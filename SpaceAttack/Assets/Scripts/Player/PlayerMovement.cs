@@ -16,14 +16,14 @@ public class PlayerMovement : MonoBehaviour
     {
         if (playerState.isDead) return;
 
-        if (!playerState.isDashing || !playerState.isStuned)  //대쉬 혹은 스턴 상태에서 이동 안됨
+        if (!playerState.isDashing && !playerState.isStuned)  //대쉬 혹은 스턴 상태에서 이동 안됨
         {
             characterMovement.Move();  //이동
 
             //공격방식에 따라서 이동 방식변경 (공격--> enum 사용)
         }
         
-        if (Input.GetKeyDown(KeyCode.Space) && !playerState.isStuned)   //스턴(피격)중에 대쉬 안됨
+        if (Input.GetKeyDown(KeyCode.Space) && !playerState.isStuned && !playerState.isDashing)   //스턴(피격)중에 대쉬 안됨
         {
             characterMovement.Dash();  //대쉬
 

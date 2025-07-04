@@ -209,7 +209,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.42, z: -6.69}
+  m_LocalPosition: {x: 0, y: 0.42, z: -9.57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -481,9 +481,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e34dc826f8c1cc84a915db331d1bc91a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_speed: 15
-  m_movementSmooth: 0.5
-  m_DashForce: 5
+  m_hp: 5
+  m_speed: 12
+  m_DashDruation: 2.3
+  m_DashTime: 0.1
+  m_stunTime: 0.1
+  m_invincibilityTime: 0.1
+  w_DashTime: 0.3
   isInvincibility: 0
   isStuned: 0
   isDashing: 0
