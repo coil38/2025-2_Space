@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (playerState.isDead) return;
 
-        if (!playerState.isDashing && !playerState.isStuned && !playerState.isAttacking)  //대쉬 혹은 스턴 상태에서 이동 안됨
+        if (!playerState.isDashing && !playerState.isStuned && !TimeSystem.w_AttackTimer.IsRunning())  //대쉬 혹은 스턴 상태에서 이동 안됨
         {
             characterMovement.Move();  //이동
 

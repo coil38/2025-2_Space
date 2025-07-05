@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class WeaponSword : WeaponType
 {
@@ -15,23 +17,43 @@ public class WeaponSword : WeaponType
     private LayerMask planLayer;   //바닥감지용 리이어 마스크
     private LayerMask enemyLayer;  //적감지용 레이어 마스크
 
-    private Vector2 attackdirection = Vector2.zero;  //기즈모 검사용
-    private void Start()
+    private Timer attackMoveTimer;
+    private bool isDetected;       //적 감지 여부
+    private float moveDuration;
+    private Vector2 targetPos;
+
+    public override void SetInfo()
     {
         planLayer |= 1 << LayerMask.NameToLayer("Plan");
         enemyLayer |= 1 << LayerMask.NameToLayer("Enemy");
+
+        attackMoveTimer = new Timer(0.1f);   //공격 이동 속도 설정
     }
+
+    public override void UpdateInfo()
+    {
+        isAttackMoving = attackMoveTimer.IsRunning(); //이동여부 설정
+        attackMoveTimer.Update();
+
+        if (isAttackMoving)
+        {
+            float timer = attackMoveTimer.GetRemainingTimer() / 0.1f;
+            Vector2 movePos = Vector2.Lerp(_currentPos, targetPos, 1 - timer);
+            attackMovePos = movePos;   //이동 위치 할당
+        }
+
+        if (!isAttacking) return;
+
+        if (!isDetected) moveDuration = 0.7f;  //적 감지 안됨
+        else moveDuration = 0.1f;              //적 감지 됨
+
+        attackMoveTimer.Start();
+        targetPos = _currentPos + attackDirection * moveDuration;
+    }
+
     public override void CheckAttack(Vector2 currentPos)
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);   //마우스 위치 받기
-        Vector2 mousePos = Vector2.zero;
-
-        if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, planLayer))
-            mousePos = (Vector2)hit.point;
-
-        Vector2 attackDir = (mousePos - currentPos).normalized * attackDistance;   //플레이어 기준 마우스 방향 얻기
-
-        attackdirection = attackDir;
+        _currentPos = currentPos;
 
         if (Input.GetMouseButtonDown(0))  //마우스 클릭시, 공격
         {
@@ -41,21 +63,41 @@ public class WeaponSword : WeaponType
             TimeSystem.w_swordTimer.Start();                  //검 공격 준비 체크 시작
             TimeSystem.w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
 
-            Collider2D[] enemyCols = Physics2D.OverlapCircleAll(currentPos, attackDistance, enemyLayer, -2f, 2f);  //원모양 범위내로 모든 적 감지
-            foreach (var enemyCol in enemyCols)
-            {
-                Vector2 dirToEnemy = (Vector2)enemyCol.transform.position - currentPos;
-                if (Vector2.Angle(attackDir, dirToEnemy) <= detectAngle / 2f)            //각도내에 적에게만 공격
-                {
-                    Attack(enemyCol.gameObject);
-                }
-            }
+            isAttacking = true;
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);   //마우스 위치 받기
+            Vector2 mousePos = Vector2.zero;
+
+            if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, planLayer))
+                mousePos = (Vector2)hit.point;
+
+            Vector2 attackDir = (mousePos - _currentPos).normalized * attackDistance;   //플레이어 기준 마우스 방향 얻기
+
+            attackDirection = attackDir;
+
+            Attack();
+        }
+        else
+        {
+            isAttacking = false;
         }
     }
 
-    public override void Attack(GameObject target)
+    public override void Attack()
     {
-        StartCoroutine(C_Attack(target));
+        isDetected = false;
+
+        Collider2D[] enemyCols = Physics2D.OverlapCircleAll(_currentPos, attackDistance, enemyLayer, -2f, 2f);  //원모양 범위내로 모든 적 감지
+        foreach (var enemyCol in enemyCols)
+        {
+            isDetected = true;   //적 확인
+
+            Vector2 dirToEnemy = (Vector2)enemyCol.transform.position - _currentPos;
+            if (Vector2.Angle(attackDirection, dirToEnemy) <= detectAngle / 2f)            //각도내에 적에게만 공격
+            {
+                StartCoroutine(C_Attack(enemyCol.gameObject));
+            }
+        }
     }
 
     private IEnumerator C_Attack(GameObject target)
@@ -69,7 +111,7 @@ public class WeaponSword : WeaponType
 
         AttackInfo attackInfo = new AttackInfo();
         attackInfo.damage = damage;
-        attackInfo.attackDirection = attackdirection;
+        attackInfo.attackDirection = attackDirection;
 
         target.SendMessage("ApplyDamage", attackInfo);
         Debug.Log("검 공격");
@@ -78,7 +120,7 @@ public class WeaponSword : WeaponType
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        DrawAttackLine(transform.position, attackDistance, attackdirection, detectAngle);
+        DrawAttackLine(transform.position, attackDistance, attackDirection, detectAngle);
 
         Gizmos.color = Color.blue;
         DrawCilcle(transform.position, attackDistance, 40);

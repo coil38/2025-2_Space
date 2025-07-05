@@ -38,6 +38,8 @@ public class CharacterMovement : MonoBehaviour
         if ((horizotal < 0 && playerState.m_FacingRight) || (horizotal > 0 && !playerState.m_FacingRight)) //(입력 - 좌, 캐릭터 - 오) || (입력 - 우, 캐릭터 - 좌) --> 반전
         {
             playerState.Flip();
+
+            Debug.Log("실행된다");
         }
 
         animator.SetFloat("Horizontal", horizotal);               //애니메이션 파리미터 전달
