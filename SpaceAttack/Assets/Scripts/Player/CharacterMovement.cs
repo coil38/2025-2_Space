@@ -8,7 +8,6 @@ public class CharacterMovement : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
 
-    private bool m_FacingRight = true;
     private Vector2 currentDir = Vector2.zero;
     private Vector3 velocity;
     private Coroutine currentCor;
@@ -36,9 +35,9 @@ public class CharacterMovement : MonoBehaviour
             }
         }
 
-        if ((horizotal < 0 && m_FacingRight) || (horizotal > 0 && !m_FacingRight)) //(입력 - 좌, 캐릭터 - 오) || (입력 - 우, 캐릭터 - 좌) --> 반전
+        if ((horizotal < 0 && playerState.m_FacingRight) || (horizotal > 0 && !playerState.m_FacingRight)) //(입력 - 좌, 캐릭터 - 오) || (입력 - 우, 캐릭터 - 좌) --> 반전
         {
-            Flip();
+            playerState.Flip();
         }
 
         animator.SetFloat("Horizontal", horizotal);               //애니메이션 파리미터 전달
@@ -48,20 +47,12 @@ public class CharacterMovement : MonoBehaviour
 
     }
 
-    private void Flip()  //좌우반전 로직
-    {
-        m_FacingRight = !m_FacingRight;
-        Vector3 localScale = transform.localScale;
-        localScale.x *= -1;
-        transform.localScale = localScale;
-    }
-
     public void Dash()  //대쉬
     {
 
-        playerState.w_dashTimer.Start();   //대쉬 타이머 시작 (0.15 초 동안)
-        playerState.invincibilityTimer.Start();  //대쉬 후, 잠시동안 무적 시작 (0.1 동안)
-        playerState.deshTimer.Start();     //대쉬 대기 시간 (0.1 초 동안)
+        TimeSystem.w_dashTimer.Start();   //대쉬 타이머 시작 (0.15 초 동안)
+        TimeSystem.invincibilityTimer.Start();  //대쉬 후, 잠시동안 무적 시작 (0.1 동안)
+        TimeSystem.deshTimer.Start();     //대쉬 대기 시간 (0.1 초 동안)
 
         animator.SetBool("IsDashing", true);
         StartCoroutine(PlayerDash());
@@ -69,8 +60,8 @@ public class CharacterMovement : MonoBehaviour
 
     private IEnumerator PlayerDash()
     {
-        Timer dashTimer = playerState.deshTimer;
-        float dashTime = playerState.m_DashTime;
+        Timer dashTimer = TimeSystem.deshTimer;
+        float dashTime = TimeSystem.m_DashTime;
         float dashDur = playerState.m_DashDruation;
         Vector2 currentPos = new Vector2(transform.position.x, transform.position.y);
         Vector2 targetPos = currentPos + currentDir.normalized * dashDur;
