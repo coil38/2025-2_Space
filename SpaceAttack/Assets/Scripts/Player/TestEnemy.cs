@@ -28,6 +28,7 @@ public class TestEnemy : MonoBehaviour
         hp -= damage;
         if (hp <= 0)    //몬스터 사망처리
         {
+            animator.SetBool("Dead", true);
             rb.AddForce(dir, ForceMode2D.Impulse);        //넉백 연산 없음(임시)
             Destroy(gameObject, 1f);
         }

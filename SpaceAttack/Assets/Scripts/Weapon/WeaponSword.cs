@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class WeaponSword : WeaponType
 {
@@ -13,6 +11,7 @@ public class WeaponSword : WeaponType
     private float w_attack = 0.2f;
     private float mass = 1f;
     private float detectAngle = 155f;
+    public float w_attackTime = 0.4f;    //검 공격 대기 시간
 
     private LayerMask planLayer;   //바닥감지용 리이어 마스크
     private LayerMask enemyLayer;  //적감지용 레이어 마스크
@@ -22,12 +21,13 @@ public class WeaponSword : WeaponType
     private float moveDuration;
     private Vector2 targetPos;
 
-    public override void SetInfo()
+    public override void OnEnable()
     {
         planLayer |= 1 << LayerMask.NameToLayer("Plan");
         enemyLayer |= 1 << LayerMask.NameToLayer("Enemy");
 
-        attackMoveTimer = new Timer(0.1f);   //공격 이동 속도 설정
+        attackMoveTimer = new Timer(0.1f);         //공격 이동 속도 설정
+        w_AttackTimer = new Timer(w_attackTime);   //공격 대기 시간 설정
     }
 
     public override void UpdateInfo()

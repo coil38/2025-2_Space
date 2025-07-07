@@ -13,18 +13,16 @@ public class PlayerAttack : MonoBehaviour
     private PlayerStatus playerState;
     private Rigidbody2D rb;
     //임시 테스트용_의존성 주입
-    public WeaponSword weaponSword;
+    public WeaponType weapon;
 
-    private bool c_isAttacking;
     void Start()
     {
-        WeaponType = weaponSword;   //의존성 주입(임시)
+        WeaponType = weapon;   //의존성 주입(임시)
+        TimeSystem.w_AttackTimer = weapon.w_AttackTimer;  //대기시간 설정
+        weaponType.attackAnimator = GetComponent<Animator>();  //애니메이터 전달
 
         playerState = GetComponent<PlayerStatus>();
         rb = GetComponent<Rigidbody2D>();
-
-        weaponType.attackAnimator = GetComponent<Animator>();  //애니메이터 전달
-        weaponType.SetInfo();
     }
 
     void Update()
@@ -36,7 +34,6 @@ public class PlayerAttack : MonoBehaviour
             if (weaponType.isAttacking)
             {
                 playerState.Flip();
-                Debug.Log("공격 실행된다");
             }
         }
 
