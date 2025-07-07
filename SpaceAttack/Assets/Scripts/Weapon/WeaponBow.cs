@@ -57,7 +57,6 @@ public class WeaponBow : WeaponType
         }
         else if (Input.GetMouseButton(0))  //클릭 중 감지
         {
-            isAttacking = true;   //공격 여부 비 활성화(좌우 전환용)
 
             //공격 차지 초기화
             if (TimeSystem.w_AttackTimer.GetRemainingTimer() < 2)
@@ -91,6 +90,8 @@ public class WeaponBow : WeaponType
         }
         else if (Input.GetMouseButtonUp(0))  //클릭 놓을 시
         {
+            isAttacking = false;   //공격 여부 비 활성화(좌우 전환용)
+
             lineRenderer.SetPosition(0, _currentPos);
             lineRenderer.SetPosition(1, _currentPos);
             lineRenderer.enabled = false;

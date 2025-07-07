@@ -33,6 +33,7 @@ public class PlayerAttack : MonoBehaviour
         {
             if (weaponType.isAttacking)
             {
+                Debug.Log("실행된다2.");
                 playerState.Flip();
             }
         }
