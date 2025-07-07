@@ -55,7 +55,7 @@ public class WeaponArrow : MonoBehaviour
 
             Destroy(gameObject);
         }
-        else
+        else if(collision.gameObject.layer != LayerMask.NameToLayer("Player"))
         {
             Destroy(gameObject);
         }
