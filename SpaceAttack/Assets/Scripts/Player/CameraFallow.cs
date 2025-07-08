@@ -10,22 +10,22 @@ public class CameraFallow : MonoBehaviour
 
     public Vector3 cameraDir;       //방향 백터(카메라)
     public Vector3 cameraRot;
+    public float cameraDis = 10;
 
     public float shakeDuration = 0.1f;
     public float shakeAmount = 0.1f;
     public float decreaseFactor = 1.0f;
 
-    Vector3 originalPos;
 
     void OnEnable()
     {
         camTransform.rotation = Quaternion.Euler(cameraRot);
-        camTransform.position = Target.position + cameraDir;
+        camTransform.position = Target.position + cameraDir.normalized * cameraDis;
     }
 
     void Update()
     {
-        Vector3 newPosition = Target.position + cameraDir;
+        Vector3 newPosition = Target.position + cameraDir.normalized * cameraDis;
         transform.position = Vector3.Slerp(transform.position, newPosition, FollowSpeed * Time.deltaTime);
     }
 }

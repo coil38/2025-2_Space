@@ -16,9 +16,17 @@ public class PlayerMovement : MonoBehaviour
     {
         if (playerState.isDead) return;
 
-        if (!playerState.isDashing && !playerState.isStuned && !TimeSystem.w_AttackTimer.IsRunning())  //대쉬 혹은 스턴 상태에서 이동 안됨
+        if (!playerState.isDashing && !playerState.isStuned)  //대쉬 혹은 스턴 상태에서 이동 안됨
         {
-            characterMovement.Move();  //이동
+            if (TimeSystem.w_AttackTimer != null)
+            {
+                if (!TimeSystem.w_AttackTimer.IsRunning())
+                    characterMovement.Move();  //이동
+            }
+            else
+            {
+                characterMovement.Move();  //이동
+            }
 
             //공격방식에 따라서 이동 방식변경 (공격--> enum 사용)
         }

@@ -42,7 +42,8 @@ public class TimeSystem : MonoBehaviour
         deshTimer.Update();
         w_dashTimer.Update();
 
-        w_AttackTimer.Update();
+        if(w_AttackTimer != null) 
+            w_AttackTimer.Update();
 
         w_swordTimer.Update();
         w_bowTimer.Update();

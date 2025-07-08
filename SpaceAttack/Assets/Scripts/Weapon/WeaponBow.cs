@@ -41,7 +41,7 @@ public class WeaponBow : WeaponType
         chargeTimer.Update();
     }
 
-    public override void CheckAttack(Vector2 currentPos)
+    public override void CheckAttack(Vector3 currentPos)
     {
         if (Input.GetMouseButtonDown(0)) //클릭 감지
         {
@@ -64,13 +64,14 @@ public class WeaponBow : WeaponType
 
             //공격 차지
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);   //마우스 위치 받기
-            Vector2 mousePos = Vector2.zero;
+            Vector3 mousePos = Vector3.zero;
 
             if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, planLayer))
-                mousePos = (Vector2)hit.point;
+                mousePos = hit.point;
+            mousePos.y = _currentPos.y;
 
-            Vector2 attackDir = (mousePos - _currentPos).normalized * currentChargeDistance;   //플레이어 기준 마우스 방향 얻기
-            Vector2 chargePos = _currentPos + attackDir;
+            Vector3 attackDir = (mousePos - _currentPos).normalized * currentChargeDistance;   //플레이어 기준 마우스 방향 얻기
+            Vector3 chargePos = _currentPos + attackDir;
             attackDirection = attackDir;
 
             lineRenderer.SetPosition(1, chargePos);
@@ -102,15 +103,17 @@ public class WeaponBow : WeaponType
 
     public override void Attack()
     {
-        float dot = Vector2.Dot(Vector2.up, attackDirection.normalized);  //내적 계산
-        float degree = Mathf.Acos(dot) * Mathf.Rad2Deg;
+        float dot = Vector3.Dot(Vector3.forward, attackDirection.normalized);  //화살 발사 방향 구하기
+        float degree = Mathf.Acos(dot) * Mathf.Rad2Deg;                        //회전 할 각도의 절댓값
 
-        float dot2 = Vector2.Dot(Vector2.right, attackDirection.normalized);  //내적 계산
-        float degree2 = Mathf.Acos(dot2) * Mathf.Rad2Deg;
+        float dot2 = Vector2.Dot(Vector3.right, attackDirection.normalized);  //예외처리: 
+        float degree2 = Mathf.Acos(dot2) * Mathf.Rad2Deg;                     //오른쪽, 왼쪽 판단 (절댓값 풀기)
 
-        degree = degree2 < 90 ? - degree : degree;
+        degree = degree2 < 90 ? degree : -degree;
 
-        Quaternion rotate = Quaternion.Euler(0, 0, degree);
+        Debug.Log($"{degree2}, {degree}");
+
+        Quaternion rotate = Quaternion.Euler(0, degree, 0);
 
         GameObject arrow = Instantiate(arrowPrefab, _currentPos + attackDirection * 0.2f, rotate);
         WeaponArrow temp2 = arrow.GetComponent<WeaponArrow>();

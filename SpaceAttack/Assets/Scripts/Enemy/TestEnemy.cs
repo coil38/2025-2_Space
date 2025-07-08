@@ -6,14 +6,14 @@ public class TestEnemy : MonoBehaviour
 {
     public float hp = 10f;
 
-    private Rigidbody2D rb;
+    private Rigidbody rb;
     private Animator animator;
 
     private bool isDead;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
     }
 
@@ -34,13 +34,13 @@ public class TestEnemy : MonoBehaviour
         {
             isDead = true;
             animator.SetBool("Dead", true);
-            rb.AddForce(dir, ForceMode2D.Impulse);        //넉백 연산 없음(임시)
+            rb.AddForce(dir, ForceMode.Impulse);        //넉백 연산 없음(임시)
             Destroy(gameObject, 1f);
         }
         else
         {
             animator.SetTrigger("Hit");                          //피격 애니메이션
-            rb.AddForce(dir * 0.5f, ForceMode2D.Impulse);        //넉백 연산 없음(임시)
+            rb.AddForce(dir * 0.5f, ForceMode.Impulse);        //넉백 연산 없음(임시)
         }
     }
 }

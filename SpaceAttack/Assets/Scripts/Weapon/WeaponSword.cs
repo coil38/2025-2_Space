@@ -11,7 +11,7 @@ public class WeaponSword : WeaponType
     private float w_attack = 0.2f;
     private float mass = 1f;
     private float detectAngle = 155f;
-    public float w_attackTime = 0.4f;    //검 공격 대기 시간
+    private float w_attackTime = 0.4f;    //검 공격 대기 시간
 
     private LayerMask planLayer;   //바닥감지용 리이어 마스크
     private LayerMask enemyLayer;  //적감지용 레이어 마스크
@@ -19,7 +19,7 @@ public class WeaponSword : WeaponType
     private Timer attackMoveTimer;
     private bool isDetected;       //적 감지 여부
     private float moveDuration;
-    private Vector2 targetPos;
+    private Vector3 targetPos;
 
     public override void OnEnable()
     {
@@ -38,7 +38,7 @@ public class WeaponSword : WeaponType
         if (isAttackMoving)
         {
             float timer = attackMoveTimer.GetRemainingTimer() / 0.1f;
-            Vector2 movePos = Vector2.Lerp(_currentPos, targetPos, 1 - timer);
+            Vector3 movePos = Vector3.Lerp(_currentPos, targetPos, 1 - timer);
             attackMovePos = movePos;   //이동 위치 할당
         }
 
@@ -51,7 +51,7 @@ public class WeaponSword : WeaponType
         targetPos = _currentPos + attackDirection * moveDuration;
     }
 
-    public override void CheckAttack(Vector2 currentPos)
+    public override void CheckAttack(Vector3 currentPos)
     {
         _currentPos = currentPos;
 
@@ -66,12 +66,13 @@ public class WeaponSword : WeaponType
             isAttacking = true;
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);   //마우스 위치 받기
-            Vector2 mousePos = Vector2.zero;
+            Vector3 mousePos = Vector3.zero;
 
             if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, planLayer))
-                mousePos = (Vector2)hit.point;
+                mousePos = hit.point;
+            mousePos.y = _currentPos.y;
 
-            Vector2 attackDir = (mousePos - _currentPos).normalized * attackDistance;   //플레이어 기준 마우스 방향 얻기
+            Vector3 attackDir = (mousePos - _currentPos).normalized * attackDistance;   //플레이어 기준 마우스 방향 얻기
 
             attackDirection = attackDir;
 
@@ -87,13 +88,14 @@ public class WeaponSword : WeaponType
     {
         isDetected = false;
 
-        Collider2D[] enemyCols = Physics2D.OverlapCircleAll(_currentPos, attackDistance, enemyLayer, -2f, 2f);  //원모양 범위내로 모든 적 감지
+        Collider[] enemyCols = Physics.OverlapSphere(_currentPos, attackDistance, enemyLayer);
         foreach (var enemyCol in enemyCols)
         {
             isDetected = true;   //적 확인
 
-            Vector2 dirToEnemy = (Vector2)enemyCol.transform.position - _currentPos;
-            if (Vector2.Angle(attackDirection, dirToEnemy) <= detectAngle / 2f)            //각도내에 적에게만 공격
+            Vector3 dirToEnemy = enemyCol.transform.position - _currentPos;
+            dirToEnemy.y = 0f;
+            if (Vector3.Angle(attackDirection, dirToEnemy) <= detectAngle / 2f)            //각도내에 적에게만 공격
             {
                 StartCoroutine(C_Attack(enemyCol.gameObject));
             }
@@ -123,40 +125,22 @@ public class WeaponSword : WeaponType
         DrawAttackLine(transform.position, attackDistance, attackDirection, detectAngle);
 
         Gizmos.color = Color.blue;
-        DrawCilcle(transform.position, attackDistance, 40);
+        Gizmos.DrawWireSphere(transform.position, attackDistance);
     }
 
-    private void DrawAttackLine(Vector2 center, float redius, Vector2 forward, float angle)
+    private void DrawAttackLine(Vector3 center, float redius, Vector3 forward, float angle)
     {
         forward = forward.normalized;
 
-        Quaternion l_rotate = Quaternion.Euler(0, 0, - angle / 2f);
-        Quaternion r_rotate = Quaternion.Euler(0, 0, angle / 2f);
+        Quaternion l_rotate = Quaternion.Euler(0, -angle / 2f, 0);
+        Quaternion r_rotate = Quaternion.Euler(0, angle / 2f, 0);
 
-        Vector2 leftRay = l_rotate * forward;
-        Vector2 rightRay = r_rotate * forward;
+        Vector3 leftRay = l_rotate * forward;
+        Vector3 rightRay = r_rotate * forward;
 
         Gizmos.DrawRay(center, forward);
         Gizmos.DrawRay(center, leftRay * redius);
         Gizmos.DrawRay(center, rightRay * redius);
 
-    }
-
-    private void DrawCilcle(Vector2 center, float radius, float segement)
-    {
-        float angle = 0f;
-
-        Vector2 prePos = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
-
-        for (int i = 1; i <= segement; i++)
-        {
-            angle = i * Mathf.PI * 2f / segement;
-
-            Vector2 newPos = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
-
-            Gizmos.DrawLine(newPos, prePos);
-
-            prePos = newPos;
-        }
     }
 }

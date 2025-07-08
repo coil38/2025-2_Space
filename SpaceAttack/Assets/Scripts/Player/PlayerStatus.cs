@@ -28,7 +28,9 @@ public class PlayerStatus : MonoBehaviour
         isDashing = TimeSystem.w_dashTimer.IsRunning();
         isInvincibility = TimeSystem.invincibilityTimer.IsRunning();
         isStuned = TimeSystem.stunTimer.IsRunning();
-        isAttacking = TimeSystem.w_AttackTimer.IsRunning();
+
+        if(TimeSystem.w_AttackTimer != null)
+            isAttacking = TimeSystem.w_AttackTimer.IsRunning();
     }
 
     public void ApplyDamage(float damage)

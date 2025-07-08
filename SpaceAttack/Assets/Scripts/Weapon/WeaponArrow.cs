@@ -4,23 +4,23 @@ using UnityEngine;
 
 public class WeaponArrow : MonoBehaviour
 {
-    private Rigidbody2D rb;
+    private Rigidbody rb;
 
     private bool isFired = false;
-    private Vector2 startPos;
+    private Vector3 startPos;
     private float damage;
-    private Vector2 attackDirection;
+    private Vector3 attackDirection;
     private float fireDistance;
     void OnEnable()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
         if (isFired)
         {
-            float dis = Vector2.Distance(transform.position, startPos);
+            float dis = Vector3.Distance(transform.position, startPos);
             if (dis > fireDistance)
             {
                 Destroy(gameObject);
@@ -28,13 +28,13 @@ public class WeaponArrow : MonoBehaviour
         }
     }
 
-    public void Fire(Vector2 _startPos, Vector2 dir, float speed, float _damage, float dis)  //이동 위치, 이동방향, 이동 속도, 공격력
+    public void Fire(Vector3 _startPos, Vector3 dir, float speed, float _damage, float dis)  //이동 위치, 이동방향, 이동 속도, 공격력
     {
         if (rb == null)
         {
             Debug.Log("없음");
         }
-        rb.AddForce(dir * speed, ForceMode2D.Impulse);
+        rb.AddForce(dir * speed, ForceMode.Impulse);
         startPos = _startPos;
         damage = _damage;
         attackDirection = dir;
@@ -42,7 +42,7 @@ public class WeaponArrow : MonoBehaviour
         isFired = true;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {

@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface ICheckAttack
 {
-    public void CheckAttack(UnityEngine.Vector2 currentPos);
+    public void CheckAttack(UnityEngine.Vector3 currentPos);
 }

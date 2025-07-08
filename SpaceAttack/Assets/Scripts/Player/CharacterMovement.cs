@@ -5,17 +5,17 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
     private PlayerStatus playerState;
-    private Rigidbody2D rb;
+    private Rigidbody rb;
     private Animator animator;
 
-    private Vector2 currentDir = Vector2.zero;
+    private Vector3 currentDir = Vector3.zero;
     private Vector3 velocity;
     private Coroutine currentCor;
 
     private void Start()
     {
         playerState = GetComponent<PlayerStatus>();
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
     }
 
@@ -24,9 +24,9 @@ public class CharacterMovement : MonoBehaviour
         float horizotal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        Vector2 dir = new Vector2(horizotal, vertical).normalized;
+        Vector3 dir = new Vector3(horizotal, 0, vertical).normalized;
 
-        if (dir != Vector2.zero) currentDir = dir.normalized;  //현재 방향값이 0이 아닐 때만 전달
+        if (dir != Vector3.zero) currentDir = dir.normalized;  //현재 방향값이 0이 아닐 때만 전달
         else
         {
             if (currentCor == null)
@@ -45,7 +45,6 @@ public class CharacterMovement : MonoBehaviour
         animator.SetFloat("Vertical", vertical);
 
         rb.MovePosition(rb.position + dir * playerState.m_speed * Time.deltaTime);   //플레이어 이동
-
     }
 
     public void Dash()  //대쉬
@@ -64,14 +63,14 @@ public class CharacterMovement : MonoBehaviour
         Timer dashTimer = TimeSystem.deshTimer;
         float dashTime = TimeSystem.m_DashTime;
         float dashDur = playerState.m_DashDruation;
-        Vector2 currentPos = new Vector2(transform.position.x, transform.position.y);
-        Vector2 targetPos = currentPos + currentDir.normalized * dashDur;
+        Vector3 currentPos = new Vector3(transform.position.x, 0, transform.position.z);
+        Vector3 targetPos = currentPos + currentDir.normalized * dashDur;
 
         while (true)
         {
             float timer = dashTimer.GetRemainingTimer() / dashTime;
 
-            Vector2 move = Vector2.Lerp(currentPos, targetPos, 1 - timer);
+            Vector3 move = Vector3.Lerp(currentPos, targetPos, 1 - timer);
             rb.MovePosition(move);
 
             if (timer <= 0.1f)
@@ -85,7 +84,7 @@ public class CharacterMovement : MonoBehaviour
     private IEnumerator e_ChangeCurrentDir()
     {
         yield return new WaitForSeconds(0.1f);
-        currentDir = Vector2.down;
+        currentDir = - Vector3.forward;
         currentCor = null;
     }
 }

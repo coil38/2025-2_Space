@@ -11,7 +11,7 @@ public class PlayerAttack : MonoBehaviour
     }
 
     private PlayerStatus playerState;
-    private Rigidbody2D rb;
+    private Rigidbody rb;
     //임시 테스트용_의존성 주입
     public WeaponType weapon;
 
@@ -22,12 +22,12 @@ public class PlayerAttack : MonoBehaviour
         weaponType.attackAnimator = GetComponent<Animator>();  //애니메이터 전달
 
         playerState = GetComponent<PlayerStatus>();
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        weaponType.CheckAttack((Vector2)transform.position);
+        weaponType.CheckAttack(transform.position);
 
         if ((playerState.m_FacingRight && weaponType.attackDirection.x < 0) || (!playerState.m_FacingRight && weaponType.attackDirection.x > 0))  //공격방향과 현재방향이 불일치 경우
         {
@@ -50,5 +50,5 @@ public class PlayerAttack : MonoBehaviour
 public class AttackInfo      //공격 정보 전달용 클래스
 {
     public float damage;
-    public Vector2 attackDirection;
+    public Vector3 attackDirection;
 }
