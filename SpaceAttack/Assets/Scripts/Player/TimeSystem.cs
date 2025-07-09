@@ -6,8 +6,8 @@ public class TimeSystem : MonoBehaviour
 {
     [Header("PlayerTimeInfo")]
     public static float m_DashTime = 0.1f;       //대쉬 시간
-    public static float m_stunTime = 0.1f;       //스턴 시간
-    public static float m_invincibilityTime = 0.1f;  //대쉬이후 무적 시간
+    public static float m_stunTime = 0.3f;       //스턴 시간
+    public static float m_invincibilityTime = 0.3f;  //대쉬이후 무적 시간
     public static float w_DashTime = 0.3f;           //다음 대쉬까지 대기 시간
 
     [Header("WeaponTimeInfo")]

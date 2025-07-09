@@ -27,6 +27,8 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
+        if(playerState.isDead) return;   //사망시, 입력 안됨
+
         weaponType.CheckAttack(transform.position);
 
         if ((playerState.m_FacingRight && weaponType.attackDirection.x < 0) || (!playerState.m_FacingRight && weaponType.attackDirection.x > 0))  //공격방향과 현재방향이 불일치 경우
