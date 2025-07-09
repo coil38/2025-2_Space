@@ -12,7 +12,7 @@ public class CameraFallow : MonoBehaviour
     public Vector3 cameraRot;
     public float cameraDis = 10;
 
-    public float shakeDuration = 0.1f;
+    public float shakeDuration = 0;
     public float shakeAmount = 0.1f;
     public float decreaseFactor = 1.0f;
 
@@ -27,5 +27,16 @@ public class CameraFallow : MonoBehaviour
     {
         Vector3 newPosition = Target.position + cameraDir.normalized * cameraDis;
         transform.position = Vector3.Slerp(transform.position, newPosition, FollowSpeed * Time.deltaTime);
+
+        if (shakeDuration > 0)
+        {
+            transform.position = transform.position + Random.insideUnitSphere * shakeAmount;
+            shakeDuration -= Time.deltaTime * decreaseFactor;
+        }
+    }
+
+    public void CameraShack()
+    {
+        shakeDuration = 0.2f;
     }
 }

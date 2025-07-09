@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class CharacterMovement : MonoBehaviour
     private Vector3 velocity;
     private Coroutine currentCor;
 
+    private bool isParticlePlaying;
     private void Start()
     {
         playerState = GetComponent<PlayerStatus>();
@@ -35,9 +37,20 @@ public class CharacterMovement : MonoBehaviour
             }
         }
 
+        if (dir.magnitude > 0.1f && !isParticlePlaying)
+        {
+            isParticlePlaying = true;
+            playerState.m_Particle.Play();   //이동하기 시작하면 파티클 재생
+        }
+        else if(dir.magnitude < 0.1f && isParticlePlaying)
+        {
+            isParticlePlaying = false;
+            playerState.m_Particle.Stop();       //이동이 멈추면 파티클 종료
+        }
+
         if ((horizotal < 0 && playerState.m_FacingRight) || (horizotal > 0 && !playerState.m_FacingRight)) //(입력 - 좌, 캐릭터 - 오) || (입력 - 우, 캐릭터 - 좌) --> 반전
         {
-            Debug.Log($"실행된다.");
+            //Debug.Log($"실행된다.");
             playerState.Flip();
         }
 
@@ -49,6 +62,9 @@ public class CharacterMovement : MonoBehaviour
 
     public void Dash()  //대쉬
     {
+        isParticlePlaying = false;
+        playerState.m_Particle.Stop();    //이동이 멈추면 파티클 종료
+        playerState.d_Particle.Play();    //대쉬할 경우, 파티클 재생
 
         TimeSystem.w_dashTimer.Start();   //대쉬 타이머 시작 (0.15 초 동안)
         TimeSystem.invincibilityTimer.Start();  //대쉬 후, 잠시동안 무적 시작 (0.1 동안)

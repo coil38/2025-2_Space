@@ -8,8 +8,8 @@ public class WeaponSword : WeaponType
 
     private float attackDistance = 2f;
     private float damage = 4f;
-    private float w_attack = 0.2f;
-    private float mass = 1f;
+    //private float w_attack = 0.2f;
+    //private float mass = 1f;
     private float detectAngle = 155f;
     private float w_attackTime = 0.4f;    //검 공격 대기 시간
 
@@ -116,6 +116,8 @@ public class WeaponSword : WeaponType
         attackInfo.attackDirection = attackDirection;
 
         target.SendMessage("ApplyDamage", attackInfo);
+
+        Camera.main.GetComponent<CameraFallow>().CameraShack();  //카메라 흔들림 연출
         Debug.Log("검 공격");
     }
 

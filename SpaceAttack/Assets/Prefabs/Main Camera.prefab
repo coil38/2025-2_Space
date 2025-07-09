@@ -150,11 +150,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8047d5a777f7a9b45b81d35597461754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FollowSpeed: 2
+  FollowSpeed: 1.2
   Target: {fileID: 0}
   camTransform: {fileID: 6673770505855984839}
-  cameraDir: {x: 0, y: 2.75, z: -9.5}
-  cameraRot: {x: 10, y: 0, z: 0}
+  cameraDir: {x: 0, y: 3.95, z: -9.5}
+  cameraRot: {x: 25, y: 0, z: 0}
+  cameraDis: 10
   shakeDuration: 0.1
   shakeAmount: 0.1
   decreaseFactor: 1

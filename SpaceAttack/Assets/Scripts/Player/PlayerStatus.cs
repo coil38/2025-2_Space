@@ -10,6 +10,9 @@ public class PlayerStatus : MonoBehaviour
     public float m_speed = 5f;           //이동 속도
     public float m_DashDruation = 2.2f;  //대쉬 거리
 
+    public ParticleSystem m_Particle;
+    public ParticleSystem d_Particle;
+
     [HideInInspector] public bool isInvincibility = false;
     [HideInInspector] public bool isStuned = false;
     [HideInInspector] public bool isDashing = false;

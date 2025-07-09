@@ -111,8 +111,6 @@ public class WeaponBow : WeaponType
 
         degree = degree2 < 90 ? degree : -degree;
 
-        Debug.Log($"{degree2}, {degree}");
-
         Quaternion rotate = Quaternion.Euler(0, degree, 0);
 
         GameObject arrow = Instantiate(arrowPrefab, _currentPos + attackDirection * 0.2f, rotate);
