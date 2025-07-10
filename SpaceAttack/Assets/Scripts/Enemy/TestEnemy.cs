@@ -14,7 +14,7 @@ public class TestEnemy : MonoBehaviour
     private Rigidbody rb;
     private Animator animator;
 
-    private bool isDead;
+    public bool isDead { get; private set; }
 
     private Vector3 _currentPos;
     private Vector3 attackDirection;
@@ -92,7 +92,10 @@ public class TestEnemy : MonoBehaviour
             dirToEnemy.y = 0f;
             if (Vector3.Angle(attackDirection, dirToEnemy) <= detectAngle / 2f)            //각도내에 적에게만 공격
             {
-                playerCol.SendMessage("ApplyDamage", damage);
+                AttackInfo info = new AttackInfo();
+                info.damage = damage;
+                info.attackDirection = attackDirection;
+                playerCol.SendMessage("ApplyDamage", info);
             }
         }
     }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class WeaponSword : WeaponType
@@ -94,12 +95,12 @@ public class WeaponSword : WeaponType
         Collider[] enemyCols = Physics.OverlapSphere(_currentPos, attackDistance, enemyLayer);
         foreach (var enemyCol in enemyCols)
         {
-            isDetected = true;   //적 확인
-
             Vector3 dirToEnemy = enemyCol.transform.position - _currentPos;
             dirToEnemy.y = 0f;
             if (Vector3.Angle(attackDirection, dirToEnemy) <= detectAngle / 2f)            //각도내에 적에게만 공격
             {
+                isDetected = true;   //적 확인
+
                 StartCoroutine(C_Attack(enemyCol.gameObject));
             }
         }
@@ -107,7 +108,6 @@ public class WeaponSword : WeaponType
 
     private IEnumerator C_Attack(GameObject target)
     {
-
         while (true)
         {
             if (!TimeSystem.w_swordTimer.IsRunning()) break;
@@ -119,8 +119,9 @@ public class WeaponSword : WeaponType
         attackInfo.damage = damage;
         attackInfo.attackDirection = attackDirection;
 
-        target.SendMessage("ApplyDamage", attackInfo);
+        if (target.gameObject == null) yield break;   //적이 없을 경우, 코루틴 종료
 
+        target.SendMessage("ApplyDamage", attackInfo);
         Camera.main.GetComponent<CameraFallow>().CameraShack();  //카메라 흔들림 연출
         Debug.Log("검 공격");
     }

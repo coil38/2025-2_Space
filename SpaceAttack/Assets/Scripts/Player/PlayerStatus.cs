@@ -19,11 +19,15 @@ public class PlayerStatus : MonoBehaviour
     [HideInInspector] public bool isDead = false;
     [HideInInspector] public bool isAttacking = false;
 
-    public bool m_FacingRight {get; private set;}
+    public bool m_FacingRight { get; private set; }
 
     private Rigidbody rb;
     private Animator animator;
 
+    private AttackInfo attackInfo = new AttackInfo();
+    private Queue<AttackInfo> attackQueue = new Queue<AttackInfo>();
+    private bool isDamageProcessing;
+    private bool isCancleAttack;
     private void Start()
     {
         m_FacingRight = true;
@@ -38,17 +42,54 @@ public class PlayerStatus : MonoBehaviour
         isInvincibility = TimeSystem.invincibilityTimer.IsRunning();
         isStuned = TimeSystem.stunTimer.IsRunning();
 
-        if(TimeSystem.w_AttackTimer != null)
+        if (TimeSystem.w_AttackTimer != null)
             isAttacking = TimeSystem.w_AttackTimer.IsRunning();
-    }
-    public void ApplyDamage(AttackInfo attackInfo)
-    {
-        ApplyDamage(attackInfo.damage);
+
+
+        CheckApplyDamage();    //피격 체킹
     }
 
-    public void ApplyDamage(float damage)
+    private void CheckApplyDamage()
+    {
+        if (isStuned) isDamageProcessing = false;   // 스턴상태일때, 데미지 처리 프로세스 해제
+
+        if (isInvincibility || isStuned || isDead) return;   //대쉬 무적 상태 혹은 스턴 상태일 때, 피격 안됨
+
+        if (!isDamageProcessing && attackQueue.Count == 1)   //현재 공격 대기 자가 1명일 때, 그 한명의 공격만 유효 처리
+        {
+            AttackInfo info = attackQueue.Dequeue();
+            _ApplyDamage(info);
+
+            isDamageProcessing = true;
+        }
+        else if (!isDamageProcessing && attackQueue.Count > 1)   //현재 공격 대기 자가 1명 이상일 때, 첫 한명의 공격만 유효 처리
+        {
+            float attackCount = attackQueue.Count - 1;
+            AttackInfo info = attackQueue.Dequeue();
+            _ApplyDamage(info);
+
+            for (int i = 0; i < attackCount; i++)   //처음 받은 공격 개수만큼 취소(예외처리: 혹시 이 사이에 공격이 추가 되었을 수도 있음)
+                attackQueue.Dequeue();
+
+            isDamageProcessing = true;
+        }
+        else if (isDamageProcessing)   //현재 데미지 처리 중일 때, 모든 사람의 공격 무효 처리
+        {
+            attackQueue.Clear();
+        }
+    }
+
+    public void ApplyDamage(AttackInfo info)
     {
         if (isInvincibility || isStuned || isDead) return;   //대쉬 무적 상태 혹은 스턴 상태일 때, 피격 안됨
+
+        attackQueue.Enqueue(info);
+    }
+
+    private void _ApplyDamage(AttackInfo info)
+    {
+        float damage = info.damage;
+        Vector3 dir = info.attackDirection;
 
         m_hp -= damage;
 
