@@ -49,8 +49,3 @@ public class PlayerAttack : MonoBehaviour
     }
 }
 
-public class AttackInfo      //공격 정보 전달용 클래스
-{
-    public float damage;
-    public Vector3 attackDirection;
-}

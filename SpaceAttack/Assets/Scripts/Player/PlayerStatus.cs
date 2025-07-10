@@ -41,6 +41,10 @@ public class PlayerStatus : MonoBehaviour
         if(TimeSystem.w_AttackTimer != null)
             isAttacking = TimeSystem.w_AttackTimer.IsRunning();
     }
+    public void ApplyDamage(AttackInfo attackInfo)
+    {
+        ApplyDamage(attackInfo.damage);
+    }
 
     public void ApplyDamage(float damage)
     {

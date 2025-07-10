@@ -1,0 +1,166 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Animator))]
+
+
+
+public abstract class EnemyBase : MonoBehaviour
+{
+    [Header("공통 속성")]
+    public float hp = 10f;
+    public float attackDistance = 2f;
+    public float detectAngle = 155f;
+    public float damage = 1f;
+    public float attackDuration = 0.5f;
+
+    [Header("공통 탐지 설정")]
+    [SerializeField]
+    private float detectRadius = 5f;  
+
+    protected Rigidbody rb;
+    protected Animator animator;
+
+    protected bool isDead;
+    protected bool isHit;
+
+    protected Vector3 _currentPos;
+    protected Vector3 attackDirection;
+    protected LayerMask playerLayer;
+
+
+    [Header("공통 주변탐색 설정")]
+    protected Vector3 patrolTarget;
+    protected float patrolMoveTime = 2f;
+    protected float patrolIdleTime = 1f;
+    protected float patrolTimer = 0f;
+    protected bool isPatrolMoving = false;
+
+
+
+    protected float DetectRadius => detectRadius;
+    protected virtual void OnPlayerDetected(Transform player) { }
+
+    protected virtual void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+        playerLayer |= 1 << LayerMask.NameToLayer("Player");
+
+        StartCoroutine(EnemyPattern());
+    }
+    protected virtual void Patrol()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, DetectRadius, playerLayer);
+        if (hits.Length > 0)
+        {
+            OnPlayerDetected(hits[0].transform); 
+            return;
+        }
+
+        patrolTimer += Time.deltaTime;
+
+        if (isPatrolMoving)
+        {
+            animator.SetBool("IsMoving", true);
+            MoveTo(patrolTarget, 1.5f); // 기본 속도
+
+            if (Vector3.Distance(transform.position, patrolTarget) < 0.5f || patrolTimer > patrolMoveTime)
+            {
+                isPatrolMoving = false;
+                patrolTimer = 0f;
+            }
+        }
+        else
+        {
+            animator.SetBool("IsMoving", false);
+
+            if (patrolTimer > patrolIdleTime)
+            {
+                isPatrolMoving = true;
+                patrolTimer = 0f;
+
+                Vector3 randomDirection = Random.insideUnitSphere;
+                randomDirection.y = 0;
+                patrolTarget = transform.position + randomDirection.normalized * Random.Range(3f, 6f);
+            }
+        }
+    }
+    protected void MoveTo(Vector3 target, float speed)
+    {
+        Vector3 direction = (target - transform.position).normalized;
+        transform.position += direction * speed * Time.deltaTime;
+
+        Flip(direction.x); //좌우반전
+    }
+
+    protected virtual IEnumerator EnemyPattern()
+    {
+        float timer = 0f;
+        float timer2 = 0f;
+        float attackTime = attackDuration;
+
+        while (true)
+        {
+            timer += Time.deltaTime / attackTime;
+            if (timer > 1 && !isHit)
+            {
+                CheckAttack();
+                timer = 0f;
+            }
+
+            if (isHit)
+            {
+                timer2 += Time.deltaTime / 0.5f;
+                if (timer2 > 1)
+                {
+                    isHit = false;
+                    timer2 = 0f;
+                }
+            }
+            yield return null;
+        }
+    }
+
+    protected virtual void CheckAttack() { }
+    protected virtual void Attack() { }
+
+    public virtual void ApplyDamage(AttackInfo attackInfo)
+    {
+        if (isDead) return; 
+
+        hp -= attackInfo.damage;
+
+        if (hp <= 0)
+        {
+            if (!isDead) 
+            {
+                isDead = true;
+                animator.SetBool("Dead", true);
+                rb.velocity = Vector3.zero; // 혹시라도 움직임 제거
+                rb.AddForce(attackInfo.attackDirection, ForceMode.Impulse);
+                Destroy(gameObject, 1f);
+            }
+        }
+        else
+        {
+            isHit = true;
+            animator.SetTrigger("Hit");
+            rb.AddForce(attackInfo.attackDirection * 0.5f, ForceMode.Impulse);
+        }
+    }
+
+    protected void Flip(float moveX)  //왼쪽 오른쪽만 보이게
+    {
+        if (moveX < -0.01f)
+        {
+            transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
+        }
+        else if (moveX > 0.01f)
+        {
+            transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
+        }
+    }
+}
