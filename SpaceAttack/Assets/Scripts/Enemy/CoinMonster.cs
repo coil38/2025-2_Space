@@ -15,11 +15,15 @@ public class CoinMonster : EnemyBase
     [Header("코인 몬스터 설정")]
     public float chaseSpeed = 3f;
     public float explodeReadySpeed = 1f;
-    public float explodeDistance = 1.5f;
     public float explosionDelay = 2f;
     public float explosionDamage = 5f;
     public float explosionKnockbackForce = 5f;
 
+    [Header("폭발 조건 및 범위")]
+    public float triggerDistance = 1f;       // 플레이어가 붙으면 폭발 준비 시작 (작게)
+    public float explodeDistance = 3f;       // 폭발 데미지 범위 (크게)
+    
+    
     private Transform player;
     private CoinMonsterState state = CoinMonsterState.Patrol;
     private float explodeTimer = 0f;
@@ -76,10 +80,10 @@ public class CoinMonster : EnemyBase
 
         float distance = Vector3.Distance(transform.position, player.position);
 
-        if (distance < explodeDistance)
+        if (distance < triggerDistance) // 👈 폭발 조건만 좁게 설정
         {
             state = CoinMonsterState.ExplodeReady;
-            animator.SetTrigger("Dash"); // 불 붙는 애니메이션
+            animator.SetTrigger("Dash");
             explodeTimer = 0f;
             return;
         }
@@ -96,13 +100,11 @@ public class CoinMonster : EnemyBase
 
         explodeTimer += Time.deltaTime;
 
+        animator.SetBool("IsMoving", false);
+
         if (explodeTimer >= explosionDelay)
         {
             Explode();
-        }
-        else
-        {
-            MoveTo(player.position, explodeReadySpeed);
         }
     }
 

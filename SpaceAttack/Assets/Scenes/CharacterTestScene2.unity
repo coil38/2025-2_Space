@@ -1786,6 +1786,31 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1450020476431819336, guid: 959e4f8102d1e264ea006fc530904b7b,
+        type: 3}
+      propertyPath: chaseSpeed
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1450020476431819336, guid: 959e4f8102d1e264ea006fc530904b7b,
+        type: 3}
+      propertyPath: detectRadius
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1450020476431819336, guid: 959e4f8102d1e264ea006fc530904b7b,
+        type: 3}
+      propertyPath: explosionDelay
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1450020476431819336, guid: 959e4f8102d1e264ea006fc530904b7b,
+        type: 3}
+      propertyPath: triggerDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1450020476431819336, guid: 959e4f8102d1e264ea006fc530904b7b,
+        type: 3}
+      propertyPath: explodeReadySpeed
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6690087329488023635, guid: 959e4f8102d1e264ea006fc530904b7b,
         type: 3}
       propertyPath: m_Name
