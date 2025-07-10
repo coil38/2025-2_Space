@@ -25,7 +25,7 @@ public class WeaponSword : WeaponType
     public override void OnEnable()
     {
         planLayer |= 1 << LayerMask.NameToLayer("Plan");
-        enemyLayer |= 1 << LayerMask.NameToLayer("Enemy");
+        enemyLayer |= (1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("DestructableObject"));
 
         attackMoveTimer = new Timer(0.1f);         //공격 이동 속도 설정
         w_AttackTimer = new Timer(w_attackTime);   //공격 대기 시간 설정

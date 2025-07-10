@@ -47,7 +47,7 @@ public abstract class EnemyBase : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        playerLayer |= 1 << LayerMask.NameToLayer("Player");
+        playerLayer |= (1 << LayerMask.NameToLayer("Player"));
 
         StartCoroutine(EnemyPattern());
     }
