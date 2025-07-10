@@ -113,7 +113,7 @@ public class CoinMonster : EnemyBase
         if (explodeRangeVisual != null)
             explodeRangeVisual.SetActive(false);
 
-        Collider[] cols = Physics.OverlapSphere(transform.position, explodeDistance, playerLayer);
+        Collider[] cols = Physics.OverlapSphere(transform.position, explodeDistance, attackLayer);
         foreach (var col in cols)
         {
             Vector3 dir = (col.transform.position - transform.position).normalized;

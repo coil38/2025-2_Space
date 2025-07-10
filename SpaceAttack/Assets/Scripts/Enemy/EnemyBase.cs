@@ -29,6 +29,7 @@ public abstract class EnemyBase : MonoBehaviour
     protected Vector3 _currentPos;
     protected Vector3 attackDirection;
     protected LayerMask playerLayer;
+    protected LayerMask attackLayer;
 
 
     [Header("공통 주변탐색 설정")]
@@ -48,6 +49,7 @@ public abstract class EnemyBase : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         playerLayer |= (1 << LayerMask.NameToLayer("Player"));
+        attackLayer |= (1 << LayerMask.NameToLayer("Player")) | (1 << LayerMask.NameToLayer("DestructableObject"));
 
         StartCoroutine(EnemyPattern());
     }
