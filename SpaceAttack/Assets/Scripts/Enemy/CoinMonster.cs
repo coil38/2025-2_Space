@@ -20,8 +20,8 @@ public class CoinMonster : EnemyBase
     public float explosionKnockbackForce = 5f;
 
     [Header("폭발 조건 및 범위")]
-    public float triggerDistance = 1f;       // 플레이어가 붙으면 폭발 준비 시작 (작게)
-    public float explodeDistance = 3f;       // 폭발 데미지 범위 (크게)
+    public float triggerDistance = 1f;       // 플레이어가 붙으면 폭발 준비 시작 
+    public float explodeDistance = 3f;       // 폭뎀범위
     
     
     private Transform player;
@@ -68,7 +68,7 @@ public class CoinMonster : EnemyBase
         UpdateAnimation();
     }
 
-    protected override void OnPlayerDetected(Transform detectedPlayer)
+    protected override void OnPlayerDetected(Transform detectedPlayer) //플레이어 찾음
     {
         player = detectedPlayer;
         state = CoinMonsterState.Chase;
@@ -80,7 +80,7 @@ public class CoinMonster : EnemyBase
 
         float distance = Vector3.Distance(transform.position, player.position);
 
-        if (distance < triggerDistance) // 👈 폭발 조건만 좁게 설정
+        if (distance < triggerDistance) 
         {
             state = CoinMonsterState.ExplodeReady;
             animator.SetTrigger("Dash");
@@ -108,7 +108,7 @@ public class CoinMonster : EnemyBase
         }
     }
 
-    private void Explode()
+    private void Explode() //폭파
     {
         if (explodeRangeVisual != null)
             explodeRangeVisual.SetActive(false);

@@ -39,7 +39,8 @@ public abstract class EnemyBase : MonoBehaviour
     protected float patrolTimer = 0f;
     protected bool isPatrolMoving = false;
 
-
+    [SerializeField] private float hitInvincibleTime = 0.4f;  // 피격 후 무적
+    private bool canBeHit = true;
 
     protected float DetectRadius => detectRadius;
     protected virtual void OnPlayerDetected(Transform player) { }
@@ -131,27 +132,40 @@ public abstract class EnemyBase : MonoBehaviour
 
     public virtual void ApplyDamage(AttackInfo attackInfo)
     {
-        if (isDead) return; 
+        if (isDead || !canBeHit) return;
 
         hp -= attackInfo.damage;
 
         if (hp <= 0)
         {
-            if (!isDead) 
+            if (!isDead)
             {
                 isDead = true;
                 animator.SetBool("Dead", true);
-                rb.velocity = Vector3.zero; // 혹시라도 움직임 제거
+                rb.velocity = Vector3.zero;
                 rb.AddForce(attackInfo.attackDirection, ForceMode.Impulse);
                 Destroy(gameObject, 1f);
             }
         }
         else
         {
-            isHit = true;
-            animator.SetTrigger("Hit");
             rb.AddForce(attackInfo.attackDirection * 0.5f, ForceMode.Impulse);
+            StartCoroutine(HitProcess(attackInfo.attackDirection));
         }
+    }
+    private IEnumerator HitProcess(Vector3 dir)
+    {
+        canBeHit = false;
+        isHit = true;
+
+        animator.SetTrigger("Hit"); 
+
+        rb.AddForce(dir * 0.5f, ForceMode.Impulse);
+
+        yield return new WaitForSeconds(hitInvincibleTime);
+
+        isHit = false;
+        canBeHit = true;
     }
 
     protected void Flip(float moveX)  //왼쪽 오른쪽만 보이게
