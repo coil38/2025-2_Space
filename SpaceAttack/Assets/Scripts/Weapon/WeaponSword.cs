@@ -46,7 +46,7 @@ public class WeaponSword : WeaponType
         if (!isAttacking) return;
 
         if (!isDetected) moveDuration = 0.7f;  //적 감지 안됨
-        else moveDuration = 0.1f;              //적 감지 됨
+        else moveDuration = 0f;              //적 감지 됨
 
         attackMoveTimer.Start();
         targetPos = _currentPos + attackDirection * moveDuration;

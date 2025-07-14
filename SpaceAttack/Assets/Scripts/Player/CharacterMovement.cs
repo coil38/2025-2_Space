@@ -79,7 +79,7 @@ public class CharacterMovement : MonoBehaviour
         }
 
         TimeSystem.w_dashTimer.Start();   //대쉬 타이머 시작 (0.15 초 동안)
-        TimeSystem.invincibilityTimer.Start();  //대쉬 후, 잠시동안 무적 시작 (0.1 동안)
+        //TimeSystem.invincibilityTimer.Start();  //대쉬 후, 잠시동안 무적 시작 (0.1 동안)
         TimeSystem.deshTimer.Start();     //대쉬 대기 시간 (0.1 초 동안)
 
         animator.SetBool("IsDashing", true);
