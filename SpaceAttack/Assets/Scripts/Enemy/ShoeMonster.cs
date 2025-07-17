@@ -22,12 +22,19 @@ public class ShoeMonster : EnemyBase
     private bool canHop = true;
     private bool canFire = true;
 
-    // ──────────────────────────────────────────────────────
+
     #region Unity Life Cycle
     protected override void Start()
     {
         base.Start();
-        StartCoroutine(HopRoutine());
+
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
+        }
+
+        StartCoroutine(EnemyPattern());
+        StartCoroutine(HopRoutine());  
     }
     private void Update()
     {
@@ -58,7 +65,6 @@ public class ShoeMonster : EnemyBase
     #region EnemyBase Override
     protected override void OnPlayerDetected(Transform player)
     {
-        Debug.Log($"[ShoeMonster] Player Detected: {player.name}");
         target = player;
         if (canFire) StartCoroutine(FireRoutine());
     }
@@ -68,11 +74,9 @@ public class ShoeMonster : EnemyBase
         if (target == null) return;
 
         float dist = Vector3.Distance(transform.position, target.position);
-        Debug.Log($"[ShoeMonster] dist={dist:F2}, attackDistance={attackDistance}");
 
         if (dist <= attackDistance && canFire)
         {
-            Debug.Log("[ShoeMonster] FireRoutine START");
             StartCoroutine(FireRoutine());
         }
     }
@@ -83,26 +87,20 @@ public class ShoeMonster : EnemyBase
     {
         while (!isDead)
         {
-            if (canHop && !isHit & !isAttacking)
+            if (canHop && !isHit && !isAttacking)
             {
-
-                Vector3 horizDir;
-                if (target)                      
-                {
-                    horizDir = (target.position - transform.position);
-                    horizDir.y = 0;
-                }
-                else                             
-                {
-                    horizDir = Random.insideUnitSphere;
-                    horizDir.y = 0;
-                }
+                Vector3 horizDir = target ? (target.position - transform.position) : Random.insideUnitSphere;
+                horizDir.y = 0;
                 horizDir = horizDir.normalized;
 
-           
-                Vector3 hopDir = horizDir * 1.0f + Vector3.up * 1.2f;  
+                Vector3 hopDir = horizDir * 1.0f + Vector3.up * 1.2f;
+
+                Flip(hopDir.x);                // ← 이걸 꼭 점프 전에!
+                animator.SetTrigger("IsMoving");
+                yield return new WaitForSeconds(1.08f);
                 rb.AddForce(hopDir * hopForce, ForceMode.Impulse);
 
+                yield return new WaitForSeconds(0.4f);
 
                 canHop = false;
                 yield return new WaitForSeconds(hopCooldown);
@@ -114,18 +112,17 @@ public class ShoeMonster : EnemyBase
 
     private IEnumerator FireRoutine()
     {
-        isAttacking = true;      
+        isAttacking = true;
         canFire = false;
 
-        rb.velocity = Vector3.zero;  
+        rb.velocity = Vector3.zero;
+
+        animator.ResetTrigger("Dash");
+        animator.SetTrigger("Dash");
 
         for (int n = 0; n < 3; n++)
         {
-            animator.ResetTrigger("Dash");   
-            animator.SetTrigger("Dash");
-
-            yield return new WaitForSeconds(dashWindUp); 
-
+            yield return new WaitForSeconds(dashWindUp);
             FireSingleBullet();
 
             if (n < 2)
@@ -134,7 +131,7 @@ public class ShoeMonster : EnemyBase
 
         yield return new WaitForSeconds(fireInterval);
 
-        isAttacking = false;  
+        isAttacking = false;
         canFire = true;
     }
     #endregion

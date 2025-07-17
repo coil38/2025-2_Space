@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(Animator))]
 
 
 
@@ -21,10 +20,12 @@ public abstract class EnemyBase : MonoBehaviour
     private float detectRadius = 5f;  
 
     protected Rigidbody rb;
-    protected Animator animator;
+    [SerializeField] protected Animator animator;
 
     protected bool isDead;
     protected bool isHit;
+
+    private float baseScaleX;
 
     protected Vector3 _currentPos;
     protected Vector3 attackDirection;
@@ -47,8 +48,12 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected virtual void Start()
     {
+        baseScaleX = transform.localScale.x;
         rb = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
+
+        if (animator == null)
+            Debug.LogError($"[EnemyBase] Animator is not assigned on {gameObject.name}");
+
         playerLayer |= (1 << LayerMask.NameToLayer("Player"));
         attackLayer |= (1 << LayerMask.NameToLayer("Player")) | (1 << LayerMask.NameToLayer("DestructableObject"));
 
@@ -168,15 +173,15 @@ public abstract class EnemyBase : MonoBehaviour
         canBeHit = true;
     }
 
-    protected void Flip(float moveX)  //왼쪽 오른쪽만 보이게
+    protected void Flip(float moveX)
     {
         if (moveX < -0.01f)
         {
-            transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
+            transform.localScale = new Vector3(-baseScaleX, transform.localScale.y, transform.localScale.z);
         }
         else if (moveX > 0.01f)
         {
-            transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
+            transform.localScale = new Vector3(baseScaleX, transform.localScale.y, transform.localScale.z);
         }
     }
 }

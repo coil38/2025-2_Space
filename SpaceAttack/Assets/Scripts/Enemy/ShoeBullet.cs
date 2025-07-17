@@ -20,7 +20,15 @@ public class ShoeBullet : MonoBehaviour
     public void Init(Vector3 velocity)
     {
         rb.velocity = velocity;
-        Destroy(gameObject, lifetime);
+
+        bool isFacingRight = velocity.x > 0;
+
+        // BillBoard 스크립트에 좌우 방향 전달
+        BillBoard bb = GetComponent<BillBoard>();
+        if (bb != null)
+        {
+            bb.SetFacingRight(isFacingRight);
+        }
     }
 
     private void OnTriggerEnter(Collider other)   //플레이어 찾기
