@@ -95,9 +95,9 @@ public class ShoeMonster : EnemyBase
 
                 Vector3 hopDir = horizDir * 1.0f + Vector3.up * 1.2f;
 
-                Flip(hopDir.x);                // ← 이걸 꼭 점프 전에!
+                Flip(hopDir.x);               
                 animator.SetTrigger("IsMoving");
-                yield return new WaitForSeconds(1.08f);
+                yield return new WaitForSeconds(0.02f);
                 rb.AddForce(hopDir * hopForce, ForceMode.Impulse);
 
                 yield return new WaitForSeconds(0.4f);

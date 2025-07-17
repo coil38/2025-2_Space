@@ -2495,14 +2495,14 @@ MonoBehaviour:
   detectRadius: 5
   animator: {fileID: 6639766565262000613}
   hitInvincibleTime: 0.4
-  hopForce: 3.5
+  hopForce: 1.5
   hopCooldown: 3
   bulletPrefab: {fileID: 6132572061775438050, guid: 8dd61d3eb308de2418dd8b28b309cf80,
     type: 3}
   bulletSpeed: 8
-  fireInterval: 5
+  fireInterval: 4
   burstDelay: 0.12
-  dashWindUp: 0.05
+  dashWindUp: 0.02
 --- !u!1 &5606290892788196262
 GameObject:
   m_ObjectHideFlags: 0
