@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
     private PlayerStatus playerState;
     private Rigidbody rb;
-
 
     private WeaponType weaponType;        //무기 임시 테스트용_의존성 주입
     public WeaponType WeaponType
@@ -24,8 +22,6 @@ public class PlayerAttack : MonoBehaviour
     }
     public SkillType[] skills;
 
-    public Sprite spriteImage;
-
     void Start()
     {
         playerState = GetComponent<PlayerStatus>();
@@ -38,19 +34,34 @@ public class PlayerAttack : MonoBehaviour
 
         //스킬 시스템 연결
         SkillTypes = skills;
+
+        if (skillTypes.Length <= 0) return;
         TimeSystem.s_w_AttackTimer = skillTypes[0].s_AttackTimer;  //대기시간 설정
 
         foreach (var skill in skillTypes)
         {
             skill.attackAnimator = GetComponent<Animator>();
-
-           //skill.generateSprit = spriteImage;
+            skill.lineRenderer = GetComponent<LineRenderer>();
         }
-    }
 
+        //LineRenderer lineRenderer = GetComponent<LineRenderer>();
+        //lineRenderer.enabled = false;
+        //lineRenderer.alignment = LineAlignment.TransformZ;
+        //lineRenderer.useWorldSpace = true;
+        //lineRenderer.transform.right = Vector3.up;
+    }
     void Update()
     {
         if(playerState.isDead) return;   //사망시, 입력 안됨
+
+        CheckWeaponAttack();
+        CheckSkillAttack();
+    }
+
+    private void CheckWeaponAttack()
+    {
+        if (TimeSystem.s_w_AttackTimer != null)
+            if (TimeSystem.s_w_AttackTimer.IsRunning()) return;
 
         //무기 시스템 연결
         weaponType.CheckAttack(transform.position);
@@ -68,9 +79,12 @@ public class PlayerAttack : MonoBehaviour
 
         if (weaponType.isAttackMoving)  //무기이동 실행
             rb.MovePosition(weaponType.attackMovePos);
+    }
 
-
-//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    private void CheckSkillAttack()
+    {
+        if (TimeSystem.w_w_AttackTimer != null)
+            if (TimeSystem.w_w_AttackTimer.IsRunning()) return;
 
         //스킬 시스템 연결
         foreach (var skill in skillTypes)

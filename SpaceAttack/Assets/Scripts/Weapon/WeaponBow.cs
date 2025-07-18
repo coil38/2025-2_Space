@@ -4,65 +4,64 @@ using UnityEngine;
 
 public class WeaponBow : WeaponType
 {
+    private Timer _m_AttackTimer;
+
     private float attackWidth = 0.2f;     //차지 너비
-    private float maxAttackDistance = 6f; //최대 차지 거리
-    private float chargeTime = 1.1f;      //최대 차지까지 소요 시간
-    private float w_attackTime = 20f;     //공격 대기 시간
+    private float attackDistance = 6f;    //최대 차지 거리
+    private float w_attackTime = 0.55f;     //공격 대기 시간
 
-    // 화살 정보
-    private float damage = 3f;            //공격력
-    private float attackSpeed = 5f;       //피사체 속도
-
-    public GameObject arrowPrefab;        //화살 프리팹
-    private LineRenderer lineRenderer;    //공격 범위 표시
-    private Timer chargeTimer;
+    private float damage = 1f;            //공격력
+    private float attackTime = 0.3f;        //이동 시간
+    private float r_AttackTime = 0.2f;      //화살 발사 시간
 
     private LayerMask planLayer;   //바닥감지용 리이어 마스크
     private LayerMask enemyLayer;  //적감지용 레이어 마스크
-    private float currentChargeDistance; //현재 차지 거리
+    private LayerMask wallLayer;   //벽감지용 레이어 마스크
 
+    private Vector3 f_DetectPos;     //기즈모 그리는 용
+    private Vector3 f_DetectSize;
+    private Quaternion detectRot;
+
+    private Vector3 detectPos;
+    private Vector3 detectSize;
+
+    private WaitForFixedUpdate waitForFixedUpdate;
 
     public override void OnEnable()
     {
         planLayer |= 1 << LayerMask.NameToLayer("Plan");
         enemyLayer |= 1 << LayerMask.NameToLayer("Enemy");
+        wallLayer |= 1 << LayerMask.NameToLayer("Wall");
 
-        lineRenderer = gameObject.AddComponent<LineRenderer>();
-        lineRenderer.startWidth = attackWidth;
-        lineRenderer.positionCount = 2;
-        lineRenderer.enabled = false;
-
-        chargeTimer = new Timer(chargeTime);
         w_AttackTimer = new Timer(w_attackTime);
+        m_AttackTimer = new Timer(attackTime);
+        _m_AttackTimer = m_AttackTimer;
+        r_AttackTimer = new Timer(r_AttackTime);
+
+        waitForFixedUpdate = new WaitForFixedUpdate();
     }
 
     public override void UpdateInfo()
     {
-        chargeTimer.Update();
+        m_AttackTimer.Update();
+        r_AttackTimer.Update();
     }
-
     public override void CheckAttack(Vector3 currentPos)
     {
-        if (Input.GetMouseButtonDown(0)) //클릭 감지
+        _currentPos = currentPos;
+
+        if (Input.GetMouseButtonDown(0))  //플레이어 입력감지
         {
-            lineRenderer.enabled = true;
-            lineRenderer.SetPosition(0, currentPos);
+            if (TimeSystem.s_w_AttackTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
 
-            _currentPos = currentPos;
-            currentChargeDistance = 0f;
-            chargeTimer.Start();
-            TimeSystem.w_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
+            // 애니메이션 추가
+            // 사운드 추가
 
-            isAttacking = true;   //공격 여부 활성화(좌우 전환용)
-        }
-        else if (Input.GetMouseButton(0))  //클릭 중 감지
-        {
+            TimeSystem.s_w_AttackTimer = w_AttackTimer;
+            TimeSystem.s_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
 
-            //공격 차지 초기화
-            if (TimeSystem.w_w_AttackTimer.GetRemainingTimer() < 2)
-                TimeSystem.w_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
+            isAttacking = true;
 
-            //공격 차지
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);   //마우스 위치 받기
             Vector3 mousePos = Vector3.zero;
 
@@ -70,58 +69,109 @@ public class WeaponBow : WeaponType
                 mousePos = hit.point;
             mousePos.y = _currentPos.y;
 
-            Vector3 attackDir = (mousePos - _currentPos).normalized * currentChargeDistance;   //플레이어 기준 마우스 방향 얻기
-            Vector3 chargePos = _currentPos + attackDir;
+            Vector3 attackDir = (mousePos - _currentPos).normalized;   //플레이어 기준 마우스 방향 얻기
+
             attackDirection = attackDir;
 
-            lineRenderer.SetPosition(1, chargePos);
-
-            if (currentChargeDistance >= maxAttackDistance)   //현재 차직 거리가 최대 일때
-            {
-                currentChargeDistance = maxAttackDistance;
-                lineRenderer.SetPosition(0, _currentPos);
-                lineRenderer.SetPosition(1, chargePos);
-            }
-            else                                              //최대 거리까지 거리 늘리기
-            {
-                float time = 1 - chargeTimer.GetRemainingTimer() / chargeTime;
-
-                currentChargeDistance = time * maxAttackDistance;
-            }
-        }
-        else if (Input.GetMouseButtonUp(0))  //클릭 놓을 시
-        {
-            isAttacking = false;   //공격 여부 비 활성화(좌우 전환용)
-
-            lineRenderer.SetPosition(0, _currentPos);
-            lineRenderer.SetPosition(1, _currentPos);
-            lineRenderer.enabled = false;
-            TimeSystem.w_w_AttackTimer.Reset();                 //공격(조준) 대기 취소
             Attack();
+        }
+        else
+        {
+            isAttacking = false;
         }
     }
 
     public override void Attack()
     {
-        float dot = Vector3.Dot(Vector3.forward, attackDirection.normalized);  //화살 발사 방향 구하기
-        float degree = Mathf.Acos(dot) * Mathf.Rad2Deg;                        //회전 할 각도의 절댓값
+        float _attackDistance = attackDistance;
+        float _attackTime = attackTime;
 
-        float dot2 = Vector2.Dot(Vector3.right, attackDirection.normalized);  //예외처리: 
-        float degree2 = Mathf.Acos(dot2) * Mathf.Rad2Deg;                     //오른쪽, 왼쪽 판단 (절댓값 풀기)
+        if (Physics.Raycast(_currentPos, attackDirection, out RaycastHit hit, attackDistance, wallLayer))   //벽이 있을 경우의 예외처리(이동거리, 이동시간)
+        {
+            _attackDistance = Vector3.Distance(hit.point, _currentPos);
 
-        degree = degree2 < 90 ? degree : -degree;
-
-        Quaternion rotate = Quaternion.Euler(0, degree, 0);
-
-        GameObject arrow = Instantiate(arrowPrefab, _currentPos + attackDirection * 0.2f, rotate);
-        WeaponArrow temp2 = arrow.GetComponent<WeaponArrow>();
-
-        if (temp2 != null)
-            temp2.Fire(_currentPos, attackDirection, attackSpeed, damage, currentChargeDistance); //이동 위치, 이동방향, 이동 속도, 공격력
+            if (attackDistance >= _attackDistance)
+            {
+                _attackTime *= _attackDistance / attackDistance;
+                m_AttackTimer = new Timer(_attackTime);
+            }
+            else
+            {
+                m_AttackTimer = _m_AttackTimer;
+            }
+        }
         else
         {
-            Debug.Log("없음 2");
+            m_AttackTimer = _m_AttackTimer;
         }
 
+        m_AttackTimer.Start();                 //공격 이동 타이머 시작
+        r_AttackTimer.Start();                 //공격 발사 애니메이션 타이머 시작
+
+        StartCoroutine(C_Attack(_attackDistance, _attackTime));
+    }
+    private IEnumerator C_Attack(float _attackDistance, float _attackTime)
+    {
+        f_DetectPos = _currentPos + (attackDirection * (_attackDistance / 2));
+        f_DetectSize = new Vector3(_attackDistance / 1.5f, 0.2f, attackWidth / 2);
+        detectRot = Quaternion.LookRotation(attackDirection, Vector2.up) * Quaternion.Euler(0, 90f, 0);
+
+        detectSize = new Vector3(0.2f, 0.2f, attackWidth / 2);
+
+        AttackInfo attackInfo = new AttackInfo();
+        attackInfo.damage = damage;
+        attackInfo.attackDirection = attackDirection;
+
+        Vector3 startPos = _currentPos;
+        Vector3 targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);
+
+        while (true)
+        {
+            if (r_AttackTimer.IsRunning()) yield return null;  //플레이어 공격애니메이션 대기
+
+            float timer = m_AttackTimer.GetRemainingTimer() / _attackTime;
+            Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
+
+            detectPos = movePos;
+
+            Collider[] cols = Physics.OverlapBox(detectPos, detectSize, detectRot, enemyLayer);   //감지 범위 내 적 감지
+
+            foreach (Collider col in cols)
+            {
+                if (col.gameObject.CompareTag("Enemy"))
+                {
+                    if (col.gameObject != null)
+                        col.SendMessage("ApplyDamage", attackInfo);
+                    yield break;                                           //단일 타격기 이기 때문에 적 한명 피격후, 종료
+                }
+                else if (col.gameObject.CompareTag("DestructableObject"))
+                {
+                    if (col.gameObject != null)
+                        col.SendMessage("ApplyDamage", attackInfo);
+                }
+            }
+
+            if (timer <= 0) break;  //시간 초과시, 코루틴 종료
+
+            yield return waitForFixedUpdate;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Vector3 temp = attackDirection;
+        if (temp.magnitude < 0.1) temp = Vector3.forward;
+        Quaternion _detectRot = Quaternion.LookRotation(temp, Vector2.up);
+        _detectRot *= Quaternion.Euler(0, 90f, 0);
+
+        Gizmos.matrix = Matrix4x4.TRS(f_DetectPos, _detectRot, Vector3.one);
+
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireCube(Vector3.zero, f_DetectSize);
+
+
+        Gizmos.matrix = Matrix4x4.TRS(detectPos, _detectRot, Vector3.one);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(Vector3.zero, detectSize);
     }
 }

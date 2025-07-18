@@ -19,6 +19,7 @@ public abstract class SkillType : MonoBehaviour, IAttack, ICheckAttack
 
     //임시로 플레이어에 할당
     public Animator attackAnimator { get; set; }            //공격 내부에서 쓸 애니메이터
+    public LineRenderer lineRenderer { get; set; }          //공격 범위 표시
     public Vector3 attackDirection { get; protected set; }  //공격 방향
 
     protected Vector3 _currentPos;                          //현재 위치

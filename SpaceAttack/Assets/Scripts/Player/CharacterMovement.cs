@@ -91,7 +91,7 @@ public class CharacterMovement : MonoBehaviour
         //    dashDur = Mathf.Max(dashDur, 0f);
         //}
 
-        Debug.Log(dashDur);
+        //Debug.Log(dashDur);
 
         TimeSystem.w_dashTimer.Start();   //대쉬 타이머 시작 (0.15 초 동안)
         //TimeSystem.invincibilityTimer.Start();  //대쉬 후, 잠시동안 무적 시작 (0.1 동안)
@@ -108,8 +108,6 @@ public class CharacterMovement : MonoBehaviour
 
         Vector3 currentPos = new Vector3(transform.position.x, 0, transform.position.z);
         Vector3 targetPos = currentPos + currentDir.normalized * dashDur;
-
-        Debug.Log(dashDur);
 
         while (true)
         {

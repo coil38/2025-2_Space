@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwordSkillbeheading : SkillType
+public class BowSkillBigArrow : SkillType
 {
     private Timer _s_AttackTimer;  //초기값인 s_AttackTimer의 복제본
 
@@ -19,16 +19,20 @@ public class SwordSkillbeheading : SkillType
     private Vector3 detectPos;
     private Vector3 detectSize;
 
-    private GameObject spriteObj;
+    private float _attackDistance;
+    private float _attackTime;
+
     private List<GameObject> targets = new List<GameObject>();
+
+    private bool isPlayGizoms;
 
     public override void OnEnable()
     {
         damage = 3f;
-        attackDistance = 4f;
+        attackDistance = 6f;
         attackWidth = 4f;
         attackTime = 0.6f;
-        playerWaitTime = 0.15f;
+        playerWaitTime = 0.2f;
         coolTime = 8f;
         coolTimer = new Timer(coolTime);
         w_AttackTimer = new Timer(playerWaitTime);
@@ -52,21 +56,20 @@ public class SwordSkillbeheading : SkillType
     {
         _currentPos = currentPos;
 
-        if (Input.GetKeyDown(KeyCode.E))  //플레이어 입력감지
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            if (coolTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
+            if (coolTimer.IsRunning() || TimeSystem.s_w_AttackTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
 
-            if (AudioManager.instance != null)
-                AudioManager.instance.PlaySound("Attack");
-
-            attackAnimator.SetBool("IsAttacking", true);      //공격 애니메이션 실행
+            isAttacking = true;                 //플레이어 입력감지
+            lineRenderer.enabled = true;
 
             TimeSystem.s_w_AttackTimer = w_AttackTimer;
             TimeSystem.s_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
-
-            coolTimer.Start();         //쿨타임 시작
-
-            isAttacking = true;
+        }
+        
+        if (isAttacking)
+        {
+            TimeSystem.s_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);   //마우스 위치 받기
             Vector3 mousePos = Vector3.zero;
@@ -79,37 +82,57 @@ public class SwordSkillbeheading : SkillType
 
             attackDirection = attackDir;
 
-            Attack();
-        }
-        else
-        {
-            isAttacking = false;
+            //벽이 있을 경우의 예외처리(이동거리, 이동시간)----------------------------------------------------------------------------------------------------
+
+            _attackDistance = attackDistance;
+            _attackTime = attackTime;
+
+            if (Physics.Raycast(_currentPos, attackDirection, out RaycastHit hit2, attackDistance, wallLayer))
+            {
+                _attackDistance = Vector3.Distance(hit2.point, _currentPos);
+
+                if (attackDistance >= _attackDistance)
+                {
+                    _attackTime *= _attackDistance / attackDistance;
+                    s_AttackTimer = new Timer(_attackTime);
+                }
+                else s_AttackTimer = _s_AttackTimer;
+            }
+            else s_AttackTimer = _s_AttackTimer;
+
+            Vector3 startPos = _currentPos;
+            Vector3 targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);
+
+            //라인랜더러 설정----------------------------------------------------------------------------------------------------------------------------------
+            lineRenderer.positionCount = 2;
+            lineRenderer.startWidth = attackWidth;
+            lineRenderer.SetPosition(0, startPos);
+            lineRenderer.SetPosition(1, targetPos);
+
+            if (Input.GetMouseButtonDown(0))  //공격 감지 및 공격
+            {
+                //공격 사운드 재생
+                //공격 애니메이션 재생
+
+                TimeSystem.s_w_AttackTimer = w_AttackTimer;
+                TimeSystem.s_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
+
+                coolTimer.Start();         //쿨타임 시작
+
+                Attack();
+                isAttacking = false;
+
+                //라인랜더러값 초기화
+                lineRenderer.enabled = false;
+            }
         }
     }
 
     public override void Attack()
     {
-        float _attackDistance = attackDistance;
-        float _attackTime = attackTime;
-
-        if (Physics.Raycast(_currentPos, attackDirection, out RaycastHit hit, attackDistance, wallLayer))   //벽이 있을 경우의 예외처리(이동거리, 이동시간)
-        {
-            _attackDistance = Vector3.Distance(hit.point, _currentPos);
-
-            if (attackDistance >= _attackDistance)
-            {
-                _attackTime *= _attackDistance / attackDistance;
-                s_AttackTimer = new Timer(_attackTime);
-            }
-            else s_AttackTimer = _s_AttackTimer;
-        }
-        else
-        {
-            s_AttackTimer = _s_AttackTimer;
-        }
+        isPlayGizoms = true;    //테스트용_범위 기즈모 활성화
 
         s_AttackTimer.Start();                                   //다음 공격 전 대기 체크 시작
-
         StartCoroutine(C_Attack(_attackDistance, _attackTime));
     }
 
@@ -128,15 +151,10 @@ public class SwordSkillbeheading : SkillType
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);
 
-        //GenerateSpriteImage();
-
         while (true)
         {
             float timer = s_AttackTimer.GetRemainingTimer() / _attackTime;
             Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
-
-            //if(spriteObj != null)
-            //    spriteObj.transform.position = movePos;   //이동 위치 할당
             detectPos = movePos;
 
             Collider[] cols = Physics.OverlapBox(detectPos, detectSize, detectRot, enemyLayer);   //감지 범위 내 적 감지
@@ -153,40 +171,29 @@ public class SwordSkillbeheading : SkillType
 
             yield return waitForFixedUpdate;
         }
+        isPlayGizoms = false;
 
         targets.Clear();
     }
 
-    //private void GenerateSpriteImage()
-    //{
-    //    spriteObj = new GameObject();
-    //    SpriteRenderer sprite = spriteObj.gameObject.AddComponent<SpriteRenderer>();
-
-    //    sprite.color = Color.white;
-    //    sprite.sprite = generateSprit;
-    //    sprite.size = new Vector2(1, 1);
-    //    spriteObj.transform.position = new Vector3(f_DetectPos.x, -0.87f, f_DetectPos.z);
-    //    spriteObj.transform.localScale = detectSize;
-    //    //spriteObj.transform.rotation *= Quaternion.Euler(90, 0, 0);
-    //    spriteObj.transform.rotation = detectRot; //Quaternion.Euler(0, 0, detectRot.z);
-
-    //}
-
     private void OnDrawGizmos()
     {
-        Vector3 temp = attackDirection;
-        if (temp.magnitude < 0.1) temp = Vector3.forward;
-        Quaternion _detectRot = Quaternion.LookRotation(temp, Vector2.up);
-        _detectRot *= Quaternion.Euler(0, 90f, 0);
+        if (isPlayGizoms)
+        {
+            Vector3 temp = attackDirection;
+            if (temp.magnitude < 0.1) temp = Vector3.forward;
+            Quaternion _detectRot = Quaternion.LookRotation(temp, Vector2.up);
+            _detectRot *= Quaternion.Euler(0, 90f, 0);
 
-        Gizmos.matrix = Matrix4x4.TRS(f_DetectPos, _detectRot, Vector3.one);
+            Gizmos.matrix = Matrix4x4.TRS(f_DetectPos, _detectRot, Vector3.one);
 
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireCube(Vector3.zero, f_DetectSize);
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireCube(Vector3.zero, f_DetectSize);
 
 
-        Gizmos.matrix = Matrix4x4.TRS(detectPos, _detectRot, Vector3.one);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(Vector3.zero, detectSize);
+            Gizmos.matrix = Matrix4x4.TRS(detectPos, _detectRot, Vector3.one);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(Vector3.zero, detectSize);
+        }
     }
 }

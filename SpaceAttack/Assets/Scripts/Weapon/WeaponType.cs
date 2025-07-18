@@ -14,6 +14,8 @@ public abstract class WeaponType : MonoBehaviour, IAttack, ICheckAttack
     public Vector3 attackMovePos { get; protected set; }    //공격 이동 위치 변수
     public bool isAttackMoving { get; protected set; }      //공격 이동 여부
     public Timer w_AttackTimer { get; protected set; }      //다음 공격 대기 타이머
+    public Timer m_AttackTimer { get; protected set; }        //공격 이동 타이머(원거리용)
+    public Timer r_AttackTimer { get; protected set; }        //공격 애니메이션 대기 (원거리용)
 
     public abstract void CheckAttack(Vector3 currentPos);
 
