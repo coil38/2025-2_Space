@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwordSkillSting : SkillType
+public class SwordSkillbeheading : SkillType
 {
     private Timer _s_AttackTimer;  //초기값인 s_AttackTimer의 복제본
 
@@ -19,16 +19,20 @@ public class SwordSkillSting : SkillType
     private Vector3 detectPos;
     private Vector3 detectSize;
 
+    private GameObject spriteObj;
+    private List<GameObject> targets = new List<GameObject>();
+
     public override void OnEnable()
     {
-        damage = 3f;                             //임시
-        attackDistance = 3.2f;
-        attackWidth = 3f;
+        damage = 3f;
+        attackDistance = 4f;
+        attackWidth = 4f;
         attackTime = 0.6f;
-        playerWaitTime = 0.6f;
-        coolTime = 5f;
+        playerWaitTime = 0.15f;
+        coolTime = 8f;
         coolTimer = new Timer(coolTime);
-        s_AttackTimer = new Timer(attackTime);  //playerWaitTime과 attackTime이 일치하기 때문에 이렇게 함.
+        w_AttackTimer = new Timer(playerWaitTime);
+        s_AttackTimer = new Timer(attackTime);                 //임시
         _s_AttackTimer = s_AttackTimer;
 
         planLayer |= 1 << LayerMask.NameToLayer("Plan");
@@ -41,13 +45,14 @@ public class SwordSkillSting : SkillType
     public override void UpdateInfo()
     {
         coolTimer.Update();
+        s_AttackTimer.Update();
     }
 
     public override void CheckAttack(Vector3 currentPos)
     {
         _currentPos = currentPos;
 
-        if (Input.GetKeyDown(KeyCode.Q))  //플레이어 입력감지
+        if (Input.GetKeyDown(KeyCode.E))  //플레이어 입력감지
         {
             if (coolTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
 
@@ -56,7 +61,7 @@ public class SwordSkillSting : SkillType
 
             attackAnimator.SetBool("IsAttacking", true);      //공격 애니메이션 실행
 
-            TimeSystem.s_w_AttackTimer = s_AttackTimer;
+            TimeSystem.s_w_AttackTimer = w_AttackTimer;
             TimeSystem.s_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
 
             coolTimer.Start();         //쿨타임 시작
@@ -103,8 +108,7 @@ public class SwordSkillSting : SkillType
             s_AttackTimer = _s_AttackTimer;
         }
 
-        TimeSystem.s_w_AttackTimer = s_AttackTimer;
-        TimeSystem.s_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
+        s_AttackTimer.Start();                                   //다음 공격 전 대기 체크 시작
 
         StartCoroutine(C_Attack(_attackDistance, _attackTime));
     }
@@ -116,7 +120,6 @@ public class SwordSkillSting : SkillType
         detectRot = Quaternion.LookRotation(attackDirection, Vector2.up) * Quaternion.Euler(0, 90f, 0);
 
         detectSize = new Vector3(0.2f, 1f, attackWidth / 2);
-        Vector3 _detectSize = new Vector3(1f, 1f, 1f);
 
         AttackInfo attackInfo = new AttackInfo();
         attackInfo.damage = damage;
@@ -125,15 +128,15 @@ public class SwordSkillSting : SkillType
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);
 
-        isAttackMoving = true;
-
         //GenerateSpriteImage();
 
         while (true)
         {
-            float timer = TimeSystem.s_w_AttackTimer.GetRemainingTimer() / _attackTime;
+            float timer = s_AttackTimer.GetRemainingTimer() / _attackTime;
             Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
-            attackMovePos = movePos;   //이동 위치 할당
+
+            if(spriteObj != null)
+                spriteObj.transform.position = movePos;   //이동 위치 할당
 
             detectPos = movePos;
 
@@ -141,18 +144,13 @@ public class SwordSkillSting : SkillType
 
             foreach (Collider col in cols)
             {
+                if (targets.Contains(col.gameObject)) continue;   //중복일 경우, 무시
+                else targets.Add(col.gameObject);                  //중복이 아닐 경우, 체크 대상에 추가
+
                 if (col.gameObject.CompareTag("Enemy"))
                 {
-                    Collider[] cols2 = Physics.OverlapBox(col.gameObject.transform.position, _detectSize, detectRot, enemyLayer);   //첫 타 후, 감지 범위 내 모든 적 감지
-
-                    foreach (var col2 in cols2)
-                    {
-                        if (col2.gameObject != null)
-                            col2.SendMessage("ApplyDamage", attackInfo);
-                    }
-
-                    isAttackMoving = false;
-                    yield break;
+                    if (col.gameObject != null)
+                        col.SendMessage("ApplyDamage", attackInfo);
                 }
                 else if (col.gameObject.CompareTag("DestructableObject"))
                 {
@@ -166,12 +164,13 @@ public class SwordSkillSting : SkillType
             yield return waitForFixedUpdate;
         }
 
-        isAttackMoving = false;
+        targets.Clear();
+        Destroy(spriteObj);
     }
 
     //private void GenerateSpriteImage()
     //{
-    //    GameObject spriteObj = new GameObject();
+    //    spriteObj = new GameObject();
     //    SpriteRenderer sprite = spriteObj.gameObject.AddComponent<SpriteRenderer>();
 
     //    sprite.color = Color.white;

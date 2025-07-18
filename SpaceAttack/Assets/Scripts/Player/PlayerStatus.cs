@@ -18,6 +18,7 @@ public class PlayerStatus : MonoBehaviour
     [HideInInspector] public bool isDashing = false;
     [HideInInspector] public bool isDead = false;
     [HideInInspector] public bool isAttacking = false;
+    [HideInInspector] public bool isUsingSkill = false;
 
     public bool m_FacingRight { get; private set; }
 
@@ -42,8 +43,11 @@ public class PlayerStatus : MonoBehaviour
         isInvincibility = TimeSystem.invincibilityTimer.IsRunning();
         isStuned = TimeSystem.stunTimer.IsRunning();
 
-        if (TimeSystem.w_AttackTimer != null)
-            isAttacking = TimeSystem.w_AttackTimer.IsRunning();
+        if (TimeSystem.w_w_AttackTimer != null)
+            isAttacking = TimeSystem.w_w_AttackTimer.IsRunning();
+
+        if (TimeSystem.s_w_AttackTimer != null)
+            isUsingSkill = TimeSystem.s_w_AttackTimer.IsRunning();
 
 
         CheckApplyDamage();    //피격 체킹
@@ -106,8 +110,8 @@ public class PlayerStatus : MonoBehaviour
         }
         else
         {
-            if (AudioManager.instance != null)
-                AudioManager.instance.PlaySound("Hit");
+            //if (AudioManager.instance != null)
+            //    AudioManager.instance.PlaySound("Hit");
 
             TimeSystem.stunTimer.Start();   //스턴 타이머 시작
                                             //스턴 연출 시작

@@ -51,7 +51,7 @@ public class WeaponBow : WeaponType
             _currentPos = currentPos;
             currentChargeDistance = 0f;
             chargeTimer.Start();
-            TimeSystem.w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
+            TimeSystem.w_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
 
             isAttacking = true;   //공격 여부 활성화(좌우 전환용)
         }
@@ -59,8 +59,8 @@ public class WeaponBow : WeaponType
         {
 
             //공격 차지 초기화
-            if (TimeSystem.w_AttackTimer.GetRemainingTimer() < 2)
-                TimeSystem.w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
+            if (TimeSystem.w_w_AttackTimer.GetRemainingTimer() < 2)
+                TimeSystem.w_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
 
             //공격 차지
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);   //마우스 위치 받기
@@ -96,7 +96,7 @@ public class WeaponBow : WeaponType
             lineRenderer.SetPosition(0, _currentPos);
             lineRenderer.SetPosition(1, _currentPos);
             lineRenderer.enabled = false;
-            TimeSystem.w_AttackTimer.Reset();                 //공격(조준) 대기 취소
+            TimeSystem.w_w_AttackTimer.Reset();                 //공격(조준) 대기 취소
             Attack();
         }
     }

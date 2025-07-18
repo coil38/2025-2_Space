@@ -37,7 +37,7 @@ public class DestructableObject : MonoBehaviour
 
     public void ApplyDamage(AttackInfo attackInfo)
     {
-        life--;
+        life -= attackInfo.damage;
         shakeDuration = 0.2f;
     }
 }

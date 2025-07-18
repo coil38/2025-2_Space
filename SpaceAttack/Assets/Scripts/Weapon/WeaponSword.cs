@@ -58,14 +58,14 @@ public class WeaponSword : WeaponType
 
         if (Input.GetMouseButtonDown(0))  //마우스 클릭시, 공격
         {
-            if (TimeSystem.w_AttackTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
+            if (TimeSystem.w_w_AttackTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
 
             if (AudioManager.instance != null)
                 AudioManager.instance.PlaySound("Attack");
 
             attackAnimator.SetBool("IsAttacking", true);      //공격 애니메이션 실행
             TimeSystem.w_swordTimer.Start();                  //검 공격 준비 체크 시작
-            TimeSystem.w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
+            TimeSystem.w_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
 
             isAttacking = true;
 

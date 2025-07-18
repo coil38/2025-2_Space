@@ -20,9 +20,12 @@ public class TimeSystem : MonoBehaviour
     public static Timer w_dashTimer;                     //대쉬 대기 시간
 
     //무기별 공격 대기
-    public static Timer w_AttackTimer;                  //공격 이후 대기시간
+    public static Timer w_w_AttackTimer;                  //공격 이후 대기시간
     public static Timer w_swordTimer;                  //검 공격 판정 전 차지시간
     public static Timer w_bowTimer;                  //활 공격 판정 전 차지시간
+
+    //스킬 대기
+    public static Timer s_w_AttackTimer;
 
     void Start()
     {
@@ -42,8 +45,11 @@ public class TimeSystem : MonoBehaviour
         deshTimer.Update();
         w_dashTimer.Update();
 
-        if(w_AttackTimer != null) 
-            w_AttackTimer.Update();
+        if(w_w_AttackTimer != null) 
+            w_w_AttackTimer.Update();
+
+        if(s_w_AttackTimer != null)
+            s_w_AttackTimer.Update();
 
         w_swordTimer.Update();
         w_bowTimer.Update();

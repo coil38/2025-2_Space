@@ -119,6 +119,11 @@ public class TestEnemy : MonoBehaviour
         }
         else
         {
+            if (AudioManager.instance != null)
+                AudioManager.instance.PlaySound("Hit");
+
+            Debug.Log("적 피격");
+
             animator.SetTrigger("Hit");                          //피격 애니메이션
             rb.AddForce(dir * 0.5f, ForceMode.Impulse);        //넉백 연산 없음(임시)
         }

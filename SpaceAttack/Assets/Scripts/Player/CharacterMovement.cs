@@ -14,11 +14,14 @@ public class CharacterMovement : MonoBehaviour
     private Coroutine currentCor;
 
     private bool isMoving;
+    private LayerMask wallLayer;
     private void Start()
     {
         playerState = GetComponent<PlayerStatus>();
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+
+        wallLayer |= 1 << LayerMask.NameToLayer("Wall");
     }
 
     public void Move()  //플레이어 이동
@@ -78,25 +81,39 @@ public class CharacterMovement : MonoBehaviour
             AudioManager.instance.PlaySound("Dash");
         }
 
+        animator.SetBool("IsDashing", true);
+
+        float dashDur = playerState.m_DashDruation;
+
+        //if (Physics.Raycast(transform.position, currentDir, out RaycastHit hit, dashDur, wallLayer))   //벽이 있을 경우의 예외처리(이동거리, 이동시간)
+        //{
+        //    dashDur = Vector3.Distance(hit.point, transform.position) - 0.25f;
+        //    dashDur = Mathf.Max(dashDur, 0f);
+        //}
+
+        Debug.Log(dashDur);
+
         TimeSystem.w_dashTimer.Start();   //대쉬 타이머 시작 (0.15 초 동안)
         //TimeSystem.invincibilityTimer.Start();  //대쉬 후, 잠시동안 무적 시작 (0.1 동안)
         TimeSystem.deshTimer.Start();     //대쉬 대기 시간 (0.1 초 동안)
 
-        animator.SetBool("IsDashing", true);
-        StartCoroutine(PlayerDash());
+        if(dashDur >= 0.5f)
+            StartCoroutine(PlayerDash(dashDur));
     }
 
-    private IEnumerator PlayerDash()
+    private IEnumerator PlayerDash(float dashDur)
     {
         Timer dashTimer = TimeSystem.deshTimer;
         float dashTime = TimeSystem.m_DashTime;
-        float dashDur = playerState.m_DashDruation;
+
         Vector3 currentPos = new Vector3(transform.position.x, 0, transform.position.z);
         Vector3 targetPos = currentPos + currentDir.normalized * dashDur;
 
+        Debug.Log(dashDur);
+
         while (true)
         {
-            float timer = dashTimer.GetRemainingTimer() / dashTime;
+           float timer = dashTimer.GetRemainingTimer() / dashTime;
 
             Vector3 move = Vector3.Lerp(currentPos, targetPos, 1 - timer);
             rb.MovePosition(move);
