@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,12 +11,16 @@ public class CharacterMovement : MonoBehaviour
     private Animator animator;
 
     private Vector3 currentDir = Vector3.zero;
-    private Vector3 velocity;
-    private Coroutine currentCor;
 
     private bool isMoving;
     private LayerMask wallLayer;
     private LayerMask itemLayer;
+
+    //대쉬용 변수
+    private bool startDash;
+    private Vector3 currentPos;
+    private Vector3 targetPos;
+    private float dashDur;          //예외처리용
     private void Start()
     {
         playerState = GetComponent<PlayerStatus>();
@@ -25,6 +30,12 @@ public class CharacterMovement : MonoBehaviour
 
         wallLayer |= 1 << LayerMask.NameToLayer("Wall");
         itemLayer |= 1 << LayerMask.NameToLayer("Item");
+    }
+
+    private void FixedUpdate()
+    {
+        if (!startDash) return;
+        PlayerDash();
     }
 
     public void Move()  //플레이어 이동
@@ -37,10 +48,7 @@ public class CharacterMovement : MonoBehaviour
         if (dir != Vector3.zero) currentDir = dir.normalized;  //현재 방향값이 0이 아닐 때만 전달
         else
         {
-            if (currentCor == null)
-            {
-                currentCor = StartCoroutine(E_ChangeCurrentDir());
-            }
+            Invoke("ChangeCurrentDir", 0.1f);  //0.1초 실행
         }
 
         if (dir.magnitude > 0.1f && !isMoving)
@@ -86,7 +94,7 @@ public class CharacterMovement : MonoBehaviour
 
         animator.SetBool("IsDashing", true);
 
-        float dashDur = playerState.m_DashDruation;
+        dashDur = playerState.m_DashDruation;
 
         //if (Physics.Raycast(transform.position, currentDir, out RaycastHit hit, dashDur, wallLayer))   //벽이 있을 경우의 예외처리(이동거리, 이동시간)
         //{
@@ -96,42 +104,36 @@ public class CharacterMovement : MonoBehaviour
 
         //Debug.Log(dashDur);
 
-        TimeSystem.w_dashTimer.Start();   //대쉬 타이머 시작 (0.15 초 동안)
-        //TimeSystem.invincibilityTimer.Start();  //대쉬 후, 잠시동안 무적 시작 (0.1 동안)
-        TimeSystem.deshTimer.Start();     //대쉬 대기 시간 (0.1 초 동안)
+        //if (dashDur >= 0.5f)
+        //    StartCoroutine(PlayerDash(dashDur));
 
-        if(dashDur >= 0.5f)
-            StartCoroutine(PlayerDash(dashDur));
+        TimeSystem.w_dashTimer.Start();   //대쉬 대기 시간(0.15 초 동안)
+        TimeSystem.deshTimer.Start();     //대쉬 타이머 시작  (0.1 초 동안)
+
+        SetDashInfo();     //대쉬 위치 설정
+        startDash = true;  //대쉬 시작
     }
-
-    private IEnumerator PlayerDash(float dashDur)
+    private void SetDashInfo()
+    {
+        currentPos = new Vector3(transform.position.x, 0, transform.position.z);
+        targetPos = currentPos + currentDir.normalized * dashDur;
+    }
+    private void PlayerDash()
     {
         Timer dashTimer = TimeSystem.deshTimer;
         float dashTime = TimeSystem.m_DashTime;
 
-        Vector3 currentPos = new Vector3(transform.position.x, 0, transform.position.z);
-        Vector3 targetPos = currentPos + currentDir.normalized * dashDur;
+        float timer = dashTimer.GetRemainingTimer() / dashTime;
 
-        while (true)
-        {
-           float timer = dashTimer.GetRemainingTimer() / dashTime;
+        Vector3 move = Vector3.Lerp(currentPos, targetPos, 1 - timer);
+        rb.MovePosition(move);
 
-            Vector3 move = Vector3.Lerp(currentPos, targetPos, 1 - timer);
-            rb.MovePosition(move);
-
-            if (timer <= 0.1f)
-            {
-                break;
-            }
-            yield return null;
-        }
+        if (timer <= 0.1f) startDash = false;
     }
 
-    private IEnumerator E_ChangeCurrentDir()
+    private void ChangeCurrentDir()
     {
-        yield return new WaitForSeconds(0.1f);
         currentDir = - Vector3.forward;
-        currentCor = null;
     }
 
     public void CheckItem()
@@ -145,6 +147,7 @@ public class CharacterMovement : MonoBehaviour
             if (chipset != null) // 감지 대상이 칩셋이면 칩셋받기
             {
                 inventory.chipSet = chipset;
+                //item.gameObject.SetActive(false);
                 //Destroy(item.gameObject, 1f);
                 Debug.Log("아이템 획득");
             }

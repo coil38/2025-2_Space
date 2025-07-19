@@ -1,15 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class WeaponSword : WeaponType
+public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션 중, 실행) O | 공격시간 X | 플레이어 대기시간 O
 {
     //임시로 플레이어에 할당
 
     private float attackDistance = 2f;
     private float damage = 4f;
-    //private float w_attack = 0.2f;
+    private float r_AttackTime = 0.2f;
     //private float mass = 1f;
     private float detectAngle = 155f;
     private float w_attackTime = 0.4f;    //검 공격 대기 시간
@@ -21,6 +20,9 @@ public class WeaponSword : WeaponType
     private bool isDetected;       //적 감지 여부
     private float moveDuration;
     private Vector3 targetPos;
+
+    //공격용
+    private GameObject target;
 
     public override void OnEnable()
     {
@@ -64,7 +66,6 @@ public class WeaponSword : WeaponType
                 AudioManager.instance.PlaySound("Attack");
 
             attackAnimator.SetBool("IsAttacking", true);      //공격 애니메이션 실행
-            TimeSystem.w_swordTimer.Start();                  //검 공격 준비 체크 시작
             TimeSystem.w_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
 
             isAttacking = true;
@@ -101,29 +102,24 @@ public class WeaponSword : WeaponType
             {
                 isDetected = true;   //적 확인
 
-                StartCoroutine(C_Attack(enemyCol.gameObject));
+                //Debug.Log("작동한다");
+                target = enemyCol.gameObject;
+                Invoke("_Attack", r_AttackTime);   //공격준비 시간동안 공격
             }
         }
     }
 
-    private IEnumerator C_Attack(GameObject target)
+    private void _Attack()
     {
-        while (true)
-        {
-            if (!TimeSystem.w_swordTimer.IsRunning()) break;
-
-            yield return null;
-        }
-
         AttackInfo attackInfo = new AttackInfo();
         attackInfo.damage = damage;
         attackInfo.attackDirection = attackDirection;
 
-        if (target.gameObject == null) yield break;   //적이 없을 경우, 코루틴 종료
+        if (target.gameObject == null) return;        //적이 없을 경우, 공격 취소
 
         target.SendMessage("ApplyDamage", attackInfo);
         Camera.main.GetComponent<CameraFallow>().CameraShack();  //카메라 흔들림 연출
-        Debug.Log("검 공격");
+        //Debug.Log("검 공격");
     }
 
     private void OnDrawGizmos()

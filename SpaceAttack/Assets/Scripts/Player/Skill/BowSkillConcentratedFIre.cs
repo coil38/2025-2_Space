@@ -31,10 +31,10 @@ public class BowSkillConcentratedFIre : SkillType
         attackCycle = 0.5f;     //공격주기
         damage = 0.5f;          //한 주기동안의 공격력
         attackTime = 2.5f;      //공격 시간
-        playerWaitTime = 0.2f;  //플레이어 대기 시간
+        r_AttackTime = 0.2f;  //플레이어 대기 시간
         coolTime = 12f;         //쿨타임
 
-        w_AttackTimer = new Timer(playerWaitTime);
+        w_AttackTimer = new Timer(r_AttackTime);
         coolTimer = new Timer(coolTime);
 
         planLayer |= 1 << LayerMask.NameToLayer("Plan");

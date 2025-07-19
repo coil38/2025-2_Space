@@ -2,15 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwordSkillbeheading : SkillType
+public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니메이션 후, 실행) O | 공격시간 O | 플레이어 대기시간(쿨타임) O
 {
-    private Timer _s_AttackTimer;  //초기값인 s_AttackTimer의 복제본
-
     private LayerMask planLayer;   //바닥감지용 리이어 마스크
     private LayerMask wallLayer;   //벽감지용 레이어 마스크
     private LayerMask enemyLayer;  //적감지용 레이어 마스크
-
-    private WaitForFixedUpdate waitForFixedUpdate;
 
     private Vector3 f_DetectPos;     //기즈모 그리는 용
     private Vector3 f_DetectSize;
@@ -19,8 +15,10 @@ public class SwordSkillbeheading : SkillType
     private Vector3 detectPos;
     private Vector3 detectSize;
 
-    private GameObject spriteObj;
     private List<GameObject> targets = new List<GameObject>();
+
+    private Timer _s_AttackTimer;  //초기값인 s_AttackTimer의 복제본
+    private WaitForFixedUpdate waitForFixedUpdate;
 
     public override void OnEnable()
     {
@@ -28,10 +26,9 @@ public class SwordSkillbeheading : SkillType
         attackDistance = 4f;
         attackWidth = 4f;
         attackTime = 0.6f;
-        playerWaitTime = 0.15f;
+        r_AttackTime = 0.2f;
         coolTime = 8f;
         coolTimer = new Timer(coolTime);
-        w_AttackTimer = new Timer(playerWaitTime);
         s_AttackTimer = new Timer(attackTime);                 //임시
         _s_AttackTimer = s_AttackTimer;
 
@@ -58,11 +55,7 @@ public class SwordSkillbeheading : SkillType
 
             if (AudioManager.instance != null)
                 AudioManager.instance.PlaySound("Attack");
-
             attackAnimator.SetBool("IsAttacking", true);      //공격 애니메이션 실행
-
-            TimeSystem.s_w_AttackTimer = w_AttackTimer;
-            TimeSystem.s_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
 
             coolTimer.Start();         //쿨타임 시작
 
@@ -76,10 +69,9 @@ public class SwordSkillbeheading : SkillType
             mousePos.y = _currentPos.y;
 
             Vector3 attackDir = (mousePos - _currentPos).normalized;   //플레이어 기준 마우스 방향 얻기
-
             attackDirection = attackDir;
 
-            Attack();
+            Invoke("Attack", r_AttackTime);       //공격 애니메이션 후, 시전시간동안 대기
         }
         else
         {

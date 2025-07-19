@@ -8,7 +8,7 @@ public abstract class SkillType : MonoBehaviour, IAttack, ICheckAttack
     public float attackDistance { get; protected set; }      //공격 거리
     public float attackWidth { get; protected set; }         //공격 너비
     public float attackTime { get; protected set; }          //공격 시간
-    public float playerWaitTime { get; protected set; }      //공격 대기 시간
+    public float r_AttackTime { get; protected set; }      //공격 대기 시간
     public float coolTime { get; protected set; }            //쿨타임
     public Timer coolTimer { get; protected set; }           //쿨타임 타이머
 

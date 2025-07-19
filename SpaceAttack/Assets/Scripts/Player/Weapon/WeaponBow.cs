@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponBow : WeaponType
+public class WeaponBow : WeaponType     //시전시간(발사: 애니메이션 후, 실행) O | 공격시간 O | 플레이어 대기시간 O
 {
     private Timer _m_AttackTimer;
 
@@ -27,6 +27,17 @@ public class WeaponBow : WeaponType
 
     private WaitForFixedUpdate waitForFixedUpdate;
 
+
+    float _attackDistance;          //공격범위 예외처리용 복사본 변수
+    float _attackTime;
+
+    Vector3 startPos;
+    Vector3 targetPos;
+
+    AttackInfo attackInfo = new AttackInfo();
+
+    bool startAttack;
+
     public override void OnEnable()
     {
         planLayer |= 1 << LayerMask.NameToLayer("Plan");
@@ -44,7 +55,9 @@ public class WeaponBow : WeaponType
     public override void UpdateInfo()
     {
         m_AttackTimer.Update();
-        r_AttackTimer.Update();
+
+        if (!startAttack) return;
+        _Attack();
     }
     public override void CheckAttack(Vector3 currentPos)
     {
@@ -83,8 +96,8 @@ public class WeaponBow : WeaponType
 
     public override void Attack()
     {
-        float _attackDistance = attackDistance;
-        float _attackTime = attackTime;
+        _attackDistance = attackDistance;
+        _attackTime = attackTime;
 
         if (Physics.Raycast(_currentPos, attackDirection, out RaycastHit hit, attackDistance, wallLayer))   //벽이 있을 경우의 예외처리(이동거리, 이동시간)
         {
@@ -105,12 +118,10 @@ public class WeaponBow : WeaponType
             m_AttackTimer = _m_AttackTimer;
         }
 
-        m_AttackTimer.Start();                 //공격 이동 타이머 시작
-        r_AttackTimer.Start();                 //공격 발사 애니메이션 타이머 시작
-
-        StartCoroutine(C_Attack(_attackDistance, _attackTime));
+        SetAttackRange();
     }
-    private IEnumerator C_Attack(float _attackDistance, float _attackTime)
+
+    private void SetAttackRange()
     {
         f_DetectPos = _currentPos + (attackDirection * (_attackDistance / 2));
         f_DetectSize = new Vector3(_attackDistance / 1.5f, 1f, attackWidth / 2);
@@ -118,43 +129,44 @@ public class WeaponBow : WeaponType
 
         detectSize = new Vector3(0.2f, 1f, attackWidth / 2);
 
-        AttackInfo attackInfo = new AttackInfo();
         attackInfo.damage = damage;
         attackInfo.attackDirection = attackDirection;
 
-        Vector3 startPos = _currentPos;
-        Vector3 targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);
+        startPos = _currentPos;
+        targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);
 
-        while (true)
+        Invoke("StartAttack", r_AttackTime);   //공격준비시간동안 대기
+    }
+    private void StartAttack()
+    {
+        m_AttackTimer.Start();                 //공격 이동 타이머 시작
+        startAttack = true;
+    }
+    private void _Attack()
+    {
+        float timer = m_AttackTimer.GetRemainingTimer() / _attackTime;
+        Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
+
+        detectPos = movePos;
+
+        Collider[] cols = Physics.OverlapBox(detectPos, detectSize, detectRot, enemyLayer);   //감지 범위 내 적 감지
+
+        foreach (Collider col in cols)
         {
-            if (r_AttackTimer.IsRunning()) yield return null;  //플레이어 공격애니메이션 대기
-
-            float timer = m_AttackTimer.GetRemainingTimer() / _attackTime;
-            Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
-
-            detectPos = movePos;
-
-            Collider[] cols = Physics.OverlapBox(detectPos, detectSize, detectRot, enemyLayer);   //감지 범위 내 적 감지
-
-            foreach (Collider col in cols)
+            if (col.gameObject.CompareTag("Enemy"))
             {
-                if (col.gameObject.CompareTag("Enemy"))
-                {
-                    if (col.gameObject != null)
-                        col.SendMessage("ApplyDamage", attackInfo);
-                    yield break;                                           //단일 타격기 이기 때문에 적 한명 피격후, 종료
-                }
-                else if (col.gameObject.CompareTag("DestructableObject"))
-                {
-                    if (col.gameObject != null)
-                        col.SendMessage("ApplyDamage", attackInfo);
-                }
+                if (col.gameObject != null)
+                    col.SendMessage("ApplyDamage", attackInfo);
+                startAttack = false;                                           //단일 타격기 이기 때문에 적 한명 피격후, 종료
             }
-
-            if (timer <= 0) break;  //시간 초과시, 코루틴 종료
-
-            yield return waitForFixedUpdate;
+            else if (col.gameObject.CompareTag("DestructableObject"))
+            {
+                if (col.gameObject != null)
+                    col.SendMessage("ApplyDamage", attackInfo);
+            }
         }
+
+        if (timer <= 0) startAttack = false;  //시간 초과시, 공격 취소
     }
 
     private void OnDrawGizmos()

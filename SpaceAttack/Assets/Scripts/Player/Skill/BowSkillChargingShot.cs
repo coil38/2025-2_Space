@@ -52,11 +52,11 @@ public class BowSkillChargingShot : SkillType
     {
         SetGaugeData(gaugeCount);
 
-        playerWaitTime = 0.2f;
+        r_AttackTime = 0.2f;
         coolTime = 25f;
 
         coolTimer = new Timer(coolTime);
-        w_AttackTimer = new Timer(playerWaitTime);
+        w_AttackTimer = new Timer(r_AttackTime);
         chargeTimer = new Timer(chargeTime);
 
         planLayer |= 1 << LayerMask.NameToLayer("Plan");

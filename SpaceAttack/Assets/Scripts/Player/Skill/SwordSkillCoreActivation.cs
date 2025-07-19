@@ -2,20 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwordSkillCoreActivation : SkillType
+public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애니메이션 후, 실행) O | 공격시간 X | 플레이어 대기시간(쿨타임) O
 {
     private float speedUpValue = 1.3f;
-    private float damageValue = 1.3f; //임시
+    private float damageValue = 1.3f;               //임시
     private float criticalValue = 1.3f;
 
     private bool isUsingBuff;
     public override void OnEnable()
     {
         attackTime = 10f;
-        playerWaitTime = 0.2f;
+        r_AttackTime = 0.2f;
         coolTime = 25f;
         coolTimer = new Timer(coolTime);
-        w_AttackTimer = new Timer(playerWaitTime);
         s_AttackTimer = new Timer(attackTime);
     }
 
@@ -43,13 +42,9 @@ public class SwordSkillCoreActivation : SkillType
 
             //물약 마시는 사운드
             //물약 마시는 애니메이션
-
-            TimeSystem.s_w_AttackTimer = w_AttackTimer;
-            TimeSystem.s_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
-
             coolTimer.Start();         //쿨타임 시작
 
-            Attack();
+            Invoke("Attack", r_AttackTime);    //시전 시간 후, 기능 실행
         }
     }
 

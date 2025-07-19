@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwordSkillSting : SkillType
+public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이션 후, 실행) O | 공격시간 O | 플레이어 대기시간(쿨타임) O
 {
     private Timer _s_AttackTimer;  //초기값인 s_AttackTimer의 복제본
 
@@ -25,7 +25,7 @@ public class SwordSkillSting : SkillType
         attackDistance = 3.2f;
         attackWidth = 3f;
         attackTime = 0.6f;
-        playerWaitTime = 0.6f;
+        r_AttackTime = 0.2f;
         coolTime = 5f;
         coolTimer = new Timer(coolTime);
         s_AttackTimer = new Timer(attackTime);  //playerWaitTime과 attackTime이 일치하기 때문에 이렇게 함.
@@ -53,11 +53,7 @@ public class SwordSkillSting : SkillType
 
             if (AudioManager.instance != null)
                 AudioManager.instance.PlaySound("Attack");
-
-            attackAnimator.SetBool("IsAttacking", true);      //공격 애니메이션 실행
-
-            TimeSystem.s_w_AttackTimer = s_AttackTimer;
-            TimeSystem.s_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
+            attackAnimator.SetBool("IsAttacking", true);      //공격 시전 애니메이션 실행
 
             coolTimer.Start();         //쿨타임 시작
 
@@ -71,10 +67,9 @@ public class SwordSkillSting : SkillType
             mousePos.y = _currentPos.y;
 
             Vector3 attackDir = (mousePos - _currentPos).normalized;   //플레이어 기준 마우스 방향 얻기
-
             attackDirection = attackDir;
 
-            Attack();
+            Invoke("Attack", r_AttackTime); //시전 애니메니션 시작 후, 시전시간동안 대기
         }
         else
         {
@@ -84,6 +79,9 @@ public class SwordSkillSting : SkillType
 
     public override void Attack()
     {
+        //찌르기 애니메이션 시작
+        //찌르기 사운드 시작
+
         float _attackDistance = attackDistance;
         float _attackTime = attackTime;
 
