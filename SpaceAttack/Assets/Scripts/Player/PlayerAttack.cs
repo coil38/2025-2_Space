@@ -12,7 +12,8 @@ public class PlayerAttack : MonoBehaviour
     {
         set { weaponType = value; }
     }
-    public WeaponType weapon;
+
+    public WeaponType weapon;            //임시로 추가
 
 
     private SkillType[] skillTypes;      //스킬 임시 테스트용_의존성 주입
@@ -20,29 +21,33 @@ public class PlayerAttack : MonoBehaviour
     {
         set { skillTypes = value; }
     }
-    public SkillType[] skills;
+    //public SkillType[] skills;
+
+    public bool notUseTestMode;
 
     void Start()
     {
         playerState = GetComponent<PlayerStatus>();
         rb = GetComponent<Rigidbody>();
 
-        //무기 시스템 연결
-        WeaponType = weapon;   //의존성 주입(임시)
-        TimeSystem.w_w_AttackTimer = weapon.w_AttackTimer;  //대기시간 설정
-        weaponType.attackAnimator = GetComponent<Animator>();  //애니메이터 전달
+        if (!notUseTestMode)            //무기 시스템 연결
+        {
+            WeaponType = weapon;   //의존성 주입(임시)
+            TimeSystem.w_w_AttackTimer = weapon.w_AttackTimer;  //대기시간 설정
+            weaponType.attackAnimator = GetComponent<Animator>();  //애니메이터 전달
+        }
 
         //스킬 시스템 연결
-        SkillTypes = skills;
+        //SkillTypes = skills;
 
-        if (skillTypes.Length <= 0) return;
-        TimeSystem.s_w_AttackTimer = skillTypes[0].s_AttackTimer;  //대기시간 설정
+        //if (skillTypes.Length <= 0) return;
+        //TimeSystem.s_w_AttackTimer = skillTypes[0].s_AttackTimer;  //대기시간 설정
 
-        foreach (var skill in skillTypes)
-        {
-            skill.attackAnimator = GetComponent<Animator>();
-            skill.lineRenderer = GetComponent<LineRenderer>();
-        }
+        //foreach (var skill in skillTypes)
+        //{
+        //    skill.attackAnimator = GetComponent<Animator>();
+        //    skill.lineRenderer = GetComponent<LineRenderer>();
+        //}
 
         //LineRenderer lineRenderer = GetComponent<LineRenderer>();
         //lineRenderer.enabled = false;
@@ -62,6 +67,8 @@ public class PlayerAttack : MonoBehaviour
     {
         if (TimeSystem.s_w_AttackTimer != null)
             if (TimeSystem.s_w_AttackTimer.IsRunning()) return;
+
+        if (weaponType == null) return;  //현재 보유 중 무기가 없을 시, 반환
 
         //무기 시스템 연결
         weaponType.CheckAttack(transform.position);
@@ -85,6 +92,8 @@ public class PlayerAttack : MonoBehaviour
     {
         if (TimeSystem.w_w_AttackTimer != null)
             if (TimeSystem.w_w_AttackTimer.IsRunning()) return;
+
+        if(skillTypes == null) return; //현재 보유 중 스킬이 없을 시, 반환
 
         //스킬 시스템 연결
         foreach (var skill in skillTypes)

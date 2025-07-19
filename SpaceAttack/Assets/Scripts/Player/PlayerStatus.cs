@@ -6,9 +6,10 @@ public class PlayerStatus : MonoBehaviour
 {
     //플레이어 상태값--------------------------------------------
     [Header("PlayerInfo")]
-    public float m_hp = 5f;              //체력
-    public float m_speed = 5f;           //이동 속도
-    public float m_DashDruation = 2.2f;  //대쉬 거리
+    public float m_hp = 5f;               //체력
+    public float m_speed = 5f;            //이동 속도
+    public float m_DashDruation = 2.2f;   //대쉬 거리
+    public float itemDetectDistance = 1.8f; //아이템 감지거리
 
     public ParticleSystem m_Particle;
     public ParticleSystem d_Particle;

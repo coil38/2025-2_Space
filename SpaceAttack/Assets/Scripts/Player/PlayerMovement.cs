@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -45,6 +46,11 @@ public class PlayerMovement : MonoBehaviour
             characterMovement.Dash();  //대쉬
 
             //무기에 따라서 대쉬 가능여부가 나뉨
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))  //아이템 줍기
+        {
+            characterMovement.CheckItem();
         }
     }
 }

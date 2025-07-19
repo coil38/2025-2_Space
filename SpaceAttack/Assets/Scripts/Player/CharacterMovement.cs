@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class CharacterMovement : MonoBehaviour
 {
     private PlayerStatus playerState;
+    private InventoryManager inventory;
     private Rigidbody rb;
     private Animator animator;
 
@@ -15,13 +15,16 @@ public class CharacterMovement : MonoBehaviour
 
     private bool isMoving;
     private LayerMask wallLayer;
+    private LayerMask itemLayer;
     private void Start()
     {
         playerState = GetComponent<PlayerStatus>();
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        inventory = GetComponent<InventoryManager>();
 
         wallLayer |= 1 << LayerMask.NameToLayer("Wall");
+        itemLayer |= 1 << LayerMask.NameToLayer("Item");
     }
 
     public void Move()  //플레이어 이동
@@ -36,7 +39,7 @@ public class CharacterMovement : MonoBehaviour
         {
             if (currentCor == null)
             {
-                currentCor = StartCoroutine(e_ChangeCurrentDir());
+                currentCor = StartCoroutine(E_ChangeCurrentDir());
             }
         }
 
@@ -124,10 +127,27 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
-    private IEnumerator e_ChangeCurrentDir()
+    private IEnumerator E_ChangeCurrentDir()
     {
         yield return new WaitForSeconds(0.1f);
         currentDir = - Vector3.forward;
         currentCor = null;
+    }
+
+    public void CheckItem()
+    {
+        Collider[] items = Physics.OverlapSphere(transform.position, playerState.itemDetectDistance, itemLayer);
+
+        foreach (var item in items)
+        {
+            ChipSetType chipset = item.gameObject.GetComponent<ChipSetType>();
+
+            if (chipset != null) // 감지 대상이 칩셋이면 칩셋받기
+            {
+                inventory.chipSet = chipset;
+                //Destroy(item.gameObject, 1f);
+                Debug.Log("아이템 획득");
+            }
+        }
     }
 }
