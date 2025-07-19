@@ -30,7 +30,7 @@ public class WeaponBow : WeaponType
     public override void OnEnable()
     {
         planLayer |= 1 << LayerMask.NameToLayer("Plan");
-        enemyLayer |= 1 << LayerMask.NameToLayer("Enemy");
+        enemyLayer |= (1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("DestructableObject"));
         wallLayer |= 1 << LayerMask.NameToLayer("Wall");
 
         w_AttackTimer = new Timer(w_attackTime);
@@ -113,10 +113,10 @@ public class WeaponBow : WeaponType
     private IEnumerator C_Attack(float _attackDistance, float _attackTime)
     {
         f_DetectPos = _currentPos + (attackDirection * (_attackDistance / 2));
-        f_DetectSize = new Vector3(_attackDistance / 1.5f, 0.2f, attackWidth / 2);
+        f_DetectSize = new Vector3(_attackDistance / 1.5f, 1f, attackWidth / 2);
         detectRot = Quaternion.LookRotation(attackDirection, Vector2.up) * Quaternion.Euler(0, 90f, 0);
 
-        detectSize = new Vector3(0.2f, 0.2f, attackWidth / 2);
+        detectSize = new Vector3(0.2f, 1f, attackWidth / 2);
 
         AttackInfo attackInfo = new AttackInfo();
         attackInfo.damage = damage;
