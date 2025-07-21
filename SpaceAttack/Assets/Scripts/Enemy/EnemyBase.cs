@@ -22,6 +22,8 @@ public abstract class EnemyBase : MonoBehaviour
     protected Rigidbody rb;
     [SerializeField] protected Animator animator;
 
+    [SerializeField] protected Transform visualTransform;
+
     protected bool isDead;
     protected bool isHit;
 
@@ -39,16 +41,21 @@ public abstract class EnemyBase : MonoBehaviour
     protected float patrolIdleTime = 1f;
     protected float patrolTimer = 0f;
     protected bool isPatrolMoving = false;
-
-    [SerializeField] private float hitInvincibleTime = 0.4f;  // 피격 후 무적
+    
+    [Header("공통 피격후 경직 시간")]
+    [SerializeField] protected float hitInvincibleTime = 0.4f;  
     private bool canBeHit = true;
+
 
     protected float DetectRadius => detectRadius;
     protected virtual void OnPlayerDetected(Transform player) { }
 
+
+
     protected virtual void Start()
     {
-        baseScaleX = transform.localScale.x;
+        if (visualTransform == null)
+        baseScaleX = visualTransform.localScale.x; 
         rb = GetComponent<Rigidbody>();
 
         if (animator == null)
@@ -107,27 +114,17 @@ public abstract class EnemyBase : MonoBehaviour
     protected virtual IEnumerator EnemyPattern()
     {
         float timer = 0f;
-        float timer2 = 0f;
         float attackTime = attackDuration;
 
         while (true)
         {
-            timer += Time.deltaTime / attackTime;
+            timer += Time.deltaTime / attackDuration;
             if (timer > 1 && !isHit)
             {
                 CheckAttack();
                 timer = 0f;
             }
 
-            if (isHit)
-            {
-                timer2 += Time.deltaTime / 0.5f;
-                if (timer2 > 1)
-                {
-                    isHit = false;
-                    timer2 = 0f;
-                }
-            }
             yield return null;
         }
     }
@@ -160,7 +157,7 @@ public abstract class EnemyBase : MonoBehaviour
     }
     private IEnumerator HitProcess(Vector3 dir)
     {
-        canBeHit = false;
+
         isHit = true;
 
         animator.SetTrigger("Hit"); 
@@ -170,18 +167,24 @@ public abstract class EnemyBase : MonoBehaviour
         yield return new WaitForSeconds(hitInvincibleTime);
 
         isHit = false;
-        canBeHit = true;
+
     }
 
     protected void Flip(float moveX)
     {
+        if (visualTransform == null) return;
+
         if (moveX < -0.01f)
         {
-            transform.localScale = new Vector3(-baseScaleX, transform.localScale.y, transform.localScale.z);
+            visualTransform.localScale = new Vector3(-Mathf.Abs(baseScaleX),
+                                                     visualTransform.localScale.y,
+                                                     visualTransform.localScale.z);
         }
         else if (moveX > 0.01f)
         {
-            transform.localScale = new Vector3(baseScaleX, transform.localScale.y, transform.localScale.z);
+            visualTransform.localScale = new Vector3(Mathf.Abs(baseScaleX),
+                                                     visualTransform.localScale.y,
+                                                     visualTransform.localScale.z);
         }
     }
 }

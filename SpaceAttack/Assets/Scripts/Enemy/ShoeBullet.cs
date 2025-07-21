@@ -31,8 +31,9 @@ public class ShoeBullet : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)   //플레이어 찾기
+    private void OnTriggerEnter(Collider other)
     {
+
         if (other.CompareTag("Player"))
         {
             PlayerStatus ps = other.GetComponent<PlayerStatus>();

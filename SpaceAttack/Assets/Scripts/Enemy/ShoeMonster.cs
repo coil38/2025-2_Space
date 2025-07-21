@@ -14,7 +14,10 @@ public class ShoeMonster : EnemyBase
     [SerializeField] private float fireInterval = 2f;   // 공격 쿨타임
     [SerializeField] private float burstDelay = 0.12f; // 3발 사이 간격   
     [SerializeField] private float dashWindUp = 0.05f;  // Dash 애니 시작 후 총알 발사까지 지연
-  
+
+
+    [SerializeField] private float attackAnimSpeed = 1.5f;  // 공격 시 애니메이션 속도
+    private float normalAnimSpeed = 1f; //원래속도
 
     private bool isAttacking = false;
 
@@ -71,7 +74,7 @@ public class ShoeMonster : EnemyBase
 
     protected override void CheckAttack()
     {
-        if (target == null) return;
+        if (target == null || isHit) return;  
 
         float dist = Vector3.Distance(transform.position, target.position);
 
@@ -115,19 +118,25 @@ public class ShoeMonster : EnemyBase
         isAttacking = true;
         canFire = false;
 
-        rb.velocity = Vector3.zero;
+        animator.speed = attackAnimSpeed;
 
-        animator.ResetTrigger("Dash");
-        animator.SetTrigger("Dash");
+        rb.velocity = Vector3.zero;
 
         for (int n = 0; n < 3; n++)
         {
-            yield return new WaitForSeconds(dashWindUp);
-            FireSingleBullet();
+            if (isHit) break;  
+
+            animator.ResetTrigger("Dash");
+            animator.SetTrigger("Dash");
+
+            float animLength = 1.13f / attackAnimSpeed;
+            yield return new WaitForSeconds(animLength);
 
             if (n < 2)
                 yield return new WaitForSeconds(burstDelay);
         }
+
+        animator.speed = normalAnimSpeed;
 
         yield return new WaitForSeconds(fireInterval);
 
@@ -136,15 +145,15 @@ public class ShoeMonster : EnemyBase
     }
     #endregion
 
-    private void FireSingleBullet()  
+    public void FireSingleBullet()
     {
-        if (!target) return;
+        if (!target || isHit) return;  
 
         Vector3 flatDir = target.position - transform.position;
         flatDir.y = 0;
         Vector3 dir = flatDir.normalized;
 
-        Vector3 spawnPos = transform.position + dir * 1.0f + Vector3.up * 0.5f;
+        Vector3 spawnPos = transform.position + dir * 0.5f + Vector3.up * 0.5f;
 
         GameObject bulletObj = Instantiate(
             bulletPrefab,
