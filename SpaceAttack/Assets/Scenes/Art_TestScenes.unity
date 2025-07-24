@@ -259,6 +259,74 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!1001 &546790545
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 512502987362523217, guid: 632e4d7aabbd0774b904ece9429d0591,
+        type: 3}
+      propertyPath: m_Name
+      value: DINO
+      objectReference: {fileID: 0}
+    - target: {fileID: 1717242638024474674, guid: 632e4d7aabbd0774b904ece9429d0591,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 1717242638024474674, guid: 632e4d7aabbd0774b904ece9429d0591,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1717242638024474674, guid: 632e4d7aabbd0774b904ece9429d0591,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1717242638024474674, guid: 632e4d7aabbd0774b904ece9429d0591,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1717242638024474674, guid: 632e4d7aabbd0774b904ece9429d0591,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1717242638024474674, guid: 632e4d7aabbd0774b904ece9429d0591,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1717242638024474674, guid: 632e4d7aabbd0774b904ece9429d0591,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1717242638024474674, guid: 632e4d7aabbd0774b904ece9429d0591,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1717242638024474674, guid: 632e4d7aabbd0774b904ece9429d0591,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1717242638024474674, guid: 632e4d7aabbd0774b904ece9429d0591,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 632e4d7aabbd0774b904ece9429d0591, type: 3}
 --- !u!1 &1055537955
 GameObject:
   m_ObjectHideFlags: 0
@@ -616,6 +684,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CanMonster_Hit
       objectReference: {fileID: 0}
+    - target: {fileID: 4925690640264715301, guid: e44fca4cb8dbcc848bf1386099ab958c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6094364661878785094, guid: e44fca4cb8dbcc848bf1386099ab958c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -776,3 +849,4 @@ SceneRoots:
   - {fileID: 1931201414}
   - {fileID: 9161758182296142031}
   - {fileID: 5992680784989202077}
+  - {fileID: 546790545}
