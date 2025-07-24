@@ -22,6 +22,7 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
 
     public override void OnEnable()
     {
+        mass = 1f;
         damage = 3f;
         attackDistance = 4f;
         attackWidth = 4f;
@@ -113,12 +114,10 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
 
         detectSize = new Vector3(0.2f, 1f, attackWidth / 2);
 
-        AttackInfo attackInfo = new AttackInfo();
-        attackInfo.damage = damage;
-        attackInfo.attackDirection = attackDirection;
-
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);
+
+        AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);   //공격 정보 설정
 
         //GenerateSpriteImage();
 

@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class SkillType : MonoBehaviour, IAttack, ICheckAttack
 {
     public float damage { get; protected set; }              //공격력
+    public float mass { get; protected set; }                //공격무기 질량
     public float attackDistance { get; protected set; }      //공격 거리
     public float attackWidth { get; protected set; }         //공격 너비
     public float attackTime { get; protected set; }          //공격 시간

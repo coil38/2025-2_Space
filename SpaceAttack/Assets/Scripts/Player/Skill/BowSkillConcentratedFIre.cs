@@ -26,6 +26,7 @@ public class BowSkillConcentratedFIre : SkillType
 
     public override void OnEnable()
     {
+        mass = 0.3f;
         detectDistance = 4f;    //선택범위 반지름
         attackDistance = 2f;    //공격범위 반지름
         attackCycle = 0.5f;     //공격주기
@@ -123,8 +124,7 @@ public class BowSkillConcentratedFIre : SkillType
 
     private IEnumerator C_Attack()
     {
-        AttackInfo attackInfo = new AttackInfo();
-        attackInfo.damage = damage;
+        AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);   //공격 정보 설정
 
         float totalAttackTime = 0;
         while (true)
@@ -133,7 +133,8 @@ public class BowSkillConcentratedFIre : SkillType
 
             foreach (Collider col in cols)
             {
-                attackInfo.attackDirection = (col.transform.position - targetPos).normalized; //공격 방향 설정
+                Vector3 _attackDirection = (col.transform.position - targetPos).normalized; //공격 방향 설정
+                attackInfo.SetAttackInfo(damage, _attackDirection, mass);
                 if (col.gameObject != null) col.SendMessage("ApplyDamage", attackInfo);
             }
 

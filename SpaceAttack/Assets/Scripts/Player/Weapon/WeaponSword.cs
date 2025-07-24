@@ -9,7 +9,7 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
     private float attackDistance = 2f;
     private float damage = 4f;
     private float r_AttackTime = 0.2f;
-    //private float mass = 1f;
+    private float mass = 1f;
     private float detectAngle = 155f;
     private float w_attackTime = 0.4f;    //검 공격 대기 시간
 
@@ -111,9 +111,7 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
 
     private void _Attack()
     {
-        AttackInfo attackInfo = new AttackInfo();
-        attackInfo.damage = damage;
-        attackInfo.attackDirection = attackDirection;
+        AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);  //공격 정보 설정
 
         if (target.gameObject == null) return;        //적이 없을 경우, 공격 취소
 

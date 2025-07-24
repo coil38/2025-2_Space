@@ -92,9 +92,7 @@ public class TestEnemy : MonoBehaviour
             dirToEnemy.y = 0f;
             if (Vector3.Angle(attackDirection, dirToEnemy) <= detectAngle / 2f)            //각도내에 적에게만 공격
             {
-                AttackInfo info = new AttackInfo();
-                info.damage = damage;
-                info.attackDirection = attackDirection;
+                AttackInfo info = new AttackInfo(damage, attackDirection);
                 playerCol.SendMessage("ApplyDamage", info);
             }
         }
@@ -107,14 +105,14 @@ public class TestEnemy : MonoBehaviour
         isHit = true;
 
         float damage = attackInfo.damage;
-        Vector2 dir = attackInfo.attackDirection;
+        Vector3 dir = attackInfo.attackDirection;
+        float hitForce = attackInfo.attackForce;
 
         hp -= damage;
         if (hp <= 0)    //몬스터 사망처리
         {
             isDead = true;
             animator.SetBool("Dead", true);
-            rb.AddForce(dir, ForceMode.Impulse);        //넉백 연산 없음(임시)
             Destroy(gameObject, 1f);
         }
         else
@@ -124,8 +122,8 @@ public class TestEnemy : MonoBehaviour
 
             Debug.Log("적 피격");
 
-            animator.SetTrigger("Hit");                          //피격 애니메이션
-            rb.AddForce(dir * 0.5f, ForceMode.Impulse);        //넉백 연산 없음(임시)
+            animator.SetTrigger("Hit");          //피격 애니메이션
+            rb.AddForce(dir * hitForce);         //넉백
         }
     }
 }

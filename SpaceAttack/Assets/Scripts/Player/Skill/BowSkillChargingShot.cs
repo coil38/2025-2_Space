@@ -43,6 +43,7 @@ public class BowSkillChargingShot : SkillType
     private int[] attackDistances = new int[3] {8, 12, 15 };
     private int[] damages = new int[3] {10, 20, 30 };
     private float[] attackTimes = new float[3] { 1f, 0.7f, 0.4f };
+    private float[] masses = new float[3] { 1f, 1.4f, 5f };
 
     private Timer chargeTimer;
     private int gaugeCount = 0;
@@ -72,6 +73,7 @@ public class BowSkillChargingShot : SkillType
         attackDistance = attackDistances[_gaugeCount];
         attackWidth = attackWidths[_gaugeCount];
         attackTime = attackTimes[_gaugeCount];
+        mass = masses[_gaugeCount];
 
         s_AttackTimer = new Timer(attackTime);
         _s_AttackTimer = s_AttackTimer;
@@ -197,12 +199,10 @@ public class BowSkillChargingShot : SkillType
 
         detectSize = new Vector3(0.2f, 1f, attackWidth / 2);
 
-        AttackInfo attackInfo = new AttackInfo();
-        attackInfo.damage = damage;
-        attackInfo.attackDirection = attackDirection;
-
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);
+
+        AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);
 
         while (true)
         {

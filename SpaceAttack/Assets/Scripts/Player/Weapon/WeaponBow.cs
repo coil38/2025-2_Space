@@ -10,7 +10,8 @@ public class WeaponBow : WeaponType     //시전시간(발사: 애니메이션 �
     private float attackDistance = 6f;    //최대 차지 거리
     private float w_attackTime = 0.55f;     //공격 대기 시간
 
-    private float damage = 1f;            //공격력
+    private float mass = 0.7f;              //무기 질량
+    private float damage = 1f;              //공격력
     private float attackTime = 0.3f;        //이동 시간
     private float r_AttackTime = 0.2f;      //화살 발사 시간
 
@@ -24,9 +25,6 @@ public class WeaponBow : WeaponType     //시전시간(발사: 애니메이션 �
 
     private Vector3 detectPos;
     private Vector3 detectSize;
-
-    private WaitForFixedUpdate waitForFixedUpdate;
-
 
     float _attackDistance;          //공격범위 예외처리용 복사본 변수
     float _attackTime;
@@ -48,8 +46,6 @@ public class WeaponBow : WeaponType     //시전시간(발사: 애니메이션 �
         m_AttackTimer = new Timer(attackTime);
         _m_AttackTimer = m_AttackTimer;
         r_AttackTimer = new Timer(r_AttackTime);
-
-        waitForFixedUpdate = new WaitForFixedUpdate();
     }
 
     public override void UpdateInfo()
@@ -129,11 +125,10 @@ public class WeaponBow : WeaponType     //시전시간(발사: 애니메이션 �
 
         detectSize = new Vector3(0.2f, 1f, attackWidth / 2);
 
-        attackInfo.damage = damage;
-        attackInfo.attackDirection = attackDirection;
-
         startPos = _currentPos;
         targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);
+
+        attackInfo.SetAttackInfo(damage, attackDirection, mass);  //공격정보 설정
 
         Invoke("StartAttack", r_AttackTime);   //공격준비시간동안 대기
     }
