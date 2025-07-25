@@ -21,6 +21,16 @@ public class PlayerStatus : MonoBehaviour
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool isUsingSkill = false;
 
+    public bool isRooted       //상태 이상: 속박
+    {
+        get {  return isRooted; }
+        set
+        {
+            Root(value);       //속박 여부 입력 후, 실행
+            isRooted = value;
+        }
+    }
+
     public bool m_FacingRight { get; private set; }
 
     private Rigidbody rb;
@@ -52,6 +62,20 @@ public class PlayerStatus : MonoBehaviour
 
 
         CheckApplyDamage();    //피격 체킹
+    }
+
+    private void Root(bool isRooted)
+    {
+        if (isRooted)  //상태이상 실행
+        {
+            GetComponent<PlayerAttack>().enabled = false;
+            GetComponent<PlayerMovement>().enabled = false;   //플레이어 입력관련 스크립트
+        }
+        else           //상태이상 취소
+        {
+            GetComponent<PlayerAttack>().enabled = true;
+            GetComponent<PlayerMovement>().enabled = true;   //플레이어 입력관련 스크립트
+        }
     }
 
     private void CheckApplyDamage()
