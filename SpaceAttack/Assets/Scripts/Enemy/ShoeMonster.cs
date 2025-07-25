@@ -13,11 +13,13 @@ public class ShoeMonster : EnemyBase
     [SerializeField] private float bulletSpeed = 8f;
     [SerializeField] private float fireInterval = 2f;   // 공격 쿨타임
     [SerializeField] private float burstDelay = 0.12f; // 3발 사이 간격   
-    [SerializeField] private float dashWindUp = 0.05f;  // Dash 애니 시작 후 총알 발사까지 지연
+    [SerializeField] private float dashWindUp = 0.05f;  
 
 
     [SerializeField] private float attackAnimSpeed = 1.5f;  // 공격 시 애니메이션 속도
     private float normalAnimSpeed = 1f; //원래속도
+
+
 
     private bool isAttacking = false;
 
@@ -25,6 +27,10 @@ public class ShoeMonster : EnemyBase
     private bool canHop = true;
     private bool canFire = true;
 
+    //캔(Shoe) 몬스터 사운드
+    [SerializeField] private AudioClip landSound;     
+    [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioClip spitSound;
 
     #region Unity Life Cycle
     protected override void Start()
@@ -71,20 +77,11 @@ public class ShoeMonster : EnemyBase
         target = player;
         if (canFire) StartCoroutine(FireRoutine());
     }
-
+    #endregion
     protected override void CheckAttack()
     {
-        if (target == null || isHit) return;  
-
-        float dist = Vector3.Distance(transform.position, target.position);
-
-        if (dist <= attackDistance && canFire)
-        {
-            StartCoroutine(FireRoutine());
-        }
+ 
     }
-    #endregion
-
     #region Coroutines
     private IEnumerator HopRoutine()
     {
@@ -98,12 +95,15 @@ public class ShoeMonster : EnemyBase
 
                 Vector3 hopDir = horizDir * 1.0f + Vector3.up * 1.2f;
 
-                Flip(hopDir.x);               
+                Flip(hopDir.x);
                 animator.SetTrigger("IsMoving");
                 yield return new WaitForSeconds(0.02f);
                 rb.AddForce(hopDir * hopForce, ForceMode.Impulse);
 
-                yield return new WaitForSeconds(0.4f);
+                yield return new WaitForSeconds(0.4f); 
+
+                if (sfxSource && landSound)
+                    sfxSource.PlayOneShot(landSound);
 
                 canHop = false;
                 yield return new WaitForSeconds(hopCooldown);
@@ -115,6 +115,9 @@ public class ShoeMonster : EnemyBase
 
     private IEnumerator FireRoutine()
     {
+        if (playerStatus == null || playerStatus.isDead)
+            yield break; 
+
         isAttacking = true;
         canFire = false;
 
@@ -124,7 +127,7 @@ public class ShoeMonster : EnemyBase
 
         for (int n = 0; n < 3; n++)
         {
-            if (isHit) break;  
+            if (isHit || playerStatus.isDead) break;
 
             animator.ResetTrigger("Dash");
             animator.SetTrigger("Dash");
@@ -147,7 +150,10 @@ public class ShoeMonster : EnemyBase
 
     public void FireSingleBullet()
     {
-        if (!target || isHit) return;  
+        if (!target || isHit || playerStatus == null || playerStatus.isDead) return; 
+
+        if (sfxSource && spitSound)
+            sfxSource.PlayOneShot(spitSound);
 
         Vector3 flatDir = target.position - transform.position;
         flatDir.y = 0;

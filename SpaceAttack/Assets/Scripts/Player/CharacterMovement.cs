@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
@@ -96,22 +97,19 @@ public class CharacterMovement : MonoBehaviour
 
         dashDur = playerState.m_DashDruation;
 
-        //if (Physics.Raycast(transform.position, currentDir, out RaycastHit hit, dashDur, wallLayer))   //벽이 있을 경우의 예외처리(이동거리, 이동시간)
-        //{
-        //    dashDur = Vector3.Distance(hit.point, transform.position) - 0.25f;
-        //    dashDur = Mathf.Max(dashDur, 0f);
-        //}
+        if (Physics.Raycast(transform.position, currentDir, out RaycastHit hit, dashDur, wallLayer))   //벽이 있을 경우의 예외처리(이동거리, 이동시간)
+        {
+            dashDur = Vector3.Distance(hit.point, transform.position) - 0.55f;
+            dashDur = Mathf.Max(dashDur, 0f);
+        }
 
-        //Debug.Log(dashDur);
-
-        //if (dashDur >= 0.5f)
-        //    StartCoroutine(PlayerDash(dashDur));
+        Debug.Log(dashDur);
 
         TimeSystem.w_dashTimer.Start();   //대쉬 대기 시간(0.15 초 동안)
         TimeSystem.deshTimer.Start();     //대쉬 타이머 시작  (0.1 초 동안)
 
         SetDashInfo();     //대쉬 위치 설정
-        startDash = true;  //대쉬 시작
+        if(dashDur > 0) startDash = true;  //대쉬 시작
     }
     private void SetDashInfo()
     {
@@ -147,9 +145,9 @@ public class CharacterMovement : MonoBehaviour
             if (chipset != null) // 감지 대상이 칩셋이면 칩셋받기
             {
                 inventory.chipSet = chipset;
-                //item.gameObject.SetActive(false);
-                //Destroy(item.gameObject, 1f);
                 Debug.Log("아이템 획득");
+
+                break;                  //획득 종료(한번에 하나만 획득)
             }
         }
     }

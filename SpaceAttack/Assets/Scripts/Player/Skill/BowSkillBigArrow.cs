@@ -28,6 +28,7 @@ public class BowSkillBigArrow : SkillType
 
     public override void OnEnable()
     {
+        mass = 1.1f;
         damage = 3f;
         attackDistance = 6f;
         attackWidth = 4f;
@@ -144,9 +145,7 @@ public class BowSkillBigArrow : SkillType
 
         detectSize = new Vector3(0.2f, 1f, attackWidth / 2);
 
-        AttackInfo attackInfo = new AttackInfo();
-        attackInfo.damage = damage;
-        attackInfo.attackDirection = attackDirection;
+        AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);   //공격 정보 설정
 
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);

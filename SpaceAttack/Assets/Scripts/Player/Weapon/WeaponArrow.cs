@@ -46,11 +46,9 @@ public class WeaponArrow : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            AttackInfo attackInfo = new AttackInfo();
-            attackInfo.damage = damage;
-            attackInfo.attackDirection = attackDirection;
+            //AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);
 
-            collision.gameObject.SendMessage("ApplyDamage", attackInfo);
+            //collision.gameObject.SendMessage("ApplyDamage", attackInfo);
             Debug.Log("화살 공격");
 
             Destroy(gameObject);

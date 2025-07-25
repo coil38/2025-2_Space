@@ -21,6 +21,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
     public override void OnEnable()
     {
+        mass = 1f;
         damage = 3f;                             //임시
         attackDistance = 3.2f;
         attackWidth = 3f;
@@ -116,9 +117,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
         detectSize = new Vector3(0.2f, 1f, attackWidth / 2);
         Vector3 _detectSize = new Vector3(1f, 1f, 1f);
 
-        AttackInfo attackInfo = new AttackInfo();
-        attackInfo.damage = damage;
-        attackInfo.attackDirection = attackDirection;
+        AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);   //공격 정보 설정
 
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);

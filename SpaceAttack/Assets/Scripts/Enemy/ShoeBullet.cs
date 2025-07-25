@@ -11,6 +11,10 @@ public class ShoeBullet : MonoBehaviour
 
     private Rigidbody rb;
 
+    [Header("사운드 설정")]
+    [SerializeField] private AudioClip hitSound;
+    [SerializeField] private AudioSource audioSource;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -23,17 +27,17 @@ public class ShoeBullet : MonoBehaviour
 
         bool isFacingRight = velocity.x > 0;
 
-        // BillBoard 스크립트에 좌우 방향 전달
         BillBoard bb = GetComponent<BillBoard>();
         if (bb != null)
         {
             bb.SetFacingRight(isFacingRight);
         }
+
+        Destroy(gameObject, lifetime);  
     }
 
     private void OnTriggerEnter(Collider other)
     {
-
         if (other.CompareTag("Player"))
         {
             PlayerStatus ps = other.GetComponent<PlayerStatus>();
@@ -46,6 +50,16 @@ public class ShoeBullet : MonoBehaviour
                 };
                 ps.ApplyDamage(info);
             }
+
+            if (hitSound)
+            {
+                GameObject soundObj = new GameObject("HitSound");
+                AudioSource source = soundObj.AddComponent<AudioSource>();
+                source.clip = hitSound;
+                source.Play();
+                Destroy(soundObj, hitSound.length);
+            }
+
             Destroy(gameObject);
         }
         else if (!other.isTrigger)

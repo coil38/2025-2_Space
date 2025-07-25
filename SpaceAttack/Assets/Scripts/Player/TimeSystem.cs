@@ -10,10 +10,6 @@ public class TimeSystem : MonoBehaviour
     public static float m_invincibilityTime = 0.3f;  //대쉬이후 무적 시간
     public static float w_DashTime = 0.3f;           //다음 대쉬까지 대기 시간
 
-    [Header("WeaponTimeInfo")]
-    public float swordCharTime = 0.2f;        //검 공격 준비 시간
-    public float bowCharTime = 20f;
-
     public static Timer stunTimer;                       //피격 이후 스턴(무적)시간
     public static Timer invincibilityTimer;              //대쉬 이후 무적시간
     public static Timer deshTimer;                       //대쉬 시간
@@ -21,8 +17,6 @@ public class TimeSystem : MonoBehaviour
 
     //무기별 공격 대기
     public static Timer w_w_AttackTimer;                  //공격 이후 대기시간
-    public static Timer w_swordTimer;                  //검 공격 판정 전 차지시간
-    public static Timer w_bowTimer;                  //활 공격 판정 전 차지시간
 
     //스킬 대기
     public static Timer s_w_AttackTimer;
@@ -33,9 +27,6 @@ public class TimeSystem : MonoBehaviour
         invincibilityTimer = new Timer(m_invincibilityTime);
         deshTimer = new Timer(m_DashTime);
         w_dashTimer = new Timer(w_DashTime);
-
-        w_swordTimer = new Timer(swordCharTime);
-        w_bowTimer = new Timer(bowCharTime);
     }
 
     void Update()
@@ -50,8 +41,5 @@ public class TimeSystem : MonoBehaviour
 
         if(s_w_AttackTimer != null)
             s_w_AttackTimer.Update();
-
-        w_swordTimer.Update();
-        w_bowTimer.Update();
     }
 }

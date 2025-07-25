@@ -96,6 +96,9 @@ public class PlayerStatus : MonoBehaviour
         float damage = info.damage;
         Vector3 dir = info.attackDirection;
 
+        float mass = 1f;
+        float attackForce = mass * 100f;
+
         m_hp -= damage;
 
         if (m_hp <= 0)
@@ -106,7 +109,6 @@ public class PlayerStatus : MonoBehaviour
             //플레이어 사망 연출 시작
             isDead = true;
             animator.SetBool("Dead", true);
-            //rb.AddForce(dir, ForceMode.Impulse);        //넉백 연산 없음(임시)
             //Destroy(gameObject, 1f);
         }
         else
@@ -118,7 +120,7 @@ public class PlayerStatus : MonoBehaviour
                                             //스턴 연출 시작
             animator.SetTrigger("Hit");                          //피격 애니메이션
             Debug.Log("플레이어 피격");
-            //rb.AddForce(dir * 0.5f, ForceMode.Impulse);        //넉백 연산 없음(임시)
+            rb.AddForce(dir * attackForce);                 //넉백
 
         }
     }

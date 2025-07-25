@@ -46,16 +46,27 @@ public abstract class EnemyBase : MonoBehaviour
     [SerializeField] protected float hitInvincibleTime = 0.4f;  
     private bool canBeHit = true;
 
+    [Header("죽은 흔적 설정")]
+    [SerializeField] private GameObject deathMarkPrefab;
+    [SerializeField] private Transform footPosition;
 
+    [Header("공통 사운드")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip hitSound;
+
+    protected PlayerStatus playerStatus;
     protected float DetectRadius => detectRadius;
     protected virtual void OnPlayerDetected(Transform player) { }
 
-
+    protected Transform attackTarget;
 
     protected virtual void Start()
     {
-        if (visualTransform == null)
-        baseScaleX = visualTransform.localScale.x; 
+        if (visualTransform != null)
+            baseScaleX = visualTransform.localScale.x;
+        else
+            Debug.LogError("[EnemyBase] visualTransform is not assigned!");
+
         rb = GetComponent<Rigidbody>();
 
         if (animator == null)
@@ -63,6 +74,12 @@ public abstract class EnemyBase : MonoBehaviour
 
         playerLayer |= (1 << LayerMask.NameToLayer("Player"));
         attackLayer |= (1 << LayerMask.NameToLayer("Player")) | (1 << LayerMask.NameToLayer("DestructableObject"));
+
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+            playerStatus = playerObj.GetComponent<PlayerStatus>();
+        else
+            Debug.LogError("[EnemyBase] Player object with tag 'Player' not found!");
 
         StartCoroutine(EnemyPattern());
     }
@@ -129,7 +146,30 @@ public abstract class EnemyBase : MonoBehaviour
         }
     }
 
-    protected virtual void CheckAttack() { }
+    protected virtual void CheckAttack()
+    {
+        if (playerStatus == null)
+        {
+            Debug.LogWarning("playerStatus가 null입니다.");
+            return;
+        }
+        if (playerStatus.isDead || isHit || isDead)
+            return;
+
+        Collider[] hits = Physics.OverlapSphere(transform.position, attackDistance, playerLayer);
+        if (hits.Length == 0)
+            return;
+
+        Transform player = hits[0].transform;
+
+        float dist = Vector3.Distance(transform.position, player.position);
+        if (dist <= attackDistance)
+        {
+            attackTarget = player;
+
+            Attack();
+        }
+    }
     protected virtual void Attack() { }
 
     public virtual void ApplyDamage(AttackInfo attackInfo)
@@ -137,6 +177,11 @@ public abstract class EnemyBase : MonoBehaviour
         if (isDead || !canBeHit) return;
 
         hp -= attackInfo.damage;
+
+        if (hitSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(hitSound);
+        }
 
         if (hp <= 0)
         {
@@ -146,6 +191,13 @@ public abstract class EnemyBase : MonoBehaviour
                 animator.SetBool("Dead", true);
                 rb.velocity = Vector3.zero;
                 rb.AddForce(attackInfo.attackDirection, ForceMode.Impulse);
+
+                if (deathMarkPrefab != null && footPosition != null)
+                {
+                    Vector3 spawnPos = footPosition.position;
+                    Instantiate(deathMarkPrefab, spawnPos, Quaternion.identity);
+                }
+
                 Destroy(gameObject, 1f);
             }
         }
