@@ -37,10 +37,6 @@ public abstract class EnemyBase : MonoBehaviour
 
     [Header("공통 주변탐색 설정")]
     protected Vector3 patrolTarget;
-    protected float patrolMoveTime = 2f;
-    protected float patrolIdleTime = 1f;
-    protected float patrolTimer = 0f;
-    protected bool isPatrolMoving = false;
     
     [Header("공통 피격후 경직 시간")]
     [SerializeField] protected float hitInvincibleTime = 0.4f;  
@@ -90,34 +86,6 @@ public abstract class EnemyBase : MonoBehaviour
         {
             OnPlayerDetected(hits[0].transform); 
             return;
-        }
-
-        patrolTimer += Time.deltaTime;
-
-        if (isPatrolMoving)
-        {
-            animator.SetBool("IsMoving", true);
-            MoveTo(patrolTarget, 1.5f); // 기본 속도
-
-            if (Vector3.Distance(transform.position, patrolTarget) < 0.5f || patrolTimer > patrolMoveTime)
-            {
-                isPatrolMoving = false;
-                patrolTimer = 0f;
-            }
-        }
-        else
-        {
-            animator.SetBool("IsMoving", false);
-
-            if (patrolTimer > patrolIdleTime)
-            {
-                isPatrolMoving = true;
-                patrolTimer = 0f;
-
-                Vector3 randomDirection = Random.insideUnitSphere;
-                randomDirection.y = 0;
-                patrolTarget = transform.position + randomDirection.normalized * Random.Range(3f, 6f);
-            }
         }
     }
     protected void MoveTo(Vector3 target, float speed)
