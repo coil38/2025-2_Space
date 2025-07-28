@@ -1310,6 +1310,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2831977939336815305, guid: 2e3037912e5b88a4fa968811c6a96db8,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.542463
+      objectReference: {fileID: 0}
+    - target: {fileID: 4737755882595159032, guid: 2e3037912e5b88a4fa968811c6a96db8,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 6.209763
+      objectReference: {fileID: 0}
     - target: {fileID: 7891855458684638259, guid: 2e3037912e5b88a4fa968811c6a96db8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1365,6 +1375,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CoinMonster
       objectReference: {fileID: 0}
+    - target: {fileID: 9029041528981113936, guid: 2e3037912e5b88a4fa968811c6a96db8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1406,7 +1421,7 @@ PrefabInstance:
     - target: {fileID: 7118149969327213046, guid: 66f67a85fb154da40b944bca54770838,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8214748764032700821, guid: 66f67a85fb154da40b944bca54770838,
         type: 3}
