@@ -32,7 +32,7 @@ public abstract class EnemyBase : MonoBehaviour
     protected Vector3 _currentPos;
     protected Vector3 attackDirection;
     protected LayerMask playerLayer;
-    protected LayerMask attackLayer;
+   [SerializeField] protected LayerMask attackLayer;
 
 
     [Header("공통 주변탐색 설정")]
@@ -176,7 +176,7 @@ public abstract class EnemyBase : MonoBehaviour
             StartCoroutine(HitProcess());
         }
     }
-    protected IEnumerator HitProcess()
+    protected virtual IEnumerator HitProcess()
     {
         isHit = true;
         animator.SetTrigger("Hit");

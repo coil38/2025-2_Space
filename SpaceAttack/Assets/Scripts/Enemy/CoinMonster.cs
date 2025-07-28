@@ -22,8 +22,8 @@ public class CoinMonster : EnemyBase
     [Header("폭발 조건 및 범위")]
     public float triggerDistance = 1f;       // 플레이어가 붙으면 폭발 준비 시작 
     public float explodeDistance = 3f;       // 폭뎀범위
-    
-    
+
+   
     private Transform player;
     private CoinMonsterState state = CoinMonsterState.Patrol;
     private float explodeTimer = 0f;
@@ -31,8 +31,6 @@ public class CoinMonster : EnemyBase
 
     //patrol 기반 함수
     private Vector3 patrolDirection;
-    private float patrolChangeInterval = 3f;
-    private float patrolTime = 0f;
     private float patrolMoveTime = 1.5f;       // 한 번 이동하는 시간
     private float patrolIdleTime = 2f;         // 정지하는 시간
     private float patrolTimer = 0f;
@@ -43,7 +41,6 @@ public class CoinMonster : EnemyBase
     private bool hasExploded = false;
 
     private SpriteRenderer spriteRenderer;
-
     private Rigidbody rb1;
 
     //폭발반경범위 시각화
@@ -62,18 +59,17 @@ public class CoinMonster : EnemyBase
 
         if (explodeRangeVisual != null)
         {
-            float baseRadius = 0.09f;  
+            float baseRadius = 0.013f;  
             float scale = explodeDistance / baseRadius;
 
-            explodeRangeVisual.transform.localScale = new Vector3(scale, scale, 1f);
+            explodeRangeVisual.transform.localScale = new Vector3(scale, scale, scale);
             explodeRangeVisual.SetActive(false);
         }
     }
-
     private void SetNextPatrol()
     {
         isPatrolling = Random.value > 0.5f; 
-        patrolTime = 0f;
+        patrolTimer = 0f;
         patrolDirection = Random.insideUnitSphere;
         patrolDirection.y = 0f;
 
@@ -165,24 +161,32 @@ public class CoinMonster : EnemyBase
 
         if (hp <= 0)
         {
- 
             base.ApplyDamage(attackInfo);
+
+            state = CoinMonsterState.Patrol;  // 혹은 아무것도 안 하게
+            animator.SetBool("StartRoll", false);
+            animator.SetBool("IsMoving", false);
+            hasExploded = true;
+
+            if (explodeRangeVisual != null)
+                explodeRangeVisual.SetActive(false);
+
             return;
         }
 
+        // 충격 (넉백)
         rb.velocity = Vector3.zero;
         rb.AddForce(attackInfo.attackDirection * 0.5f, ForceMode.Impulse);
 
-        AnimatorStateInfo animState = animator.GetCurrentAnimatorStateInfo(0);
-        bool isExplodeOrCryPlaying = animState.IsName("Coin_explode") || animState.IsName("StartCry");
-
-        if (state == CoinMonsterState.ExplodeReady && isExplodeOrCryPlaying)
+        if (state == CoinMonsterState.ExplodeReady)
         {
             return;
         }
 
         StartCoroutine(HitProcess());
     }
+
+
 
     protected override void OnPlayerDetected(Transform detectedPlayer)
     {
@@ -210,11 +214,12 @@ public class CoinMonster : EnemyBase
 
         // 애니메이션 제어
         animator.SetBool("StartRoll", true);      
-        animator.SetBool("StopRolling", false);   
     }
 
     private void ExplodeReady()
     {
+
+
         if (player == null) return;
 
         if (explodeRangeVisual != null)
@@ -224,17 +229,17 @@ public class CoinMonster : EnemyBase
 
         animator.SetBool("StartRoll", false);  
         animator.SetBool("IsMoving", false);
+        canBeHit = false;
 
-        if (!hasExploded && explodeTimer >= explosionDelay)
+        if (explodeTimer >= explosionDelay)
         {
-            animator.SetTrigger("Explode");  
-            hasExploded = true;
+            animator.SetTrigger("Explode");
         }
 
         AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
-        if (hasExploded && info.IsName("Coin_explode") && info.normalizedTime >= 1f)
+        if (!hasExploded && info.IsName("Coin_explode") && info.normalizedTime >= 1f)
         {
-            Explode();
+            Explode(); // 이 내부에서 hasExploded = true 처리하면 충분함
         }
     }
     public void Explode()
@@ -246,6 +251,7 @@ public class CoinMonster : EnemyBase
             explodeRangeVisual.SetActive(false);
 
         Collider[] cols = Physics.OverlapSphere(transform.position, explodeDistance, attackLayer);
+
         foreach (var col in cols)
         {
             Vector3 dir = (col.transform.position - transform.position).normalized;
