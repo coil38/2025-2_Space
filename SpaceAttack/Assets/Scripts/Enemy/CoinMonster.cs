@@ -28,19 +28,21 @@ public class CoinMonster : EnemyBase
     private CoinMonsterState state = CoinMonsterState.Patrol;
     private float explodeTimer = 0f;
 
+
+    //patrol 기반 함수
     private Vector3 patrolDirection;
     private float patrolChangeInterval = 3f;
     private float patrolTime = 0f;
-
     private float patrolMoveTime = 1.5f;       // 한 번 이동하는 시간
     private float patrolIdleTime = 2f;         // 정지하는 시간
     private float patrolTimer = 0f;
     private bool isPatrolling = true;
-
     private float patrolWaitTime = 0f;
     private float patrolWaitCounter = 0f;
 
-    private bool hasPatrolled = false;
+    private bool hasExploded = false;
+
+    private SpriteRenderer spriteRenderer;
 
     private Rigidbody rb1;
 
@@ -51,7 +53,7 @@ public class CoinMonster : EnemyBase
     {
         base.Start();
         state = CoinMonsterState.Patrol;
-
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         SetNextPatrol();
 
         rb1 = GetComponent<Rigidbody>();
@@ -98,22 +100,18 @@ public class CoinMonster : EnemyBase
         }
         else
         {
-            // 멈춤 상태
             animator.SetBool("StartRoll", false);
-            animator.SetBool("StopRolling", false); 
 
             if (patrolTimer >= patrolIdleTime)
             {
                 isPatrolling = true;
                 patrolTimer = 0f;
 
-                // 새로운 방향 설정
                 patrolDirection = Random.insideUnitSphere;
                 patrolDirection.y = 0f;
             }
         }
 
-        // 탐지 체크
         Collider[] hits = Physics.OverlapSphere(transform.position, DetectRadius, playerLayer);
         if (hits.Length > 0)
         {
@@ -140,8 +138,6 @@ public class CoinMonster : EnemyBase
                 ExplodeReady();
                 break;
         }
-
-        UpdateAnimation();
     }
     private void MoveRolling(Vector3 direction, float speed)
     {
@@ -150,7 +146,42 @@ public class CoinMonster : EnemyBase
         Vector3 move = direction.normalized * speed * Time.deltaTime;
         rb.MovePosition(rb.position + move);
 
-        // ★ 회전은 애니메이션에 맡김!
+        if (direction.x != 0)
+        {
+            spriteRenderer.flipX = direction.x < 0;
+        }
+    }
+
+    public override void ApplyDamage(AttackInfo attackInfo)
+    {
+        if (isDead || !canBeHit) return;
+
+        hp -= attackInfo.damage;
+
+        if (hitSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(hitSound);
+        }
+
+        if (hp <= 0)
+        {
+ 
+            base.ApplyDamage(attackInfo);
+            return;
+        }
+
+        rb.velocity = Vector3.zero;
+        rb.AddForce(attackInfo.attackDirection * 0.5f, ForceMode.Impulse);
+
+        AnimatorStateInfo animState = animator.GetCurrentAnimatorStateInfo(0);
+        bool isExplodeOrCryPlaying = animState.IsName("Coin_explode") || animState.IsName("StartCry");
+
+        if (state == CoinMonsterState.ExplodeReady && isExplodeOrCryPlaying)
+        {
+            return;
+        }
+
+        StartCoroutine(HitProcess());
     }
 
     protected override void OnPlayerDetected(Transform detectedPlayer)
@@ -168,13 +199,18 @@ public class CoinMonster : EnemyBase
         if (distance < triggerDistance)
         {
             state = CoinMonsterState.ExplodeReady;
-            animator.SetTrigger("Explode");
+            animator.SetTrigger("StartCry");  
+            animator.SetBool("StartRoll", false); 
             explodeTimer = 0f;
             return;
         }
 
         Vector3 direction = (player.position - transform.position).normalized;
         MoveRolling(direction, chaseSpeed);
+
+        // 애니메이션 제어
+        animator.SetBool("StartRoll", true);      
+        animator.SetBool("StopRolling", false);   
     }
 
     private void ExplodeReady()
@@ -186,17 +222,26 @@ public class CoinMonster : EnemyBase
 
         explodeTimer += Time.deltaTime;
 
+        animator.SetBool("StartRoll", false);  
         animator.SetBool("IsMoving", false);
-        animator.SetBool("StartCry", true);  // 이 bool 파라미터로 Coin_cry_loop 진입 유도
 
-        if (explodeTimer >= explosionDelay)
+        if (!hasExploded && explodeTimer >= explosionDelay)
+        {
+            animator.SetTrigger("Explode");  
+            hasExploded = true;
+        }
+
+        AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
+        if (hasExploded && info.IsName("Coin_explode") && info.normalizedTime >= 1f)
         {
             Explode();
         }
     }
-
-    private void Explode() //폭파
+    public void Explode()
     {
+        if (hasExploded) return;
+        hasExploded = true;
+
         if (explodeRangeVisual != null)
             explodeRangeVisual.SetActive(false);
 
@@ -209,10 +254,5 @@ public class CoinMonster : EnemyBase
         }
 
         Destroy(gameObject);
-    }
-    private void UpdateAnimation()
-    {
-        bool isMoving = (state == CoinMonsterState.Chase || state == CoinMonsterState.ExplodeReady);
-        animator.SetBool("IsMoving", isMoving);
     }
 }

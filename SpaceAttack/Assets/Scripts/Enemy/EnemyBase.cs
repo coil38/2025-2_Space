@@ -40,15 +40,15 @@ public abstract class EnemyBase : MonoBehaviour
     
     [Header("공통 피격후 경직 시간")]
     [SerializeField] protected float hitInvincibleTime = 0.4f;  
-    private bool canBeHit = true;
+    protected bool canBeHit = true;
 
     [Header("죽은 흔적 설정")]
-    [SerializeField] private GameObject deathMarkPrefab;
-    [SerializeField] private Transform footPosition;
+    [SerializeField] protected GameObject deathMarkPrefab;
+    [SerializeField] protected Transform footPosition;
 
     [Header("공통 사운드")]
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip hitSound;
+    [SerializeField] protected AudioSource audioSource;
+    [SerializeField] protected AudioClip hitSound;
 
     protected PlayerStatus playerStatus;
     protected float DetectRadius => detectRadius;
@@ -171,24 +171,22 @@ public abstract class EnemyBase : MonoBehaviour
         }
         else
         {
+            rb.velocity = Vector3.zero;
             rb.AddForce(attackInfo.attackDirection * 0.5f, ForceMode.Impulse);
-            StartCoroutine(HitProcess(attackInfo.attackDirection));
+            StartCoroutine(HitProcess());
         }
     }
-    private IEnumerator HitProcess(Vector3 dir)
+    protected IEnumerator HitProcess()
     {
-
         isHit = true;
-
-        animator.SetTrigger("Hit"); 
-
-        rb.AddForce(dir * 0.5f, ForceMode.Impulse);
+        animator.SetTrigger("Hit");
 
         yield return new WaitForSeconds(hitInvincibleTime);
 
         isHit = false;
-
     }
+
+
 
     protected void Flip(float moveX)
     {

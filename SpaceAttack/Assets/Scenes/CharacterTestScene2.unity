@@ -610,17 +610,17 @@ PrefabInstance:
     - target: {fileID: 7891855458684638259, guid: 2e3037912e5b88a4fa968811c6a96db8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.66629475
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7891855458684638259, guid: 2e3037912e5b88a4fa968811c6a96db8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.8199997
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7891855458684638259, guid: 2e3037912e5b88a4fa968811c6a96db8,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.14669755
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7891855458684638259, guid: 2e3037912e5b88a4fa968811c6a96db8,
         type: 3}
@@ -1723,7 +1723,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44eb29a46f482b74abc4ada36534be4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 10
+  hp: 30
   attackDistance: 2
   detectAngle: 155
   damage: 1
@@ -1742,7 +1742,7 @@ MonoBehaviour:
   explosionDelay: 2
   explosionDamage: 5
   explosionKnockbackForce: 5
-  triggerDistance: 1
+  triggerDistance: 1.5
   explodeDistance: 3
   explodeRangeVisual: {fileID: 104954264}
 --- !u!65 &1737022692
@@ -1764,8 +1764,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 16.575281, y: 15.209394, z: 3.250345}
-  m_Center: {x: -0.8147923, y: 7.1046925, z: -0.07623017}
+  m_Size: {x: 18.056446, y: 14.645145, z: 2.434813}
+  m_Center: {x: 0.374039, y: 9.60345, z: -0.027995307}
 --- !u!54 &1737022693
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1775,7 +1775,7 @@ Rigidbody:
   m_GameObject: {fileID: 1737022689}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 3
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -1802,7 +1802,7 @@ Transform:
   m_GameObject: {fileID: 1737022689}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.76, y: -0.837, z: -0.085}
+  m_LocalPosition: {x: 8.76, y: -1.265, z: -0.085}
   m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_ConstrainProportionsScale: 0
   m_Children:
