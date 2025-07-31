@@ -13,11 +13,24 @@ public enum CoinMonsterState
 public class CoinMonster : EnemyBase
 {
     [Header("코인 몬스터 설정")]
-    public float chaseSpeed = 3f;
     public float explodeReadySpeed = 1f;
     public float explosionDelay = 2f;
     public float explosionDamage = 5f;
     public float explosionKnockbackForce = 5f;
+    private float rollCooldown = 0.4f;  // 한 번 굴고 나서 다시 굴 수 있는 최소 시간
+    private float rollTimer = 0f;
+
+    [Header("사운드 설정")]
+    public AudioClip rollSound;
+    [SerializeField] private AudioSource chargeSource;
+    [SerializeField] private AudioSource explosionSource;
+
+    [SerializeField] private AudioClip chargeSound;
+    [SerializeField] private AudioClip explosionSound;
+
+    [Header("이동 속도 설정")]
+    public float patrolSpeed = 1.5f;  // 느린 속도
+    public float chaseSpeed = 3f;     
 
     [Header("폭발 조건 및 범위")]
     public float triggerDistance = 1f;       // 플레이어가 붙으면 폭발 준비 시작 
@@ -31,13 +44,14 @@ public class CoinMonster : EnemyBase
 
     //patrol 기반 함수
     private Vector3 patrolDirection;
-    private float patrolMoveTime = 1.5f;       // 한 번 이동하는 시간
-    private float patrolIdleTime = 2f;         // 정지하는 시간
+    private float patrolMoveTime = 1.5f;      
+    private float patrolIdleTime = 2f;         
     private float patrolTimer = 0f;
     private bool isPatrolling = true;
-    private float patrolWaitTime = 0f;
-    private float patrolWaitCounter = 0f;
 
+    private Vector3 lastMoveDirection = Vector3.zero;
+    //상태변수
+    private bool isRolling = false;
     private bool hasExploded = false;
 
     private SpriteRenderer spriteRenderer;
@@ -52,6 +66,9 @@ public class CoinMonster : EnemyBase
         state = CoinMonsterState.Patrol;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         SetNextPatrol();
+
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
 
         rb1 = GetComponent<Rigidbody>();
         rb1.useGravity = true;
@@ -73,8 +90,6 @@ public class CoinMonster : EnemyBase
         patrolDirection = Random.insideUnitSphere;
         patrolDirection.y = 0f;
 
-        patrolWaitTime = Random.Range(1f, 2f); 
-        patrolWaitCounter = 0f;
     }
 
     protected override void Patrol()
@@ -83,8 +98,7 @@ public class CoinMonster : EnemyBase
 
         if (isPatrolling)
         {
-            // 이동 상태
-            MoveRolling(patrolDirection, chaseSpeed);
+            MoveRolling(patrolDirection, patrolSpeed);
             animator.SetBool("StartRoll", true);
 
             if (patrolTimer >= patrolMoveTime)
@@ -118,6 +132,9 @@ public class CoinMonster : EnemyBase
 
     private void Update()
     {
+        if (rollTimer > 0f)
+            rollTimer -= Time.deltaTime;
+
         if (isDead) return;
 
         switch (state)
@@ -135,6 +152,12 @@ public class CoinMonster : EnemyBase
                 break;
         }
     }
+    public void OnRollDone()
+    {
+        animator.SetBool("RollDone", true);
+        isRolling = false;
+    }
+
     private void MoveRolling(Vector3 direction, float speed)
     {
         if (rb == null) return;
@@ -143,11 +166,24 @@ public class CoinMonster : EnemyBase
         rb.MovePosition(rb.position + move);
 
         if (direction.x != 0)
-        {
             spriteRenderer.flipX = direction.x < 0;
-        }
-    }
 
+        if (rollTimer > 0f) return;
+
+        if (Mathf.Sign(direction.x) != Mathf.Sign(lastMoveDirection.x) || !isRolling)
+        {
+            if (direction.x < 0)
+                animator.SetTrigger("RollLeft");
+            else
+                animator.SetTrigger("RollRight");
+
+            isRolling = true;
+            rollTimer = rollCooldown;             
+            animator.SetBool("RollDone", false);
+        }
+
+        lastMoveDirection = direction;
+    }
     public override void ApplyDamage(AttackInfo attackInfo)
     {
         if (isDead || !canBeHit) return;
@@ -163,7 +199,7 @@ public class CoinMonster : EnemyBase
         {
             base.ApplyDamage(attackInfo);
 
-            state = CoinMonsterState.Patrol;  // 혹은 아무것도 안 하게
+            state = CoinMonsterState.Patrol;  
             animator.SetBool("StartRoll", false);
             animator.SetBool("IsMoving", false);
             hasExploded = true;
@@ -174,7 +210,6 @@ public class CoinMonster : EnemyBase
             return;
         }
 
-        // 충격 (넉백)
         rb.velocity = Vector3.zero;
         rb.AddForce(attackInfo.attackDirection * 0.5f, ForceMode.Impulse);
 
@@ -239,7 +274,7 @@ public class CoinMonster : EnemyBase
         AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
         if (!hasExploded && info.IsName("Coin_explode") && info.normalizedTime >= 1f)
         {
-            Explode(); // 이 내부에서 hasExploded = true 처리하면 충분함
+            Explode(); 
         }
     }
     public void Explode()
@@ -248,17 +283,52 @@ public class CoinMonster : EnemyBase
         hasExploded = true;
 
         if (explodeRangeVisual != null)
-            explodeRangeVisual.SetActive(false);
+            Destroy(explodeRangeVisual); 
 
         Collider[] cols = Physics.OverlapSphere(transform.position, explodeDistance, attackLayer);
-
         foreach (var col in cols)
         {
             Vector3 dir = (col.transform.position - transform.position).normalized;
             AttackInfo info = new AttackInfo(explosionDamage, dir * explosionKnockbackForce);
             col.SendMessage("ApplyDamage", info, SendMessageOptions.DontRequireReceiver);
         }
+        foreach (var sr in GetComponentsInChildren<SpriteRenderer>())
+        {
+            sr.enabled = false;
+        }
+    }
 
-        Destroy(gameObject);
+//코인몬스터 소리
+    public void PlayRollSound()
+    {
+        if (audioSource != null && rollSound != null)
+        {
+            audioSource.PlayOneShot(rollSound);
+        }
+    }
+
+    public void OnChargeStart()
+    {
+
+        if (chargeSource != null && chargeSound != null)
+        {
+            chargeSource.clip = chargeSound;
+            chargeSource.Play();
+        }
+    }
+
+
+    public void OnExplode()
+    {
+
+        if (chargeSource != null)
+            chargeSource.Stop();
+
+        if (explosionSource != null && explosionSound != null)
+        {
+            explosionSource.PlayOneShot(explosionSound);
+        }
+
+        Explode();
     }
 }
