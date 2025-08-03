@@ -7,6 +7,7 @@ public class SoundData
 {
     public string soundKey;
     public string name;
+    public string attribute;
     public float volume;
     public float pitch;
     public int isLoop;

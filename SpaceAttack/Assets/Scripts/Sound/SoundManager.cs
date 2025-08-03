@@ -4,15 +4,138 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static SoundManager instance;
+
+    Dictionary<string, SoundSO[]> soundLibrary = new Dictionary<string, SoundSO[]>();              //<속성명, 사운드 데이터>
+    Dictionary<GameObject, SoundInfo[]> audioRegistry = new Dictionary<GameObject, SoundInfo[]>(); //<인스턴스주소, 오디오소스>
+
+    private List<SoundInfo> RegisterTemp = new List<SoundInfo>();    //사운드 등록용
+
+    private void Awake()
     {
-        
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(this);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
+        SoundDatabaseSO database = DataManager.instance._soundDatabase;    //사운드 데이터 베이스 받기
+
+        if (database == null)
+        {
+            Debug.Log("사운드 데이터 베이스가 존재하지 않다");
+            return;
+        }
+
+        Dictionary<string, List<SoundSO>> temp = new Dictionary<string, List<SoundSO>>();   //속성 별로 분류하기 위한 선언
+        foreach (var sound in database.sounds)
+        {
+            if (sound == null)
+            {
+                Debug.Log("sound가 존재하지 않습니다.");
+                return;
+            }
+
+            if (temp.ContainsKey(sound.soundAttribute))
+            {
+                temp[sound.soundAttribute].Add(sound);                 //사운드SO 리스트 추가
+            }
+            else
+            {
+                temp.Add(sound.soundAttribute, new List<SoundSO>());   //사운드SO 리스트 생성
+                temp[sound.soundAttribute].Add(sound);                 //사운드SO 리스트 추가
+            }
+        }
         
+        foreach (var sound in temp)
+            soundLibrary.Add(sound.Key, sound.Value.ToArray());        //필드로 변환
+
+        //foreach (var test in soundLibrary)
+        //{
+        //    List<string> s = new List<string>();
+        //    foreach (var test2 in test.Value)
+        //    {
+        //        s.Add(test2.name);
+        //    }
+        //    Debug.Log($"속성: {test.Key}, 사운드명: {string.Join(", ", s)}");
+        //}
+    }
+
+    public void RegisterGameObject(GameObject obj, string attribute)   //해당 오브젝트가 필요한 오디오소스 할당 및 인스턴스주소 등록
+    {
+        if (soundLibrary.TryGetValue(attribute, out var sounds))
+        {
+            foreach (var sound in sounds) 
+            {
+                AudioSource source = obj.AddComponent<AudioSource>();  //오디오소스 생성 및 값 할당
+                source.volume = sound.volume;
+                source.pitch = sound.pitch;
+                source.loop = sound.loop;
+                source.spatialBlend = sound.is3D;
+                source.clip = sound.clip;
+                source.outputAudioMixerGroup = sound.mixerGroup;
+
+                SoundInfo soundInfo = obj.AddComponent<SoundInfo>();   //SoundInfo에 정보 할당
+                soundInfo.name = sound.soundName;
+                soundInfo.audioSource = source;
+
+                RegisterTemp.Add(soundInfo);
+            }
+
+            audioRegistry.TryAdd(obj, RegisterTemp.ToArray());    //해당 속성0인 객체가 등록한다.
+            RegisterTemp.Clear();
+        }
+        else
+        {
+            Debug.LogError($"{attribute}는 확인할 수 없는 속성입니다. 다시 체크해주세요");
+        }
+    }
+
+
+    public void PlaySound(GameObject obj, string soundName)   //등록된 대상만 사용가능 및 사운드이름이 정확해야함
+    {
+        if (audioRegistry.ContainsKey(obj))
+        {
+            SoundInfo[] sounds = audioRegistry[obj];
+            foreach (var sound in sounds)
+            {
+                if (sound.name == soundName)    //사운드 이름에 해당하는 오디오소스 재생
+                {
+                    sound.audioSource.Play();               //사운드 재생
+
+                    Debug.Log($"{sound.name} 재생");
+                }
+            }
+        }
+        else
+        {
+            Debug.LogError($"{obj}에 해당하는 등록정보를 확인할 수 없다(해당 오브젝트가 등록을 안한 듯).");
+        }
+    }
+
+    public void StopSound(GameObject obj, string soundName)   //등록된 대상만 사용가능 및 사운드이름이 정확해야함
+    {
+        if (audioRegistry.ContainsKey(obj))
+        {
+            SoundInfo[] sounds = audioRegistry[obj];
+            foreach (var sound in sounds)
+            {
+                if (sound.name == soundName)    //사운드 이름에 해당하는 오디오소스 재생
+                {
+                    sound.audioSource.Stop();               //사운드 재생
+                }
+            }
+        }
+        else
+        {
+            Debug.LogError($"{obj}에 해당하는 등록정보를 확인할 수 없다(해당 오브젝트가 등록을 안한 듯).");
+        }
     }
 }

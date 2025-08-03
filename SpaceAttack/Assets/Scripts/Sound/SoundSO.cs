@@ -6,6 +6,7 @@ public class SoundSO : ScriptableObject
 {
     public string soundKey;
     public string soundName;
+    public string soundAttribute;
     public float volume;
     public float pitch;
     public bool loop;
