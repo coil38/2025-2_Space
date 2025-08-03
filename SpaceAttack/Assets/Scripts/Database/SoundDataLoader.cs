@@ -41,6 +41,7 @@ public class SoundDataLoader : EditorWindow
                 //데이터 복사
                 soundSO.soundKey = soundData.soundKey;
                 soundSO.soundName = soundData.name;
+                soundSO.soundAttribute = soundData.attribute;
                 soundSO.volume = soundData.volume;
                 soundSO.pitch = soundData.pitch;
                 soundSO.loop = soundData.isLoop == 1;  //1이면 true, 0이면 false
