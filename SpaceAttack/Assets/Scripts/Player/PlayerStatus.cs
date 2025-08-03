@@ -20,6 +20,11 @@ public class PlayerStatus : MonoBehaviour
     [HideInInspector] public bool isDead = false;
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool isUsingSkill = false;
+                      private bool canMove = true;
+
+    private PlayerMovement movementScript;
+    private PlayerAttack attackScript;
+
 
     public bool isRooted       //상태 이상: 속박
     {
@@ -43,10 +48,36 @@ public class PlayerStatus : MonoBehaviour
     private void Start()
     {
         m_FacingRight = true;
-
+        movementScript = GetComponent<PlayerMovement>();
+        attackScript = GetComponent<PlayerAttack>();
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
     }
+    public void DisableMovement()
+    {
+        canMove = false;
+
+        if (movementScript != null)
+            movementScript.enabled = false;
+
+        if (attackScript != null)
+            attackScript.enabled = false;
+
+        // 애니메이션도 멈추고 싶으면 추가 가능
+        animator.SetBool("IsMoving", false);
+    }
+
+    public void EnableMovement()
+    {
+        canMove = true;
+
+        if (movementScript != null)
+            movementScript.enabled = true;
+
+        if (attackScript != null)
+            attackScript.enabled = true;
+    }
+
     void Update()
     {
         //각각의 상태 실행여부값 할당

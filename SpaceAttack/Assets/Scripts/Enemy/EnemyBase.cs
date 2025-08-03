@@ -24,9 +24,9 @@ public abstract class EnemyBase : MonoBehaviour
 
     [SerializeField] protected Transform visualTransform;
 
+    protected bool isFacingRight = true;
     protected bool isDead;
     protected bool isHit;
-
     private float baseScaleX;
 
     protected Vector3 _currentPos;
@@ -55,6 +55,7 @@ public abstract class EnemyBase : MonoBehaviour
     protected virtual void OnPlayerDetected(Transform player) { }
 
     protected Transform attackTarget;
+
 
     protected virtual void Start()
     {
@@ -90,10 +91,13 @@ public abstract class EnemyBase : MonoBehaviour
     }
     protected void MoveTo(Vector3 target, float speed)
     {
-        Vector3 direction = (target - transform.position).normalized;
+        Vector3 direction = target - transform.position;
+        direction.y = 0f; 
+        direction = direction.normalized;
+
         transform.position += direction * speed * Time.deltaTime;
 
-        Flip(direction.x); //좌우반전
+        Flip(direction.x);
     }
 
     protected virtual IEnumerator EnemyPattern()
@@ -192,17 +196,23 @@ public abstract class EnemyBase : MonoBehaviour
     {
         if (visualTransform == null) return;
 
-        if (moveX < -0.01f)
+        bool shouldFlipLeft = moveX < -0.01f;
+        bool shouldFlipRight = moveX > 0.01f;
+
+        if (shouldFlipLeft)
         {
             visualTransform.localScale = new Vector3(-Mathf.Abs(baseScaleX),
                                                      visualTransform.localScale.y,
                                                      visualTransform.localScale.z);
+            isFacingRight = false;
+
         }
-        else if (moveX > 0.01f)
+        else if (shouldFlipRight)
         {
             visualTransform.localScale = new Vector3(Mathf.Abs(baseScaleX),
                                                      visualTransform.localScale.y,
                                                      visualTransform.localScale.z);
+            isFacingRight = true;
         }
     }
 }
