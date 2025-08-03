@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.IO;
 
 public class JsonToScriptableConverter : EditorWindow
 {
@@ -48,6 +49,15 @@ public class JsonToScriptableConverter : EditorWindow
 
     private void SelectConverter()
     {
+        //사운드 시스템에 맞는 제인슨인지 체크
+        string jsonFileName = Path.GetFileNameWithoutExtension(jsonFilePath);
+        if (jsonFileName != jsonType.ToString())
+        {
+            EditorUtility.DisplayDialog("Error", "jsonType에 맞는 jsonFile을 입력하세요!", "OK");
+            return;
+        }
+
+
         switch (jsonType)
         {
             case JsonType.Sound:
