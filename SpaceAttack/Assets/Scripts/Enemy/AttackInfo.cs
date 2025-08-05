@@ -10,17 +10,21 @@ public struct AttackInfo
     public Vector3 attackDirection { get; set; }
     public float attackForce { get; set; }
 
-    public AttackInfo(float damage, Vector3 dir, float mass = 1f)
+    public GameObject attacker { get; set; }
+    public AttackInfo(float damage, Vector3 dir, float mass = 1f, GameObject attacker = null)
     {
         this.damage = damage;
         this.attackDirection = dir;
         this.attackForce = mass * 100f;
+        this.attacker = attacker;
+
     }
 
-    public void SetAttackInfo(float damage, Vector3 dir, float mass = 1f)
+    public void SetAttackInfo(float damage, Vector3 dir,float mass = 1f, GameObject attacker = null)
     {
         this.damage = damage;
         this.attackDirection = dir;
         this.attackForce = mass * 100f;
+        this.attacker = attacker;
     }
 }

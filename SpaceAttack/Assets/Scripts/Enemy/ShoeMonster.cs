@@ -74,13 +74,16 @@ public class ShoeMonster : EnemyBase
     #region EnemyBase Override
     protected override void OnPlayerDetected(Transform player)
     {
+        if (playerStatus != null && playerStatus.isBeingEaten)
+            return;
+
         target = player;
         if (canFire) StartCoroutine(FireRoutine());
     }
     #endregion
     protected override void CheckAttack()
     {
- 
+      
     }
     #region Coroutines
     private IEnumerator HopRoutine()
@@ -115,8 +118,8 @@ public class ShoeMonster : EnemyBase
 
     private IEnumerator FireRoutine()
     {
-        if (playerStatus == null || playerStatus.isDead)
-            yield break; 
+        if (playerStatus == null || playerStatus.isDead || playerStatus.isBeingEaten)
+            yield break;
 
         isAttacking = true;
         canFire = false;
@@ -127,7 +130,7 @@ public class ShoeMonster : EnemyBase
 
         for (int n = 0; n < 3; n++)
         {
-            if (isHit || playerStatus.isDead) break;
+            if (isHit || playerStatus.isDead || playerStatus.isBeingEaten) break;
 
             animator.ResetTrigger("Dash");
             animator.SetTrigger("Dash");
@@ -177,7 +180,8 @@ public class ShoeMonster : EnemyBase
     #region Attack
     protected override void Attack()
     {
-        FireSingleBullet();   
+
+        FireSingleBullet();
     }
 
     #endregion

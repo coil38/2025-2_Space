@@ -125,7 +125,7 @@ public abstract class EnemyBase : MonoBehaviour
             Debug.LogWarning("playerStatus가 null입니다.");
             return;
         }
-        if (playerStatus.isDead || isHit || isDead)
+        if (playerStatus.isDead || playerStatus.isBeingEaten || isHit || isDead)
             return;
 
         Collider[] hits = Physics.OverlapSphere(transform.position, attackDistance, playerLayer);

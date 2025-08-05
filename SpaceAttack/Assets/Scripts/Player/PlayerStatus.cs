@@ -21,6 +21,7 @@ public class PlayerStatus : MonoBehaviour
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool isUsingSkill = false;
                       private bool canMove = true;
+                      public bool isBeingEaten = false;  //먹히는 중인가?
 
     private PlayerMovement movementScript;
     private PlayerAttack attackScript;
@@ -141,6 +142,12 @@ public class PlayerStatus : MonoBehaviour
 
     public void ApplyDamage(AttackInfo info)
     {
+        if (isBeingEaten && (info.attacker == null || !info.attacker.CompareTag("SnackMonster")))
+        {
+            // 먹히는 중이고, 공격자가 없거나 스낵몬스터가 아니면 데미지 무시
+            return;
+        }
+
         if (isInvincibility || isStuned || isDead) return;   //대쉬 무적 상태 혹은 스턴 상태일 때, 피격 안됨
 
         attackQueue.Enqueue(info);

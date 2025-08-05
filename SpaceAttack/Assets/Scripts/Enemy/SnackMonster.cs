@@ -22,6 +22,7 @@ public class SnackMonster : EnemyBase
     private bool isChasing;
     private bool isEating = false;
     private GameObject eatRangeVisualInstance;
+    private Vector3 lastPosition;
 
 
     private bool isPaused = false;
@@ -32,6 +33,8 @@ public class SnackMonster : EnemyBase
     protected override void Start()
     {
         base.Start();
+        animator = GetComponentInChildren<Animator>();
+
         ChooseNewPatrolPoint();
         patrolTimer = patrolChangeTime;
     }
@@ -55,7 +58,11 @@ public class SnackMonster : EnemyBase
 
     private void FixedUpdate()
     {
-        if (isDead || isHit || isEating || isPaused) return;
+        if (isDead || isHit || isEating || isPaused)
+        {
+            SetIsWalking(false);
+            return;
+        }
 
         if (!isChasing)
         {
@@ -65,8 +72,22 @@ public class SnackMonster : EnemyBase
         {
             Chase();
         }
-    }
 
+        // 이전 위치와 현재 위치 차이로 속도 판단 (월드 좌표 기준)
+        float movedDistance = Vector3.Distance(transform.position, lastPosition);
+        bool isWalking = movedDistance > 0.01f; // 너무 작은 이동은 무시
+
+        SetIsWalking(isWalking);
+
+        lastPosition = transform.position; // 위치 갱신
+    }
+    private void SetIsWalking(bool walking)
+    {
+        if (animator.GetBool("isWalking") != walking)
+        {
+            animator.SetBool("isWalking", walking);
+        }
+    }
     private void ChooseNewPatrolPoint()
     {
         Vector2 randomOffset = Random.insideUnitCircle * 3f;
@@ -84,7 +105,7 @@ public class SnackMonster : EnemyBase
     private bool IsPlayerInEatBox()
     {
         Vector3 center = transform.position + (isFacingRight ? transform.right : -transform.right) * (eatRadius / 2);
-        Vector3 halfExtents = new Vector3(eatRadius / 2, 1f, 2.5f); 
+        Vector3 halfExtents = new Vector3(eatRadius / 2, 1f, 1.5f); 
 
         Collider[] hits = Physics.OverlapBox(center, halfExtents, Quaternion.identity, LayerMask.GetMask("Player"));
         foreach (Collider hit in hits)
@@ -104,9 +125,12 @@ public class SnackMonster : EnemyBase
             return;
         }
 
+        float eatStartDistance = eatRadius + 0.8f;
+        float stopDistance = 3f;
+
         float distanceToTarget = Vector3.Distance(transform.position, attackTarget.position);
 
-        if (distanceToTarget <= eatRadius && Time.time - lastEatTime >= eatCooldown && IsPlayerInEatBox())
+        if (distanceToTarget <= eatStartDistance && Time.time - lastEatTime >= eatCooldown && IsPlayerInEatBox())
         {
             StartCoroutine(EatPlayerRoutine());
             return;
@@ -121,18 +145,30 @@ public class SnackMonster : EnemyBase
             return;
         }
 
-        MoveToRigidbody(attackTarget.position, chaseSpeed);
+        if (distanceToTarget > stopDistance)
+        {
+            MoveToRigidbody(attackTarget.position, chaseSpeed);
+        }
+        else
+        {
+            rb.velocity = Vector2.zero; 
+
+            float dirX = (attackTarget.position - transform.position).x;
+            Flip(dirX);
+        }
     }
 
     private IEnumerator EatPlayerRoutine()
     {
         isEating = true;
+        animator.SetBool("isEating", true);
         isChasing = false;
         rb.velocity = Vector3.zero;
 
         playerTransform = attackTarget;
         playerStatusScript = playerTransform.GetComponent<PlayerStatus>();
 
+     
         if (eatRangeVisualPrefab != null && eatRangeVisualInstance == null)
         {
             eatRangeVisualInstance = Instantiate(eatRangeVisualPrefab);
@@ -142,7 +178,7 @@ public class SnackMonster : EnemyBase
             visualOffset += Vector3.up * 0.1f;  
             eatRangeVisualInstance.transform.position = transform.position + visualOffset;
 
-            eatRangeVisualInstance.transform.localScale = new Vector3(eatRadius, 3f, eatRadius * 4f);
+            eatRangeVisualInstance.transform.localScale = new Vector3(eatRadius, 3.5f, eatRadius * 4f);
 
             eatRangeVisualInstance.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
 
@@ -157,7 +193,21 @@ public class SnackMonster : EnemyBase
             if (eatRangeVisualInstance != null) Destroy(eatRangeVisualInstance);
             yield break;
         }
+        if (eatRangeVisualInstance != null)
+        {
+            eatRangeVisualInstance.SetActive(false); // 먹는 중에는 숨김
+        }
+        SpriteRenderer sr = playerTransform.GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            sr.enabled = false;
+        }
 
+        // 여기서 isBeingEaten 켜기
+        if (playerStatusScript != null)
+        {
+            playerStatusScript.isBeingEaten = true;
+        }
 
         playerTransform.SetParent(transform);
         playerTransform.localPosition = Vector3.up * 0.5f;
@@ -174,7 +224,8 @@ public class SnackMonster : EnemyBase
                 AttackInfo attackInfo = new AttackInfo
                 {
                     damage = damagePerTick,
-                    attackDirection = Vector3.zero
+                    attackDirection = Vector3.zero,
+                    attacker = this.gameObject
                 };
                 playerStatusScript.ApplyDamage(attackInfo);
             }
@@ -182,9 +233,13 @@ public class SnackMonster : EnemyBase
             yield return new WaitForSeconds(damageInterval);
             elapsed += damageInterval;
         }
-
         if (playerStatusScript != null)
+        {
             playerStatusScript.EnableMovement();
+
+            // 먹기 끝나고 무적 해제
+            playerStatusScript.isBeingEaten = false;
+        }
 
         playerTransform.SetParent(null);
 
@@ -198,14 +253,19 @@ public class SnackMonster : EnemyBase
         }
 
         isEating = false;
+        animator.SetBool("isEating", false);
+
         attackTarget = null;
         isChasing = false;     
         rb.velocity = Vector3.zero;
 
-
+        animator.SetTrigger("spit");
         ChooseNewPatrolPoint();
         patrolTimer = patrolChangeTime;
-
+        if (sr != null)
+        {
+            sr.enabled = true;
+        }
 
         isPaused = true;
         yield return new WaitForSeconds(3f);
@@ -215,6 +275,8 @@ public class SnackMonster : EnemyBase
         attackTarget = playerTransform;
         isChasing = true;
         lastEatTime = Time.time;
+
+       
     }
 
     private void MoveToRigidbody(Vector3 targetPos, float speed)
