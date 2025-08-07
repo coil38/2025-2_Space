@@ -301,12 +301,16 @@ public class CoinMonster : EnemyBase
         }
     }
 
-//코인몬스터 소리
+    //코인몬스터 소리
     public void PlayRollSound()
     {
         if (audioSource != null && rollSound != null)
         {
-            audioSource.PlayOneShot(rollSound);
+            if (audioSource.isPlaying)
+                audioSource.Stop(); // 기존 소리 끊기
+
+            audioSource.clip = rollSound;
+            audioSource.Play();
         }
     }
 
