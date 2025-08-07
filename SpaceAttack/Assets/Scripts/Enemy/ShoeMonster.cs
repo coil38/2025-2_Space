@@ -61,6 +61,8 @@ public class ShoeMonster : EnemyBase
         }
     }
     #endregion
+
+    //배회상태
     protected override void Patrol()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, DetectRadius, playerLayer);
@@ -70,7 +72,9 @@ public class ShoeMonster : EnemyBase
             return;                    
         }
     }
+    
 
+    //플레이어 감지
     #region EnemyBase Override
     protected override void OnPlayerDetected(Transform player)
     {
@@ -86,6 +90,8 @@ public class ShoeMonster : EnemyBase
       
     }
     #region Coroutines
+
+    //뛰는 루틴 코드
     private IEnumerator HopRoutine()
     {
         while (!isDead)
@@ -116,6 +122,7 @@ public class ShoeMonster : EnemyBase
         }
     }
 
+    //공격 루틴
     private IEnumerator FireRoutine()
     {
         if (playerStatus == null || playerStatus.isDead || playerStatus.isBeingEaten)
@@ -150,6 +157,8 @@ public class ShoeMonster : EnemyBase
         canFire = true;
     }
     #endregion
+
+    //공격 총알 
 
     public void FireSingleBullet()
     {

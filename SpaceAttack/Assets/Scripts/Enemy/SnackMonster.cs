@@ -24,15 +24,14 @@ public class SnackMonster : EnemyBase
     [SerializeField] private AudioClip eatClip;
     [SerializeField] private AudioClip spitClip;
 
+
+    //상태변수들
     private float patrolTimer;
     private bool isChasing;
     private bool isEating = false;
     private GameObject eatRangeVisualInstance;
     private Vector3 lastPosition;
-
-
     private bool isPaused = false;
-
     private Transform playerTransform;
     private PlayerStatus playerStatusScript;
 
@@ -87,6 +86,7 @@ public class SnackMonster : EnemyBase
 
         lastPosition = transform.position; // 위치 갱신
     }
+    //움직임
     private void SetIsWalking(bool walking)
     {
         if (animator.GetBool("isWalking") != walking)
@@ -103,12 +103,13 @@ public class SnackMonster : EnemyBase
             }
         }
     }
+    //주변 배회 상태 자식
     private void ChooseNewPatrolPoint()
     {
         Vector2 randomOffset = Random.insideUnitCircle * 3f;
         patrolTarget = transform.position + new Vector3(randomOffset.x, 0, randomOffset.y);
     }
-
+    //플레이어 감지
     protected override void OnPlayerDetected(Transform player)
     {
         if (!isEating)
@@ -117,6 +118,7 @@ public class SnackMonster : EnemyBase
             attackTarget = player;
         }
     }
+    //플레이어가 박스 안에 있는가?
     private bool IsPlayerInEatBox()
     {
         Vector3 center = transform.position + (isFacingRight ? transform.right : -transform.right) * (eatRadius / 2);
@@ -130,6 +132,7 @@ public class SnackMonster : EnemyBase
         }
         return false;
     }
+    //주변 배회 상태
     private void Chase()
     {
         if (attackTarget == null)
@@ -172,7 +175,9 @@ public class SnackMonster : EnemyBase
             Flip(dirX);
         }
     }
+    
 
+    //먹기 코드
     private IEnumerator EatPlayerRoutine()
     {
         isEating = true;
@@ -205,13 +210,28 @@ public class SnackMonster : EnemyBase
         PlayEatSound();
         if (!IsPlayerInEatBox())
         {
+            Debug.Log("먹기 실패: 플레이어가 범위 밖에 있음");
+
             isEating = false;
-            if (eatRangeVisualInstance != null) Destroy(eatRangeVisualInstance);
+            isChasing = false;
+            rb.velocity = Vector3.zero;
+
+            if (eatRangeVisualInstance != null)
+            {
+                Destroy(eatRangeVisualInstance);
+                eatRangeVisualInstance = null;
+            }
+
+            animator.SetBool("isWalking", false); 
+            animator.SetTrigger("toIdle"); 
+            ChooseNewPatrolPoint(); 
+            patrolTimer = patrolChangeTime;
+
             yield break;
         }
         if (eatRangeVisualInstance != null)
         {
-            eatRangeVisualInstance.SetActive(false); // 먹는 중에는 숨김
+            eatRangeVisualInstance.SetActive(false); 
         }
         SpriteRenderer sr = playerTransform.GetComponent<SpriteRenderer>();
         if (sr != null)
@@ -219,7 +239,6 @@ public class SnackMonster : EnemyBase
             sr.enabled = false;
         }
 
-        // 여기서 isBeingEaten 켜기
         if (playerStatusScript != null)
         {
             playerStatusScript.isBeingEaten = true;
@@ -296,7 +315,7 @@ public class SnackMonster : EnemyBase
 
        
     }
-
+    //움직임
     private void MoveToRigidbody(Vector3 targetPos, float speed)
     {
         Vector3 direction = targetPos - rb.position;

@@ -83,6 +83,8 @@ public class CoinMonster : EnemyBase
             explodeRangeVisual.SetActive(false);
         }
     }
+
+    //다음 상태 배회
     private void SetNextPatrol()
     {
         isPatrolling = Random.value > 0.5f; 
@@ -92,6 +94,8 @@ public class CoinMonster : EnemyBase
 
     }
 
+
+    //주변 배회 상태 코드
     protected override void Patrol()
     {
         patrolTimer += Time.deltaTime;
@@ -99,18 +103,14 @@ public class CoinMonster : EnemyBase
         if (isPatrolling)
         {
             MoveRolling(patrolDirection, patrolSpeed);
-            animator.SetBool("StartRoll", true);
-
             if (patrolTimer >= patrolMoveTime)
             {
                 isPatrolling = false;
                 patrolTimer = 0f;
-                animator.SetBool("StartRoll", false);
             }
         }
         else
         {
-            animator.SetBool("StartRoll", false);
 
             if (patrolTimer >= patrolIdleTime)
             {
@@ -152,12 +152,14 @@ public class CoinMonster : EnemyBase
                 break;
         }
     }
+
+    //구르기가 끝났나?
     public void OnRollDone()
     {
-        animator.SetBool("RollDone", true);
         isRolling = false;
     }
 
+    //구르기 코드
     private void MoveRolling(Vector3 direction, float speed)
     {
         if (rb == null) return;
@@ -179,11 +181,13 @@ public class CoinMonster : EnemyBase
 
             isRolling = true;
             rollTimer = rollCooldown;             
-            animator.SetBool("RollDone", false);
+
         }
 
         lastMoveDirection = direction;
     }
+
+    //데미지 주기
     public override void ApplyDamage(AttackInfo attackInfo)
     {
         if (isDead || !canBeHit) return;
@@ -200,8 +204,6 @@ public class CoinMonster : EnemyBase
             base.ApplyDamage(attackInfo);
 
             state = CoinMonsterState.Patrol;  
-            animator.SetBool("StartRoll", false);
-            animator.SetBool("IsMoving", false);
             hasExploded = true;
 
             if (explodeRangeVisual != null)
@@ -222,15 +224,19 @@ public class CoinMonster : EnemyBase
     }
 
 
-
+    //플레이어 감지
     protected override void OnPlayerDetected(Transform detectedPlayer)
     {
         player = detectedPlayer;
         state = CoinMonsterState.Chase;
     }
 
+
+    //플레이어쫒기
     private void ChasePlayer()
     {
+
+        animator.SetBool("isChasing", true);
         if (player == null) return;
 
         float distance = Vector3.Distance(transform.position, player.position);
@@ -239,7 +245,6 @@ public class CoinMonster : EnemyBase
         {
             state = CoinMonsterState.ExplodeReady;
             animator.SetTrigger("StartCry");  
-            animator.SetBool("StartRoll", false); 
             explodeTimer = 0f;
             return;
         }
@@ -247,10 +252,9 @@ public class CoinMonster : EnemyBase
         Vector3 direction = (player.position - transform.position).normalized;
         MoveRolling(direction, chaseSpeed);
 
-        // 애니메이션 제어
-        animator.SetBool("StartRoll", true);      
     }
 
+    //폭발 준비
     private void ExplodeReady()
     {
 
@@ -261,9 +265,6 @@ public class CoinMonster : EnemyBase
             explodeRangeVisual.SetActive(true);
 
         explodeTimer += Time.deltaTime;
-
-        animator.SetBool("StartRoll", false);  
-        animator.SetBool("IsMoving", false);
         canBeHit = false;
 
         if (explodeTimer >= explosionDelay)
@@ -277,6 +278,8 @@ public class CoinMonster : EnemyBase
             Explode(); 
         }
     }
+    
+    //폭발 코드
     public void Explode()
     {
         if (hasExploded) return;
