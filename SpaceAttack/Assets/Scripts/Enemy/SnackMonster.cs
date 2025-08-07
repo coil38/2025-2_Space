@@ -18,6 +18,12 @@ public class SnackMonster : EnemyBase
     [SerializeField] private float eatCooldown = 2f;  // 뱉고 나서 다시 먹기까지 대기시간
     private float lastEatTime = -Mathf.Infinity;
 
+
+    [Header("사운드 클립들")]
+    [SerializeField] private AudioClip walkClip;
+    [SerializeField] private AudioClip eatClip;
+    [SerializeField] private AudioClip spitClip;
+
     private float patrolTimer;
     private bool isChasing;
     private bool isEating = false;
@@ -86,6 +92,15 @@ public class SnackMonster : EnemyBase
         if (animator.GetBool("isWalking") != walking)
         {
             animator.SetBool("isWalking", walking);
+
+            if (walking)
+            {
+                PlayWalkSound();
+            }
+            else
+            {
+                StopSound();
+            }
         }
     }
     private void ChooseNewPatrolPoint()
@@ -161,10 +176,11 @@ public class SnackMonster : EnemyBase
     private IEnumerator EatPlayerRoutine()
     {
         isEating = true;
-        animator.SetBool("isEating", true);
+        animator.SetTrigger("isEating");
         isChasing = false;
         rb.velocity = Vector3.zero;
 
+      
         playerTransform = attackTarget;
         playerStatusScript = playerTransform.GetComponent<PlayerStatus>();
 
@@ -186,7 +202,7 @@ public class SnackMonster : EnemyBase
         }
 
         yield return new WaitForSeconds(1.5f);
-
+        PlayEatSound();
         if (!IsPlayerInEatBox())
         {
             isEating = false;
@@ -253,13 +269,15 @@ public class SnackMonster : EnemyBase
         }
 
         isEating = false;
-        animator.SetBool("isEating", false);
+      
 
         attackTarget = null;
         isChasing = false;     
         rb.velocity = Vector3.zero;
 
+        
         animator.SetTrigger("spit");
+        PlaySpitSound();
         ChooseNewPatrolPoint();
         patrolTimer = patrolChangeTime;
         if (sr != null)
@@ -296,5 +314,45 @@ public class SnackMonster : EnemyBase
 
         Flip(move.x);
     }
+    //스낵 몬스터 사운드 
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
 
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
+    }
+
+    public void PlayWalkSound()
+    {
+        PlayClip(walkClip, loop: true);
+    }
+
+    public void PlayEatSound()
+    {
+        PlayClip(eatClip, loop: false);
+    }
+
+    public void PlaySpitSound()
+    {
+        PlayClip(spitClip, loop: false);
+    }
+
+    private void PlayClip(AudioClip clip, bool loop)
+    {
+        if (clip == null) return;
+
+        if (audioSource.isPlaying)
+            audioSource.Stop();
+
+        audioSource.loop = loop;
+        audioSource.clip = clip;
+        audioSource.Play();
+    }
+
+    public void StopSound()
+    {
+        if (audioSource.isPlaying)
+            audioSource.Stop();
+    }
 }

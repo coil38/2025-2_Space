@@ -1772,7 +1772,7 @@ PrefabInstance:
     - target: {fileID: 6914809680509299649, guid: cd3b0176977f738418c90edeb1c2c168,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1841,6 +1841,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: snackbagmonster
+      objectReference: {fileID: 0}
+    - target: {fileID: 8313812678542682393, guid: ffcd0c4f3158e684b880268b559301dc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

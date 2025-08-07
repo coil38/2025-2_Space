@@ -1109,7 +1109,7 @@ GameObject:
   - component: {fileID: 1184319801}
   - component: {fileID: 1184319800}
   - component: {fileID: 1184319799}
-  - component: {fileID: 1184319798}
+  - component: {fileID: 1184319805}
   m_Layer: 6
   m_Name: SnackMons
   m_TagString: SnackMonster
@@ -1117,7 +1117,112 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!82 &1184319798
+--- !u!114 &1184319799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184319797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e4d51f077e0e5b44adacb7a2d487ae9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 10
+  attackDistance: 2
+  detectAngle: 155
+  damage: 1
+  attackDuration: 0.5
+  detectRadius: 5
+  animator: {fileID: 3414471963663468486}
+  visualTransform: {fileID: 1191372313}
+  attackLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  hitInvincibleTime: 0.4
+  deathMarkPrefab: {fileID: 3373934178109677858, guid: c1caaa46b3d509e4ab3f20c75343c5df,
+    type: 3}
+  footPosition: {fileID: 658465852}
+  audioSource: {fileID: 1184319805}
+  hitSound: {fileID: 8300000, guid: 1bc8b9ac984a0ba4a9a33ca8c3a91097, type: 3}
+  patrolSpeed: 1.5
+  chaseSpeed: 2
+  patrolChangeTime: 4
+  eatRadius: 4
+  eatDuration: 3
+  damageInterval: 0.5
+  damagePerTick: 0.01
+  eatRangeVisualPrefab: {fileID: 418775520}
+  eatCooldown: 3
+  walkClip: {fileID: 8300000, guid: 2eb499a4091285844896ff546479ecb4, type: 3}
+  eatClip: {fileID: 8300000, guid: 59c59e213f7828548b4948d4c4b0932e, type: 3}
+  spitClip: {fileID: 8300000, guid: 541b477452489f743b39b891ae4e2c69, type: 3}
+--- !u!65 &1184319800
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184319797}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 11.793907, y: 12.478512, z: 3.054021}
+  m_Center: {x: -0.15420198, y: 5.739254, z: -0.016608337}
+--- !u!54 &1184319801
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184319797}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 2
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 0
+--- !u!4 &1184319802
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184319797}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.34, y: 0.32, z: -1.82}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1191372313}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1184319805
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1213,108 +1318,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1184319799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1184319797}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e4d51f077e0e5b44adacb7a2d487ae9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hp: 10
-  attackDistance: 2
-  detectAngle: 155
-  damage: 1
-  attackDuration: 0.5
-  detectRadius: 5
-  animator: {fileID: 3414471963663468486}
-  visualTransform: {fileID: 1191372313}
-  attackLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  hitInvincibleTime: 0.4
-  deathMarkPrefab: {fileID: 3373934178109677858, guid: c1caaa46b3d509e4ab3f20c75343c5df,
-    type: 3}
-  footPosition: {fileID: 658465852}
-  audioSource: {fileID: 1184319798}
-  hitSound: {fileID: 8300000, guid: 1bc8b9ac984a0ba4a9a33ca8c3a91097, type: 3}
-  patrolSpeed: 1.5
-  chaseSpeed: 2
-  patrolChangeTime: 4
-  eatRadius: 4
-  eatDuration: 3
-  damageInterval: 0.5
-  damagePerTick: 0.01
-  eatRangeVisualPrefab: {fileID: 418775520}
-  eatCooldown: 3
---- !u!65 &1184319800
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1184319797}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 11.793907, y: 12.478512, z: 3.054021}
-  m_Center: {x: -0.15420198, y: 5.739254, z: -0.016608337}
---- !u!54 &1184319801
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1184319797}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 2
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 116
-  m_CollisionDetection: 0
---- !u!4 &1184319802
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1184319797}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.62, y: 0.32, z: 1.719}
-  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1191372313}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1191372312
 GameObject:
   m_ObjectHideFlags: 0
@@ -2284,7 +2287,7 @@ PrefabInstance:
     - target: {fileID: 6422306526229571329, guid: 9541107c5822f594286f8457abebf1d4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.0783908
+      value: -0.14
       objectReference: {fileID: 0}
     - target: {fileID: 6422306526229571329, guid: 9541107c5822f594286f8457abebf1d4,
         type: 3}
@@ -2790,7 +2793,7 @@ PrefabInstance:
     - target: {fileID: 3210841994201302233, guid: d050b10c2f1f7bb49999ccd2284bded5,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4846051118577970345, guid: d050b10c2f1f7bb49999ccd2284bded5,
         type: 3}
