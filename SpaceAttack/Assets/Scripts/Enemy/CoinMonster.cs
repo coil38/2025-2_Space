@@ -199,6 +199,9 @@ public class CoinMonster : EnemyBase
             audioSource.PlayOneShot(hitSound);
         }
 
+        if (monsterHPUI != null)
+            monsterHPUI.ReduceHP(maxHP, hp);
+
         if (hp <= 0)
         {
             base.ApplyDamage(attackInfo);
@@ -257,15 +260,13 @@ public class CoinMonster : EnemyBase
     //폭발 준비
     private void ExplodeReady()
     {
-
-
         if (player == null) return;
 
         if (explodeRangeVisual != null)
             explodeRangeVisual.SetActive(true);
 
         explodeTimer += Time.deltaTime;
-        canBeHit = false;
+        //canBeHit = false;
 
         if (explodeTimer >= explosionDelay)
         {
@@ -299,6 +300,9 @@ public class CoinMonster : EnemyBase
         {
             sr.enabled = false;
         }
+
+        if (monsterHPUI != null)
+            monsterHPUI.ReduceHP(maxHP, 0);
     }
 
     //코인몬스터 소리

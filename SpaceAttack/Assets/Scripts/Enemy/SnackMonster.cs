@@ -192,7 +192,7 @@ public class SnackMonster : EnemyBase
      
         if (eatRangeVisualPrefab != null && eatRangeVisualInstance == null)
         {
-            eatRangeVisualInstance = Instantiate(eatRangeVisualPrefab);
+            eatRangeVisualInstance = Instantiate(eatRangeVisualPrefab);  
             eatRangeVisualInstance.SetActive(false);
 
             Vector3 visualOffset = (isFacingRight ? transform.right : -transform.right) * (eatRadius / 2);

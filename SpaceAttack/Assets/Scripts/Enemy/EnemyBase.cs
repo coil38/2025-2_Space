@@ -50,6 +50,10 @@ public abstract class EnemyBase : MonoBehaviour
     [SerializeField] protected AudioSource audioSource;
     [SerializeField] protected AudioClip hitSound;
 
+    [Header("공통 체력 UI")]
+    [SerializeField] protected MonsterHPUI monsterHPUI;
+    protected float maxHP = 10f;
+
     protected PlayerStatus playerStatus;
     protected float DetectRadius => detectRadius;
     protected virtual void OnPlayerDetected(Transform player) { }
@@ -77,6 +81,10 @@ public abstract class EnemyBase : MonoBehaviour
             playerStatus = playerObj.GetComponent<PlayerStatus>();
         else
             Debug.LogError("[EnemyBase] Player object with tag 'Player' not found!");
+
+        if (monsterHPUI == null)
+            Debug.LogError("monsterHPUI가 할당되지 않았습니다.");
+        else maxHP = hp;
 
         StartCoroutine(EnemyPattern());
     }
@@ -154,6 +162,9 @@ public abstract class EnemyBase : MonoBehaviour
         {
             audioSource.PlayOneShot(hitSound);
         }
+
+        if (monsterHPUI != null)
+            monsterHPUI.ReduceHP(maxHP, hp);
 
         if (hp <= 0)
         {
