@@ -15,7 +15,7 @@ public class CoinMonster : EnemyBase
     [Header("코인 몬스터 설정")]
     public float explodeReadySpeed = 1f;
     public float explosionDelay = 2f;
-    public float explosionDamage = 5f;
+    public int explosionDamage = 5;
     public float explosionKnockbackForce = 5f;
     private float rollCooldown = 0.4f;  // 한 번 굴고 나서 다시 굴 수 있는 최소 시간
     private float rollTimer = 0f;

@@ -5,8 +5,8 @@ using UnityEngine;
 public class ShoeBullet : MonoBehaviour
 {
     [Header("총알 정보")]
-    public float damage = 1f;
-    public float lifetime = 3f;      
+    public int damage = 1;
+    public float lifetime = 3f;
     public float knockback = 2f;
 
     private Rigidbody rb;

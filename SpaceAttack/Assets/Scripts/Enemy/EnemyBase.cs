@@ -12,7 +12,7 @@ public abstract class EnemyBase : MonoBehaviour
     public float hp = 10f;
     public float attackDistance = 2f;
     public float detectAngle = 155f;
-    public float damage = 1f;
+    public int damage = 1;
     public float attackDuration = 0.5f;
 
     [Header("공통 탐지 설정")]

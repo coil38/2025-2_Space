@@ -13,7 +13,7 @@ public class SnackMonster : EnemyBase
     [SerializeField] private float eatRadius = 2f;
     [SerializeField] private float eatDuration = 3f;         // 먹는 시간 총합
     [SerializeField] private float damageInterval = 0.5f;    // HP 깎는 간격
-    [SerializeField] private float damagePerTick = 1f;       // 한 번에 깎는 HP 양
+    [SerializeField] private int damagePerTick = 1;       // 한 번에 깎는 HP 양
     [SerializeField] private GameObject eatRangeVisualPrefab;
     [SerializeField] private float eatCooldown = 2f;  // 뱉고 나서 다시 먹기까지 대기시간
     private float lastEatTime = -Mathf.Infinity;
