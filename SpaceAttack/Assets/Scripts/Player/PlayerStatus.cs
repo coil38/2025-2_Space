@@ -9,7 +9,7 @@ public class PlayerStatus : MonoBehaviour
     public static int m_hp = 5;               //체력
     public static int m_maxhp = 10;           //최대 체력
     public float m_speed = 5f;            //이동 속도
-    public float m_DashDruation = 2.2f;   //대쉬 거리
+    public float m_DashDistance = 2.2f;   //대쉬 거리
     public float itemDetectDistance = 1.8f; //아이템 감지거리
 
     public ParticleSystem m_Particle;

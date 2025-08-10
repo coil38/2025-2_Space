@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.UIElements;
 using UnityEngine;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class CharacterMovement : MonoBehaviour
 {
     private PlayerStatus playerState;
     private InventoryManager inventory;
     private Rigidbody rb;
-    private Animator animator;
+    private PlayerMovementAnimationController movementAniController;
 
     private Vector3 currentDir = Vector3.zero;
 
@@ -21,12 +22,12 @@ public class CharacterMovement : MonoBehaviour
     private bool startDash;
     private Vector3 currentPos;
     private Vector3 targetPos;
-    private float dashDur;          //예외처리용
+    private float dashDis;          //예외처리용
     private void Start()
     {
         playerState = GetComponent<PlayerStatus>();
         rb = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
+        movementAniController = GetComponent<PlayerMovementAnimationController>();
         inventory = GetComponent<InventoryManager>();
 
         wallLayer |= 1 << LayerMask.NameToLayer("Wall");
@@ -41,10 +42,10 @@ public class CharacterMovement : MonoBehaviour
 
     public void Move()  //플레이어 이동
     {
-        float horizotal = Input.GetAxis("Horizontal");
+        float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        Vector3 dir = new Vector3(horizotal, 0, vertical).normalized;
+        Vector3 dir = new Vector3(horizontal, 0, vertical).normalized;
 
         if (dir != Vector3.zero) currentDir = dir.normalized;  //현재 방향값이 0이 아닐 때만 전달
         else
@@ -69,14 +70,8 @@ public class CharacterMovement : MonoBehaviour
                 AudioManager.instance.PauseSound("Run");
         }
 
-        if ((horizotal < 0 && playerState.m_FacingRight) || (horizotal > 0 && !playerState.m_FacingRight)) //(입력 - 좌, 캐릭터 - 오) || (입력 - 우, 캐릭터 - 좌) --> 반전
-        {
-            //Debug.Log($"실행된다.");
-            playerState.Flip();
-        }
-
-        animator.SetFloat("Horizontal", horizotal);               //애니메이션 파리미터 전달
-        animator.SetFloat("Vertical", vertical);
+        movementAniController.UpdateMoveDirection(horizontal, vertical);  //애니메이션 이동방향 갱신
+        movementAniController.PlayAnimation("Move", horizontal, vertical); //이동 애니메이션 재생
 
         rb.MovePosition(rb.position + dir * playerState.m_speed * Time.deltaTime);   //플레이어 이동
     }
@@ -93,28 +88,28 @@ public class CharacterMovement : MonoBehaviour
             AudioManager.instance.PlaySound("Dash");
         }
 
-        animator.SetBool("IsDashing", true);
+        dashDis = playerState.m_DashDistance;
 
-        dashDur = playerState.m_DashDruation;
+        movementAniController.PlayAnimation("Dash", 0, 0, TimeSystem.w_DashTime); //대쉬 애니메이션 재생
 
-        if (Physics.Raycast(transform.position, currentDir, out RaycastHit hit, dashDur, wallLayer))   //벽이 있을 경우의 예외처리(이동거리, 이동시간)
+        if (Physics.Raycast(transform.position, currentDir, out RaycastHit hit, dashDis, wallLayer))   //벽이 있을 경우의 예외처리(이동거리, 이동시간)
         {
-            dashDur = Vector3.Distance(hit.point, transform.position) - 0.55f;
-            dashDur = Mathf.Max(dashDur, 0f);
+            dashDis = Vector3.Distance(hit.point, transform.position) - 0.55f;
+            dashDis = Mathf.Max(dashDis, 0f);
         }
 
-        Debug.Log(dashDur);
+        Debug.Log(dashDis);
 
         TimeSystem.w_dashTimer.Start();   //대쉬 대기 시간(0.15 초 동안)
         TimeSystem.deshTimer.Start();     //대쉬 타이머 시작  (0.1 초 동안)
 
         SetDashInfo();     //대쉬 위치 설정
-        if(dashDur > 0) startDash = true;  //대쉬 시작
+        if(dashDis > 0) startDash = true;  //대쉬 시작
     }
     private void SetDashInfo()
     {
         currentPos = new Vector3(transform.position.x, 0, transform.position.z);
-        targetPos = currentPos + currentDir.normalized * dashDur;
+        targetPos = currentPos + currentDir.normalized * dashDis;
     }
     private void PlayerDash()
     {
