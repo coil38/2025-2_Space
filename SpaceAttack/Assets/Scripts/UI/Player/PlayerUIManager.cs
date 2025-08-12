@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 public class PlayerUIManager : MonoBehaviour
 {
     public static PlayerUIManager instance;
 
-    public PlayerHPUI playerHPUI;
+    [SerializeField] PlayerHPUI playerHPUI;
+    [SerializeField] PlayerCoreUI playerCoreUI;
     private void Awake()
     {
         if (instance == null)
@@ -33,5 +35,10 @@ public class PlayerUIManager : MonoBehaviour
     public void ReducePlayerUI(int hp, int damage)
     {
         playerHPUI.ReduceHPUI(hp, damage);
+    }
+
+    public void UpdatePlayerEXP(ExpInfo expInfo)
+    {
+        playerCoreUI.UpdateEXP(expInfo);
     }
 }
