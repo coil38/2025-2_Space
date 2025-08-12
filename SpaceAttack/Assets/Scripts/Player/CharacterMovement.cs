@@ -57,17 +57,11 @@ public class CharacterMovement : MonoBehaviour
         {
             isMoving = true;
             playerState.m_Particle.Play();   //이동하기 시작하면 파티클 재생
-
-            if (AudioManager.instance != null)
-                AudioManager.instance.PlaySound("Run");
         }
         else if(dir.magnitude < 0.1f && isMoving)
         {
             isMoving = false;
             playerState.m_Particle.Stop();       //이동이 멈추면 파티클 종료
-
-            if (AudioManager.instance != null)
-                AudioManager.instance.PauseSound("Run");
         }
 
         movementAniController.UpdateMoveDirection(horizontal, vertical);  //애니메이션 이동방향 갱신

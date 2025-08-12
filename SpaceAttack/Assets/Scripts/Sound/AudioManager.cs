@@ -60,6 +60,16 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public void StopSound(string name)
+    {
+        Sound pauseSound = sounds.Find(s => s.name == name);
+
+        if (pauseSound != null)
+        {
+            pauseSound.source.Stop();
+        }
+    }
+
     public void StopAllSounds()
     {
         foreach (var sound in sounds)

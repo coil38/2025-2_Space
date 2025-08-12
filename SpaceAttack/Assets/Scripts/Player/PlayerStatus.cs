@@ -178,8 +178,8 @@ public class PlayerStatus : MonoBehaviour
         }
         else
         {
-            //if (AudioManager.instance != null)
-            //    AudioManager.instance.PlaySound("Hit");
+            if (AudioManager.instance != null)
+                AudioManager.instance.PlaySound("Hit");
 
             TimeSystem.stunTimer.Start();   //스턴 타이머 시작
                                             //스턴 연출 시작
