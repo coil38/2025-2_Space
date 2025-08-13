@@ -64,9 +64,6 @@ public class PlayerStatus : MonoBehaviour
 
         if (attackScript != null)
             attackScript.enabled = false;
-
-        // 애니메이션도 멈추고 싶으면 추가 가능
-        animator.SetBool("IsMoving", false);
     }
 
     public void EnableMovement()

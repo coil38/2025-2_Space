@@ -175,7 +175,18 @@ public class SnackMonster : EnemyBase
             Flip(dirX);
         }
     }
-    
+
+    //죽었을때 시각화 프리팹 사라지는 코드
+    protected override void OnDeath()
+    {
+        if (eatRangeVisualInstance != null)
+        {
+            Destroy(eatRangeVisualInstance);
+            eatRangeVisualInstance = null;
+        }
+        isEating = false;
+        isChasing = false;
+    }
 
     //먹기 코드
     private IEnumerator EatPlayerRoutine()

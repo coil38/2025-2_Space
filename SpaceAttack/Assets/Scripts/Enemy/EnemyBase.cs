@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -60,7 +61,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected Transform attackTarget;
 
-
+    public Action<EnemyBase> OnDeathAction; // 몬스터 죽을 때 이벤트
     protected virtual void Start()
     {
         if (visualTransform != null)
@@ -152,6 +153,7 @@ public abstract class EnemyBase : MonoBehaviour
     }
     protected virtual void Attack() { }
 
+    protected virtual void OnDeath() { }
     public virtual void ApplyDamage(AttackInfo attackInfo)
     {
         if (isDead || !canBeHit) return;
@@ -159,32 +161,36 @@ public abstract class EnemyBase : MonoBehaviour
         hp -= attackInfo.damage;
 
         if (hitSound != null && audioSource != null)
-        {
             audioSource.PlayOneShot(hitSound);
-        }
 
         if (monsterHPUI != null)
             monsterHPUI.ReduceHP(maxHP, hp);
 
-        if (hp <= 0)
+        // 사망 체크
+        if (hp <= 0 && !isDead)
         {
-            if (!isDead)
+            isDead = true;
+
+            OnDeathAction?.Invoke(this);
+
+            int exp = UnityEngine.Random.Range(3, 7);
+            PlayerCore.GetDarkMatter(exp);
+
+            OnDeath();
+
+            animator.SetBool("Dead", true);
+            rb.velocity = Vector3.zero;
+            rb.AddForce(attackInfo.attackDirection, ForceMode.Impulse);
+
+            if (deathMarkPrefab != null && footPosition != null)
             {
-                isDead = true;
-                animator.SetBool("Dead", true);
-                rb.velocity = Vector3.zero;
-                rb.AddForce(attackInfo.attackDirection, ForceMode.Impulse);
-
-                if (deathMarkPrefab != null && footPosition != null)
-                {
-                    Vector3 spawnPos = footPosition.position;
-                    Instantiate(deathMarkPrefab, spawnPos, Quaternion.identity);
-                }
-
-                Destroy(gameObject, 1f);
+                Vector3 spawnPos = footPosition.position;
+                Instantiate(deathMarkPrefab, spawnPos, Quaternion.identity);
             }
+
+            Destroy(gameObject, 1f);
         }
-        else
+        else if (hp > 0) 
         {
             rb.velocity = Vector3.zero;
             rb.AddForce(attackInfo.attackDirection * 0.5f, ForceMode.Impulse);
