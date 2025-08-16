@@ -30,9 +30,11 @@ public class InventoryManager : MonoBehaviour
     }
 
     private PlayerAttack playerAttack;
+    private PlayerMovementAnimationController aniController;
     void Start()
     {
         playerAttack = GetComponent<PlayerAttack>();
+        aniController = GetComponent<PlayerMovementAnimationController>();
     }
 
     void Update()
@@ -55,11 +57,22 @@ public class InventoryManager : MonoBehaviour
     private void RemoveChipsetToPlayerAttack(ChipSetType m_chipSet)
     {
         playerAttack.WeaponType = null;
-        m_chipSet.weapon.attackAnimator = null;
+
+        //PMAC용
+        aniController.SetAnimator(m_chipSet.animator, m_chipSet.name, false);  //공격본의 애니메이터 null처리
+        m_chipSet.weapon.weaponAniDelegate -= aniController.OnAttackObj;   //공격본 활성화함수 체인 해지 처리
+
+        //CAC용
+        ChipsetAnimationController temp = _chipSet.GetComponent<ChipsetAnimationController>();
+        temp.SetAnimator(null);                                //공격본의 애니메이터 전달
+        _chipSet.weapon.weaponAniDelegate -= temp.PlayAttackAnimation;    //애니메이션 실행 코드 체인 구독 처리
 
         playerAttack.SkillTypes = null;
         foreach (var skill in m_chipSet.skills)
         {
+            skill.skillAniDelegate -= aniController.OnAttackObj;    //공격본 활성화함수 체인 해지 처리
+            skill.skillAniDelegate -= temp.PlayAttackAnimation;    //애니메이션 실행 코드 체인 해지 처리
+
             skill.attackAnimator = null;
             skill.lineRenderer = null;
         }
@@ -73,20 +86,32 @@ public class InventoryManager : MonoBehaviour
 
         _chipSet.gameObject.transform.SetParent(this.transform);                  //해당 칩셋을 Player 자식으로 넣기
         _chipSet.gameObject.transform.localPosition = Vector3.zero;
+
     }
 
 
     private void SetChipsetToPlayerAttack()        //PlayerAttack 스크립트에 접근 구현
     {
         playerAttack.WeaponType = _chipSet.weapon;
-        TimeSystem.w_w_AttackTimer = _chipSet.weapon.w_AttackTimer;  //대기시간 설정
-        _chipSet.weapon.attackAnimator = GetComponent<Animator>();  //애니메이터 전달
+        PlayerTimeSystem.w_BaseAttackTimer = _chipSet.weapon.w_AttackTimer;  //대기시간 설정
+
+        //PMAC용
+        aniController.SetAnimator(_chipSet.animator, _chipSet.name, true);  //공격본의 애니메이터 할당처리
+        _chipSet.weapon.weaponAniDelegate += aniController.OnAttackObj;   //공격본 활성화함수 체인 구독 처리
+
+        //CAC용
+        ChipsetAnimationController temp = _chipSet.GetComponent<ChipsetAnimationController>();
+        temp.SetAnimator(aniController.attackAnimator);                   //공격본의 애니메이터 전달
+        _chipSet.weapon.weaponAniDelegate += temp.PlayAttackAnimation;    //애니메이션 실행 코드 체인 구독 처리
 
         playerAttack.SkillTypes = _chipSet.skills;
-        TimeSystem.s_w_AttackTimer = _chipSet.skills[0].s_AttackTimer;  //대기시간 설정
+        PlayerTimeSystem.w_SkillTimer = _chipSet.skills[0].s_AttackTimer;  //대기시간 설정
 
         foreach (var skill in _chipSet.skills)
         {
+            skill.skillAniDelegate += aniController.OnAttackObj;   //공격본 활성화함수 체인 구독 처리
+            skill.skillAniDelegate += temp.PlayAttackAnimation;    //애니메이션 실행 코드 체인 구독 처리
+
             skill.attackAnimator = GetComponent<Animator>();
             skill.lineRenderer = GetComponent<LineRenderer>();
         }

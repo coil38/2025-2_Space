@@ -20,17 +20,17 @@ public class PlayerMovement : MonoBehaviour
     {
         if (playerState.isDead) return;
 
-        if (!playerState.isDashing && !TimeSystem.stunTimer.IsRunning())  //대쉬 혹은 스턴 상태에서 이동 안됨
+        if (!playerState.isDashing && !PlayerTimeSystem.stunTimer.IsRunning())  //대쉬 혹은 스턴 상태에서 이동 안됨
         {
-            if (TimeSystem.w_w_AttackTimer != null)
-                if (!TimeSystem.w_w_AttackTimer.IsRunning())
+            if (PlayerTimeSystem.w_BaseAttackTimer != null)
+                if (!PlayerTimeSystem.w_BaseAttackTimer.IsRunning())
                     isAttacking = false;
                 else isAttacking = true;
             else isAttacking = false;                            //임시로 활성화 시킴
 
 
-            if (TimeSystem.s_w_AttackTimer != null)
-                if (!TimeSystem.s_w_AttackTimer.IsRunning())
+            if (PlayerTimeSystem.w_SkillTimer != null)
+                if (!PlayerTimeSystem.w_SkillTimer.IsRunning())
                     isUsingSkill = false;
                 else isUsingSkill = true;
             else isUsingSkill = false;                            //임시로 활성화 시킴

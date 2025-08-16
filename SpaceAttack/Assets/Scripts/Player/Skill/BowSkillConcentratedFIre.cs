@@ -57,18 +57,18 @@ public class BowSkillConcentratedFIre : SkillType
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (coolTimer.IsRunning() || TimeSystem.s_w_AttackTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
+            if (coolTimer.IsRunning() || PlayerTimeSystem.w_SkillTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
 
             isAttacking = true;                 //플레이어 입력감지
             isPlayGizoms = true;
 
-            TimeSystem.s_w_AttackTimer = w_AttackTimer;
-            TimeSystem.s_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
+            PlayerTimeSystem.w_SkillTimer = w_AttackTimer;
+            PlayerTimeSystem.w_SkillTimer.Start();                 //다음 공격 전 대기 체크 시작
         }
 
         if (isAttacking)
         {
-            TimeSystem.s_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
+            PlayerTimeSystem.w_SkillTimer.Start();                 //다음 공격 전 대기 체크 시작
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);   //마우스 위치 받기
             Vector3 mousePos = Vector3.zero;
@@ -100,8 +100,8 @@ public class BowSkillConcentratedFIre : SkillType
                 //공격 사운드 재생
                 //공격 애니메이션 재생
 
-                TimeSystem.s_w_AttackTimer = w_AttackTimer;
-                TimeSystem.s_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
+                PlayerTimeSystem.w_SkillTimer = w_AttackTimer;
+                PlayerTimeSystem.w_SkillTimer.Start();                 //다음 공격 전 대기 체크 시작
 
                 coolTimer.Start();         //쿨타임 시작
 

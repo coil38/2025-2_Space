@@ -61,13 +61,13 @@ public class WeaponBow : WeaponType     //시전시간(발사: 애니메이션 �
 
         if (Input.GetMouseButtonDown(0))  //플레이어 입력감지
         {
-            if (TimeSystem.s_w_AttackTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
+            if (PlayerTimeSystem.w_SkillTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
 
             // 애니메이션 추가
             // 사운드 추가
 
-            TimeSystem.s_w_AttackTimer = w_AttackTimer;
-            TimeSystem.s_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
+            PlayerTimeSystem.w_SkillTimer = w_AttackTimer;
+            PlayerTimeSystem.w_SkillTimer.Start();                 //다음 공격 전 대기 체크 시작
 
             isAttacking = true;
 

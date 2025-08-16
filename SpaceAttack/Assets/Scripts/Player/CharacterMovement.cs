@@ -84,7 +84,7 @@ public class CharacterMovement : MonoBehaviour
 
         dashDis = playerState.m_DashDistance;
 
-        movementAniController.PlayAnimation("Dash", 0, 0, TimeSystem.w_DashTime); //대쉬 애니메이션 재생
+        movementAniController.PlayAnimation("Dash", 0, 0, PlayerTimeSystem.w_DashTime); //대쉬 애니메이션 재생
 
         if (Physics.Raycast(transform.position, currentDir, out RaycastHit hit, dashDis, wallLayer))   //벽이 있을 경우의 예외처리(이동거리, 이동시간)
         {
@@ -92,10 +92,10 @@ public class CharacterMovement : MonoBehaviour
             dashDis = Mathf.Max(dashDis, 0f);
         }
 
-        Debug.Log(dashDis);
+        //Debug.Log(dashDis);
 
-        TimeSystem.w_dashTimer.Start();   //대쉬 대기 시간(0.15 초 동안)
-        TimeSystem.deshTimer.Start();     //대쉬 타이머 시작  (0.1 초 동안)
+        PlayerTimeSystem.w_dashTimer.Start();   //대쉬 대기 시간(0.15 초 동안)
+        PlayerTimeSystem.deshTimer.Start();     //대쉬 타이머 시작  (0.1 초 동안)
 
         SetDashInfo();     //대쉬 위치 설정
         if(dashDis > 0) startDash = true;  //대쉬 시작
@@ -107,8 +107,8 @@ public class CharacterMovement : MonoBehaviour
     }
     private void PlayerDash()
     {
-        Timer dashTimer = TimeSystem.deshTimer;
-        float dashTime = TimeSystem.m_DashTime;
+        Timer dashTimer = PlayerTimeSystem.deshTimer;
+        float dashTime = PlayerTimeSystem.m_DashTime;
 
         float timer = dashTimer.GetRemainingTimer() / dashTime;
 

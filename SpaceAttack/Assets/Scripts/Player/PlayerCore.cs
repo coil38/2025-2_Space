@@ -25,6 +25,12 @@ public class PlayerCore : MonoBehaviour
 
     public static void GetDarkMatter(int exp)     //암흑물질(경험치) 획득
     {
+        if (PlayerUIManager.instance == null)     //예외처리
+        {
+            Debug.LogError("플레이어 메인 UI를 찾을 수 없습니다.");
+            return;
+        }
+
         ExpInfo expInfo = new ExpInfo(DarkMaterialCount, DarkMaterialCount + exp, maxLevel, Level, 110);  //경험치업에 필요한 정보생성
         PlayerUIManager.instance.UpdatePlayerEXP(expInfo);     //UI 갱신 및 연출 재생
 

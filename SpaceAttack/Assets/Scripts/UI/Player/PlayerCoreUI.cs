@@ -38,7 +38,7 @@ public class PlayerCoreUI : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log($"현재 대기자수: {expInfos.Count}");
+        //Debug.Log($"현재 대기자수: {expInfos.Count}");
 
         if (expInfos.Count > 0 && currentCor == null)  //대기중인 정보들 업데이트
         {

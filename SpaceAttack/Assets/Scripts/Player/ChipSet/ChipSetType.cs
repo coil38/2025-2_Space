@@ -10,6 +10,7 @@ public abstract class ChipSetType : MonoBehaviour
     public abstract string description { get; protected set; }
     public abstract Sprite iconImage { get; protected set; }
     public abstract GameObject prefab { get; protected set; }
+    public abstract Animator animator { get; protected set; }
     public abstract void SetCorrectionValue(Object obj, FindCorectionValueEvent e);
 
 }

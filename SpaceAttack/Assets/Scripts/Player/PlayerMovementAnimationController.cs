@@ -11,9 +11,14 @@ public enum MoveDirection
 
 public class PlayerMovementAnimationController : MonoBehaviour
 {
+    [Header("애니메이션 오브젝트들")]
     public GameObject FrontMoveObj;
     public GameObject BackMoveObj;
     public GameObject SideMoveObj;
+    public GameObject AttackObj;
+
+    [Header("무기 오브젝트들")]
+    public GameObject SwordObj;
 
     private Animator frontMoveAnimator;
     private Animator backMoveAnimator;
@@ -22,6 +27,10 @@ public class PlayerMovementAnimationController : MonoBehaviour
     private MoveDirection moveDirection;
     private MoveDirection currentDirection;
     private PlayerStatus playerStatus;
+
+    private bool isAttacking;   //공격여부 내부 변수
+    [HideInInspector] public Animator attackAnimator;
+
     void Start()
     {
         frontMoveAnimator = FrontMoveObj.GetComponent<Animator>();
@@ -29,6 +38,22 @@ public class PlayerMovementAnimationController : MonoBehaviour
         sideMoveAnimator = SideMoveObj.GetComponent<Animator>();
 
         playerStatus = GetComponent<PlayerStatus>();
+    }
+
+    void Update()
+    {
+        if (!isAttacking) return;
+
+        AnimatorStateInfo stateInfo = attackAnimator.GetCurrentAnimatorStateInfo(0);
+
+        if (PlayerEndParamBehaviour.isEndAttack)  //모든 칩셋의 공격 이름 BaseAttack으로 통일
+        {
+            Debug.Log("공격종료");
+            PlayerEndParamBehaviour.isEndAttack = false;
+            AttackObj.SetActive(false);
+            isAttacking = false;
+            SetDirection();
+        }
     }
 
     public void UpdateMoveDirection(float horizontal, float Vertical) //검사순서 --> 위,아래 --> 사이드 (이유: 위아래 애니메이션을 더 잘만들어서 )
@@ -46,24 +71,31 @@ public class PlayerMovementAnimationController : MonoBehaviour
             }
         }
 
+        if (isAttacking) return; //현재 공격중일 경우, 리턴처리
+
         if (currentDirection != moveDirection)  //방향이 바뀌었을 경우, 애니메이션오브젝트 활성화 여부 결정
         {
-            ResetAnimationObj();
-            switch (moveDirection)
-            {
-                case MoveDirection.Front:
-                    FrontMoveObj.SetActive(true);
-                    break;
-                case MoveDirection.Back:
-                    BackMoveObj.SetActive(true);
-                    break;
-                case MoveDirection.Side:
-                    SideMoveObj.SetActive(true);
-                    break;
-            }
+            SetDirection();
         }
 
         currentDirection = moveDirection;  //최신 방향 갱신
+    }
+
+    private void SetDirection()
+    {
+        ResetAnimationObj();
+        switch (moveDirection)
+        {
+            case MoveDirection.Front:
+                FrontMoveObj.SetActive(true);
+                break;
+            case MoveDirection.Back:
+                BackMoveObj.SetActive(true);
+                break;
+            case MoveDirection.Side:
+                SideMoveObj.SetActive(true);
+                break;
+        }
     }
 
     public void PlayAnimation(string name, float horizontal = 0, float Vertical = 0, float dashDuration = 0)
@@ -79,10 +111,12 @@ public class PlayerMovementAnimationController : MonoBehaviour
             case "Dash":
                 if (moveDirection == MoveDirection.Front)
                 {
+                    frontMoveAnimator.SetFloat("DashSpeed", Mathf.Clamp(2f / dashDuration, 0.5f, 5f));
                     frontMoveAnimator.SetTrigger("Dash");
                 }
                 else if (moveDirection == MoveDirection.Back)
                 {
+                    backMoveAnimator.SetFloat("DashSpeed", Mathf.Clamp(2f / dashDuration, 0.5f, 5f));
                     backMoveAnimator.SetTrigger("Dash");
                 }
                 else if (moveDirection == MoveDirection.Side)
@@ -97,10 +131,48 @@ public class PlayerMovementAnimationController : MonoBehaviour
         }
     }
 
+    public void SetAnimator(Animator animator, string chipsetName, bool isAdding)  //공격본에 애니메이터 설정
+    {
+        if (isAdding)
+        {
+            AttackObj.GetComponent<Animator>().runtimeAnimatorController = animator.runtimeAnimatorController;
+            attackAnimator = AttackObj.GetComponent<Animator>();
+
+            ResetWeaponObj();
+            switch (chipsetName)
+            {
+                case "Warrior":
+                    SwordObj.SetActive(true);
+                    break;
+            }
+        }
+        else
+        {
+            AttackObj.GetComponent<Animator>().runtimeAnimatorController = null;
+            attackAnimator = null;
+
+            ResetWeaponObj();  //무기 초기화
+        }
+    }
+
+    public void OnAttackObj(PlayerAniInfo _aniInfo)
+    {
+        Debug.Log("공격 중");
+        isAttacking = true;  //공격활성화 처리
+        ResetAnimationObj();
+        AttackObj.SetActive(true);
+    }
+
     private void ResetAnimationObj()    // 애니메이션 오브젝트들 초기화함수
     {
         FrontMoveObj.SetActive(false);
         SideMoveObj.SetActive(false);
         BackMoveObj.SetActive(false);
+    }
+
+    private void ResetWeaponObj()
+    {
+        SwordObj.SetActive(false);
+        //추가 예정
     }
 }

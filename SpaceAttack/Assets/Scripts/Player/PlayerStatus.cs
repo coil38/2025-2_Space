@@ -9,7 +9,7 @@ public class PlayerStatus : MonoBehaviour
     public static int m_hp = 5;               //체력
     public static int m_maxhp = 10;           //최대 체력
     public float m_speed = 5f;            //이동 속도
-    public float m_DashDistance = 2.2f;   //대쉬 거리
+    public float m_DashDistance = 3.2f;   //대쉬 거리
     public float itemDetectDistance = 1.8f; //아이템 감지거리
 
     public ParticleSystem m_Particle;
@@ -80,15 +80,15 @@ public class PlayerStatus : MonoBehaviour
     void Update()
     {
         //각각의 상태 실행여부값 할당
-        isDashing = TimeSystem.w_dashTimer.IsRunning();
-        isInvincibility = TimeSystem.invincibilityTimer.IsRunning();
-        isStuned = TimeSystem.stunTimer.IsRunning();
+        isDashing = PlayerTimeSystem.w_dashTimer.IsRunning();
+        isInvincibility = PlayerTimeSystem.invincibilityTimer.IsRunning();
+        isStuned = PlayerTimeSystem.stunTimer.IsRunning();
 
-        if (TimeSystem.w_w_AttackTimer != null)
-            isAttacking = TimeSystem.w_w_AttackTimer.IsRunning();
+        if (PlayerTimeSystem.w_BaseAttackTimer != null)
+            isAttacking = PlayerTimeSystem.w_BaseAttackTimer.IsRunning();
 
-        if (TimeSystem.s_w_AttackTimer != null)
-            isUsingSkill = TimeSystem.s_w_AttackTimer.IsRunning();
+        if (PlayerTimeSystem.w_SkillTimer != null)
+            isUsingSkill = PlayerTimeSystem.w_SkillTimer.IsRunning();
 
 
         CheckApplyDamage();    //피격 체킹
@@ -178,7 +178,7 @@ public class PlayerStatus : MonoBehaviour
             if (AudioManager.instance != null)
                 AudioManager.instance.PlaySound("Hit");
 
-            TimeSystem.stunTimer.Start();   //스턴 타이머 시작
+            PlayerTimeSystem.stunTimer.Start();   //스턴 타이머 시작
                                             //스턴 연출 시작
             animator.SetTrigger("Hit");                          //피격 애니메이션
             Debug.Log("플레이어 피격");

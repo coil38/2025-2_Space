@@ -8,10 +8,10 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
 
     private float attackDistance = 2f;
     private float damage = 4f;
-    private float r_AttackTime = 0.2f;
+    private float r_AttackTime = 0.3f;
     private float mass = 1f;
     private float detectAngle = 155f;
-    private float w_attackTime = 0.4f;    //검 공격 대기 시간
+    private float w_attackTime = 0.6f;    //검 공격 대기 시간
 
     private LayerMask planLayer;   //바닥감지용 리이어 마스크
     private LayerMask enemyLayer;  //적감지용 레이어 마스크
@@ -60,13 +60,17 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
 
         if (Input.GetMouseButtonDown(0))  //마우스 클릭시, 공격
         {
-            if (TimeSystem.w_w_AttackTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
+            if (PlayerTimeSystem.w_BaseAttackTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
 
             if (AudioManager.instance != null)
                 AudioManager.instance.PlaySound("Attack");
 
-            attackAnimator.SetBool("IsAttacking", true);      //공격 애니메이션 실행
-            TimeSystem.w_w_AttackTimer.Start();                 //다음 공격 전 대기 체크 시작
+            PlayerTimeSystem.w_BaseAttackTimer = w_AttackTimer; //공격 타이머 할당
+
+            PlayerAniInfo aniInfo = new PlayerAniInfo("isAttacking", AniType.Trrigger, 1.33f / w_attackTime);  //공격 애니메이션 실행
+            PlayAniMation(aniInfo);
+
+            PlayerTimeSystem.w_BaseAttackTimer.Start();                 //다음 공격 전 대기 체크 시작
 
             isAttacking = true;
 
