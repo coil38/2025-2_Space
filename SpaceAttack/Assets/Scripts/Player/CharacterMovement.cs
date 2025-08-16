@@ -102,7 +102,7 @@ public class CharacterMovement : MonoBehaviour
     }
     private void SetDashInfo()
     {
-        currentPos = new Vector3(transform.position.x, 0, transform.position.z);
+        currentPos = transform.position;
         targetPos = currentPos + currentDir.normalized * dashDis;
     }
     private void PlayerDash()

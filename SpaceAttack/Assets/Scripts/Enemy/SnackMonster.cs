@@ -259,7 +259,7 @@ public class SnackMonster : EnemyBase
         playerTransform.localPosition = Vector3.up * 0.5f;
 
         if (playerStatusScript != null)
-            playerStatusScript.DisableMovement();
+            playerStatusScript.isRooted = true;   //플레이어 속박처리
 
         float elapsed = 0f;
 
@@ -274,6 +274,8 @@ public class SnackMonster : EnemyBase
                     attacker = this.gameObject
                 };
                 playerStatusScript.ApplyDamage(attackInfo);
+
+                Debug.Log("실행된다.");
             }
 
             yield return new WaitForSeconds(damageInterval);
@@ -281,7 +283,7 @@ public class SnackMonster : EnemyBase
         }
         if (playerStatusScript != null)
         {
-            playerStatusScript.EnableMovement();
+            playerStatusScript.isRooted = false;   //플레이어 속박 해제 처리
 
             // 먹기 끝나고 무적 해제
             playerStatusScript.isBeingEaten = false;

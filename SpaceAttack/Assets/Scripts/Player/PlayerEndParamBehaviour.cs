@@ -10,6 +10,5 @@ public class PlayerEndParamBehaviour : StateMachineBehaviour
     {
         //애니메이션이 실행하기 전 실행조건 초기화
         isEndAttack = true;
-        Debug.Log("작동한다");
     }
 }

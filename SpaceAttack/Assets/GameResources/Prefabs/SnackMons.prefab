@@ -138,6 +138,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3247679775456891815}
   - component: {fileID: 8514316641876137413}
+  - component: {fileID: 3557967978163621467}
   m_Layer: 0
   m_Name: snackbagmonster
   m_TagString: Untagged
@@ -190,6 +191,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!210 &3557967978163621467
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 824067101444164001}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &941658738619859684
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,7 +418,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 116
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!65 &1625576957432636737
 BoxCollider:
@@ -463,8 +476,8 @@ MonoBehaviour:
   patrolChangeTime: 4
   eatRadius: 4
   eatDuration: 3
-  damageInterval: 0.5
-  damagePerTick: 0
+  damageInterval: 1
+  damagePerTick: 1
   eatRangeVisualPrefab: {fileID: 488147858975766093}
   eatCooldown: 3
   walkClip: {fileID: 8300000, guid: 2eb499a4091285844896ff546479ecb4, type: 3}

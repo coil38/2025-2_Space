@@ -21,60 +21,32 @@ public class PlayerStatus : MonoBehaviour
     [HideInInspector] public bool isDead = false;
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool isUsingSkill = false;
-                      private bool canMove = true;
                       public bool isBeingEaten = false;  //먹히는 중인가?
 
-    private PlayerMovement movementScript;
-    private PlayerAttack attackScript;
+    private bool cannotStuned;
 
-
+    private bool _isRooted;
     public bool isRooted       //상태 이상: 속박
     {
-        get {  return isRooted; }
+        get {  return _isRooted; }
         set
         {
             Root(value);       //속박 여부 입력 후, 실행
-            isRooted = value;
+            _isRooted = value;
         }
     }
 
     public bool m_FacingRight { get; private set; }
 
     private Rigidbody rb;
-    private Animator animator;
 
-    private AttackInfo attackInfo = new AttackInfo();
     private Queue<AttackInfo> attackQueue = new Queue<AttackInfo>();
     private bool isDamageProcessing;
-    private bool isCancleAttack;
+
     private void Start()
     {
         m_FacingRight = true;
-        movementScript = GetComponent<PlayerMovement>();
-        attackScript = GetComponent<PlayerAttack>();
         rb = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
-    }
-    public void DisableMovement()
-    {
-        canMove = false;
-
-        if (movementScript != null)
-            movementScript.enabled = false;
-
-        if (attackScript != null)
-            attackScript.enabled = false;
-    }
-
-    public void EnableMovement()
-    {
-        canMove = true;
-
-        if (movementScript != null)
-            movementScript.enabled = true;
-
-        if (attackScript != null)
-            attackScript.enabled = true;
     }
 
     void Update()
@@ -100,11 +72,29 @@ public class PlayerStatus : MonoBehaviour
         {
             GetComponent<PlayerAttack>().enabled = false;
             GetComponent<PlayerMovement>().enabled = false;   //플레이어 입력관련 스크립트
+            cannotStuned = true;
+
+            PlayerMovementAnimationController temp = GetComponent<PlayerMovementAnimationController>();
+            temp.ResetAnimationObj();        //모든 이미지 비활성화
+            temp.ResetAttackAnimation();     //현재 공격 초기화
+
+            GetComponent<Rigidbody>().useGravity = false;  //피격방지
+            GetComponent<Collider>().enabled = false;
         }
         else           //상태이상 취소
         {
             GetComponent<PlayerAttack>().enabled = true;
             GetComponent<PlayerMovement>().enabled = true;   //플레이어 입력관련 스크립트
+            cannotStuned = false;
+
+            PlayerMovementAnimationController temp = GetComponent<PlayerMovementAnimationController>();
+            temp.SetDirection();           //현재에 맞는 이미지 활성화
+
+            if (!isDead)
+            {
+                GetComponent<Rigidbody>().useGravity = true;
+                GetComponent<Collider>().enabled = true;
+            }
         }
     }
 
@@ -140,9 +130,9 @@ public class PlayerStatus : MonoBehaviour
 
     public void ApplyDamage(AttackInfo info)
     {
-        if (isBeingEaten && (info.attacker == null || !info.attacker.CompareTag("SnackMonster")))
+        if (info.attacker.CompareTag("SnackMonster"))  // 공격을 받는 대상인 스낵몬스터 일 경우
         {
-            // 먹히는 중이고, 공격자가 없거나 스낵몬스터가 아니면 데미지 무시
+            _ApplyDamage(info);
             return;
         }
 
@@ -156,10 +146,13 @@ public class PlayerStatus : MonoBehaviour
         int damage = (int) info.damage;
         Vector3 dir = info.attackDirection;
 
+        Debug.Log(damage);
+
         float mass = 1f;
         float attackForce = mass * 100f;
 
-        PlayerUIManager.instance.ReducePlayerUI(m_hp, damage); //체력감소 UI적용
+        if(PlayerUIManager.instance != null)
+            PlayerUIManager.instance.ReducePlayerUI(m_hp, damage); //체력감소 UI적용
 
         m_hp -= damage;
 
@@ -168,9 +161,12 @@ public class PlayerStatus : MonoBehaviour
             if (AudioManager.instance != null)
                 AudioManager.instance.StopAllSounds();
 
+            GetComponent<Rigidbody>().useGravity = false;  //피격방지
+            GetComponent<Collider>().enabled = false;
+
             //플레이어 사망 연출 시작
             isDead = true;
-            animator.SetBool("Dead", true);
+            //animator.SetBool("Dead", true);
             //Destroy(gameObject, 1f);
         }
         else
@@ -178,9 +174,10 @@ public class PlayerStatus : MonoBehaviour
             if (AudioManager.instance != null)
                 AudioManager.instance.PlaySound("Hit");
 
-            PlayerTimeSystem.stunTimer.Start();   //스턴 타이머 시작
+            if(!cannotStuned)
+                PlayerTimeSystem.stunTimer.Start();   //스턴 타이머 시작
                                             //스턴 연출 시작
-            animator.SetTrigger("Hit");                          //피격 애니메이션
+            //animator.SetTrigger("Hit");                          //피격 애니메이션
             Debug.Log("플레이어 피격");
             rb.AddForce(dir * attackForce);                 //넉백
 

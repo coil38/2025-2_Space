@@ -42,17 +42,16 @@ public class PlayerMovementAnimationController : MonoBehaviour
 
     void Update()
     {
-        if (!isAttacking) return;
-
-        AnimatorStateInfo stateInfo = attackAnimator.GetCurrentAnimatorStateInfo(0);
-
-        if (PlayerEndParamBehaviour.isEndAttack)  //모든 칩셋의 공격 이름 BaseAttack으로 통일
+        if (PlayerEndParamBehaviour.isEndAttack)  //모든 칩셋의 공격 이름 BaseAttack으로 통일 ( 항상 반복 )
         {
-            Debug.Log("공격종료");
             PlayerEndParamBehaviour.isEndAttack = false;
-            AttackObj.SetActive(false);
-            isAttacking = false;
-            SetDirection();
+
+            if (isAttacking)   //공격 중일 때만 종료처리
+            {
+                AttackObj.SetActive(false);
+                isAttacking = false;
+                SetDirection();
+            }
         }
     }
 
@@ -81,7 +80,7 @@ public class PlayerMovementAnimationController : MonoBehaviour
         currentDirection = moveDirection;  //최신 방향 갱신
     }
 
-    private void SetDirection()
+    public void SetDirection()
     {
         ResetAnimationObj();
         switch (moveDirection)
@@ -157,17 +156,22 @@ public class PlayerMovementAnimationController : MonoBehaviour
 
     public void OnAttackObj(PlayerAniInfo _aniInfo)
     {
-        Debug.Log("공격 중");
         isAttacking = true;  //공격활성화 처리
         ResetAnimationObj();
         AttackObj.SetActive(true);
     }
 
-    private void ResetAnimationObj()    // 애니메이션 오브젝트들 초기화함수
+    public void ResetAnimationObj()    // 애니메이션 오브젝트들 초기화함수
     {
         FrontMoveObj.SetActive(false);
         SideMoveObj.SetActive(false);
         BackMoveObj.SetActive(false);
+        AttackObj.SetActive(false);
+    }
+
+    public void ResetAttackAnimation()
+    {
+        isAttacking = false;
     }
 
     private void ResetWeaponObj()

@@ -855,6 +855,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5589111309285847584}
   - component: {fileID: 5121794632923753638}
+  - component: {fileID: 412951184466251680}
   - component: {fileID: 4804741291901631544}
   m_Layer: 6
   m_Name: CanMonster
@@ -908,6 +909,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!210 &412951184466251680
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6656450268837246340}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!114 &4804741291901631544
 MonoBehaviour:
   m_ObjectHideFlags: 0
