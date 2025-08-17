@@ -130,7 +130,7 @@ public class PlayerStatus : MonoBehaviour
 
     public void ApplyDamage(AttackInfo info)
     {
-        if (info.attacker.CompareTag("SnackMonster"))  // 공격을 받는 대상인 스낵몬스터 일 경우
+        if (info.attacker != null && info.attacker.CompareTag("SnackMonster"))  // 공격을 받는 대상인 스낵몬스터 일 경우
         {
             _ApplyDamage(info);
             return;

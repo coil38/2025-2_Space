@@ -31,6 +31,8 @@ public class PlayerMovementAnimationController : MonoBehaviour
     private bool isAttacking;   //공격여부 내부 변수
     [HideInInspector] public Animator attackAnimator;
 
+    private float currentVertical;
+    private bool isDecrease;
     void Start()
     {
         frontMoveAnimator = FrontMoveObj.GetComponent<Animator>();
@@ -57,8 +59,11 @@ public class PlayerMovementAnimationController : MonoBehaviour
 
     public void UpdateMoveDirection(float horizontal, float Vertical) //검사순서 --> 위,아래 --> 사이드 (이유: 위아래 애니메이션을 더 잘만들어서 )
     {
-        if (Vertical > 0) moveDirection = MoveDirection.Back;         //위 입력이 있을 때, 이동방향 --> 뒤
-        else if (Vertical < 0) moveDirection = MoveDirection.Front;   //아래 입력이 있을 때, 이동방향 --> 앞
+        if (currentVertical > Vertical) isDecrease = true;
+        else isDecrease = false;
+
+        if ((Vertical > 0 && !isDecrease) || (Vertical > 0.4 && isDecrease)) moveDirection = MoveDirection.Back; //위 입력이 있을 때, 이동방향 --> 뒤
+        else if ((Vertical < 0 && !isDecrease) || (Vertical < - 0.4 && isDecrease)) moveDirection = MoveDirection.Front;   //아래 입력이 있을 때, 이동방향 --> 앞
         else if (Mathf.Abs(horizontal) > 0)                           //사이드 입력이 있을 때, 이동방향 --> 사이드
         {
             moveDirection = MoveDirection.Side;
@@ -69,6 +74,7 @@ public class PlayerMovementAnimationController : MonoBehaviour
                 playerStatus.Flip();
             }
         }
+        currentVertical = Vertical;  //최신 버티컬값 갱신
 
         if (isAttacking) return; //현재 공격중일 경우, 리턴처리
 

@@ -127,17 +127,25 @@ public class CharacterMovement : MonoBehaviour
     {
         Collider[] items = Physics.OverlapSphere(transform.position, playerState.itemDetectDistance, itemLayer);
 
+        float minDistance = 5f;
+        Collider selectedItem = null;
         foreach (var item in items)
         {
-            ChipSetType chipset = item.gameObject.GetComponent<ChipSetType>();
-
-            if (chipset != null) // 감지 대상이 칩셋이면 칩셋받기
+            float temp = Mathf.Min(minDistance, Vector3.Distance(transform.position, item.transform.position));
+            if (temp < minDistance)
             {
-                inventory.chipSet = chipset;
-                Debug.Log("아이템 획득");
-
-                break;                  //획득 종료(한번에 하나만 획득)
+                selectedItem = item;
             }
+        }
+
+        if (selectedItem == null) return;   //주변에 아이템이 없을 시, 반환처리
+
+        ChipSetType chipset = selectedItem.gameObject.GetComponent<ChipSetType>();
+
+        if (chipset != null) // 감지 대상이 칩셋이면 칩셋받기
+        {
+            inventory.chipSet = chipset;
+            Debug.Log("아이템 획득");
         }
     }
 }

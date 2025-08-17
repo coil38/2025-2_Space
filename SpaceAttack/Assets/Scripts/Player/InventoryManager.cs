@@ -11,6 +11,14 @@ public class InventoryManager : MonoBehaviour
         { 
             if (_chipSet != null)        //칩셋에 이미 있을 경우
             {
+                if (_chipSet != value)
+                {
+                    Debug.Log("다른 칩셋이다");
+                }
+                else
+                {
+                    Debug.Log("같은 칩셋이다");
+                }
                 Debug.Log("현 보유중인 칩셋이 있음");
                 RemoveChipsetToPlayerAttack(_chipSet);
                 DropChipset(_chipSet);
@@ -46,12 +54,13 @@ public class InventoryManager : MonoBehaviour
     {
         //월드 드랍 연출
 
-
         Color color = m_chipSet.gameObject.GetComponent<SpriteRenderer>().color;   //해당 칩셋을 원래 상태로 변경
         color.a = 1f;
         m_chipSet.gameObject.GetComponent<SpriteRenderer>().color = color;
 
         m_chipSet.gameObject.transform.SetParent(null);                  //해당 칩셋을 Player 자식으로 넣기 해제
+
+        m_chipSet.gameObject.GetComponent<Collider>().enabled = true;   //감지 가능상태로 변경
     }
 
     private void RemoveChipsetToPlayerAttack(ChipSetType m_chipSet)
@@ -87,6 +96,7 @@ public class InventoryManager : MonoBehaviour
         _chipSet.gameObject.transform.SetParent(this.transform);                  //해당 칩셋을 Player 자식으로 넣기
         _chipSet.gameObject.transform.localPosition = Vector3.zero;
 
+        _chipSet.gameObject.GetComponent<Collider>().enabled = false;   //감지 가능상태로 변경
     }
 
 
