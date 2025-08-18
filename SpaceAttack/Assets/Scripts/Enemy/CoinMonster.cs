@@ -303,6 +303,8 @@ public class CoinMonster : EnemyBase
 
         if (monsterHPUI != null)
             monsterHPUI.ReduceHP(maxHP, 0);
+
+        OnDeathAction?.Invoke(this);
     }
 
     //코인몬스터 소리

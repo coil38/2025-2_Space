@@ -54,7 +54,7 @@ public class StageManager : MonoBehaviour
     private void OnMonsterDeath(EnemyBase deadMonster)
     {
         aliveMonsters.Remove(deadMonster);
-
+        Debug.Log(aliveMonsters.Count);
         if (aliveMonsters.Count == 0)
         {
             Debug.Log($"웨이브 {currentWave} 완료!");
