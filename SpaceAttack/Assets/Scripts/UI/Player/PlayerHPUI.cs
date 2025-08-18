@@ -80,18 +80,31 @@ public class PlayerHPUI : MonoBehaviour
         int heartCount = hp / 2;
         bool halfHeartExist = hp % 2 == 1;
 
-        HpSlots.Clear();
+        int currentHeartCount = HpSlots.Count;
 
         for (int i = 0; i < maxHeartCount; i++)  //빈어있는 최대체력 생성
         {
-            GameObject hpSlot = Instantiate(HPSlot);
-            hpSlot.transform.SetParent(this.transform);
+            if (currentHeartCount <= 0)
+            {
+                GameObject hpSlot = Instantiate(HPSlot);
+                hpSlot.transform.SetParent(this.transform);
 
-            Transform hpImage = hpSlot.transform.GetChild(0);  // 1은 절반 체력, 2는 가득찬 체력 : 이들을 비활성화
-            hpImage.GetChild(1).gameObject.SetActive(false);
-            hpImage.GetChild(2).gameObject.SetActive(false);
+                Transform hpImage = hpSlot.transform.GetChild(0);  // 1은 절반 체력, 2는 가득찬 체력 : 이들을 비활성화
+                hpImage.GetChild(1).gameObject.SetActive(false);
+                hpImage.GetChild(2).gameObject.SetActive(false);
 
-            HpSlots.Enqueue(hpImage);
+                HpSlots.Enqueue(hpImage);   //이미 만들어진 체력슬롯 재사용
+            }
+            else
+            {
+                if (HpSlots.TryPeek(out var result))
+                {
+                    result.GetChild(1).gameObject.SetActive(false);
+                    result.GetChild(2).gameObject.SetActive(false);
+                }
+            }
+
+            currentHeartCount--;
         }
 
         foreach (var hpSlot in HpSlots)

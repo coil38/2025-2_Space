@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션 중, 실행) O | 공격시간 X | 플레이어 대기시간 O
 {
@@ -22,8 +23,7 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
     private Vector3 targetPos;
 
     //공격용
-    private GameObject target;
-
+    private Queue<GameObject> targets = new Queue<GameObject>();
     public override void OnEnable()
     {
         planLayer |= 1 << LayerMask.NameToLayer("Plan");
@@ -96,6 +96,7 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
     public override void Attack()
     {
         isDetected = false;
+        targets.Clear();
 
         Collider[] enemyCols = Physics.OverlapSphere(_currentPos, attackDistance, enemyLayer);
         foreach (var enemyCol in enemyCols)
@@ -106,8 +107,8 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
             {
                 isDetected = true;   //적 확인
 
-                //Debug.Log("작동한다");
-                target = enemyCol.gameObject;
+                //Debug.Log(enemyCol.gameObject.name + "을 감지했습니다.");
+                targets.Enqueue(enemyCol.gameObject);
                 Invoke("_Attack", r_AttackTime);   //공격준비 시간동안 공격
             }
         }
@@ -117,11 +118,12 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
     {
         AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);  //공격 정보 설정
 
-        if (target.gameObject == null) return;        //적이 없을 경우, 공격 취소
-
-        target.SendMessage("ApplyDamage", attackInfo);
-        Camera.main.GetComponent<CameraFallow>().CameraShack();  //카메라 흔들림 연출
-        //Debug.Log("검 공격");
+        if (targets.TryDequeue(out var target))
+        {
+            target.SendMessage("ApplyDamage", attackInfo);
+            Camera.main.GetComponent<CameraFallow>().CameraShack();  //카메라 흔들림 연출
+            //Debug.Log(target.name + "을 검 공격함");
+        }
     }
 
     private void OnDrawGizmos()

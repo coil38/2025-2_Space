@@ -17,10 +17,10 @@ public class PlayerCore : MonoBehaviour
     void Update() 
     {
         //테스용
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            GetDarkMatter(15);
-        }
+        //if (Input.GetKeyDown(KeyCode.V))
+        //{
+        //    GetDarkMatter(15);
+        //}
     }
 
     public static void GetDarkMatter(int exp)     //암흑물질(경험치) 획득
