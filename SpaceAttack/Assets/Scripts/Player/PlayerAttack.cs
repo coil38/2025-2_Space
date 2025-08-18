@@ -41,6 +41,9 @@ public class PlayerAttack : MonoBehaviour
         if (PlayerTimeSystem.w_SkillTimer != null)
             if (PlayerTimeSystem.w_SkillTimer.IsRunning()) return;  //현재 공격중일 경우, 반환
 
+        if (PlayerTimeSystem.w_dashTimer != null)
+            if (PlayerTimeSystem.w_dashTimer.IsRunning()) return;  //데쉬 도중일 경우, 반환
+
         if (weaponType == null) return;  //현재 보유 중 무기가 없을 시, 반환
 
         //무기 시스템 연결
@@ -66,7 +69,10 @@ public class PlayerAttack : MonoBehaviour
         if (PlayerTimeSystem.w_BaseAttackTimer != null)
             if (PlayerTimeSystem.w_BaseAttackTimer.IsRunning()) return;  //현재 스킬 실행중일 경우, 반환
 
-        if(skillTypes == null) return; //현재 보유 중 스킬이 없을 시, 반환
+        if (PlayerTimeSystem.w_dashTimer != null)
+            if (PlayerTimeSystem.w_dashTimer.IsRunning()) return;  //데쉬 도중일 경우, 반환
+
+        if (skillTypes == null) return; //현재 보유 중 스킬이 없을 시, 반환
 
         //스킬 시스템 연결
         foreach (var skill in skillTypes)

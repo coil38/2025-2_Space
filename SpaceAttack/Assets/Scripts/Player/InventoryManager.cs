@@ -11,14 +11,6 @@ public class InventoryManager : MonoBehaviour
         { 
             if (_chipSet != null)        //칩셋에 이미 있을 경우
             {
-                if (_chipSet != value)
-                {
-                    Debug.Log("다른 칩셋이다");
-                }
-                else
-                {
-                    Debug.Log("같은 칩셋이다");
-                }
                 Debug.Log("현 보유중인 칩셋이 있음");
                 RemoveChipsetToPlayerAttack(_chipSet);
                 DropChipset(_chipSet);

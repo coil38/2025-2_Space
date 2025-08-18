@@ -13,7 +13,7 @@ public class DestructableObject : MonoBehaviour
     private Vector3 initialPosition;
     void Start()
     {
-        initialPosition = transform.position;   //초기 위치 할당
+        initialPosition = transform.localPosition;   //초기 위치 할당
     }
 
     void Update()

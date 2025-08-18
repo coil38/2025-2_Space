@@ -364,7 +364,7 @@ Transform:
   m_GameObject: {fileID: 3210841994201302233}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.373704, y: -0.9583912, z: 0.90591717}
+  m_LocalPosition: {x: 4.586631, y: -1.08, z: -0.8552828}
   m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -438,7 +438,7 @@ MonoBehaviour:
   detectAngle: 155
   damage: 1
   attackDuration: 0.5
-  detectRadius: 4
+  detectRadius: 6
   animator: {fileID: 5121794632923753638}
   visualTransform: {fileID: 5589111309285847584}
   attackLayer:
@@ -451,8 +451,8 @@ MonoBehaviour:
   audioSource: {fileID: 4813388956784431499}
   hitSound: {fileID: 8300000, guid: 1bc8b9ac984a0ba4a9a33ca8c3a91097, type: 3}
   monsterHPUI: {fileID: 2614539350023895746}
-  hopForce: 1.5
-  hopCooldown: 3
+  hopForce: 2.5
+  hopCooldown: 1.8
   bulletPrefab: {fileID: 6132572061775438050, guid: 8dd61d3eb308de2418dd8b28b309cf80,
     type: 3}
   bulletSpeed: 6
@@ -475,7 +475,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.6
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -806,7 +806,7 @@ Transform:
   m_GameObject: {fileID: 5227105966529545785}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.88, z: 0}
+  m_LocalPosition: {x: 0, y: 0.88, z: -3.0899997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -872,8 +872,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6656450268837246340}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
+  m_LocalPosition: {x: 0, y: 0, z: -3.09}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -887,7 +887,7 @@ Transform:
   - {fileID: 5489271926258165860}
   - {fileID: 4732122473497494198}
   m_Father: {fileID: 6870687074548268519}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
 --- !u!95 &5121794632923753638
 Animator:
   serializedVersion: 5
@@ -917,9 +917,9 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6656450268837246340}
   m_Enabled: 1
-  m_SortingLayerID: -1508022593
-  m_SortingLayer: 1
-  m_SortingOrder: 10
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
   m_SortAtRoot: 0
 --- !u!114 &4804741291901631544
 MonoBehaviour:
@@ -1521,17 +1521,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8451859774077082898}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
+  m_LocalPosition: {x: 0, y: 0, z: 5.73}
   m_LocalScale: {x: 6.666666, y: 6.666666, z: 6.666666}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 463241426987457530}
   m_Father: {fileID: 6870687074548268519}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -1.73, y: 17.84}
+  m_AnchoredPosition: {x: -1.73, y: 15.93}
   m_SizeDelta: {x: 3, y: 0.8789}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7706559520824167628

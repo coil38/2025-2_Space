@@ -19,8 +19,6 @@ public class PlayerStatus : MonoBehaviour
     [HideInInspector] public bool isStuned = false;
     [HideInInspector] public bool isDashing = false;
     [HideInInspector] public bool isDead = false;
-    [HideInInspector] public bool isAttacking = false;
-    [HideInInspector] public bool isUsingSkill = false;
                       public bool isBeingEaten = false;  //먹히는 중인가?
 
     private bool cannotStuned;
@@ -55,13 +53,6 @@ public class PlayerStatus : MonoBehaviour
         isDashing = PlayerTimeSystem.w_dashTimer.IsRunning();
         isInvincibility = PlayerTimeSystem.invincibilityTimer.IsRunning();
         isStuned = PlayerTimeSystem.stunTimer.IsRunning();
-
-        if (PlayerTimeSystem.w_BaseAttackTimer != null)
-            isAttacking = PlayerTimeSystem.w_BaseAttackTimer.IsRunning();
-
-        if (PlayerTimeSystem.w_SkillTimer != null)
-            isUsingSkill = PlayerTimeSystem.w_SkillTimer.IsRunning();
-
 
         CheckApplyDamage();    //피격 체킹
     }

@@ -16,7 +16,15 @@ public class StageManager : MonoBehaviour
 
     void Start()
     {
-        StartWave();
+        //StartWave();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G))   //테스트용
+        {
+            StartWave();
+        }
     }
 
     void StartWave()
