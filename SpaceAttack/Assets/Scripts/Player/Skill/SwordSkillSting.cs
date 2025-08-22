@@ -48,7 +48,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
     {
         _currentPos = currentPos;
 
-        if (Input.GetKeyDown(KeyCode.Q))  //플레이어 입력감지
+        if (PlayerInputController.skill1Action.triggered)  //플레이어 입력감지
         {
             if (coolTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
 

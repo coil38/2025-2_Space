@@ -109,7 +109,7 @@ public class BowSkillChargingShot : SkillType
     {
         _currentPos = currentPos;
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (PlayerInputController.skill3Action.triggered)
         {
             if (coolTimer.IsRunning() || PlayerTimeSystem.w_SkillTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
 

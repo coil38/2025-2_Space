@@ -40,8 +40,8 @@ public class CharacterMovement : MonoBehaviour
 
     public void Move()  //플레이어 이동
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        float horizontal = PlayerInputController.horizontalValue;
+        float vertical = PlayerInputController.verticalValue;
 
         Vector3 dir = new Vector3(horizontal, 0, vertical).normalized;
 

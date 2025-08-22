@@ -36,7 +36,7 @@ public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애�
 
     public override void CheckAttack(Vector3 currentPos)
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (PlayerInputController.skill3Action.triggered)
         {
             if (coolTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
 
