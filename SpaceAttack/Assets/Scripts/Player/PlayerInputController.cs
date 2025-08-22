@@ -7,8 +7,8 @@ public class PlayerInputController : MonoBehaviour
 {
     private PlayerInput playerInput;
 
-    private InputAction verticalAction;
-    private InputAction horizontalAction;
+    private static InputAction verticalAction;
+    private static InputAction horizontalAction;
     private float smoothTime = 0.5f;
     private float h_timer;
     private float v_timer;
@@ -35,9 +35,28 @@ public class PlayerInputController : MonoBehaviour
         dashAction = playerInput.actions["Dash"];
     }
 
-    private void OnDisable()
+    public static void EnableAction()
     {
-        
+        if(verticalAction != null) verticalAction.Enable();
+        if (horizontalAction != null) horizontalAction.Enable();
+        if (attackAction != null) attackAction.Enable();
+        if (skill1Action != null) skill1Action.Enable();
+        if (skill2Action != null) skill2Action.Enable();
+        if (skill3Action != null) skill3Action.Enable();
+        if (interactionAction != null) interactionAction.Enable();
+        if (dashAction != null) dashAction.Enable();
+    }
+
+    public static void DisableAction()
+    {
+        if (verticalAction != null) verticalAction.Disable();
+        if (horizontalAction != null) horizontalAction.Disable();
+        if (attackAction != null) attackAction.Disable();
+        if (skill1Action != null) skill1Action.Disable();
+        if (skill2Action != null) skill2Action.Disable();
+        if (skill3Action != null) skill3Action.Disable();
+        if (interactionAction != null) interactionAction.Disable();
+        if (dashAction != null) dashAction.Disable();
     }
 
     void Update()

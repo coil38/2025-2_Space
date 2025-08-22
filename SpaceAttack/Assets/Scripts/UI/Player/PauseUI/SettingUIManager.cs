@@ -3,60 +3,56 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
+using UnityEngine.UI;
+using System;
 
 public class SettingUIManager : MonoBehaviour
 {
-    [Header("InputSystem용 변수")]
-    [SerializeField] private InputActionReference horizontalMoveRefer;
-    [SerializeField] private InputActionReference verticalMoveRefer;
-    [SerializeField] private InputActionReference skill1Refer;
-    [SerializeField] private InputActionReference skill2Refer;
-    [SerializeField] private InputActionReference skill3Refer;
-    [SerializeField] private InputActionReference interactionRefer;
-    [SerializeField] private InputActionReference dashRefer;
+    [Header("버튼용 변수")]
+    [SerializeField] private Button returnButton;  //되돌아가기 버튼
+    [SerializeField] private Button saveButton;    //저장 버튼
+    [SerializeField] private Button resetButton;   //초기화 버튼
 
-    [Header("TMP용 변수")]
-    [SerializeField] private TMP_InputField upMoveCommand;
-    [SerializeField] private TMP_InputField downMoveCommand;
-    [SerializeField] private TMP_InputField leftMoveCommand;
-    [SerializeField] private TMP_InputField rightMoveCommand;
-    [SerializeField] private TMP_InputField skill1Command;
-    [SerializeField] private TMP_InputField skill2Command;
-    [SerializeField] private TMP_InputField skill3Command;
-    [SerializeField] private TMP_InputField interactionCommand;
-    [SerializeField] private TMP_InputField dashCommand;
+    public Dictionary<TMP_InputField, string> initialComands = new Dictionary<TMP_InputField, string>();
 
-    private InputActionReference currentRefer;
-    void Start()
+    //public event Action saveEvent;   //저장용 이벤트 델리게이트
+    public event Action resetEvent;  //초기화용 이벤트 델리게이트
+
+    void Start()   //초기 입력값들 설정 및 저장
     {
-
+        returnButton.onClick.AddListener(ExitSettingPanel);
+        saveButton.onClick.AddListener(SaveSetting);
+        resetButton.onClick.AddListener(ResetSetting);
     }
 
-    void Update()
+    private void OnEnable()
     {
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            //Debug.Log(command.text);
-        }
+        PlayerInputController.DisableAction();
     }
 
-    private void RebindKey()
+    private void OnDisable()
     {
-        var action = currentRefer.action;
-        int targetIndex = 0;
-        action.PerformInteractiveRebinding(targetIndex)
-              .WithControlsExcluding("Mouse")
-              .OnComplete(op =>
-              {
-                  op.Dispose();
-                  Debug.Log("Rebind완료: " + action.bindings[targetIndex].effectivePath);
-                  SaveRebinds(action.actionMap.asset); //저장
-              })
-              .Start();
-
+        PlayerInputController.EnableAction();
     }
 
-    private void SaveRebinds(InputActionAsset asset)
+    private void ExitSettingPanel()
+    {
+        gameObject.SetActive(false);
+    }
+
+    private void SaveSetting()
+    {
+        //바꾼 값들 저장
+        //saveEvent.Invoke();
+    }
+
+    private void ResetSetting()
+    {
+        //이전 값으로 초기화
+        resetEvent.Invoke();
+    }
+
+    public static void SaveRebinds(InputActionAsset asset)
     {
         var json = asset.SaveBindingOverridesAsJson();
         PlayerPrefs.SetString("rebinds", json);
