@@ -17,7 +17,7 @@ public class PlayerCore : MonoBehaviour
     void Update() 
     {
         //테스용
-        //if (Input.GetKeyDown(KeyCode.V))
+        //if (Input.GetKeyDown(KeyCode.Y))
         //{
         //    GetDarkMatter(15);
         //}

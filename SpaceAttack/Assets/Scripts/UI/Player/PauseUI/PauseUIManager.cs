@@ -58,6 +58,7 @@ public class PauseUIManager : MonoBehaviour
         {
             //특정씬에서만 활성화하게 예외처리-----------------//
             pauseUIPanel.SetActive(true);
+            Time.timeScale = 0f;           //일시정지
         }
     }
 
@@ -69,6 +70,8 @@ public class PauseUIManager : MonoBehaviour
     private void ResumeGame()
     {
         Debug.Log("게임을 재개합니다.");
+        pauseUIPanel.SetActive(false);
+        Time.timeScale = 1f;           //일시정지 해제
     }
 
     private void PlayNewGame()

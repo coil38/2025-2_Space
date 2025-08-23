@@ -33,6 +33,13 @@ public class PlayerInputController : MonoBehaviour
         skill3Action = playerInput.actions["Skill3"];
         interactionAction = playerInput.actions["Interaction"];
         dashAction = playerInput.actions["Dash"];
+
+        EnableAction();
+    }
+
+    private void OnDisable()
+    {
+        DisableAction();
     }
 
     public static void EnableAction()

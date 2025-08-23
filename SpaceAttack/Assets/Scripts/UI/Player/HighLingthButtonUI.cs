@@ -14,11 +14,11 @@ public class HighLingthingButtonUI : MonoBehaviour, IPointerEnterHandler, IPoint
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        rectTransform.DOScale(new Vector3(1.1f, 1.1f, 1.1f), 0.3f);
+        rectTransform.DOScale(new Vector3(1.1f, 1.1f, 1.1f), 0.3f).SetUpdate(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        rectTransform.DOScale(new Vector3(1f, 1f, 1f), 0.3f);
+        rectTransform.DOScale(new Vector3(1f, 1f, 1f), 0.3f).SetUpdate(true);
     }
 }

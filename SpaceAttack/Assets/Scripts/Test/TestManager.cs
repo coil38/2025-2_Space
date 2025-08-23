@@ -16,10 +16,10 @@ public class TestManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            RestartScene();
-        }
+        //if (Input.GetKeyDown(KeyCode.Y))
+        //{
+        //    RestartScene();
+        //}
     }
 
     private void RestartScene()
