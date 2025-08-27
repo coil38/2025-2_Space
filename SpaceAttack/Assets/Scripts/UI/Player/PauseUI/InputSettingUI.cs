@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class InputSettingUI : MonoBehaviour
 {
@@ -30,6 +29,8 @@ public class InputSettingUI : MonoBehaviour
         settingUIManager.cancelSaveEvent += CancelSavedRebinding;
         settingUIManager.saveEvent += SaveRebinging;
         settingUIManager.resetEvent += ResetRebinding;
+
+        if(inputField != null) inputField.text = "";  //입력칸 초기화
     }
 
     private void OnDisable()
@@ -50,7 +51,7 @@ public class InputSettingUI : MonoBehaviour
         {
             settingUIManager.currentInputSetting = this;  //입력준비 중일 때, 최근 인스턴스로 본인을 갱신
             RebindKey();  //변경후, 입력
-            Debug.Log(gameObject.name + "이 작동한다.");
+            //Debug.Log(gameObject.name + "이 작동한다.");
         }
 
         if (settingUIManager.currentInputSetting != this)        //최근 인스턴스가 본인 아닐 경우(변경대상이 본인이 아닐 경우)
@@ -80,7 +81,7 @@ public class InputSettingUI : MonoBehaviour
               .WithCancelingThrough("<Keyboard>/escape")
               .OnCancel(op =>
               {
-                  Debug.Log("Rebind 취소");
+                  //Debug.Log("Rebind 취소");
                   op.Dispose();
                   isInputting = false;
               })
@@ -89,11 +90,11 @@ public class InputSettingUI : MonoBehaviour
                   string key = action.bindings[targetIndex].effectivePath.ToUpper();
                   key = key.Substring(key.IndexOf("/") + 1);
 
-                  Debug.Log(key);
+                  //Debug.Log(key);
 
                   if (settingUIManager.currentComands.ContainsValue(key))   //중복되는 키가 있는지 체크
                   {
-                      Debug.Log($"이미 {key}에 대한 입력값이 존재합니다.");
+                      //Debug.Log($"이미 {key}에 대한 입력값이 존재합니다.");
                       inputField.text = "";
                       op.Dispose();
                       isInputting = false;
@@ -103,12 +104,21 @@ public class InputSettingUI : MonoBehaviour
                       return;
                   }
 
-                  Debug.Log($"{gameObject.name}이 Rebind 완료: " + action.bindings[targetIndex].effectivePath);
+                  //Debug.Log($"{gameObject.name}이 Rebind 완료: " + action.bindings[targetIndex].effectivePath);
                   op.Dispose();
                   preMeshProUGUI.text = key;
                   inputField.text = key;
                   settingUIManager.currentComands[inputField] = key;       //최근 키로 저장
                   isInputting = false;
+
+                  if (settingUIManager.savedComands[inputField] != key)    //이전 저장값과 변경될 입력값이 같지 않을 경우
+                  {
+                      settingUIManager.isChanged.Enqueue(true);            //변경사항 있음 처리
+                  }
+                  else
+                  {
+                      settingUIManager.isChanged.TryDequeue(out bool temp);    //변경사항 없음 처리
+                  }
                   SettingUIManager.SaveRebinds(action.actionMap.asset);                   // 저장
               })
               .Start();
@@ -132,6 +142,10 @@ public class InputSettingUI : MonoBehaviour
 
         string currentKey = settingUIManager.savedComands[inputField].ToLower();
         action.ApplyBindingOverride(targetIndex, "<Keyboard>/" + currentKey);   //입력을 통해서 바뀌었던 키를 다시 되돌리기
+
+        preMeshProUGUI.text = currentKey;  //현재 입력 칸 값 변경
+
+        settingUIManager.currentComands[inputField] = settingUIManager.savedComands[inputField];  //최근 입력값을 이전 저장된 입력값으로 덮어쓰기
     }
 
     public void SaveRebinging()
