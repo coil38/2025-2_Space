@@ -20,6 +20,8 @@ public class PauseUIManager : MonoBehaviour
     [SerializeField] private GameObject achievementUIPanel;
     [SerializeField] private GameObject helpUIPanel;
     [SerializeField] private GameObject settingUIPanel;
+
+    private bool cannotEscape;  //일시정지창 이외에 또다른 뎁스가 있을 경우, false처리 (esc입력 안됨)
     private void Awake()
     {
         if (Instance == null)
@@ -44,15 +46,17 @@ public class PauseUIManager : MonoBehaviour
 
         pauseUIPanel.SetActive(false);
         settingUIPanel.SetActive(false);
+        achievementUIPanel.SetActive(false);
+        helpUIPanel.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        CheckOnPausePanel();   //설정UI가 활성화여부 실시간 체크
+        CheckEscape();         //일시정지 취소 가능여부 실시간 체크
     }
 
-    private void CheckOnPausePanel()
+    private void CheckOnPausePanel()  //설정UI가 활성화여부 실시간 체크
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -62,9 +66,37 @@ public class PauseUIManager : MonoBehaviour
         }
     }
 
-    private void HighLightingButton()  //버튼강조
+    private void CheckEscape()
     {
-        Debug.Log("버튼이 강조되었습니다.");
+        if (pauseUIPanel.activeSelf)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (!cannotEscape) ResumeGame();  //게임재개
+            }
+        }
+        else CheckOnPausePanel();
+
+        if (!pauseUIPanel.activeSelf) return;  //일시정지 창이 비활성화일 경우, return 처리
+
+        Debug.Log("작동한다");
+
+        if (!cannotEscape)  //escape가능 여부 판단 처리
+        {
+            if (achievementUIPanel.activeSelf || helpUIPanel.activeSelf || settingUIPanel.activeSelf)
+            {
+                Debug.Log("나갈수 없음");
+                cannotEscape = true;
+            }
+        }
+        else
+        {
+            if (!achievementUIPanel.activeSelf && !helpUIPanel.activeSelf && !settingUIPanel.activeSelf)
+            {
+                Debug.Log("나갈수 있음");
+                cannotEscape = false;
+            }
+        }
     }
 
     private void ResumeGame()

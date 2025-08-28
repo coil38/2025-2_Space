@@ -162,5 +162,8 @@ public class InputSettingUI : MonoBehaviour
         inputReference.action.RemoveAllBindingOverrides();   //모든 Rebinding 제거
         preMeshProUGUI.text = settingUIManager.initialComands[inputField];
         inputField.text = "";
+
+        settingUIManager.currentComands[inputField] = settingUIManager.initialComands[inputField];  //최근 입력값을 초기 입력값으로 덮어쓰기
+        settingUIManager.savedComands[inputField] = settingUIManager.initialComands[inputField];  //저장된 입력값을 초기 입력값으로 덮어쓰기
     }
 }

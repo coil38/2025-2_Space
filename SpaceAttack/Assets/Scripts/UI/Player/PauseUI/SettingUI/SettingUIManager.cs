@@ -24,6 +24,8 @@ public class SettingUIManager : MonoBehaviour
     public Dictionary<TMP_InputField, string> currentComands = new Dictionary<TMP_InputField, string>();  //변경값 ( 변경하면서 최신 갱신 )
     public Dictionary<TMP_InputField, string> savedComands = new Dictionary<TMP_InputField, string>();    //저장값 ( 저장버튼을 누르고 저장된 설정 )
 
+    public Dictionary<string, float> savedVolumes = new Dictionary<string, float>();  //사운드 저장값 ( 저장버튼을 누르고 저장된 설정 + 변경하면서 최신 갱신 )
+
     public event Action cancelSaveEvent;   //저장 취소용 이벤트 델리게이트
     public event Action saveEvent;         //저장용 이벤트 델리게이트
     public event Action resetEvent;        //초기화용 이벤트 델리게이트
