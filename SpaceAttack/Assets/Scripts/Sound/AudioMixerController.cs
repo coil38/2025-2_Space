@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
-using static UnityEngine.Rendering.DebugUI;
 
 public class AudioMixerController : MonoBehaviour
 {
@@ -76,8 +75,11 @@ public class AudioMixerController : MonoBehaviour
         }
         else
         {
-            foreach (var volume in settingUIManager.savedVolumes) //저장값 초기화
-                settingUIManager.savedVolumes[volume.Key] = 0f;
+            settingUIManager.savedVolumes["Master"] = value;
+            settingUIManager.savedVolumes["BGM"] = value;
+            settingUIManager.savedVolumes["SFX"] = value;
+            settingUIManager.savedVolumes["UI"] = value;
+
         }
 
         MasterSlider.value = value;

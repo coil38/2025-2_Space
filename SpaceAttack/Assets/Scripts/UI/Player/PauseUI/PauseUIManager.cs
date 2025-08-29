@@ -79,13 +79,11 @@ public class PauseUIManager : MonoBehaviour
 
         if (!pauseUIPanel.activeSelf) return;  //일시정지 창이 비활성화일 경우, return 처리
 
-        Debug.Log("작동한다");
-
         if (!cannotEscape)  //escape가능 여부 판단 처리
         {
             if (achievementUIPanel.activeSelf || helpUIPanel.activeSelf || settingUIPanel.activeSelf)
             {
-                Debug.Log("나갈수 없음");
+                //Debug.Log("나갈수 없음");
                 cannotEscape = true;
             }
         }
@@ -93,7 +91,7 @@ public class PauseUIManager : MonoBehaviour
         {
             if (!achievementUIPanel.activeSelf && !helpUIPanel.activeSelf && !settingUIPanel.activeSelf)
             {
-                Debug.Log("나갈수 있음");
+                //Debug.Log("나갈수 있음");
                 cannotEscape = false;
             }
         }

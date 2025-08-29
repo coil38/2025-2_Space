@@ -11,6 +11,9 @@ public class PlayerStatus : MonoBehaviour
     public float m_speed = 5f;            //이동 속도
     public float m_DashDistance = 3.2f;   //대쉬 거리
     public float itemDetectDistance = 1.8f; //아이템 감지거리
+    public static float criticalRate = 5f;         //치명타 확률
+    public static float criticalHitRate = 50f;     //치명타 피해
+    public float missRate = 0f;             //회피율
 
     public ParticleSystem m_Particle;
     public ParticleSystem d_Particle;
@@ -134,6 +137,8 @@ public class PlayerStatus : MonoBehaviour
 
     private void _ApplyDamage(AttackInfo info)
     {
+        
+
         int damage = (int) info.damage;
         Vector3 dir = info.attackDirection;
 

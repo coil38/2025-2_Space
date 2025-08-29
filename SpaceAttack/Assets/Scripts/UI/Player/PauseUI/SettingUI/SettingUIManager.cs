@@ -82,6 +82,22 @@ public class SettingUIManager : MonoBehaviour
         resetButton.onClick.RemoveAllListeners();
     }
 
+    private void Update()  //설정 Esc나가기 실시간 체크
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isChanged.Count > 0)  //변경사항이 있을 경우
+            {
+                if (confirmationUI != null && exitConfirmationUI != null)
+                    confirmationUI.Show(exitConfirmationUI);
+            }
+            else  //변경사항이 없을 경우
+            {
+                gameObject.SetActive(false);
+            }
+        }
+    }
+
     public void ExitSettingPanel()  //설정 패널 비활성화 함수
     {
         gameObject.SetActive(false);

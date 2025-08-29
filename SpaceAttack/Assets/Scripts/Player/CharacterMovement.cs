@@ -126,14 +126,17 @@ public class CharacterMovement : MonoBehaviour
         Collider[] items = Physics.OverlapSphere(transform.position, playerState.itemDetectDistance, itemLayer);
 
         float minDistance = 5f;
+        float currentDis = 5f;
         Collider selectedItem = null;
         foreach (var item in items)
         {
-            float temp = Mathf.Min(minDistance, Vector3.Distance(transform.position, item.transform.position));
-            if (temp < minDistance)
+            minDistance = Mathf.Min(minDistance, Vector3.Distance(transform.position, item.transform.position));
+            if (currentDis > minDistance)
             {
                 selectedItem = item;
             }
+
+            currentDis = minDistance;
         }
 
         if (selectedItem == null) return;   //주변에 아이템이 없을 시, 반환처리

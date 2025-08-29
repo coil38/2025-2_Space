@@ -54,9 +54,10 @@ public class InputSettingUI : MonoBehaviour
             //Debug.Log(gameObject.name + "이 작동한다.");
         }
 
-        if (settingUIManager.currentInputSetting != this)        //최근 인스턴스가 본인 아닐 경우(변경대상이 본인이 아닐 경우)
+        if (settingUIManager.currentInputSetting != this && isInputting)        //최근 인스턴스가 본인 아닐 경우(변경대상이 본인이 아닐 경우)
         {
             isInputting = false;
+            //inputField.text = "";
             //Debug.Log($"{gameObject.name} 인스턴스는 변경 대상이 빠뀜.");
         }
     }
@@ -76,14 +77,21 @@ public class InputSettingUI : MonoBehaviour
         isInputting = true;
         settingUIManager.rebindingOperation?.Cancel();   //이미 op가 존재할 경우, 해당 op 초기화
 
+        if (settingUIManager.currentInputSetting == this)  //입력 대기 중, 텍스트 설정
+        {
+            preMeshProUGUI.text = "ReadyToSet";
+        }
+
         settingUIManager.rebindingOperation = action.PerformInteractiveRebinding(targetIndex)
               .WithControlsExcluding("Mouse")    // 원하면 마우스 제외 등 필터
               .WithCancelingThrough("<Keyboard>/escape")
               .OnCancel(op =>
               {
+                  inputField.DeactivateInputField();   //입력준비 비활성화
                   //Debug.Log("Rebind 취소");
                   op.Dispose();
                   isInputting = false;
+                  preMeshProUGUI.text = settingUIManager.currentComands[inputField];  //입력 대기 중, 텍스트 설정 취소
               })
               .OnComplete(op =>
               {
@@ -91,6 +99,7 @@ public class InputSettingUI : MonoBehaviour
                   key = key.Substring(key.IndexOf("/") + 1);
 
                   //Debug.Log(key);
+                  inputField.DeactivateInputField();   //입력준비 비활성화
 
                   if (settingUIManager.currentComands.ContainsValue(key))   //중복되는 키가 있는지 체크
                   {
@@ -98,6 +107,8 @@ public class InputSettingUI : MonoBehaviour
                       inputField.text = "";
                       op.Dispose();
                       isInputting = false;
+
+                      preMeshProUGUI.text = settingUIManager.currentComands[inputField];  //입력 대기 중, 텍스트 설정 취소
 
                       string currentKey = settingUIManager.currentComands[inputField].ToLower();
                       action.ApplyBindingOverride(targetIndex, "<Keyboard>/" + currentKey);   //입력을 통해서 바뀌었던 키를 다시 되돌리기
@@ -107,7 +118,7 @@ public class InputSettingUI : MonoBehaviour
                   //Debug.Log($"{gameObject.name}이 Rebind 완료: " + action.bindings[targetIndex].effectivePath);
                   op.Dispose();
                   preMeshProUGUI.text = key;
-                  inputField.text = key;
+                  inputField.text = "";
                   settingUIManager.currentComands[inputField] = key;       //최근 키로 저장
                   isInputting = false;
 
