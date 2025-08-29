@@ -24,8 +24,6 @@ public class PlayerStatus : MonoBehaviour
     [HideInInspector] public bool isDead = false;
                       public bool isBeingEaten = false;  //먹히는 중인가?
 
-    private bool cannotStuned;
-
     private bool _isRooted;
     public bool isRooted       //상태 이상: 속박
     {
@@ -68,7 +66,6 @@ public class PlayerStatus : MonoBehaviour
         {
             GetComponent<PlayerAttack>().enabled = false;
             GetComponent<PlayerMovement>().enabled = false;   //플레이어 입력관련 스크립트
-            cannotStuned = true;
 
             PlayerMovementAnimationController temp = GetComponent<PlayerMovementAnimationController>();
             temp.ResetAnimationObj();        //모든 이미지 비활성화
@@ -81,7 +78,6 @@ public class PlayerStatus : MonoBehaviour
         {
             GetComponent<PlayerAttack>().enabled = true;
             GetComponent<PlayerMovement>().enabled = true;   //플레이어 입력관련 스크립트
-            cannotStuned = false;
 
             PlayerMovementAnimationController temp = GetComponent<PlayerMovementAnimationController>();
             temp.SetDirection();           //현재에 맞는 이미지 활성화
@@ -181,10 +177,12 @@ public class PlayerStatus : MonoBehaviour
             if (AudioManager.instance != null)
                 AudioManager.instance.PlaySound("Hit");
 
-            if(!cannotStuned)
+            if (!isRooted)
+            {
                 PlayerTimeSystem.stunTimer.Start();   //스턴 타이머 시작
-                                                      //스턴 연출 시작
-            movemetAniController.PlayAnimation("Hit");  //피격 애니메이션
+                movemetAniController.PlayAnimation("Hit");  //피격 애니메이션 ( 속박상태가 아닐 경우 )
+            }
+
             Debug.Log("플레이어 피격");
             rb.AddForce(dir * attackForce);                 //넉백
 
