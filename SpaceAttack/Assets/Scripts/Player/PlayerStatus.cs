@@ -11,7 +11,7 @@ public class PlayerStatus : MonoBehaviour
     public float m_speed = 5f;            //이동 속도
     public float m_DashDistance = 3.2f;   //대쉬 거리
     public float itemDetectDistance = 1.8f; //아이템 감지거리
-    public static float criticalRate = 5f;         //치명타 확률
+    public static float criticalRate = 50f;         //치명타 확률
     public static float criticalHitRate = 50f;     //치명타 피해
     public float missRate = 0f;             //회피율
 
@@ -137,12 +137,21 @@ public class PlayerStatus : MonoBehaviour
 
     private void _ApplyDamage(AttackInfo info)
     {
-        
-
-        int damage = (int) info.damage;
+        int damage = (int)info.damage;
         Vector3 dir = info.attackDirection;
 
-        Debug.Log(damage);
+        float randomValue = Random.Range(0.01f, 100f);
+        if (randomValue < missRate)
+        {
+            //회피성공
+            if (DamageEffectManager.instance != null)
+                DamageEffectManager.instance.ShowMiss(transform.position + transform.up * 0.3f);
+        }
+        else
+        {
+            if (DamageEffectManager.instance != null)
+                DamageEffectManager.instance.ShowDamage(transform.position + transform.up * 0.3f, damage, true);
+        }
 
         float mass = 1f;
         float attackForce = mass * 100f;

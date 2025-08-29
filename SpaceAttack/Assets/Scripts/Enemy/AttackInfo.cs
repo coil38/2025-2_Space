@@ -27,4 +27,15 @@ public struct AttackInfo
         this.attackForce = mass * 100f;
         this.attacker = attacker;
     }
+
+    public float CheckAndSetCritical(float damage, float criticalRate, float criticalHitRate)
+    {
+        float randomValue = Random.Range(0.01f, 100f);
+        if (randomValue < criticalRate) //크리티컬 처리
+        {
+            damage += damage * criticalHitRate / 100f;
+        }
+
+        return damage;
+    }
 }

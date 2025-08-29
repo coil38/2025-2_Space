@@ -29,7 +29,7 @@ public class TestManager : MonoBehaviour
 
     private void ResetHp()
     {
-        Debug.Log("작동한다!!");
+        //Debug.Log("작동한다!!");
         PlayerStatus.m_hp = 5;
     }
 }

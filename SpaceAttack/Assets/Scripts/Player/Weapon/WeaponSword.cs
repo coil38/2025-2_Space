@@ -9,7 +9,7 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
 
     private float attackDistance = 2f;
     private float damage = 4f;
-    private float r_AttackTime = 0.3f;
+    private float r_AttackTime = 0.2f;
     private float mass = 1f;
     private float detectAngle = 155f;
     private float w_attackTime = 0.3f;    //검 공격 대기 시간
@@ -120,6 +120,16 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
 
         if (targets.TryDequeue(out var target))
         {
+            bool isCritical = false;
+            float temp = attackInfo.CheckAndSetCritical(damage, PlayerStatus.criticalRate, PlayerStatus.criticalHitRate);
+            if (temp > damage) isCritical = true;  //크리티컬 처리
+
+            attackInfo.damage = temp; //데미지 재설정
+
+            Vector3 effectPos = target.transform.position + target.transform.up * 0.5f;
+            if (DamageEffectManager.instance != null)
+                DamageEffectManager.instance.ShowDamage(effectPos, (int)temp, false, isCritical);
+
             target.SendMessage("ApplyDamage", attackInfo);
             Camera.main.GetComponent<CameraFallow>().CameraShack();  //카메라 흔들림 연출
             //Debug.Log(target.name + "을 검 공격함");
