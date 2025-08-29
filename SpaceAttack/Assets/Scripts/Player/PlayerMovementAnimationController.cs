@@ -143,6 +143,14 @@ public class PlayerMovementAnimationController : MonoBehaviour
                 }
                 break;
 
+            case "Hit":
+
+                isAttacking = false;  //공격도 초기화 처리
+                moveDirection = MoveDirection.Front;
+                SetDirection();
+                frontMoveAnimator.SetFloat("HitSpeed", Mathf.Clamp(0.667f / PlayerTimeSystem.m_stunTime - 0.05f, 0.6f, 5f));
+                frontMoveAnimator.SetTrigger("Hit");
+                break;
         }
     }
 

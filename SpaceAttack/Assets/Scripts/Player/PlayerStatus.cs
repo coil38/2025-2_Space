@@ -6,7 +6,7 @@ public class PlayerStatus : MonoBehaviour
 {
     //플레이어 상태값--------------------------------------------
     [Header("PlayerInfo")]
-    public static int m_hp = 5;               //체력
+    public static int m_hp = 10;              //체력
     public static int m_maxhp = 10;           //최대 체력
     public float m_speed = 5f;            //이동 속도
     public float m_DashDistance = 3.2f;   //대쉬 거리
@@ -40,14 +40,16 @@ public class PlayerStatus : MonoBehaviour
     public bool m_FacingRight { get; private set; }
 
     private Rigidbody rb;
+    private PlayerMovementAnimationController movemetAniController;
 
     private Queue<AttackInfo> attackQueue = new Queue<AttackInfo>();
     private bool isDamageProcessing;
 
-    private void Start()
+    private void OnEnable()
     {
         m_FacingRight = true;
         rb = GetComponent<Rigidbody>();
+        movemetAniController = GetComponent<PlayerMovementAnimationController>();
     }
 
     void Update()
@@ -181,8 +183,8 @@ public class PlayerStatus : MonoBehaviour
 
             if(!cannotStuned)
                 PlayerTimeSystem.stunTimer.Start();   //스턴 타이머 시작
-                                            //스턴 연출 시작
-            //animator.SetTrigger("Hit");                          //피격 애니메이션
+                                                      //스턴 연출 시작
+            movemetAniController.PlayAnimation("Hit");  //피격 애니메이션
             Debug.Log("플레이어 피격");
             rb.AddForce(dir * attackForce);                 //넉백
 

@@ -9,7 +9,7 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
 
     private float attackDistance = 2f;
     private float damage = 4f;
-    private float r_AttackTime = 0.2f;
+    private float r_AttackTime = 0.1f;
     private float mass = 1f;
     private float detectAngle = 155f;
     private float w_attackTime = 0.3f;    //검 공격 대기 시간
@@ -116,6 +116,8 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
 
     private void _Attack()
     {
+        if (PlayerTimeSystem.stunTimer.IsRunning()) return;  //플레이어 피격받는 중일 경우, 공격취소 처리 (예외처리)
+
         AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);  //공격 정보 설정
 
         if (targets.TryDequeue(out var target))

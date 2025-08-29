@@ -44,6 +44,9 @@ public class PlayerAttack : MonoBehaviour
         if (PlayerTimeSystem.w_dashTimer != null)
             if (PlayerTimeSystem.w_dashTimer.IsRunning()) return;  //데쉬 도중일 경우, 반환
 
+        if (PlayerTimeSystem.stunTimer != null)
+            if (PlayerTimeSystem.stunTimer.IsRunning()) return; //스턴 상태일 경우, 반환
+
         if (weaponType == null) return;  //현재 보유 중 무기가 없을 시, 반환
 
         //무기 시스템 연결
@@ -72,6 +75,9 @@ public class PlayerAttack : MonoBehaviour
         if (PlayerTimeSystem.w_dashTimer != null)
             if (PlayerTimeSystem.w_dashTimer.IsRunning()) return;  //데쉬 도중일 경우, 반환
 
+        if (PlayerTimeSystem.stunTimer != null)
+            if (PlayerTimeSystem.stunTimer.IsRunning()) return; //스턴 상태일 경우, 반환
+
         if (skillTypes == null) return; //현재 보유 중 스킬이 없을 시, 반환
 
         //스킬 시스템 연결
@@ -91,11 +97,6 @@ public class PlayerAttack : MonoBehaviour
             if (skill.isAttackMoving)  //무기이동 실행
                 rb.MovePosition(skill.attackMovePos);
         }
-    }
-
-    public void SetAnimationObj(string name, bool par1, int par2, float par3)
-    {
-
     }
 }
 
