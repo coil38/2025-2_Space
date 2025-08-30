@@ -22,7 +22,10 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
     public override void OnEnable()
     {
         mass = 1f;
-        damage = 3f;                             //임시
+        damage = 3f;
+        initialDamage = damage;
+        damageRate = 1.2f;
+        unLockedNumber = 1;
         attackDistance = 3.2f;
         attackWidth = 3f;
         attackTime = 0.6f;
@@ -46,6 +49,12 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
     public override void CheckAttack(Vector3 currentPos)
     {
+        if (!canUse)//해금여부에 따른 스킬 사용 여부
+        {
+            //Debug.Log("스킬_찌르기가 해금되지 않았습니다");
+            return;
+        }
+
         _currentPos = currentPos;
 
         if (PlayerInputController.skill1Action.triggered)  //플레이어 입력감지

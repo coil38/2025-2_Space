@@ -66,8 +66,10 @@ public class JsonToScriptableConverter : EditorWindow
                 SoundDataLoader.ConvertJsonToScriptableObjects();
             break;
 
-            case JsonType.Player:
-                Debug.Log("플레이어 제이슨 저장");
+            case JsonType.Level:
+                LevelDataLoader.jsonFilePath = jsonFilePath;
+                LevelDataLoader.creatDatabase = createDatabase;
+                LevelDataLoader.ConvertJsonToScriptableObjects();
             break;
 
             case JsonType.Monster:

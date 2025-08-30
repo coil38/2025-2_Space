@@ -1,14 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션 중, 실행) O | 공격시간 X | 플레이어 대기시간 O
 {
     //임시로 플레이어에 할당
 
     private float attackDistance = 2f;
-    private float damage = 4f;
     private float r_AttackTime = 0.1f;
     private float mass = 1f;
     private float detectAngle = 155f;
@@ -26,6 +24,12 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
     private Queue<GameObject> targets = new Queue<GameObject>();
     public override void OnEnable()
     {
+        //내부 데이터 설정
+        damage = 4f;
+        initialDamage = damage;
+        damageRate = 1.1f;
+        //------------------------------------------------------------------------------------------------------------------------------------------------------------
+
         planLayer |= 1 << LayerMask.NameToLayer("Plan");
         enemyLayer |= (1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("DestructableObject"));
 

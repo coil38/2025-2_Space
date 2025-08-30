@@ -1,6 +1,6 @@
 public enum JsonType
 {
     Sound,
-    Player,
+    Level,
     Monster
 }

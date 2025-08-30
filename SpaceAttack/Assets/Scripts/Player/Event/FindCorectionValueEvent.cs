@@ -5,34 +5,99 @@ using System;
 
 public class FindCorectionValueEvent
 {
-    private EventHandler<FindCorectionValueEvent> _eventHandler;
+    private EventHandler<FindCorectionValueEvent> _correctionEventHandler;
 
-    public event EventHandler<FindCorectionValueEvent> eventHandler
+    public event EventHandler<FindCorectionValueEvent> correctionEventHandler
     {
         add
         {
-            _eventHandler += value;
+            _correctionEventHandler += value;
         }
         remove
         {
-            _eventHandler -= value;
+            _correctionEventHandler -= value;
         }
     }
 
-    public string test;
+    private EventHandler<FindCorectionValueEvent> _levelEventHandler;
+
+    public event EventHandler<FindCorectionValueEvent> levelEventHandler
+    {
+        add
+        {
+            _levelEventHandler += value;
+        }
+        remove
+        {
+            _levelEventHandler -= value;
+        }
+    }
+
+    public LevelDatabaseSO levelDatabase;   //레벨 보정관련 데이터 베이스
+
+    public bool correctablility;
+    public int damageCorrection;
+    public int heartCorrection;
+    public int speedCorrection;
+    public bool unlockability;
+    public int skillNumber;
 
     public void FindCorectionValue(int _level)
     {
-        ClearData();
-
-        test = "찾는 중...";
+        correctablility = false;
+        damageCorrection = 0;
+        heartCorrection = 0;
+        speedCorrection = 0;
+        unlockability = false;
+        skillNumber = 0;
 
         //정보전달
-        _eventHandler.Invoke(this, EventManager.f_CorrectionValueEvent);   //이벤트 호출
+        LevelSO levelSO = levelDatabase.GetLevelByLevel(_level);
+        if (levelSO != null)
+        {
+            if (levelSO.correctability)  //플레이어 스텟보정
+            {
+                correctablility = levelSO.correctability;
+                damageCorrection = levelSO.damageCorrection;
+                heartCorrection = levelSO.heartCorrection;
+                speedCorrection = levelSO.speedCorrection;
+            }
+
+            if (levelSO.unlockability)  //스킬 해금
+            {
+                unlockability = levelSO.unlockability;
+                skillNumber = levelSO.unlockedSkill;
+            }
+
+            _correctionEventHandler.Invoke(this, EventManager.f_CorrectionValueEvent);   //이벤트 호출
+        }
     }
 
-    private void ClearData()
+    public int maxEXP;
+    public int nextMaxEXP;
+
+    public void FindMaxExpValue(int _level)
     {
-        //이전에 사용한 정보들 초기화
+        maxEXP = 0;
+        nextMaxEXP = 0;
+        if (levelDatabase.maxLevel < _level)  //최대레벨 예외처리
+        {
+            Debug.LogWarning($"{levelDatabase.maxLevel} 레벨의 이상의 레벨은 존재하지 않습니다. 입력받은 레벨: {_level}");
+        }
+        else
+        {
+            maxEXP = levelDatabase.GetMaxExp(_level);  //해당 레벨의 최대경험치양 찾기
+        }
+
+        if (levelDatabase.maxLevel < _level + 1)  //최대레벨 예외처리
+        {
+            Debug.LogWarning($"{levelDatabase.maxLevel} 레벨의 이상의 레벨은 존재하지 않습니다. 입력받은 레벨: {_level + 1}");
+        }
+        else
+        {
+            nextMaxEXP = levelDatabase.GetMaxExp(_level + 1);  //해당 레벨의 최대경험치양 찾기
+        }
+
+        _levelEventHandler.Invoke(this, EventManager.f_CorrectionValueEvent);   //최대레벨을 찾는 이벤트 호출
     }
 }

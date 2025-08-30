@@ -48,9 +48,16 @@ public class PlayerStatus : MonoBehaviour
         m_FacingRight = true;
         rb = GetComponent<Rigidbody>();
         movemetAniController = GetComponent<PlayerMovementAnimationController>();
+
+        EventManager.f_CorrectionValueEvent.correctionEventHandler += SetCorrectionValue;  //플레이어 스텟 보정 이벤트 구독
     }
 
-    void Update()
+    private void OnDisable()
+    {
+        EventManager.f_CorrectionValueEvent.correctionEventHandler -= SetCorrectionValue;  //플레이어 스텟 보정 이벤트 구독 해지
+    }
+
+    private void Update()
     {
         //각각의 상태 실행여부값 할당
         isDashing = PlayerTimeSystem.w_dashTimer.IsRunning();
@@ -90,7 +97,7 @@ public class PlayerStatus : MonoBehaviour
         }
     }
 
-    private void CheckApplyDamage()
+    private void CheckApplyDamage()  //다중 피격 받을 시, 예외처리 함수
     {
         if (isStuned) isDamageProcessing = false;   // 스턴상태일때, 데미지 처리 프로세스 해제
 
@@ -195,5 +202,21 @@ public class PlayerStatus : MonoBehaviour
         Vector3 localScale = transform.localScale;
         localScale.x *= -1;
         transform.localScale = localScale;
+    }
+
+    public void SetCorrectionValue(object obj, FindCorectionValueEvent e)
+    {
+        if (e.correctablility)  //플레이어 스텟 보정치 주입
+        {
+            //Debug.Log("플레이어 스텟 상승");
+            m_maxhp += e.heartCorrection;
+            m_speed *= 1 + e.speedCorrection / 100f;
+            //Debug.Log($"{e.heartCorrection}, {e.speedCorrection} / 100");
+
+            if (PlayerUIManager.instance != null)
+                PlayerUIManager.instance.ResetHpUI(); //체력 초기화
+
+            //플레이어 스텟보정 연출
+        }
     }
 }

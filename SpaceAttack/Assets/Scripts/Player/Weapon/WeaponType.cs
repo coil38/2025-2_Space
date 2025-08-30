@@ -18,6 +18,11 @@ public abstract class WeaponType : MonoBehaviour, IAttack, ICheckAttack
     public Timer m_AttackTimer { get; protected set; }        //공격 이동 타이머(원거리용)
     public Timer r_AttackTimer { get; protected set; }        //공격 애니메이션 대기
 
+    //내부 기능
+    public float damage { get; set; }
+    public float initialDamage { get; protected set; }
+    public float damageRate { get; protected set; }
+
     public abstract void CheckAttack(Vector3 currentPos);
 
     public abstract void Attack();

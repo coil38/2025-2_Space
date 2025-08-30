@@ -11,6 +11,7 @@ public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애�
     private bool isUsingBuff;
     public override void OnEnable()
     {
+        unLockedNumber = 3;
         attackTime = 10f;
         r_AttackTime = 0.2f;
         coolTime = 25f;
@@ -36,6 +37,12 @@ public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애�
 
     public override void CheckAttack(Vector3 currentPos)
     {
+        if (!canUse)//해금여부에 따른 스킬 사용 여부
+        {
+            //Debug.Log("스킬_코어활성화가 해금되지 않았습니다");
+            return;
+        }
+
         if (PlayerInputController.skill3Action.triggered)
         {
             if (coolTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴

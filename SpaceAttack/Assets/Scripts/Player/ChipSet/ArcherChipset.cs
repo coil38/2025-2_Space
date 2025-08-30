@@ -19,9 +19,9 @@ public class ArcherChipset : ChipSetType
     [SerializeField] private GameObject _prefab;
     [SerializeField] private Animator _animator;
 
-    public override void SetCorrectionValue(Object obj, FindCorectionValueEvent e)
+    public override void SetCorrectionValue(object obj, FindCorectionValueEvent e)
     {
-        Debug.Log($"{e.test}를 스킬 보정치에 주입");
+        //Debug.Log($"{e}를 스킬 보정치에 주입");
     }
 
     void OnEnable()      //임시

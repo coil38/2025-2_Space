@@ -88,8 +88,8 @@ public class DamageTextEffect : MonoBehaviour
 
     private void StartFlashEffect()
     {
-        if (textMesh == null) return;
-        textMesh.color = Color.white;     //색갈 설정
+        //if (textMesh == null) return;
+        //textMesh.color = Color.white;     //색갈 설정
 
         //반짝임 시작 실행부
         isFlashing = true;

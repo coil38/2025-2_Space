@@ -24,6 +24,9 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
     {
         mass = 1f;
         damage = 3f;
+        initialDamage = damage;
+        damageRate = 1.3f;
+        unLockedNumber = 2;
         attackDistance = 4f;
         attackWidth = 4f;
         attackTime = 0.6f;
@@ -48,6 +51,12 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
 
     public override void CheckAttack(Vector3 currentPos)
     {
+        if (!canUse)//해금여부에 따른 스킬 사용 여부
+        {
+            //Debug.Log("스킬_참격이 해금되지 않았습니다");
+            return;
+        }
+
         _currentPos = currentPos;
 
         if (PlayerInputController.skill2Action.triggered)  //플레이어 입력감지

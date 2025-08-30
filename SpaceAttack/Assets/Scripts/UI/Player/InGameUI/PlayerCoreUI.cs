@@ -8,6 +8,7 @@ public class PlayerCoreUI : MonoBehaviour
 {
     [SerializeField] private Text maxExpText;
     [SerializeField] private Text expText;
+    [SerializeField] private Text levelText;
 
     private Coroutine currentCor;
     private Queue<ExpInfo> expInfos = new Queue<ExpInfo>();
@@ -31,8 +32,18 @@ public class PlayerCoreUI : MonoBehaviour
             Variables.Object(this.gameObject).Set("targetExp", expInfo.targetExp);
             Variables.Object(this.gameObject).Set("maxExp", expInfo.maxExp);
 
-            //함수 실행
-            CustomEvent.Trigger(this.gameObject, "UpdateExp");
+            if (expInfo.isInitial)  //초기화 설정
+            {
+                //UI텍스트 갱신
+                levelText.text = expInfo.currentLevel.ToString(); //현재 레벨 갱신
+                expText.text = expInfo.currentExp.ToString(); //현재 경험치량
+                maxExpText.text = "/ " + expInfo.maxExp;  //최대 경험치량
+            }
+            else
+            {
+                //함수 실행
+                CustomEvent.Trigger(this.gameObject, "UpdateExp");
+            }
         }
     }
 

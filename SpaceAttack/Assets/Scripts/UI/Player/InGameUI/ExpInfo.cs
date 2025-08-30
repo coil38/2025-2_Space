@@ -10,13 +10,15 @@ public struct ExpInfo
     public int maxExp { get; private set; }
     public int currentLevel { get; private set; }
     public int nextMaxExp { get; private set; }
+    public bool isInitial { get; private set; }
 
-    public ExpInfo(int _currentExp, int _targetExp, int _maxExp, int _currentLevel, int _nextMaxExp)
+    public ExpInfo(int _currentExp, int _targetExp, int _maxExp, int _currentLevel, int _nextMaxExp, bool _isInitial = false)
     {
         currentExp = _currentExp;
         targetExp = _targetExp;
         maxExp = _maxExp;
         currentLevel = _currentLevel;
         nextMaxExp = _nextMaxExp;
+        isInitial = _isInitial;   //초기화용 옵션
     }
 }

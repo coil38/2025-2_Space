@@ -32,7 +32,7 @@ public class SoundDataLoader : EditorWindow
 
             List<SoundSO> createdSounds = new List<SoundSO>();    //SoundSO 리스트 생성
 
-            AudioMixer mixer = AssetDatabase.LoadAssetAtPath<AudioMixer>(AudioMixerPath);
+            AudioMixer mixer = AssetDatabase.LoadAssetAtPath<AudioMixer>(AudioMixerPath);   //UnityEditor 전용
 
             foreach (var soundData in soundDataList)
             {
