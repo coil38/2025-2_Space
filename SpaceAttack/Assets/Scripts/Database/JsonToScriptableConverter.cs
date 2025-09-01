@@ -72,8 +72,16 @@ public class JsonToScriptableConverter : EditorWindow
                 LevelDataLoader.ConvertJsonToScriptableObjects();
             break;
 
-            case JsonType.Monster:
-                Debug.Log("몬스터 제이슨 저장");
+            case JsonType.ChipsetComponent:
+                ChipsetComponentDataLoader.jsonFilePath = jsonFilePath;
+                ChipsetComponentDataLoader.createDatabase = createDatabase;
+                ChipsetComponentDataLoader.ConvertJsonToScriptableObjects();
+            break;
+
+            case JsonType.Chipset:
+                ChipsetDataLoader.jsonFilePath = jsonFilePath;
+                ChipsetDataLoader.createDatabase = createDatabase;
+                ChipsetDataLoader.ConvertJsonToScriptableObjects();
             break;
         }
     }
