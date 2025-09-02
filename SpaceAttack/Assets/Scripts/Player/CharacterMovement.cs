@@ -15,6 +15,7 @@ public class CharacterMovement : MonoBehaviour
     private bool isMoving;
     private LayerMask wallLayer;
     private LayerMask itemLayer;
+    private LayerMask interationLayer;
 
     //대쉬용 변수
     private bool startDash;
@@ -30,6 +31,7 @@ public class CharacterMovement : MonoBehaviour
 
         wallLayer |= 1 << LayerMask.NameToLayer("Wall");
         itemLayer |= 1 << LayerMask.NameToLayer("Item");
+        interationLayer |= 1 << LayerMask.NameToLayer("InteractionObj");
     }
 
     private void FixedUpdate()
@@ -92,8 +94,9 @@ public class CharacterMovement : MonoBehaviour
 
         //Debug.Log(dashDis);
 
-        PlayerTimeSystem.w_dashTimer.Start();   //대쉬 대기 시간(0.15 초 동안)
-        PlayerTimeSystem.deshTimer.Start();     //대쉬 타이머 시작  (0.1 초 동안)
+        PlayerTimeSystem.c_dashTimer.Start();   //대쉬 쿨타임 시작
+        PlayerTimeSystem.w_dashTimer.Start();   //대쉬 대기 시간(0.25 초 동안)
+        PlayerTimeSystem.deshTimer.Start();     //대쉬 타이머 시작  (0.2 초 동안)
 
         SetDashInfo();     //대쉬 위치 설정
         if(dashDis > 0) startDash = true;  //대쉬 시작
@@ -147,6 +150,18 @@ public class CharacterMovement : MonoBehaviour
         {
             inventory.chipSet = chipset;
             Debug.Log("아이템 획득");
+        }
+    }
+
+    public void CheckInteraction()
+    {
+        Collider[] interactions = Physics.OverlapSphere(transform.position, playerState.itemDetectDistance, interationLayer);
+
+        foreach (var interaction in interactions)
+        {
+            ChipsetSelectObject chipsetSelect = interaction.GetComponent<ChipsetSelectObject>();
+
+            if (chipsetSelect != null) chipsetSelect.OnChipsetSelectUI();  //칩셋 선택UI 활성화
         }
     }
 }

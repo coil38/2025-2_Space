@@ -21,6 +21,8 @@ public class PauseUIManager : MonoBehaviour
     [SerializeField] private GameObject helpUIPanel;
     [SerializeField] private GameObject settingUIPanel;
 
+    [HideInInspector] public bool cannotOnPanel;  //일시정치창 활성화 방지
+
     private bool cannotEscape;  //일시정지창 이외에 또다른 뎁스가 있을 경우, false처리 (esc입력 안됨)
     private void Awake()
     {
@@ -53,7 +55,7 @@ public class PauseUIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckEscape();         //일시정지 취소 가능여부 실시간 체크
+        if(!cannotOnPanel) CheckEscape();         //일시정지 취소 가능여부 실시간 체크
     }
 
     private void CheckOnPausePanel()  //설정UI가 활성화여부 실시간 체크

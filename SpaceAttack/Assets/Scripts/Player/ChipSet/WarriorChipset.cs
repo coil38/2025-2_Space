@@ -68,11 +68,17 @@ public class WarriorChipset : ChipSetType
         prefab = _prefab;
         animator = _animator;
 
-        EventManager.f_CorrectionValueEvent.correctionEventHandler += SetCorrectionValue;  //공격력, 스킬 보정 이벤트 구독
+        StartCoroutine(SetEvent());
     }
 
     private void OnDisable()
     {
         EventManager.f_CorrectionValueEvent.correctionEventHandler -= SetCorrectionValue;  //공격력, 스킬 보정 이벤트 구독 해지
+    }
+
+    private IEnumerator SetEvent()
+    {
+        yield return new WaitUntil(() => EventManager.f_CorrectionValueEvent != null);
+        EventManager.f_CorrectionValueEvent.correctionEventHandler += SetCorrectionValue;  //공격력, 스킬 보정 이벤트 구독
     }
 }

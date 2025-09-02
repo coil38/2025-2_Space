@@ -1,35 +1,70 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ChipsetSelectDetailUI : MonoBehaviour
 {
+    [Header("칩셋 선택창")]
+    [SerializeField] private ChipsetSelectUI chipsetSelectUI;
+
+    [Header("칩셋 정보창")]
     [SerializeField] private TextMeshProUGUI chipsetTitle;
     [SerializeField] private Image chipsetIcon;
     [SerializeField] private TextMeshProUGUI chipsetDescription;
     [SerializeField] private GameObject[] skills;
     [SerializeField] private TextMeshProUGUI skillDescriptionText;
 
+    [Header("칩셋 정보창 버튼")]
+    [SerializeField] private Button equipChipsetButton;
+    [SerializeField] private Button cancelButton;
+    [SerializeField] private TextMeshProUGUI equipChipsetText;
+
     [HideInInspector] public ChipsetSO currentChipset;
     [HideInInspector] public ChipsetDatabaseSO chipsetDatabase;
+    [HideInInspector] public int chipsetIndex;
+
+    private ChipsetSO equipedChipset;  //장착중인 칩셋SO
+    private HighLingthingButtonUI highLingthingButtonUI;  //장착 버튼 애니메이션 Component
+    private Vector3 defaultIconSize;   //초기 스킬 아이콘 크기
 
     private Image[] skillSprites;
     private Button[] buttons;
+    private string[] descriptions;
+
     void OnEnable()
     {
-        SetChipsetDetail();
+        if(skillSprites == null && buttons == null)  //처음 한번만 실행 ( 변수 생성 )
+            SetChipsetDetailOneTime();
+
+        if (currentChipset == null) return;
+        SetChipsetDetail();  //아이콘 할당 및 아이콘 버튼 이벤트 구독 처리
+        SetEquipmentChipsetButton();  //장착여부 체크
     }
 
     void OnDisable()
     {
-        
+        if (currentChipset == null) return;
+        foreach (var button in buttons)
+        {
+            button.onClick.RemoveAllListeners();
+        }
+        equipChipsetButton.onClick.RemoveAllListeners();  //장착 버튼 구독 해제
     }
 
-    private void SetChipsetDetail()
+    private void Update()
     {
-        List<Image> i_temp = new List<Image>();
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    private void SetChipsetDetailOneTime()
+    {
+        List<Image> i_temp = new List<Image>();       //이미지, 버튼 리스트 생성 및 할당
         List<Button> b_temp = new List<Button>();
         foreach (var skill in skills)
         {
@@ -39,30 +74,112 @@ public class ChipsetSelectDetailUI : MonoBehaviour
         skillSprites = i_temp.ToArray();
         buttons = b_temp.ToArray();
 
-        string stringTemp = "";
-        for (int i = 0; i < buttons.Length; i++)
+        descriptions = new string[skills.Length];
+
+        equipChipsetButton.onClick.AddListener(EquipChipset); //장착 버튼 구독
+        cancelButton.onClick.AddListener(Cancel);             //취소 버튼 구독
+
+        highLingthingButtonUI = equipChipsetButton.gameObject.GetComponent<HighLingthingButtonUI>();  //할당
+        defaultIconSize = skillSprites[0].rectTransform.localScale;  //할당
+    }
+
+    private void SetChipsetDetail()  
+    {
+        chipsetTitle.text = currentChipset.name;  //칩셋 이름, 칩셋 스프라이트 이미지, 칩셋 설명 텍스트 할당
+        chipsetIcon.sprite = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.Weapon).iconSprite;
+        chipsetDescription.text = currentChipset.description;
+
+        Sprite iconTemp;
+        ChipsetComponentSO chipsetComponent = null;
+        for (int i = 0; i < buttons.Length; i++)    //스킬 아이콘들 +아이콘 버튼 상호작용 이벤트 구독
         {
             if (i == 0)
             {
-                stringTemp = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.BaseAttack).description;
+                chipsetComponent = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.BaseAttack);
             }
             else if (i == 1)
             {
-                stringTemp = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.Skill1).description;
+                chipsetComponent = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.Skill1);
             }
             else if (i == 2)
             {
-                stringTemp = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.Skill2).description;
+                chipsetComponent = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.Skill2);
             }
             else if (i == 3)
             {
-                stringTemp = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.Skill3).description;
+                chipsetComponent = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.Skill3);
             }
 
-            buttons[i].onClick.AddListener(() =>
+            if (chipsetComponent == null) return;
+            descriptions[i] = chipsetComponent.description;
+            iconTemp = chipsetComponent.iconSprite;
+
+            int index = i;
+
+            skillSprites[index].sprite = iconTemp;
+
+            buttons[index].onClick.AddListener(() =>   //스킬 설명 상호작용 버튼 이벤트 구독
             {
-                skillDescriptionText.text = stringTemp;
+                skillDescriptionText.text = descriptions[index];
+                HighLingthingSkillIcon(skillSprites[index]);
             });
         }
+    }
+
+    private void EquipChipset()   //칩셋 장착
+    {
+        Debug.Log("칩셋 장착");
+
+        //칩셋 장착 내부 코드
+
+        equipedChipset = currentChipset;  //현재 칩셋을 장착중인 칩셋에 할당
+        chipsetSelectUI.SetEquipmentText(chipsetIndex);  //장착중인 칩셋 텍스트 표시
+        SetEquipmentChipsetButton();
+        Cancel();                    //장착 디테일창 비활성화
+    }
+
+    private void Cancel()
+    {
+        gameObject.SetActive(false);
+    }
+
+    private void SetEquipmentChipsetButton()
+    {
+        if (equipedChipset != currentChipset)
+        {
+            equipChipsetText.text = "Equip";
+            equipChipsetButton.onClick.AddListener(EquipChipset); //장착 버튼 구독 처리
+
+            //버튼 하이라이트 작동방지 끄기
+            highLingthingButtonUI.dontUsehighLingth = false;
+
+            //버튼 입력 색상 변경
+            ColorBlock cb = equipChipsetButton.colors;
+            cb.pressedColor = new Color32(200, 200, 200, 255);
+            equipChipsetButton.colors = cb;
+        }
+        else
+        {
+            equipChipsetText.text = "Equiped";
+            equipChipsetButton.onClick.RemoveAllListeners();  //장착 버튼 구독 해제
+
+            //버튼 하이라이트 작동방지 켜기
+            highLingthingButtonUI.dontUsehighLingth = true;
+
+            //버튼 입력 색상 변경
+            ColorBlock cb = equipChipsetButton.colors;
+            cb.pressedColor = Color.white;
+            equipChipsetButton.colors = cb;
+        }
+    }
+
+    private void HighLingthingSkillIcon(Image targetImage)  //스킬 아이콘 애니메이션 실행함수
+    {
+        foreach (var image in skillSprites)  //초기화
+        {
+            image.rectTransform.localScale = defaultIconSize;
+        }
+
+        targetImage.rectTransform.DOScale(new Vector3(1.1f, 1.1f, 1.1f), 0.1f).SetUpdate(true);
     }
 }

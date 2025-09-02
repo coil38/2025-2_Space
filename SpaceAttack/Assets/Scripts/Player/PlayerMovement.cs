@@ -36,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
             //공격방식에 따라서 이동 방식변경 (공격--> enum 사용)
         }
         
-        if (PlayerInputController.dashAction.triggered && !PlayerTimeSystem.stunTimer.IsRunning() && !playerState.isDashing)//스턴(피격)중에 대쉬 안됨
+        if (PlayerInputController.dashAction.triggered && !PlayerTimeSystem.stunTimer.IsRunning())//스턴(피격)중에 대쉬 안됨
         {
             isAttacking = false;
             isUsingSkill = false;
@@ -47,12 +47,19 @@ public class PlayerMovement : MonoBehaviour
             if (PlayerTimeSystem.w_SkillTimer != null)
                 if (PlayerTimeSystem.w_SkillTimer.IsRunning()) isUsingSkill = true;
 
-            if (!isAttacking && !isUsingSkill) characterMovement.Dash();  //대쉬
+            if (PlayerTimeSystem.c_dashTimer != null)
+            {
+                if (!PlayerTimeSystem.c_dashTimer.IsRunning())
+                {
+                    if (!isAttacking && !isUsingSkill) characterMovement.Dash();  //대쉬
+                }
+            }
         }
 
         if (PlayerInputController.interactionAction.triggered)  //아이템 줍기
         {
             characterMovement.CheckItem();
+            characterMovement.CheckInteraction();
         }
     }
 }
