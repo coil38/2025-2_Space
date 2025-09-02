@@ -179,13 +179,47 @@ public class SnackMonster : EnemyBase
     //죽었을때 시각화 프리팹 사라지는 코드
     protected override void OnDeath()
     {
+        // 먹기 시각화 프리팹 제거
         if (eatRangeVisualInstance != null)
         {
             Destroy(eatRangeVisualInstance);
             eatRangeVisualInstance = null;
         }
-        isEating = false;
+
+        // 먹는 도중이면 코루틴 중지
+        if (isEating)
+        {
+            StopAllCoroutines(); // EatPlayerRoutine 등 모두 중지
+            isEating = false;
+
+            if (playerTransform != null)
+            {
+                // 플레이어 상태 초기화
+                SpriteRenderer sr = playerTransform.GetComponent<SpriteRenderer>();
+                if (sr != null) sr.enabled = true;
+
+                playerTransform.SetParent(null);
+
+                if (playerStatusScript != null)
+                {
+                    playerStatusScript.isBeingEaten = false;
+                    playerStatusScript.isRooted = false;
+                }
+
+                Vector3 forwardOffset = (isFacingRight ? Vector3.right : Vector3.left) * 2f + Vector3.up * 1f;
+                playerTransform.position = transform.position + forwardOffset;
+
+                // 참조 초기화
+                playerTransform = null;
+                playerStatusScript = null;
+            }
+        }
+
+        // 상태 초기화
         isChasing = false;
+        rb.velocity = Vector3.zero;
+
+        base.OnDeath(); // EnemyBase가 있다면 호출
     }
 
     //먹기 코드

@@ -171,7 +171,7 @@ public class ShoeMonster : EnemyBase
         flatDir.y = 0;
         Vector3 dir = flatDir.normalized;
 
-        Vector3 spawnPos = transform.position + dir * 0.5f + Vector3.up * 0.5f;
+        Vector3 spawnPos = transform.position + dir * 1.0f + Vector3.up * 0.5f;
 
         GameObject bulletObj = Instantiate(
             bulletPrefab,

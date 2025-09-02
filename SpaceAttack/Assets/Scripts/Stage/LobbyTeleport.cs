@@ -12,7 +12,8 @@ public class LobbyTeleport : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            SceneManager.LoadScene(battleSceneName);
+            FadeManager.Instance.LoadScene(battleSceneName);
         }
     }
 }
+
