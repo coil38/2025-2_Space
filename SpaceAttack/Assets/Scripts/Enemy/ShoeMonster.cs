@@ -193,5 +193,12 @@ public class ShoeMonster : EnemyBase
         FireSingleBullet();
     }
 
+
+    //주금
+    protected override void OnDeath()
+    {
+        base.OnDeath(); 
+    }
+
     #endregion
 }

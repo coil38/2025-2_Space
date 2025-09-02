@@ -47,6 +47,10 @@ public abstract class EnemyBase : MonoBehaviour
     [SerializeField] protected GameObject deathMarkPrefab;
     [SerializeField] protected Transform footPosition;
 
+    [Header("죽음 시 드롭 아이템")]
+    [SerializeField] private GameObject heartPrefab;      // 드롭할 하트 프리팹
+    [SerializeField] private float dropRadius = 1.5f;     // 몬스터 주변 랜덤 드롭 반경
+
     [Header("공통 사운드")]
     [SerializeField] protected AudioSource audioSource;
     [SerializeField] protected AudioClip hitSound;
@@ -153,7 +157,24 @@ public abstract class EnemyBase : MonoBehaviour
     }
     protected virtual void Attack() { }
 
-    protected virtual void OnDeath() { }
+
+    //죽음
+    protected virtual void OnDeath()
+    {
+        float dropChance = 0.2f; // 20% 확률
+        if (heartPrefab != null && UnityEngine.Random.value < dropChance)
+        {
+            Vector3 randomOffset = new Vector3(
+                UnityEngine.Random.Range(-dropRadius, dropRadius),
+                0.5f,
+                UnityEngine.Random.Range(-dropRadius, dropRadius)
+            );
+
+            Vector3 spawnPos = transform.position + randomOffset;
+            Instantiate(heartPrefab, spawnPos, Quaternion.identity);
+        }
+    }
+
     public virtual void ApplyDamage(AttackInfo attackInfo)
     {
         if (isDead || !canBeHit) return;

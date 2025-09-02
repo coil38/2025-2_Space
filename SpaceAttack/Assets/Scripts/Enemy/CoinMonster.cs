@@ -226,6 +226,12 @@ public class CoinMonster : EnemyBase
         StartCoroutine(HitProcess());
     }
 
+    //주금
+    protected override void OnDeath()
+    {
+        base.OnDeath();
+    }
+
 
     //플레이어 감지
     protected override void OnPlayerDetected(Transform detectedPlayer)
