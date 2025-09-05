@@ -151,6 +151,12 @@ public class PlayerMovementAnimationController : MonoBehaviour
                 frontMoveAnimator.SetFloat("HitSpeed", Mathf.Clamp(0.667f / PlayerTimeSystem.m_stunTime - 0.05f, 0.6f, 5f));
                 frontMoveAnimator.SetTrigger("Hit");
                 break;
+
+            case "Dead":
+                moveDirection = MoveDirection.Front;
+                SetDirection();
+                frontMoveAnimator.SetTrigger("Dead");
+                break;
         }
     }
 
