@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 public class ChipsetDataLoader : EditorWindow
 {
     private static string outputFolder = "Assets/ScriptableObjects/Chipset";
-    private static string iconPath = "Assets/Materials/Icon/Chipset/";
+    private static string iconPath = "Assets/Materials/Icon/";
     public static string jsonFilePath { get; set; }
     public static bool createDatabase { get; set; }
 

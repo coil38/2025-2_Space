@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerUIManager : MonoBehaviour
 {
@@ -8,6 +9,12 @@ public class PlayerUIManager : MonoBehaviour
 
     [SerializeField] PlayerHPUI playerHPUI;
     [SerializeField] PlayerCoreUI playerCoreUI;
+
+    [Header("칩셋 UI 이미지")]
+    [SerializeField] Image chipsetImage;
+    [SerializeField] Image skill1Image;
+    [SerializeField] Image skill2Image;
+    [SerializeField] Image skill3Image;
     private void Awake()
     {
         if (instance == null)
@@ -43,5 +50,15 @@ public class PlayerUIManager : MonoBehaviour
     public void UpdatePlayerEXP(ExpInfo expInfo)
     {
         playerCoreUI.UpdateEXP(expInfo);
+    }
+
+    public void SetChipsetInfo(Sprite chipsetIcon, Sprite skill1Icon, Sprite skill2Icon, Sprite skill3Icon)
+    {
+        if (chipsetImage == null || skill1Image == null || skill2Image == null || skill3Image == null) return;
+
+        chipsetImage.sprite = chipsetIcon;
+        skill1Image.sprite = skill1Icon;
+        skill2Image.sprite = skill2Icon;
+        skill3Image.sprite = skill3Icon;
     }
 }

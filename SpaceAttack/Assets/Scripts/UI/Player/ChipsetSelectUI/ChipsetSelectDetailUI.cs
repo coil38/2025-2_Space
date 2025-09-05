@@ -35,7 +35,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
     private Vector3 defaultIconSize;   //초기 스킬 아이콘 크기
     private InventoryManager inventoryManager;   //인벤토리 컴포넌트
 
-    private Image[] skillSprites;
+    private Image[] skillImages;
     private Button[] buttons;
     private string[] descriptions;
 
@@ -44,7 +44,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
         if (inventoryManager == null) 
             inventoryManager = FindAnyObjectByType<InventoryManager>();
 
-        if(skillSprites == null && buttons == null)  //처음 한번만 실행 ( 변수 생성 )
+        if(skillImages == null && buttons == null)  //처음 한번만 실행 ( 변수 생성 )
             SetChipsetDetailOneTime();
 
         if (currentChipset == null) return;
@@ -79,7 +79,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
             i_temp.Add(skill.GetComponent<Image>());
             b_temp.Add(skill.GetComponent<Button>());
         }
-        skillSprites = i_temp.ToArray();
+        skillImages = i_temp.ToArray();
         buttons = b_temp.ToArray();
 
         descriptions = new string[skills.Length];
@@ -88,7 +88,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
         cancelButton.onClick.AddListener(Cancel);             //취소 버튼 구독
 
         highLingthingButtonUI = equipChipsetButton.gameObject.GetComponent<HighLingthingButtonUI>();  //할당
-        defaultIconSize = skillSprites[0].rectTransform.localScale;  //할당
+        defaultIconSize = skillImages[0].rectTransform.localScale;  //할당
     }
 
     private void SetChipsetDetail()  
@@ -124,31 +124,42 @@ public class ChipsetSelectDetailUI : MonoBehaviour
 
             int index = i;
 
-            skillSprites[index].sprite = iconTemp;
+            skillImages[index].sprite = iconTemp;
 
             buttons[index].onClick.AddListener(() =>   //스킬 설명 상호작용 버튼 이벤트 구독
             {
                 skillDescriptionText.text = descriptions[index];
-                HighLingthingSkillIcon(skillSprites[index]);
+                HighLingthingSkillIcon(skillImages[index]);
             });
         }
     }
 
     private void EquipChipset()   //칩셋 장착
     {
+        Sprite[] sprites = new Sprite[skillImages.Length];  //스킬 스프라이트 저장
+        for (int i = 0; i < skillImages.Length; i++)
+            sprites[i] = skillImages[i].sprite;
+        sprites[0] = currentChipset.iconSprite;
+
         //칩셋 장착 내부 코드
-        switch(currentChipset.name)
+        switch (currentChipset.name)
         {
-            case "Warrior":
+            case "Chipset_Warrior":
                 Debug.Log("전사 칩셋 장착");
                 if (inventoryManager != null)
                     inventoryManager.chipSet = warriorPrefab.GetComponent<ChipSetType>();
+
+                if (PlayerUIManager.instance != null)
+                    PlayerUIManager.instance.SetChipsetInfo(sprites[0], sprites[1], sprites[2], sprites[3]);  //메인UI 이미지 변경
                 break;
 
-            case "Archer":
+            case "Chipset_Archer":
                 Debug.Log("궁수 칩셋 장착");
                 if (inventoryManager != null)
                     inventoryManager.chipSet = archerPrefab.GetComponent<ChipSetType>();
+
+                if (PlayerUIManager.instance != null)
+                    PlayerUIManager.instance.SetChipsetInfo(sprites[0], sprites[1], sprites[2], sprites[3]);
                 break;
         }
 
@@ -195,7 +206,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
 
     private void HighLingthingSkillIcon(Image targetImage)  //스킬 아이콘 애니메이션 실행함수
     {
-        foreach (var image in skillSprites)  //초기화
+        foreach (var image in skillImages)  //초기화
         {
             image.rectTransform.localScale = defaultIconSize;
         }

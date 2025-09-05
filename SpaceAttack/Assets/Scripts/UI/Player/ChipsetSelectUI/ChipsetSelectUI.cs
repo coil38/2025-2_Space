@@ -14,10 +14,6 @@ public class ChipsetSelectUI : MonoBehaviour
     [SerializeField] private ChipsetSelectDetailUI chipsetDetailPanel;   //칩셋(상세)창
     [SerializeField] private TextMeshProUGUI feedBackText;
 
-    [Header("칩셋 프리팹")]
-    public GameObject warriorChipset;  //전사 칩셋 프리팹
-    public GameObject archerChipset;   //궁수 칩셋 프리팹
-
     [Header("기타")]
     [SerializeField] private Sprite lockedIcon; //잠금 아이콘
     [SerializeField] private Button selectButton;  //선택 버튼

@@ -9,6 +9,7 @@ public class PlayerCoreUI : MonoBehaviour
     [SerializeField] private Text maxExpText;
     [SerializeField] private Text expText;
     [SerializeField] private Text levelText;
+    [SerializeField] private Slider expSlider;
 
     private Coroutine currentCor;
     private Queue<ExpInfo> expInfos = new Queue<ExpInfo>();
@@ -37,7 +38,11 @@ public class PlayerCoreUI : MonoBehaviour
                 //UI텍스트 갱신
                 levelText.text = expInfo.currentLevel.ToString(); //현재 레벨 갱신
                 expText.text = expInfo.currentExp.ToString(); //현재 경험치량
-                maxExpText.text = "/ " + expInfo.maxExp;  //최대 경험치량
+                maxExpText.text = "/" + expInfo.maxExp;  //최대 경험치량
+
+                expSlider.maxValue = expInfo.maxExp;  //최대 경험치량 (슬라이더용)
+                expSlider.minValue = 0f;
+                expSlider.value = expInfo.currentExp; //현재 경험치량 (슬라이더용)
             }
             else
             {
@@ -77,8 +82,10 @@ public class PlayerCoreUI : MonoBehaviour
         Variables.Object(this.gameObject).Set("targetLevel", expInfo.currentLevel + 1);
         CustomEvent.Trigger(this.gameObject, "UpdateLevel");  //레벨업 연출 시작
 
-        expText.text = "0";                           //현재 경험치량
-        maxExpText.text = "/ " + expInfo.nextMaxExp;  //최대 경험치량
+        expText.text = "0";                          //현재 경험치량
+        maxExpText.text = "/" + expInfo.nextMaxExp;  //최대 경험치량
+        expSlider.value = 0;                          //현재 경험치량 (슬라이더용)
+        expSlider.maxValue = expInfo.nextMaxExp;      //최대 경험치량 (슬라이더용)
         currentCor = null;
 
         yield return null;

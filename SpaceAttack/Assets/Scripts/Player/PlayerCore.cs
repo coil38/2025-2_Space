@@ -33,10 +33,10 @@ public class PlayerCore : MonoBehaviour
     void Update() 
     {
         //테스용
-        //if (Input.GetKeyDown(KeyCode.Y))  //최대 경험치양 이상의 경험치 얻지 못하게 함 ( 예외처리 )
-        //{
-        //    GetDarkMatter(150);
-        //}
+        if (Input.GetKeyDown(KeyCode.Y))  //최대 경험치양 이상의 경험치 얻지 못하게 함 ( 예외처리 )
+        {
+            GetDarkMatter(15);
+        }
     }
 
     private IEnumerator C_Initialize()

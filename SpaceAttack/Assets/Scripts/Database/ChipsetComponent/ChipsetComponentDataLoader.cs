@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 public class ChipsetComponentDataLoader : EditorWindow
 {
     public static string outputFolder = "Assets/ScriptableObjects/skillAndWeapon";
-    private static string iconPath = "Assets/Materials/Icon/Weapon&Skill/";
+    private static string iconPath = "Assets/Materials/Icon/";
     public static string jsonFilePath { get; set; }
     public static bool createDatabase { get; set; }
 
