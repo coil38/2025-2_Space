@@ -67,7 +67,7 @@ public class StageManager : MonoBehaviour
             );
 
             GameObject prefab = monsterPrefabs[Random.Range(0, monsterPrefabs.Length)];
-            GameObject monsterObj = Instantiate(prefab, randomPos, Quaternion.identity);
+            GameObject monsterObj = Instantiate(prefab, randomPos, prefab.transform.rotation);   //프리팹의 회전값으로 생성
             EnemyBase monster = monsterObj.GetComponent<EnemyBase>();
 
             if (monster != null)

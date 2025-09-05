@@ -5,7 +5,16 @@ using UnityEngine;
 public class CameraFallow : MonoBehaviour
 {
     public float FollowSpeed = 2.0f;
-    public Transform Target;
+    public Transform Target
+    {
+        get { return target; }
+        set 
+        {
+            target = value;
+            //Debug.Log($"대상이 활당됨!!, 대상이름: {value.gameObject.name}");
+        }
+    }
+    private Transform target;
     public Transform camTransform;
 
     public Vector3 cameraDir;       //방향 백터(카메라)
@@ -19,13 +28,21 @@ public class CameraFallow : MonoBehaviour
 
     void OnEnable()
     {
-        camTransform.rotation = Quaternion.Euler(cameraRot);
-        camTransform.position = Target.position + cameraDir.normalized * cameraDis;
+        StartCoroutine(FindTargetAndInitialize());
     }
 
     void Update()
     {
-        Vector3 newPosition = Target.position + cameraDir.normalized * cameraDis;
+        if (target == null)
+        {
+            //Debug.Log("대상이 존재하지 않다");
+            return;
+        }
+        else
+        {
+            //Debug.Log("대상이 존재한다");
+        }
+        Vector3 newPosition = target.position + cameraDir.normalized * cameraDis;
         transform.position = Vector3.Slerp(transform.position, newPosition, FollowSpeed * Time.deltaTime);
 
         if (shakeDuration > 0)
@@ -38,5 +55,14 @@ public class CameraFallow : MonoBehaviour
     public void CameraShack()
     {
         shakeDuration = 0.2f;
+    }
+
+    private IEnumerator FindTargetAndInitialize()
+    {
+        yield return new WaitUntil(() => PlayerStatus.Instance != null);
+        Target = PlayerStatus.Instance.transform;
+
+        camTransform.rotation = Quaternion.Euler(cameraRot);
+        camTransform.position = target.position + cameraDir.normalized * cameraDis;
     }
 }

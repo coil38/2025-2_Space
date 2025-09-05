@@ -35,18 +35,13 @@ public class InventoryManager : MonoBehaviour
         aniController = GetComponent<PlayerMovementAnimationController>();
     }
 
-    void Update()
-    {
-        
-    }
-
     private void DropChipset(ChipSetType m_chipSet)
     {
         //월드 드랍 연출
 
-        Color color = m_chipSet.gameObject.GetComponent<SpriteRenderer>().color;   //해당 칩셋을 원래 상태로 변경
-        color.a = 1f;
-        m_chipSet.gameObject.GetComponent<SpriteRenderer>().color = color;
+        //Color color = m_chipSet.gameObject.GetComponent<SpriteRenderer>().color;   //해당 칩셋을 원래 상태로 변경
+        //color.a = 1f;
+        //m_chipSet.gameObject.GetComponent<SpriteRenderer>().color = color;
 
         m_chipSet.gameObject.transform.SetParent(null);                  //해당 칩셋을 Player 자식으로 넣기 해제
 

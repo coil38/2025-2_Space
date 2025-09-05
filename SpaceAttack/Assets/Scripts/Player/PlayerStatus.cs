@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerStatus : MonoBehaviour
 {
+    public static PlayerStatus Instance { get;  private set; }
+
     //플레이어 상태값--------------------------------------------
     [Header("PlayerInfo")]
     public static int m_hp = 10;              //체력
@@ -43,6 +45,18 @@ public class PlayerStatus : MonoBehaviour
     private Queue<AttackInfo> attackQueue = new Queue<AttackInfo>();
     private bool isDamageProcessing;
 
+    private void Awake()   //싱글톤화
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     private void OnEnable()
     {
         m_FacingRight = true;
@@ -176,6 +190,7 @@ public class PlayerStatus : MonoBehaviour
 
             //플레이어 사망 연출 시작
             isDead = true;
+            Debug.Log("플레이어 사망");
             //animator.SetBool("Dead", true);
             //Destroy(gameObject, 1f);
         }
@@ -190,7 +205,7 @@ public class PlayerStatus : MonoBehaviour
                 movemetAniController.PlayAnimation("Hit");  //피격 애니메이션 ( 속박상태가 아닐 경우 )
             }
 
-            Debug.Log("플레이어 피격");
+            Debug.Log($"플레이어 피격, 현재 체력: {m_hp}");
             rb.AddForce(dir * attackForce);                 //넉백
 
         }
