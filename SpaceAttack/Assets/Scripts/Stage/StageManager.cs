@@ -53,6 +53,10 @@ public class StageManager : MonoBehaviour
         currentWave++;
         aliveMonsters.Clear();
 
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        Vector3 playerPos = playerObj != null ? playerObj.transform.position : Vector3.zero;
+        float minSpawnDistance = 5f; // 플레이어와 최소 거리
+
         for (int i = 0; i < monstersPerWave; i++)
         {
             GameObject plan = planObjects[Random.Range(0, planObjects.Length)];
@@ -60,14 +64,24 @@ public class StageManager : MonoBehaviour
             if (renderer == null) continue;
 
             Bounds bounds = renderer.bounds;
-            Vector3 randomPos = new Vector3(
-                Random.Range(bounds.min.x, bounds.max.x),
-                bounds.max.y,
-                Random.Range(bounds.min.z, bounds.max.z)
-            );
+            Vector3 randomPos;
+
+            int safetyCount = 0;
+            do
+            {
+                randomPos = new Vector3(
+                    Random.Range(bounds.min.x, bounds.max.x),
+                    bounds.max.y,
+                    Random.Range(bounds.min.z, bounds.max.z)
+                );
+
+                safetyCount++;
+                if (safetyCount > 30) break; // 무한루프 방지
+            }
+            while (Vector3.Distance(randomPos, playerPos) < minSpawnDistance);
 
             GameObject prefab = monsterPrefabs[Random.Range(0, monsterPrefabs.Length)];
-            GameObject monsterObj = Instantiate(prefab, randomPos, prefab.transform.rotation);   //프리팹의 회전값으로 생성
+            GameObject monsterObj = Instantiate(prefab, randomPos, prefab.transform.rotation);   // 프리팹의 회전값으로 생성
             EnemyBase monster = monsterObj.GetComponent<EnemyBase>();
 
             if (monster != null)

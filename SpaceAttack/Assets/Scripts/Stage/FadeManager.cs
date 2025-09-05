@@ -16,7 +16,7 @@ public class FadeManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // FadeManager 전체 프리팹 유지
+            DontDestroyOnLoad(gameObject); 
         }
         else
         {
@@ -26,8 +26,6 @@ public class FadeManager : MonoBehaviour
 
     private void Start()
     {
-        // 게임 시작할 때 자동으로 밝아지기
-        StartCoroutine(Fade(0f));
     }
 
     public void LoadScene(string sceneName)
@@ -37,14 +35,20 @@ public class FadeManager : MonoBehaviour
 
     private IEnumerator FadeAndLoad(string sceneName)
     {
-        // 🔴 Fade Out (점점 어두워짐)
         yield return StartCoroutine(Fade(1f));
 
-        // 씬 로드
+        Camera mainCam = Camera.main;
+        if (mainCam != null) mainCam.enabled = false;
+
         yield return SceneManager.LoadSceneAsync(sceneName);
 
-        // ⚪ Fade In (밝아짐)
         yield return StartCoroutine(Fade(0f));
+
+        mainCam = Camera.main;
+        if (mainCam != null) mainCam.enabled = true;
+
+        // 게임 재개
+        Time.timeScale = 1f;
     }
 
     private IEnumerator Fade(float targetAlpha)
@@ -55,7 +59,7 @@ public class FadeManager : MonoBehaviour
 
         while (time < fadeDuration)
         {
-            time += Time.deltaTime;
+            time += Time.unscaledDeltaTime; 
             float t = time / fadeDuration;
             color.a = Mathf.Lerp(startAlpha, targetAlpha, t);
             fadeImage.color = color;

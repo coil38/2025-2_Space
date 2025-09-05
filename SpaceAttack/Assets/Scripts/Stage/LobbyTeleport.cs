@@ -5,14 +5,26 @@ using UnityEngine.SceneManagement;
 
 public class LobbyTeleport : MonoBehaviour
 {
-    public int stageToLoad = 1;
-    public string battleSceneName = "CharacterTestScene2";
+    [Header("UI 연결")]
+    [SerializeField] private GameObject stageSelectUI; 
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            FadeManager.Instance.LoadScene(battleSceneName);
+            if (stageSelectUI != null)
+                stageSelectUI.SetActive(true); // UI 활성화
+            Time.timeScale = 0f;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            if (stageSelectUI != null)
+                stageSelectUI.SetActive(false);
+            Time.timeScale = 1f;
         }
     }
 }
