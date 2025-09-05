@@ -167,6 +167,9 @@ public class PlayerMovementAnimationController : MonoBehaviour
                 case "Warrior":
                     SwordObj.SetActive(true);
                     break;
+                case "Archer":
+                    Debug.Log("궁수 애니메이션 연결_완");
+                    break;
             }
         }
         else

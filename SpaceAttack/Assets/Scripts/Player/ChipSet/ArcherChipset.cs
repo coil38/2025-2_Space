@@ -26,18 +26,12 @@ public class ArcherChipset : ChipSetType
 
     void OnEnable()      //임시
     {
-        chipSetName = "궁수";
+        chipSetName = "Archer";
         description = "그냥 저냥 평범한 칩셋(직업)2";
         weapon = _weapon;
         skills = _skills;
         iconImage = _iconImage;
         prefab = _prefab;
         animator = _animator;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -22,6 +22,10 @@ public class ChipsetSelectDetailUI : MonoBehaviour
     [SerializeField] private Button cancelButton;
     [SerializeField] private TextMeshProUGUI equipChipsetText;
 
+    [Header("칩셋 프리팹")]
+    [SerializeField] private GameObject warriorPrefab;
+    [SerializeField] private GameObject archerPrefab;
+
     [HideInInspector] public ChipsetSO currentChipset;
     [HideInInspector] public ChipsetDatabaseSO chipsetDatabase;
     [HideInInspector] public int chipsetIndex;
@@ -29,6 +33,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
     private ChipsetSO equipedChipset;  //장착중인 칩셋SO
     private HighLingthingButtonUI highLingthingButtonUI;  //장착 버튼 애니메이션 Component
     private Vector3 defaultIconSize;   //초기 스킬 아이콘 크기
+    private InventoryManager inventoryManager;   //인벤토리 컴포넌트
 
     private Image[] skillSprites;
     private Button[] buttons;
@@ -36,6 +41,9 @@ public class ChipsetSelectDetailUI : MonoBehaviour
 
     void OnEnable()
     {
+        if (inventoryManager == null) 
+            inventoryManager = FindAnyObjectByType<InventoryManager>();
+
         if(skillSprites == null && buttons == null)  //처음 한번만 실행 ( 변수 생성 )
             SetChipsetDetailOneTime();
 
@@ -128,9 +136,21 @@ public class ChipsetSelectDetailUI : MonoBehaviour
 
     private void EquipChipset()   //칩셋 장착
     {
-        Debug.Log("칩셋 장착");
-
         //칩셋 장착 내부 코드
+        switch(currentChipset.name)
+        {
+            case "Warrior":
+                Debug.Log("전사 칩셋 장착");
+                if (inventoryManager != null)
+                    inventoryManager.chipSet = warriorPrefab.GetComponent<ChipSetType>();
+                break;
+
+            case "Archer":
+                Debug.Log("궁수 칩셋 장착");
+                if (inventoryManager != null)
+                    inventoryManager.chipSet = archerPrefab.GetComponent<ChipSetType>();
+                break;
+        }
 
         equipedChipset = currentChipset;  //현재 칩셋을 장착중인 칩셋에 할당
         chipsetSelectUI.SetEquipmentText(chipsetIndex);  //장착중인 칩셋 텍스트 표시
