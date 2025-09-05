@@ -76,7 +76,7 @@ public class ChipsetSelectUI : MonoBehaviour
             if (chipsetCount > 0)
             {
                 string key = chipsetDatabase.chipsets[i].chipsetKey;
-                iconImages[i].sprite = chipsetDatabase.GetChipsetComponent(key, ChipsetComponentType.Weapon).iconSprite;  //칩셋 스프라이트 할당
+                iconImages[i].sprite = chipsetDatabase.chipsets[i].iconSprite;  //칩셋 스프라이트 할당
             }
             else
             {

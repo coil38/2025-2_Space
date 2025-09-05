@@ -29,6 +29,7 @@ public class PlayerMovementAnimationController : MonoBehaviour
     private PlayerStatus playerStatus;
 
     private bool isAttacking;   //공격여부 내부 변수
+    private bool isRestingAni;  //방향이동 재설정용 변수
     [HideInInspector] public Animator attackAnimator;
 
     void Start()
@@ -88,10 +89,13 @@ public class PlayerMovementAnimationController : MonoBehaviour
 
         if (isAttacking) return; //현재 공격중일 경우, 리턴처리
 
-        if (currentDirection != moveDirection)  //방향이 바뀌었을 경우, 애니메이션오브젝트 활성화 여부 결정
+        if (currentDirection != moveDirection) SetDirection(); //방향이 바뀌었을 경우, 애니메이션오브젝트 활성화 여부 결정
+        else if (PlayerEndParamBehaviour.isResetingAni)
         {
             SetDirection();
+            PlayerEndParamBehaviour.isResetingAni = false;
         }
+
 
         currentDirection = moveDirection;  //최신 방향 갱신
     }
@@ -144,7 +148,6 @@ public class PlayerMovementAnimationController : MonoBehaviour
                 break;
 
             case "Hit":
-
                 isAttacking = false;  //공격도 초기화 처리
                 moveDirection = MoveDirection.Front;
                 SetDirection();
@@ -153,6 +156,7 @@ public class PlayerMovementAnimationController : MonoBehaviour
                 break;
 
             case "Dead":
+                isAttacking = false;  //공격도 초기화 처리
                 moveDirection = MoveDirection.Front;
                 SetDirection();
                 frontMoveAnimator.SetTrigger("Dead");
@@ -187,7 +191,7 @@ public class PlayerMovementAnimationController : MonoBehaviour
         }
     }
 
-    public void OnAttackObj(PlayerAniInfo _aniInfo)
+    public void OnAttackObj(PlayerAniInfo _aniInfo)   //공격할시, 실행됨 (이벤트 체인)
     {
         isAttacking = true;  //공격활성화 처리
         ResetAnimationObj();
