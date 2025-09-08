@@ -38,7 +38,7 @@ public class ChipsetComponentDataLoader : EditorWindow
                 chipComponentSO.name = componentData.name;
                 chipComponentSO.description = componentData.description;
 
-                if (System.Enum.TryParse(componentData.componentTypeString, out ChipsetComponentType parsedType))
+                if (System.Enum.TryParse(componentData.componentTypeString.ToUpper(), out ChipsetComponentType parsedType))
                 {
                     chipComponentSO.componentType = parsedType;
                 }

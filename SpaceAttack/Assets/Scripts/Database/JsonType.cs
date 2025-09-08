@@ -1,6 +1,9 @@
 public enum JsonType
 {
-    Sound,
+    BGM,
+    CharacterSound,
+    MonsterSound,
+    SystemSound,
     Level,
     ChipsetComponent,
     Chipset

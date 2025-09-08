@@ -9,7 +9,7 @@ public class JsonToScriptableConverter : EditorWindow
 {
     private string jsonFilePath = "";
     private bool createDatabase = true;  //데이터 베이스 생성 여부
-    private JsonType jsonType = JsonType.Sound;           //Json타입
+    private JsonType jsonType = JsonType.Level;           //Json타입
 
     //private System.Enum JsonType;
 
@@ -60,11 +60,29 @@ public class JsonToScriptableConverter : EditorWindow
 
         switch (jsonType)
         {
-            case JsonType.Sound:
+            case JsonType.BGM :
                 SoundDataLoader.jsonFilePath = jsonFilePath;
                 SoundDataLoader.createDatabase = createDatabase;
-                SoundDataLoader.ConvertJsonToScriptableObjects();
+                SoundDataLoader.ConvertJsonToScriptableObjects(SoundType.BGM);
             break;
+
+            case JsonType.CharacterSound:
+                SoundDataLoader.jsonFilePath = jsonFilePath;
+                SoundDataLoader.createDatabase = createDatabase;
+                SoundDataLoader.ConvertJsonToScriptableObjects(SoundType.SFX);
+                break;
+
+            case JsonType.MonsterSound:
+                SoundDataLoader.jsonFilePath = jsonFilePath;
+                SoundDataLoader.createDatabase = createDatabase;
+                SoundDataLoader.ConvertJsonToScriptableObjects(SoundType.SFX);
+                break;
+
+            case JsonType.SystemSound:
+                SoundDataLoader.jsonFilePath = jsonFilePath;
+                SoundDataLoader.createDatabase = createDatabase;
+                SoundDataLoader.ConvertJsonToScriptableObjects(SoundType.UI);
+                break;
 
             case JsonType.Level:
                 LevelDataLoader.jsonFilePath = jsonFilePath;

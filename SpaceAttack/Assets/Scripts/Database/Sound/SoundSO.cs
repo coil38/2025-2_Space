@@ -4,6 +4,7 @@ using UnityEngine.Audio;
 [CreateAssetMenu(fileName = "new Sound", menuName = "Sound/sounds")]
 public class SoundSO : ScriptableObject
 {
+    public int soundID;
     public string soundKey;
     public string soundName;
     public string soundAttribute;

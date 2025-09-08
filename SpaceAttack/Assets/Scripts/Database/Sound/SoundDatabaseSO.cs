@@ -10,14 +10,18 @@ public class SoundDatabaseSO : ScriptableObject
     //캐싱을 위한 사전
     private Dictionary<string, SoundSO> soundByKey;     //스트링키로 사운드 찾기 위한 캐싱
 
+    private Dictionary<int, SoundSO> soundById;         //사운드ID로 사운드 찾기 위한 캐싱
+
     public void Initialize()
     {
         soundByKey = new Dictionary<string, SoundSO>();
-
         foreach (var sound in sounds)
-        {
             soundByKey[sound.soundKey] = sound;
-        }
+
+
+        soundById = new Dictionary<int, SoundSO>();
+        foreach (var sound in sounds)
+            soundById[sound.soundID] = sound;
     }
 
     public SoundSO GetSound(string soundKey)  //스트링키로 사운드 찾기
@@ -27,6 +31,18 @@ public class SoundDatabaseSO : ScriptableObject
             Initialize();
         }
         if (soundByKey.TryGetValue(soundKey, out SoundSO sound))
+            return sound;
+
+        return null;
+    }
+
+    public SoundSO GetSoundById(int soundID)  //t사운드ID로 사운드 찾기
+    {
+        if (soundById == null)
+        {
+            Initialize();
+        }
+        if (soundById.TryGetValue(soundID, out SoundSO sound))
             return sound;
 
         return null;

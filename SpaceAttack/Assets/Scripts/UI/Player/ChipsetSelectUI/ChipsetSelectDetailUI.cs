@@ -103,19 +103,19 @@ public class ChipsetSelectDetailUI : MonoBehaviour
         {
             if (i == 0)
             {
-                chipsetComponent = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.BaseAttack);
+                chipsetComponent = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.BASEATTACK);
             }
             else if (i == 1)
             {
-                chipsetComponent = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.Skill1);
+                chipsetComponent = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.SKILL1);
             }
             else if (i == 2)
             {
-                chipsetComponent = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.Skill2);
+                chipsetComponent = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.SKILL2);
             }
             else if (i == 3)
             {
-                chipsetComponent = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.Skill3);
+                chipsetComponent = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.SKILL3);
             }
 
             if (chipsetComponent == null) return;

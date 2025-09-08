@@ -14,7 +14,7 @@ public class SoundDataLoader : EditorWindow
     private static string AudioPath = "Assets/Materials/Sound";                        //모든 사운드가 존재하는 경로 주소 앞 부분
     public static string jsonFilePath {  get; set; }
     public static bool createDatabase {  get; set; }
-    public static void ConvertJsonToScriptableObjects()
+    public static void ConvertJsonToScriptableObjects(SoundType soundType)
     {
         //폴더 생성
         if (!Directory.Exists(outputFolder))   //폴더 위치를 확인하고 없으면 생성한다
@@ -39,6 +39,7 @@ public class SoundDataLoader : EditorWindow
                 SoundSO soundSO = ScriptableObject.CreateInstance<SoundSO>();
 
                 //데이터 복사
+                soundSO.soundID = soundData.soundID;
                 soundSO.soundKey = soundData.soundKey;
                 soundSO.soundName = soundData.name;
                 soundSO.soundAttribute = soundData.attribute;
@@ -46,20 +47,15 @@ public class SoundDataLoader : EditorWindow
                 soundSO.pitch = soundData.pitch;
                 soundSO.loop = soundData.isLoop == 1;  //1이면 true, 0이면 false
                 soundSO.is3D = soundData.is3D;
+                soundSO.soundType = soundType;
 
-                if (System.Enum.TryParse(soundData.soundTypeString, out SoundType parsedType))
+                //사운드 타입에 따라서 오디오믹서 할당
+                if (mixer != null)
                 {
-                    soundSO.soundType = parsedType;
-
-                    if (mixer == null) Debug.LogWarning("오디오 믹서가 존재하지 않는다");
-                    string _soundTypestring = soundData.soundTypeString;                          //사운드 타입이 적힌 string값으로 받는다.
-                    AudioMixerGroup[] mixerGroups = mixer.FindMatchingGroups(_soundTypestring);   //해당 사운드 타입과 맞는 그룹 찾기
-                    soundSO.mixerGroup = mixerGroups[0];                                          //오디오 믹서 할당
+                    AudioMixerGroup[] mixerGroups = mixer.FindMatchingGroups(soundType.ToString());   //해당 사운드 타입과 맞는 그룹 찾기
+                    soundSO.mixerGroup = mixerGroups[0];                                          //오디오 믹서 할당   
                 }
-                else
-                {
-                    Debug.LogWarning($"사운드 '{soundData.name}'의 유료하지 않은 타입: {soundData.soundTypeString}");
-                }
+                else Debug.LogWarning("오디오 믹서가 존재하지 않는다");
 
                 //사운드 클립 로드
                 if (!string.IsNullOrEmpty(soundData.soundClipPath))
@@ -83,11 +79,25 @@ public class SoundDataLoader : EditorWindow
                 EditorUtility.SetDirty(soundSO);
             }
 
-            //데이터 베이스 생성
+            //사운드 데이터 베이스 생성 (여러가지의 사운드 JSON이 하나의 사운드 데이터 베이스를 공유)
             if (createDatabase && createdSounds.Count > 0)
             {
                 SoundDatabaseSO database = ScriptableObject.CreateInstance<SoundDatabaseSO>();  //SoundDatabaseSO 생성
                 database.sounds = createdSounds;
+                for (int i = 0; i < createdSounds.Count; i++)
+                {
+                    bool hasSound = false;
+                    for (int j = 0; j < database.sounds.Count; j++)
+                    {
+                        if (database.sounds[j] == createdSounds[i])  //데이터 베이스에 이미 사운드SO가 있을 경우, 변경처리
+                        {
+                            database.sounds[j] = createdSounds[i];
+                            hasSound = true;
+                            break;
+                        }
+                    }
+                    if (!hasSound) database.sounds.Add(createdSounds[i]);  //데이터 베이스에 이미 존재하는 사운드SO가 없을 경우, 추가
+                }
 
                 AssetDatabase.CreateAsset(database, $"{outputFolder}/SoundDatabase.asset");
                 EditorUtility.SetDirty(database);

@@ -56,16 +56,6 @@ public class SoundManager : MonoBehaviour
         
         foreach (var sound in temp)
             soundLibrary.Add(sound.Key, sound.Value.ToArray());        //필드로 변환
-
-        //foreach (var test in soundLibrary)
-        //{
-        //    List<string> s = new List<string>();
-        //    foreach (var test2 in test.Value)
-        //    {
-        //        s.Add(test2.name);
-        //    }
-        //    Debug.Log($"속성: {test.Key}, 사운드명: {string.Join(", ", s)}");
-        //}
     }
 
     public void RegisterGameObject(GameObject obj, string attribute)   //해당 오브젝트가 필요한 오디오소스 할당 및 인스턴스주소 등록
@@ -79,6 +69,24 @@ public class SoundManager : MonoBehaviour
                 source.pitch = sound.pitch;
                 source.loop = sound.loop;
                 source.spatialBlend = sound.is3D;
+                float maxDistance = 5f;
+                if (sound.is3D == 1)  //3차원 사운드일 경우
+                {
+                    source.minDistance = 0f;
+                    source.maxDistance = maxDistance;
+
+                    //사운드 그래프 설정
+                    source.rolloffMode = AudioRolloffMode.Custom;
+
+                    AnimationCurve curve = new AnimationCurve(
+                        new Keyframe(0f, 1f),       //0m -> 볼륨: 1
+                        new Keyframe(0.5f, 0.5f),   //0.5m -> 볼륨: 0.5
+                        new Keyframe(0.3f, 0.1f),    //0.1m -> 볼륨: 0.1
+                        new Keyframe(maxDistance, 0f)
+                        );
+
+                    source.SetCustomCurve(AudioSourceCurveType.CustomRolloff, curve);
+                }
                 source.clip = sound.clip;
                 source.outputAudioMixerGroup = sound.mixerGroup;
 
