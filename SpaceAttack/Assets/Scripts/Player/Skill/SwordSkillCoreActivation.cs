@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애니메이션 후, 실행) O | 공격시간 X | 플레이어 대기시간(쿨타임) O
 {
-    private float speedUpValue = 1.3f;
-    private float damageValue = 1.3f;               //임시
-    private float criticalValue = 1.3f;
+    //private float speedUpValue = 1.3f;
+    //private float damageValue = 1.3f;               //임시
+    //private float criticalValue = 1.3f;
 
     private bool isUsingBuff;
     public override void OnEnable()

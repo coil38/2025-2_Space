@@ -35,7 +35,7 @@ public class ChipsetComponentDataLoader : EditorWindow
 
                 //데이터 복사
                 chipComponentSO.chipsetComponentKey = componentData.chipsetComponentKey;
-                chipComponentSO.name = componentData.name;
+                chipComponentSO.chipsetCpname = componentData.name;
                 chipComponentSO.description = componentData.description;
 
                 if (System.Enum.TryParse(componentData.componentTypeString.ToUpper(), out ChipsetComponentType parsedType))
@@ -61,7 +61,7 @@ public class ChipsetComponentDataLoader : EditorWindow
                 AssetDatabase.CreateAsset(chipComponentSO, assetPath);
 
                 //에셋 이름 저장
-                chipComponentSO.name = $"ChipsetComponent_{componentData.name}";
+                chipComponentSO.chipsetCpname = $"ChipsetComponent_{componentData.name}";
                 createdchipComponents.Add(chipComponentSO);
 
                 EditorUtility.SetDirty(chipComponentSO);

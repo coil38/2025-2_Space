@@ -35,7 +35,7 @@ public class ChipsetDataLoader : EditorWindow
 
                 //데이터 복사
                 chipsetSO.chipsetKey = chipsetData.chipsetKey;
-                chipsetSO.name = chipsetData.name;
+                chipsetSO.chipsetName = chipsetData.name;
                 chipsetSO.description = chipsetData.description;
 
                 //칩셋 컴포넌트 추가
@@ -63,7 +63,7 @@ public class ChipsetDataLoader : EditorWindow
                 AssetDatabase.CreateAsset(chipsetSO, assetPath);
 
                 //에셋 이름 저장
-                chipsetSO.name = $"Chipset_{chipsetData.name}";
+                chipsetSO.chipsetName = $"Chipset_{chipsetData.name}";
                 createdChipsets.Add(chipsetSO);
 
                 EditorUtility.SetDirty(chipsetSO);

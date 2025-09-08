@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니메이션 후, 실행) O | 공격시간 O | 플레이어 대기시간(쿨타임) O
 {
+    [SerializeField] private GameObject floorSprite;  //장판 이미지
+
     private LayerMask planLayer;   //바닥감지용 리이어 마스크
     private LayerMask wallLayer;   //벽감지용 레이어 마스크
     private LayerMask enemyLayer;  //적감지용 레이어 마스크
@@ -51,11 +53,11 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
 
     public override void CheckAttack(Vector3 currentPos)
     {
-        if (!canUse)//해금여부에 따른 스킬 사용 여부
-        {
-            //Debug.Log("스킬_참격이 해금되지 않았습니다");
-            return;
-        }
+        //if (!canUse)//해금여부에 따른 스킬 사용 여부
+        //{
+        //    //Debug.Log("스킬_참격이 해금되지 않았습니다");
+        //    return;
+        //}
 
         _currentPos = currentPos;
 
@@ -129,6 +131,7 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
         AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);   //공격 정보 설정
 
         //GenerateSpriteImage();
+        //장판 스프라이트 설정
 
         while (true)
         {
@@ -156,21 +159,6 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
 
         targets.Clear();
     }
-
-    //private void GenerateSpriteImage()
-    //{
-    //    spriteObj = new GameObject();
-    //    SpriteRenderer sprite = spriteObj.gameObject.AddComponent<SpriteRenderer>();
-
-    //    sprite.color = Color.white;
-    //    sprite.sprite = generateSprit;
-    //    sprite.size = new Vector2(1, 1);
-    //    spriteObj.transform.position = new Vector3(f_DetectPos.x, -0.87f, f_DetectPos.z);
-    //    spriteObj.transform.localScale = detectSize;
-    //    //spriteObj.transform.rotation *= Quaternion.Euler(90, 0, 0);
-    //    spriteObj.transform.rotation = detectRot; //Quaternion.Euler(0, 0, detectRot.z);
-
-    //}
 
     private void OnDrawGizmos()
     {

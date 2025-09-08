@@ -4,7 +4,7 @@ using UnityEngine;
 public class ChipsetComponentSO : ScriptableObject
 {
     public string chipsetComponentKey;
-    public string name;
+    public string chipsetCpname;
     public ChipsetComponentType componentType;
     public Sprite iconSprite;
     public string description;

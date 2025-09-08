@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class SoundInfo : MonoBehaviour
 {
-    public string name {  get; set; }
+    public string soundName {  get; set; }
     public AudioSource audioSource {  get; set; }
 }

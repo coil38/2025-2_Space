@@ -38,6 +38,8 @@ public class WeaponBow : WeaponType     //시전시간(발사: 애니메이션 �
 
     public override void OnEnable()
     {
+
+
         planLayer |= 1 << LayerMask.NameToLayer("Plan");
         enemyLayer |= (1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("DestructableObject"));
         wallLayer |= 1 << LayerMask.NameToLayer("Wall");

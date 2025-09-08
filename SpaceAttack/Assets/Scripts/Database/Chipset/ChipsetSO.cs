@@ -6,7 +6,7 @@ using UnityEngine;
 public class ChipsetSO : ScriptableObject
 {
     public string chipsetKey;
-    public string name;
+    public string chipsetName;
     public string[] chipsetComponentKeys;
     public Sprite iconSprite;
     public string description;

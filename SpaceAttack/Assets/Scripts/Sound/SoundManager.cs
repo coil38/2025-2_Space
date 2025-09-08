@@ -91,7 +91,7 @@ public class SoundManager : MonoBehaviour
                 source.outputAudioMixerGroup = sound.mixerGroup;
 
                 SoundInfo soundInfo = obj.AddComponent<SoundInfo>();   //SoundInfo에 정보 할당
-                soundInfo.name = sound.soundName;
+                soundInfo.soundName = sound.soundName;
                 soundInfo.audioSource = source;
 
                 RegisterTemp.Add(soundInfo);
@@ -114,11 +114,11 @@ public class SoundManager : MonoBehaviour
             SoundInfo[] sounds = audioRegistry[obj];
             foreach (var sound in sounds)
             {
-                if (sound.name == soundName)    //사운드 이름에 해당하는 오디오소스 재생
+                if (sound.soundName == soundName)    //사운드 이름에 해당하는 오디오소스 재생
                 {
                     sound.audioSource.Play();               //사운드 재생
 
-                    Debug.Log($"{sound.name} 재생");
+                    Debug.Log($"{sound.soundName} 재생");
                 }
             }
         }
@@ -135,7 +135,7 @@ public class SoundManager : MonoBehaviour
             SoundInfo[] sounds = audioRegistry[obj];
             foreach (var sound in sounds)
             {
-                if (sound.name == soundName)    //사운드 이름에 해당하는 오디오소스 재생
+                if (sound.soundName == soundName)    //사운드 이름에 해당하는 오디오소스 재생
                 {
                     sound.audioSource.Stop();               //사운드 재생
                 }

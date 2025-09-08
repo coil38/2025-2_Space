@@ -93,7 +93,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
 
     private void SetChipsetDetail()  
     {
-        chipsetTitle.text = currentChipset.name;  //칩셋 이름, 칩셋 스프라이트 이미지, 칩셋 설명 텍스트 할당
+        chipsetTitle.text = currentChipset.chipsetName;  //칩셋 이름, 칩셋 스프라이트 이미지, 칩셋 설명 텍스트 할당
         chipsetIcon.sprite = currentChipset.iconSprite;
         chipsetDescription.text = currentChipset.description;
 
@@ -142,7 +142,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
         sprites[0] = currentChipset.iconSprite;
 
         //칩셋 장착 내부 코드
-        switch (currentChipset.name)
+        switch (currentChipset.chipsetName)
         {
             case "Chipset_Warrior":
                 Debug.Log("전사 칩셋 장착");
