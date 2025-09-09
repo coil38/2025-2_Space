@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e23ab0b78cb75145871b1b9c9415ed3, type: 3}
-  m_Name: Sound_MonsterHit
+  m_Name: Sound_characterHit
   m_EditorClassIdentifier: 
-  soundKey: MonsterHit_3
-  soundName: MonsterHit
-  soundAttribute: Snack
+  soundID: 2008
+  soundKey: characterHit
+  soundName: characterHit
+  soundAttribute: charater
   volume: 1
   pitch: 1
   loop: 0
-  is3D: 1
+  is3D: 0
   soundType: 1
-  clip: {fileID: 8300000, guid: 1bc8b9ac984a0ba4a9a33ca8c3a91097, type: 3}
+  clip: {fileID: 8300000, guid: ad17c95545cf0e843bb28ec1a23d6570, type: 3}
   mixerGroup: {fileID: 6909636423580828950, guid: cdd5aeb38d2190b419998f3af9b3d3a6,
     type: 2}

@@ -82,25 +82,37 @@ public class SoundDataLoader : EditorWindow
             //사운드 데이터 베이스 생성 (여러가지의 사운드 JSON이 하나의 사운드 데이터 베이스를 공유)
             if (createDatabase && createdSounds.Count > 0)
             {
-                SoundDatabaseSO database = ScriptableObject.CreateInstance<SoundDatabaseSO>();  //SoundDatabaseSO 생성
-                database.sounds = createdSounds;
-                for (int i = 0; i < createdSounds.Count; i++)
+                SoundDatabaseSO currentDatabase = AssetDatabase.LoadAssetAtPath<SoundDatabaseSO>($"{outputFolder}/SoundDatabase.asset");
+                if (currentDatabase != null)
                 {
-                    bool hasSound = false;
-                    for (int j = 0; j < database.sounds.Count; j++)
+                    for (int i = 0; i < createdSounds.Count; i++)
                     {
-                        if (database.sounds[j] == createdSounds[i])  //데이터 베이스에 이미 사운드SO가 있을 경우, 변경처리
+                        bool hasSound = false;
+                        for (int j = 0; j < currentDatabase.sounds.Count; j++)
                         {
-                            database.sounds[j] = createdSounds[i];
-                            hasSound = true;
-                            break;
+                            if (currentDatabase.sounds[j].soundID == createdSounds[i].soundID)  //데이터 베이스에 이미 사운드SO가 있을 경우, 변경처리
+                            {
+                                Debug.Log($"{createdSounds[i].soundName}가 중복확인되었다");
+                                currentDatabase.sounds[j] = createdSounds[i];
+                                hasSound = true;
+                                break;
+                            }
+                        }
+                        if (!hasSound)
+                        {
+                            Debug.Log($"{createdSounds[i].soundName}으로 새로운 사운드 등록한다");
+                            currentDatabase.sounds.Add(createdSounds[i]);  //데이터 베이스에 이미 존재하는 사운드SO가 없을 경우, 추가
                         }
                     }
-                    if (!hasSound) database.sounds.Add(createdSounds[i]);  //데이터 베이스에 이미 존재하는 사운드SO가 없을 경우, 추가
                 }
+                else
+                {
+                    SoundDatabaseSO database = ScriptableObject.CreateInstance<SoundDatabaseSO>();  //SoundDatabaseSO 생성
+                    database.sounds = createdSounds;
 
-                AssetDatabase.CreateAsset(database, $"{outputFolder}/SoundDatabase.asset");
-                EditorUtility.SetDirty(database);
+                    AssetDatabase.CreateAsset(database, $"{outputFolder}/SoundDatabase.asset");
+                    EditorUtility.SetDirty(database);
+                }
             }
 
             AssetDatabase.SaveAssets();

@@ -9,7 +9,7 @@ public class JsonToScriptableConverter : EditorWindow
 {
     private string jsonFilePath = "";
     private bool createDatabase = true;  //데이터 베이스 생성 여부
-    private JsonType jsonType = JsonType.Level;           //Json타입
+    private JsonType jsonType = JsonType.BGM;           //Json타입
 
     //private System.Enum JsonType;
 
