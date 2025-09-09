@@ -2,11 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum RangeType
+{
+    FloorSquare,
+    FloorCircle,
+    Square
+}
+
 public class AttackRangeSetter : MonoBehaviour
 {
     [SerializeField] private GameObject spriteObject;
 
-    public void SetAttackRange(Vector3 scale)
+    public void SetAttackRange(Vector3 scale, RangeType rangeType)
     {
         if (spriteObject == null)
         {
@@ -14,8 +21,15 @@ public class AttackRangeSetter : MonoBehaviour
             return;
         }
 
-        spriteObject.transform.localScale = scale;
-        Vector3 currentPos = spriteObject.transform.position;
-        spriteObject.transform.position = new Vector3(currentPos.x, currentPos.y, - scale.z / 2f);
+        switch(rangeType)
+        {
+            case RangeType.FloorSquare:
+                spriteObject.transform.localScale = scale;
+                break;
+
+            case RangeType.Square:
+                spriteObject.transform.localScale = scale;
+                break;
+        }
     }
 }

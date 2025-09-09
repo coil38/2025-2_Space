@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class WarriorChipset : ChipSetType
@@ -52,10 +53,10 @@ public class WarriorChipset : ChipSetType
         {
             n_DamageRate += rate;
         }
-        _weapon.damage = (_weapon.initialDamage * n_DamageRate / 100f) * _weapon.damageRate;  //공격력 연산
-        //Debug.Log($"총 공격력: {_weapon.damage}, 누적 공격수치: {n_DamageRate}");
+        _weapon.damage = (PlayerStatus.normalDamage * n_DamageRate / 100f) * _weapon.damageRate;  //공격력 연산
+        Debug.Log($"총 공격력: {_weapon.damage}, 누적 공격수치: {n_DamageRate}");
         foreach (var skill in _skills)
-            skill.damage += (skill.initialDamage * n_DamageRate / 100f) * skill.damageRate;
+            skill.damage = (PlayerStatus.normalDamage * n_DamageRate / 100f) * skill.damageRate;
     }
 
     private void OnEnable()

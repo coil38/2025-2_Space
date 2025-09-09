@@ -24,10 +24,8 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
     private Queue<GameObject> targets = new Queue<GameObject>();
     public override void OnEnable()
     {
-        //내부 데이터 설정
-        damage = 4f;
-        initialDamage = damage;
-        damageRate = 1.1f;
+        damageRate = 1f;
+        damage = PlayerStatus.normalDamage * damageRate;
         //------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         planLayer |= 1 << LayerMask.NameToLayer("Plan");

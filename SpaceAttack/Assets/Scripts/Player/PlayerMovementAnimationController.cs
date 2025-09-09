@@ -49,11 +49,10 @@ public class PlayerMovementAnimationController : MonoBehaviour
 
             if (isAttacking)   //공격 중일 때만 종료처리
             {
-                AttackObj.SetActive(false);
                 isAttacking = false;
 
-                ResetAnimationObj();
-                SideMoveObj.SetActive(true);  //방향설정
+                //ResetAnimationObj();
+                //SideMoveObj.SetActive(true);  //방향설정
             }
         }
     }

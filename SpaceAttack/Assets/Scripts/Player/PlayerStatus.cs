@@ -16,6 +16,7 @@ public class PlayerStatus : MonoBehaviour
     public static float criticalRate = 5f;         //치명타 확률
     public static float criticalHitRate = 50f;     //치명타 피해
     public float missRate = 0f;             //회피율
+    public static float normalDamage = 5;       //기본공격력
 
     public ParticleSystem m_Particle;
     public ParticleSystem d_Particle;
@@ -187,7 +188,10 @@ public class PlayerStatus : MonoBehaviour
 
             GetComponent<Rigidbody>().useGravity = false;  //피격방지
             GetComponent<Collider>().enabled = false;
-            movemetAniController.PlayAnimation("Dead");   //사망 애니메이션 재생
+            if (!isRooted)
+            {
+                movemetAniController.PlayAnimation("Dead");   //사망 애니메이션 재생
+            }
             //플레이어 사망 연출 시작
             isDead = true;
             Debug.Log("플레이어 사망");

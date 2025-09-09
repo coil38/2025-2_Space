@@ -37,11 +37,11 @@ public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애�
 
     public override void CheckAttack(Vector3 currentPos)
     {
-        if (!canUse)//해금여부에 따른 스킬 사용 여부
-        {
-            //Debug.Log("스킬_코어활성화가 해금되지 않았습니다");
-            return;
-        }
+        //if (!canUse)//해금여부에 따른 스킬 사용 여부
+        //{
+        //    //Debug.Log("스킬_코어활성화가 해금되지 않았습니다");
+        //    return;
+        //}
 
         if (PlayerInputController.skill3Action.triggered)
         {

@@ -20,7 +20,6 @@ public abstract class WeaponType : MonoBehaviour, IAttack, ICheckAttack
 
     //내부 기능
     public float damage { get; set; }
-    public float initialDamage { get; protected set; }
     public float damageRate { get; protected set; }
 
     public abstract void CheckAttack(Vector3 currentPos);
