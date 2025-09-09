@@ -5,7 +5,6 @@ using UnityEngine.Audio;
 public class SoundSO : ScriptableObject
 {
     public int soundID;
-    public string soundKey;
     public string soundName;
     public string soundAttribute;
     public float volume;
@@ -18,6 +17,6 @@ public class SoundSO : ScriptableObject
 
     public override string ToString()
     {
-        return $"[{soundKey}] ({soundType}) - 크기: {volume}, 속도: {pitch}, 반복: {loop}, 3차원사운드: {is3D}";
+        return $"[{soundID}] ({soundType}) - 크기: {volume}, 속도: {pitch}, 반복: {loop}, 3차원사운드: {is3D}";
     }
 }

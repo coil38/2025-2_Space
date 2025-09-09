@@ -40,7 +40,6 @@ public class SoundDataLoader : EditorWindow
 
                 //데이터 복사
                 soundSO.soundID = soundData.soundID;
-                soundSO.soundKey = soundData.soundKey;
                 soundSO.soundName = soundData.name;
                 soundSO.soundAttribute = soundData.attribute;
                 soundSO.volume = soundData.volume;

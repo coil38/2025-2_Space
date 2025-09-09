@@ -6,7 +6,6 @@ using UnityEngine.Audio;
 public class SoundData
 {
     public int soundID;
-    public string soundKey;
     public string name;
     public string attribute;
     public float volume;
