@@ -385,6 +385,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1919733030352736383, guid: fc7773ab55445a54da0638907c30b4b1,
+        type: 3}
+      propertyPath: ShapeModule.angle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1919733030352736383, guid: fc7773ab55445a54da0638907c30b4b1,
+        type: 3}
+      propertyPath: ShapeModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1919733030352736383, guid: fc7773ab55445a54da0638907c30b4b1,
+        type: 3}
+      propertyPath: ShapeModule.m_Rotation.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 1919733030352736383, guid: fc7773ab55445a54da0638907c30b4b1,
+        type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 0.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: 3279648407112994780, guid: fc7773ab55445a54da0638907c30b4b1,
+        type: 3}
+      propertyPath: ShapeModule.angle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3279648407112994780, guid: fc7773ab55445a54da0638907c30b4b1,
+        type: 3}
+      propertyPath: ShapeModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3279648407112994780, guid: fc7773ab55445a54da0638907c30b4b1,
+        type: 3}
+      propertyPath: ShapeModule.m_Rotation.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 3279648407112994780, guid: fc7773ab55445a54da0638907c30b4b1,
+        type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 0.0001
+      objectReference: {fileID: 0}
     - target: {fileID: 4027043883987837715, guid: fc7773ab55445a54da0638907c30b4b1,
         type: 3}
       propertyPath: m_LocalPosition.x
