@@ -7,10 +7,10 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
     //임시로 플레이어에 할당
 
     private float attackDistance = 2f;
-    private float r_AttackTime = 0.1f;
+    private float r_AttackTime = 0.3f;
     private float mass = 1f;
     private float detectAngle = 155f;
-    private float w_attackTime = 0.3f;    //검 공격 대기 시간
+    private float w_attackTime = 0.4f;    //검 공격 대기 시간
 
     private LayerMask planLayer;   //바닥감지용 리이어 마스크
     private LayerMask enemyLayer;  //적감지용 레이어 마스크
@@ -124,6 +124,9 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
 
         if (targets.TryDequeue(out var target))
         {
+            if(target.GetComponent<EnemyBase>() != null)
+                if (target.GetComponent<EnemyBase>().isDead) return;  //만약 타겟이 사망했다면 반환처리
+
             bool isCritical = false;
             float temp = attackInfo.CheckAndSetCritical(damage, PlayerStatus.criticalRate, PlayerStatus.criticalHitRate);
             if (temp > damage) isCritical = true;  //크리티컬 처리
@@ -136,7 +139,7 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
 
             target.SendMessage("ApplyDamage", attackInfo);
             Camera.main.GetComponent<CameraFallow>().CameraShack();  //카메라 흔들림 연출
-            //Debug.Log(target.name + "을 검 공격함");
+                                                                     //Debug.Log(target.name + "을 검 공격함");
         }
     }
 

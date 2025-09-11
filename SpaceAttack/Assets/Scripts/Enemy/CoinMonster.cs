@@ -76,8 +76,8 @@ public class CoinMonster : EnemyBase
 
         if (explodeRangeVisual != null)
         {
-            float baseRadius = 0.013f;  
-            float scale = explodeDistance / baseRadius;
+            float radiusRate = 5.142f;
+            float scale = explodeDistance * radiusRate;
 
             explodeRangeVisual.transform.localScale = new Vector3(scale, scale, scale);
             explodeRangeVisual.SetActive(false);

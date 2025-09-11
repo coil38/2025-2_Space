@@ -26,7 +26,7 @@ public abstract class EnemyBase : MonoBehaviour
     [SerializeField] protected Transform visualTransform;
 
     protected bool isFacingRight = true;
-    protected bool isDead;
+    public bool isDead { get; protected set; }
     protected bool isHit;
     private float baseScaleX;
 
@@ -171,7 +171,7 @@ public abstract class EnemyBase : MonoBehaviour
             );
 
             Vector3 spawnPos = transform.position + randomOffset;
-            Instantiate(heartPrefab, spawnPos, Quaternion.identity);
+            Instantiate(heartPrefab, spawnPos, heartPrefab.transform.rotation);
         }
     }
 

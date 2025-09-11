@@ -27,6 +27,10 @@ public class Heart : MonoBehaviour
             if (PlayerUIManager.instance != null)
                 PlayerUIManager.instance.ResetHpUI();
 
+            //플레이어 회복UI연출
+            if (DamageEffectManager.instance != null && PlayerStatus.Instance != null)
+                DamageEffectManager.instance.ShowHeal(PlayerStatus.Instance.transform.position + PlayerStatus.Instance.transform.up * 0.5f, healAmount);
+
             // 하트 오브젝트 제거
             Destroy(gameObject);
         }

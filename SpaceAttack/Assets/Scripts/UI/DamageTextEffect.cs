@@ -65,11 +65,11 @@ public class DamageTextEffect : MonoBehaviour
         rectTransform.position += moveDirection * moveSpeed * Time.deltaTime;
 
         timer += Time.deltaTime;
-        if (timer >= lifeTime * 0.5f)
+        if (timer >= lifeTime * 0.7f)
         {
             if (textMesh != null)
             {
-                float alpha = Mathf.Lerp(originalColor.a, 0f, (timer - lifeTime * 0.5f / lifeTime * 0.5f));
+                float alpha = Mathf.Lerp(originalColor.a, 0f, (timer - lifeTime * 0.7f / lifeTime * 0.7f));
                 textMesh.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
             }
             moveSpeed = Mathf.Lerp(moveSpeed, 0.2f, Time.deltaTime * 2f);

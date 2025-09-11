@@ -10,6 +10,6 @@ public class HeartRoTate : MonoBehaviour
     void Update()
     {
         // Y축 기준으로 계속 회전
-        transform.Rotate(Vector3.up * rotationSpeed * Time.deltaTime, Space.World);
+        transform.Rotate(transform.up * rotationSpeed * Time.deltaTime, Space.World);
     }
 }

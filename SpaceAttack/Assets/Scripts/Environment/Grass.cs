@@ -19,6 +19,8 @@ public class Grass : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!other.gameObject.CompareTag("Player")) return;
+
         if (other.gameObject.transform.position.x > transform.position.x)   //플레이어가 오른쪽에 있을때
         {
             animator.Play("MovingGrassR");

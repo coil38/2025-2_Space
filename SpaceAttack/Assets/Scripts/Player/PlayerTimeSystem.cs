@@ -9,7 +9,7 @@ public class PlayerTimeSystem : MonoBehaviour
     public static float m_stunTime = 0.3f;       //스턴 시간
     public static float m_invincibilityTime = 0.3f;  //대쉬이후 무적 시간
     public static float w_DashTime = 0.25f;           //다음 대쉬까지 대기 시간
-    public static float c_DashTime = 5f;              //대쉬 쿨타임
+    public static float c_DashTime = 3f;              //대쉬 쿨타임
 
     public static Timer stunTimer;                       //피격 이후 스턴(무적)시간
     public static Timer invincibilityTimer;              //대쉬 이후 무적시간

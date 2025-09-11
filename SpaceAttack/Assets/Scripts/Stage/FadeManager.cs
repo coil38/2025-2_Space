@@ -37,15 +37,15 @@ public class FadeManager : MonoBehaviour
     {
         yield return StartCoroutine(Fade(1f));
 
-        Camera mainCam = Camera.main;
-        if (mainCam != null) mainCam.enabled = false;
+        //Camera mainCam = Camera.main;
+        //if (mainCam != null) mainCam.enabled = false;
 
         yield return SceneManager.LoadSceneAsync(sceneName);
 
         yield return StartCoroutine(Fade(0f));
 
-        mainCam = Camera.main;
-        if (mainCam != null) mainCam.enabled = true;
+        //mainCam = Camera.main;
+        //if (mainCam != null) mainCam.enabled = true;
 
         // 게임 재개
         Time.timeScale = 1f;
