@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerInputController : MonoBehaviour
 {
@@ -35,11 +36,21 @@ public class PlayerInputController : MonoBehaviour
         dashAction = playerInput.actions["Dash"];
 
         EnableAction();
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
     {
         DisableAction();
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        EnableAction();
+        playerInput.DeactivateInput();
+        playerInput.ActivateInput();
+        playerInput.SwitchCurrentActionMap("GamePlay");
     }
 
     public static void EnableAction()

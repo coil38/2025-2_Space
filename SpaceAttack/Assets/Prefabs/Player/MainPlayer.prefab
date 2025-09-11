@@ -3336,6 +3336,7 @@ GameObject:
   - component: {fileID: 6320312296714409488}
   - component: {fileID: 562426298371380875}
   - component: {fileID: 7747343635866525195}
+  - component: {fileID: 1315576812552095037}
   m_Layer: 7
   m_Name: MainPlayer
   m_TagString: Player
@@ -3662,6 +3663,14 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!81 &1315576812552095037
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2294210348751967844}
+  m_Enabled: 1
 --- !u!1 &2327263388625136577
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 using TMPro;
 using UnityEngine.UI;
 using System;
-using UnityEditor.Search;
 
 public class SettingUIManager : MonoBehaviour
 {
@@ -38,6 +37,8 @@ public class SettingUIManager : MonoBehaviour
     private void OnEnable() //입력 실행 비활성화 처리 및 버튼 이벤트 구독
     {
         isChanged.Clear(); //변경사항 유무 초기화
+
+        UISoundManager.PlayeOnAndOffPanel(); //패널열기 사운드 재생
 
         PlayerInputController.DisableAction();         //입력 비활성화 처리 ( 리바이딩을 위해서 )
 
@@ -75,6 +76,8 @@ public class SettingUIManager : MonoBehaviour
 
     private void OnDisable() //입력 실행 활성화 처리 및 버튼 이벤트 구독 해지
     {
+        UISoundManager.PlayeOnAndOffPanel(); //패널닫기 사운드 재생
+
         PlayerInputController.EnableAction();
 
         exitButton.onClick.RemoveAllListeners();

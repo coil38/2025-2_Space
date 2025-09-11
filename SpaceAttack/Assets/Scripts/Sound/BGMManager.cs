@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BGMManager : MonoBehaviour
 {
+    private Scene currentScene;
     void Start()
     {
-        //Invoke("Test", 1f);
-        //Invoke("Test2", 5f);
+        StartCoroutine(TEst());
     }
 
     void Update()
@@ -15,14 +16,50 @@ public class BGMManager : MonoBehaviour
         
     }
 
-    void Test()
+    private IEnumerator TEst()
     {
-        SoundManager.instance.RegisterGameObject(gameObject, "None");
-        SoundManager.instance.PlaySound(gameObject, "EarthBossBattleStage_2");
+        yield return new WaitForSeconds(1);  //임시
+        Initialized();
+        Debug.Log($"{gameObject.name}에서 작동한다");
+        //PlayBGMSoound(currentScene);
     }
 
-    void Test2()
+    private void Initialized()
     {
-        //SoundManager.instance.StopSound(gameObject, "EarthBossBattleStage_2");
+        currentScene = SceneManager.GetActiveScene();
+        SceneManager.sceneLoaded += OnSceneLoaded;    //씬로드 이벤트 구독
+
+        //모든 BGM구독처리
+        SoundManager.instance.RegisterGameObjectBySoundType(gameObject, SoundType.BGM);
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;    //씬로드 이벤트 구독 헤제
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
+    {
+        currentScene = scene;
+        PlayBGMSoound(scene);
+        Debug.Log("작동한다");
+    }
+
+    private void PlayBGMSoound(Scene scene)
+    {
+        switch (scene.name)
+        {
+            case "LobbyScene":
+                SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
+                break;
+
+            case "ChipsetSelectScene":
+                SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
+                break;
+
+            case "BattleScene":
+                SoundManager.instance.PlayBGMOrUISound(1001, SoundType.BGM);
+                break;
+        }
     }
 }
