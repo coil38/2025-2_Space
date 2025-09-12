@@ -6,25 +6,8 @@ using UnityEngine.SceneManagement;
 public class BGMManager : MonoBehaviour
 {
     private Scene currentScene;
-    void Start()
-    {
-        StartCoroutine(TEst());
-    }
 
-    void Update()
-    {
-        
-    }
-
-    private IEnumerator TEst()
-    {
-        yield return new WaitForSeconds(1);  //임시
-        Initialized();
-        Debug.Log($"{gameObject.name}에서 작동한다");
-        //PlayBGMSoound(currentScene);
-    }
-
-    private void Initialized()
+    public void Initialized()  //사운드 등록용 초기설정
     {
         currentScene = SceneManager.GetActiveScene();
         SceneManager.sceneLoaded += OnSceneLoaded;    //씬로드 이벤트 구독

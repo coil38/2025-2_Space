@@ -5,25 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class UISoundManager : MonoBehaviour
 {
-    void Start()
-    {
-        StartCoroutine(TEst());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    private IEnumerator TEst()
-    {
-        yield return new WaitForSeconds(1);    //임시
-        Initialized(); 
-        Debug.Log($"{gameObject.name}에서 작동한다");
-    }
-
-    private void Initialized()
+    public void Initialized()
     {
         SoundManager.instance.RegisterGameObjectBySoundType(gameObject, SoundType.UI);
     }

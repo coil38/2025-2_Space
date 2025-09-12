@@ -14,9 +14,17 @@ public class PlayerCore : MonoBehaviour
     [Header("레벨 데이터베이스")]
     [SerializeField] private LevelDatabaseSO levelDatabase;
 
-    private void OnEnable()  //델리게이트 체인 구독
+    public void InitializeEvent()  //이벤트 체인 구독
     {
-        StartCoroutine(StartEvent());
+        EventManager.f_CorrectionValueEvent.levelEventHandler += GetMaxExpValue;
+        if (DataManager.instance != null)
+        {
+            EventManager.f_CorrectionValueEvent.levelDatabase = DataManager.instance._levelDatabase;  //데이터 베이스 할당
+        }
+        else Debug.LogError("레벨데이터 베이스가 PlayerCore시스템에 할당되지 않았습니다.");
+        EventManager.f_CorrectionValueEvent.FindMaxExpValue(Level);  //현재 레벨의 최대 경험치량 할당 이벤트 실행
+        maxLevel = EventManager.f_CorrectionValueEvent.levelDatabase.maxLevel;  //최대 레벨 갱신
+        StartCoroutine(C_Initialize()); //초기화
     }
 
     private void OnDisable()  //델리게이트 체인 구독 해지
@@ -75,16 +83,5 @@ public class PlayerCore : MonoBehaviour
         maxEXP = e.maxEXP;  //최대 경험치 갱신
         nextMaxEXP = e.nextMaxEXP;  //다음 최대 경험치 갱신
         //Debug.Log($"이벤트 실행됨. 최대경험치량: {e.maxEXP}, 다음 최대경험치량: {e.nextMaxEXP}");
-    }
-
-    private IEnumerator StartEvent()
-    {
-        yield return new WaitUntil(() => EventManager.f_CorrectionValueEvent != null);
-        EventManager.f_CorrectionValueEvent.levelEventHandler += GetMaxExpValue;
-        if (levelDatabase != null) EventManager.f_CorrectionValueEvent.levelDatabase = levelDatabase;  //데이터 베이스 할당
-        else Debug.LogError("레벨데이터 베이스가 PlayerCore시스템에 할당되지 않았습니다.");
-        EventManager.f_CorrectionValueEvent.FindMaxExpValue(Level);  //현재 레벨의 최대 경험치량 할당 이벤트 실행
-        maxLevel = EventManager.f_CorrectionValueEvent.levelDatabase.maxLevel;  //최대 레벨 갱신
-        StartCoroutine(C_Initialize()); //초기화
     }
 }

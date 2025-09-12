@@ -63,8 +63,11 @@ public class PlayerStatus : MonoBehaviour
         m_FacingRight = true;
         rb = GetComponent<Rigidbody>();
         movemetAniController = GetComponent<PlayerMovementAnimationController>();
+    }
 
-        StartCoroutine(StartEvent());
+    public void InitializeEvent()  //이벤트 체인 함수
+    {
+        EventManager.f_CorrectionValueEvent.correctionEventHandler += SetCorrectionValue;  //플레이어 스텟 보정 이벤트 구독
     }
 
     private void OnDisable()
@@ -235,11 +238,5 @@ public class PlayerStatus : MonoBehaviour
 
             //플레이어 스텟보정 연출
         }
-    }
-
-    private IEnumerator StartEvent()
-    {
-        yield return new WaitUntil(() => EventManager.f_CorrectionValueEvent != null);
-        EventManager.f_CorrectionValueEvent.correctionEventHandler += SetCorrectionValue;  //플레이어 스텟 보정 이벤트 구독
     }
 }

@@ -23,7 +23,7 @@ public class SoundManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(this);
+            //DontDestroyOnLoad(this);
         }
         else
         {
@@ -31,7 +31,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    void Start()
+    public void Initialize()
     {
         SoundDatabaseSO database = DataManager.instance._soundDatabase;    //사운드 데이터 베이스 받기
 
@@ -66,12 +66,12 @@ public class SoundManager : MonoBehaviour
                 temp[sound.soundAttribute].Add(sound);                 //사운드SO 리스트 추가
             }
         }
-        
+
         foreach (var sound in temp)
             soundLibrary.Add(sound.Key, sound.Value.ToArray());        //필드로 변환
     }
 
-    public void RegisterGameObjectBySoundType(GameObject obj, SoundType soundType)
+    public void RegisterGameObjectBySoundType(GameObject obj, SoundType soundType)  //BGM과 UISound용 등록함수
     {
         if(soundType == SoundType.BGM) BGMRegistry.Clear();   //초기화
         else if (soundType == SoundType.UI) UISFXRegistry.Clear();
