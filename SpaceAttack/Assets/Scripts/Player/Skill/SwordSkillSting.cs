@@ -131,7 +131,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * _attackDistance;
 
-        OnFloorSprite(f_DetectSize*2, attackDirection, f_DetectPos);        //장판 스프라이트 켜기
+        //OnFloorSprite(f_DetectSize*2, attackDirection, f_DetectPos);        //장판 스프라이트 켜기
 
         isAttackMoving = true;
 
@@ -141,7 +141,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
             Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
             attackMovePos = movePos;   //이동 위치 할당
 
-            UpdateFloorSprite(f_DetectPos);  //장판 스프라이트 위치 갱신
+            //UpdateFloorSprite(f_DetectPos);  //장판 스프라이트 위치 갱신
 
             detectPos = movePos;
 
@@ -160,7 +160,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
                     }
 
                     isAttackMoving = false;
-                    OffFloorSprite();
+                    //OffFloorSprite();
                     yield break;
                 }
                 else if (col.gameObject.CompareTag("DestructableObject"))
@@ -174,7 +174,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
             yield return waitForFixedUpdate;
         }
-        OffFloorSprite();
+        //OffFloorSprite();
         isAttackMoving = false;
     }
 

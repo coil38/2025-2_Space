@@ -135,16 +135,16 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
         AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);   //공격 정보 설정
 
         //Debug.Log($"장판위치: {f_DetectPos}, 시작 위치: {_currentPos}, 종료위치: {targetPos}");
-        OnFloorSprite(f_DetectSize * 2f, attackDirection, f_DetectPos);        //장판 스프라이트 켜기
-        OnSlashSprite(detectSize * 2f, attackDirection);                       //참격 스프라이트 켜기
+        //OnFloorSprite(f_DetectSize * 2f, attackDirection, f_DetectPos);        //장판 스프라이트 켜기
+        //OnSlashSprite(detectSize * 2f, attackDirection);                       //참격 스프라이트 켜기
 
         while (true)
         {
             float timer = s_AttackTimer.GetRemainingTimer() / _attackTime;
             Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
 
-            UpdateSlashSprite(movePos, attackDirection);  //참격 스프라이트 갱신
-            UpdateFloorSprite(movePos, attackDirection);  //장판 스프라이트 갱신
+            //UpdateSlashSprite(movePos, attackDirection);  //참격 스프라이트 갱신
+            //UpdateFloorSprite(movePos, attackDirection);  //장판 스프라이트 갱신
 
             detectPos = movePos;
             Collider[] cols = Physics.OverlapBox(detectPos, detectSize, detectRot, enemyLayer);   //감지 범위 내 적 감지
@@ -163,8 +163,8 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
         }
 
         targets.Clear();
-        OffFloorSprite();   //장판 스프라이트 끄기
-        OffSlashSprite();   //참격 스프라이트 끄기
+        //OffFloorSprite();   //장판 스프라이트 끄기
+        //OffSlashSprite();   //참격 스프라이트 끄기
     }
     private void OnFloorSprite(Vector3 size, Vector3 direction, Vector3 pos)
     {
