@@ -13,6 +13,7 @@ public class InitializationOrderer : MonoBehaviour
     private SoundManager soundManager;    //DataManager -> soundDatabase관련
     private BGMManager bgmManager;        //SoundManager.instance관련
     private UISoundManager uISoundManager; //SoundManager.instance관련
+    private PlayerUIManager playerUIManager; //PlayerUIManager.instance관련
 
     private void Awake()
     {
@@ -38,9 +39,10 @@ public class InitializationOrderer : MonoBehaviour
         soundManager = FindAnyObjectByType<SoundManager>();
         bgmManager = FindAnyObjectByType<BGMManager>();
         uISoundManager = FindAnyObjectByType<UISoundManager>();
+        playerUIManager = FindAnyObjectByType<PlayerUIManager>();
 
         if (DataManager == null || EventManager == null || playerStatus == null || playerCore == null 
-            || soundManager == null || bgmManager == null || uISoundManager == null)
+            || soundManager == null || bgmManager == null || uISoundManager == null || playerUIManager == null)
         {
             if (DataManager == null) Debug.LogError("DataManger가 존재하지 않음.");
             if (EventManager == null) Debug.LogError("EventManager가 존재하지 않음.");
@@ -49,17 +51,20 @@ public class InitializationOrderer : MonoBehaviour
             if (soundManager == null) Debug.LogError("soundManager가 존재하지 않음.");
             if (bgmManager == null) Debug.LogError("bgmManager가 존재하지 않음.");
             if (uISoundManager == null) Debug.LogError("uISoundManager가 존재하지 않음.");
+            if(playerUIManager == null) Debug.LogError("playerUIManager가 존재하지 않음.");
 
             yield break;
         }
         //DataManager과 EventManager의 싱글톤이 존재할때, 넘어감
         yield return new WaitUntil(() =>
         {
-            return DataManager.instance != null && EventManager.f_CorrectionValueEvent != null;
+            return DataManager.instance != null 
+            && EventManager.f_CorrectionValueEvent != null
+            && PlayerUIManager.instance != null;
         });
 
         playerStatus.InitializeEvent();  //EventManger -> f_CorrectionValueEven 체인처리
-        playerCore.InitializeEvent();    //EventManger -> f_CorrectionValueEvent, DataManger -> Level 관리
+        playerCore.InitializeEvent();    //EventManger -> f_CorrectionValueEvent, DataManger -> Level 관리, PlayerUIManager 인스턴스
         soundManager.Initialize();       //DataManager -> soundDatabase 받기
 
         yield return new WaitUntil(() => SoundManager.instance != null);  //SoundManager인스턴스 존재 할 시, 넘어감

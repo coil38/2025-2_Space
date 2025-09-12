@@ -11,9 +11,6 @@ public class PlayerCore : MonoBehaviour
     private static int nextMaxEXP = 100;                //다음 최대 경험치량
     private static int maxLevel = 0;                 //최대 레벨
 
-    [Header("레벨 데이터베이스")]
-    [SerializeField] private LevelDatabaseSO levelDatabase;
-
     public void InitializeEvent()  //이벤트 체인 구독
     {
         EventManager.f_CorrectionValueEvent.levelEventHandler += GetMaxExpValue;
@@ -24,7 +21,7 @@ public class PlayerCore : MonoBehaviour
         else Debug.LogError("레벨데이터 베이스가 PlayerCore시스템에 할당되지 않았습니다.");
         EventManager.f_CorrectionValueEvent.FindMaxExpValue(Level);  //현재 레벨의 최대 경험치량 할당 이벤트 실행
         maxLevel = EventManager.f_CorrectionValueEvent.levelDatabase.maxLevel;  //최대 레벨 갱신
-        StartCoroutine(C_Initialize()); //초기화
+        GetDarkMatter(0, true);  //UI 갱신
     }
 
     private void OnDisable()  //델리게이트 체인 구독 해지
@@ -39,12 +36,6 @@ public class PlayerCore : MonoBehaviour
         {
             GetDarkMatter(15);
         }
-    }
-
-    private IEnumerator C_Initialize()
-    {
-        yield return new WaitUntil(() => PlayerUIManager.instance != null);
-        GetDarkMatter(0, true);  //UI 갱신
     }
 
     public static void GetDarkMatter(int exp, bool isInitial = false)     //암흑물질(경험치) 획득

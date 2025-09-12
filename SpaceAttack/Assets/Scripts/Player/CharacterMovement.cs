@@ -116,7 +116,8 @@ public class CharacterMovement : MonoBehaviour
         Vector3 move = Vector3.Lerp(currentPos, targetPos, 1 - timer);
         rb.MovePosition(move);
 
-        if (timer <= 0.1f) startDash = false;
+        if (timer <= 0.1f || PlayerStatus.Instance.isStuned) 
+            startDash = false;
     }
 
     private void ChangeCurrentDir()
