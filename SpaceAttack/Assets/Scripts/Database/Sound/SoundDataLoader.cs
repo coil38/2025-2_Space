@@ -81,37 +81,26 @@ public class SoundDataLoader : EditorWindow
             //사운드 데이터 베이스 생성 (여러가지의 사운드 JSON이 하나의 사운드 데이터 베이스를 공유)
             if (createDatabase && createdSounds.Count > 0)
             {
-                SoundDatabaseSO currentDatabase = AssetDatabase.LoadAssetAtPath<SoundDatabaseSO>($"{outputFolder}/SoundDatabase.asset");
-                if (currentDatabase != null)
-                {
-                    for (int i = 0; i < createdSounds.Count; i++)
-                    {
-                        bool hasSound = false;
-                        for (int j = 0; j < currentDatabase.sounds.Count; j++)
-                        {
-                            if (currentDatabase.sounds[j].soundID == createdSounds[i].soundID)  //데이터 베이스에 이미 사운드SO가 있을 경우, 변경처리
-                            {
-                                Debug.Log($"{createdSounds[i].soundName}가 중복확인되었다");
-                                currentDatabase.sounds[j] = createdSounds[i];
-                                hasSound = true;
-                                break;
-                            }
-                        }
-                        if (!hasSound)
-                        {
-                            Debug.Log($"{createdSounds[i].soundName}으로 새로운 사운드 등록한다");
-                            currentDatabase.sounds.Add(createdSounds[i]);  //데이터 베이스에 이미 존재하는 사운드SO가 없을 경우, 추가
-                        }
-                    }
-                }
-                else
-                {
-                    SoundDatabaseSO database = ScriptableObject.CreateInstance<SoundDatabaseSO>();  //SoundDatabaseSO 생성
-                    database.sounds = createdSounds;
+                SoundDatabaseSO database = ScriptableObject.CreateInstance<SoundDatabaseSO>();  //SoundDatabaseSO 생성
 
-                    AssetDatabase.CreateAsset(database, $"{outputFolder}/SoundDatabase.asset");
-                    EditorUtility.SetDirty(database);
+                string[] guids = AssetDatabase.FindAssets("t:SoundSO", new[] { outputFolder });
+
+                List<SoundSO> tempList = new List<SoundSO>();
+
+                foreach (string guid in guids)
+                {
+                    string path = AssetDatabase.GUIDToAssetPath(guid);
+                    SoundSO sound = AssetDatabase.LoadAssetAtPath<SoundSO>(path);
+                    if (sound != null)
+                    {
+                        tempList.Add(sound);
+                    }
+
                 }
+                database.sounds = tempList;
+
+                AssetDatabase.CreateAsset(database, $"{outputFolder}/SoundDatabase.asset");
+                EditorUtility.SetDirty(database);
             }
 
             AssetDatabase.SaveAssets();
