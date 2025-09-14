@@ -44,7 +44,7 @@ public class ChipsetComponentDataLoader : EditorWindow
                 }
                 else
                 {
-                    Debug.LogError($"{componentData.name}의 타입이 {componentData.componentTypeString}으로 다르게 입력되었습니다.");
+                    LogUtil.LogError($"{componentData.name}의 타입이 {componentData.componentTypeString}으로 다르게 입력되었습니다.");
                 }
 
                 //아이콘 스프라이트 저장
@@ -53,7 +53,7 @@ public class ChipsetComponentDataLoader : EditorWindow
                     chipComponentSO.iconSprite = AssetDatabase.LoadAssetAtPath<Sprite>(iconPath + componentData.iconPath);
 
                     if (chipComponentSO.iconSprite == null)
-                        Debug.LogWarning($"{componentData.name}이름의 {componentData.iconPath}위치에 아이콘이 존재하지 않음");
+                        LogUtil.LogWarning($"{componentData.name}이름의 {componentData.iconPath}위치에 아이콘이 존재하지 않음");
                 }
 
                 //SO 저장
@@ -85,7 +85,7 @@ public class ChipsetComponentDataLoader : EditorWindow
         catch (System.Exception e)
         {
             EditorUtility.DisplayDialog("Error", $"Failed to Convert JSON : {e.Message}", "OK");
-            Debug.LogError($"JSON 변환 오류: {e}");
+            LogUtil.LogError($"JSON 변환 오류: {e}");
         }
     }
 }

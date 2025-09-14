@@ -17,7 +17,7 @@ public class AttackRangeSetter : MonoBehaviour
     {
         if (spriteObject == null)
         {
-            Debug.Log("공격범위의 변경될 스프라이트 대상이 할당되지 않음");
+            LogUtil.Log("공격범위의 변경될 스프라이트 대상이 할당되지 않음");
             return;
         }
 

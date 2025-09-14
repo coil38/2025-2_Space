@@ -55,7 +55,7 @@ public class ChipsetDataLoader : EditorWindow
                     chipsetSO.iconSprite = AssetDatabase.LoadAssetAtPath<Sprite>(iconPath + chipsetData.iconPath);
 
                     if (chipsetSO.iconSprite == null)
-                        Debug.LogWarning($"{chipsetData.name}이름의 {chipsetData.iconPath}위치에 아이콘이 존재하지 않음");
+                        LogUtil.LogWarning($"{chipsetData.name}이름의 {chipsetData.iconPath}위치에 아이콘이 존재하지 않음");
                 }
 
                 //SO 저장
@@ -78,7 +78,7 @@ public class ChipsetDataLoader : EditorWindow
                 //칩셋 컴포넌트 데이터 베이스 값 할당
                 database.chipsetComponentDatabase = AssetDatabase.LoadAssetAtPath<ChipsetComponentDatabaseSO>(chipsetComponentDatabasePath);
                 if (database.chipsetComponentDatabase == null)
-                    Debug.LogError("chipsetComponent Database 할당에 실패했습니다.");
+                    LogUtil.LogError("chipsetComponent Database 할당에 실패했습니다.");
 
                 AssetDatabase.CreateAsset(database, $"{outputFolder}/ChipsetDatabase.asset");
                 EditorUtility.SetDirty(database);
@@ -92,7 +92,7 @@ public class ChipsetDataLoader : EditorWindow
         catch (System.Exception e)
         {
             EditorUtility.DisplayDialog("Error", $"Failed to Convert JSON : {e.Message}", "OK");
-            Debug.LogError($"JSON 변환 오류: {e}");
+            LogUtil.LogError($"JSON 변환 오류: {e}");
         }
     }
 }

@@ -74,7 +74,7 @@ public class LevelDataLoader : EditorWindow
         catch (System.Exception e)
         {
             EditorUtility.DisplayDialog("Error", $"Failed to Convert JSON: {e.Message}", "OK");
-            Debug.LogError($"JSON 변환 오류: {e}");
+            LogUtil.LogError($"JSON 변환 오류: {e}");
         }
     }
 }

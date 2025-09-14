@@ -54,7 +54,7 @@ public class SoundDataLoader : EditorWindow
                     AudioMixerGroup[] mixerGroups = mixer.FindMatchingGroups(soundType.ToString());   //해당 사운드 타입과 맞는 그룹 찾기
                     soundSO.mixerGroup = mixerGroups[0];                                          //오디오 믹서 할당   
                 }
-                else Debug.LogWarning("오디오 믹서가 존재하지 않는다");
+                else LogUtil.LogWarning("오디오 믹서가 존재하지 않는다");
 
                 //사운드 클립 로드
                 if (!string.IsNullOrEmpty(soundData.soundClipPath))
@@ -63,7 +63,7 @@ public class SoundDataLoader : EditorWindow
            
                     if (soundSO.clip == null)
                     {
-                        Debug.LogWarning($"사운드 '{soundData.name}'의 사운드 클립을 찾을 수 없습니다. : {soundData.soundClipPath}");
+                        LogUtil.LogWarning($"사운드 '{soundData.name}'의 사운드 클립을 찾을 수 없습니다. : {soundData.soundClipPath}");
                     }
                 }
 
@@ -111,7 +111,7 @@ public class SoundDataLoader : EditorWindow
         catch (System.Exception e)
         {
             EditorUtility.DisplayDialog("Error", $"Failed to Convert JSON : {e.Message}", "OK");
-            Debug.LogError($"JSON 변환 오류: {e}");
+            LogUtil.LogError($"JSON 변환 오류: {e}");
         }
     }
 }

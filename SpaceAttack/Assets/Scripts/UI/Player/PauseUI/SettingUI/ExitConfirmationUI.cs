@@ -26,7 +26,7 @@ public class ExitConfirmationUI : SettingUIStrategy
 
         _leftButton.onClick.AddListener(() =>
         {
-            Debug.Log("저장 버튼 동작");
+            LogUtil.Log("저장 버튼 동작");
             if (settingUIManager != null)
             {
                 settingUIManager.SaveSetting();  //저장하고 나가기
@@ -38,7 +38,7 @@ public class ExitConfirmationUI : SettingUIStrategy
 
         _midleButton.onClick.AddListener(() =>
         {
-            Debug.Log("저장하지 않고 나가기 동작");
+            LogUtil.Log("저장하지 않고 나가기 동작");
             if (settingUIManager != null)
             {
                 settingUIManager.CancelSave();    //저장하지 않고 나가기
@@ -50,7 +50,7 @@ public class ExitConfirmationUI : SettingUIStrategy
 
         _rightButton.onClick.AddListener(() =>
         {
-            Debug.Log("취소 동작");
+            LogUtil.Log("취소 동작");
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
         });
     }

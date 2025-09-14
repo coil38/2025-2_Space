@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class TestEnemy : MonoBehaviour
 {
@@ -120,7 +119,7 @@ public class TestEnemy : MonoBehaviour
             if (AudioManager.instance != null)
                 AudioManager.instance.PlaySound("Hit");
 
-            Debug.Log("적 피격");
+            LogUtil.Log("적 피격");
 
             animator.SetTrigger("Hit");          //피격 애니메이션
             rb.AddForce(dir * hitForce);         //넉백

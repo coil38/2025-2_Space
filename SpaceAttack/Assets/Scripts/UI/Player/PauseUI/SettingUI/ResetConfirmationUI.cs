@@ -25,7 +25,7 @@ public class ResetConfirmationUI : SettingUIStrategy
 
         _leftButton.onClick.AddListener(() =>
         {
-            Debug.Log("초기화 버튼 동작");
+            LogUtil.Log("초기화 버튼 동작");
             if (settingUIManager != null)
             {
                 settingUIManager.isChanged.Clear();  //저장 체크용 변경 사항 초기화
@@ -36,7 +36,7 @@ public class ResetConfirmationUI : SettingUIStrategy
 
         _midleButton.onClick.AddListener(() =>
         {
-            Debug.Log("취소 버튼 동작");
+            LogUtil.Log("취소 버튼 동작");
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
         });
     }

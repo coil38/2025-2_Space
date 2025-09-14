@@ -197,7 +197,7 @@ public class PlayerStatus : MonoBehaviour
             }
             //플레이어 사망 연출 시작
             isDead = true;
-            Debug.Log("플레이어 사망");
+            LogUtil.Log("플레이어 사망");
         }
         else
         {
@@ -210,7 +210,7 @@ public class PlayerStatus : MonoBehaviour
                 movemetAniController.PlayAnimation("Hit");  //피격 애니메이션 ( 속박상태가 아닐 경우 )
             }
 
-            Debug.Log($"플레이어 피격, 현재 체력: {m_hp}");
+            LogUtil.Log($"플레이어 피격, 현재 체력: {m_hp}");
             rb.AddForce(dir * attackForce);                 //넉백
 
         }
@@ -228,10 +228,10 @@ public class PlayerStatus : MonoBehaviour
     {
         if (e.correctablility)  //플레이어 스텟 보정치 주입
         {
-            //Debug.Log("플레이어 스텟 상승");
+            //LogUtil.Log("플레이어 스텟 상승");
             m_maxhp += e.heartCorrection;
             m_speed *= 1 + e.speedCorrection / 100f;
-            //Debug.Log($"{e.heartCorrection}, {e.speedCorrection} / 100");
+            //LogUtil.Log($"{e.heartCorrection}, {e.speedCorrection} / 100");
 
             if (PlayerUIManager.instance != null)
                 PlayerUIManager.instance.ResetHpUI(); //체력 초기화

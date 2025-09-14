@@ -25,7 +25,7 @@ public class BGMManager : MonoBehaviour
     {
         currentScene = scene;
         PlayBGMSoound(scene);
-        Debug.Log("작동한다");
+        LogUtil.Log("작동한다");
     }
 
     private void PlayBGMSoound(Scene scene)

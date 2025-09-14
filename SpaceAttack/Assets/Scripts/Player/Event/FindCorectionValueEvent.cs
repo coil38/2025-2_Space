@@ -82,7 +82,7 @@ public class FindCorectionValueEvent
         nextMaxEXP = 0;
         if (levelDatabase.maxLevel < _level)  //최대레벨 예외처리
         {
-            Debug.LogWarning($"{levelDatabase.maxLevel} 레벨의 이상의 레벨은 존재하지 않습니다. 입력받은 레벨: {_level}");
+            LogUtil.LogWarning($"{levelDatabase.maxLevel} 레벨의 이상의 레벨은 존재하지 않습니다. 입력받은 레벨: {_level}");
         }
         else
         {
@@ -91,7 +91,7 @@ public class FindCorectionValueEvent
 
         if (levelDatabase.maxLevel < _level + 1)  //최대레벨 예외처리
         {
-            Debug.LogWarning($"{levelDatabase.maxLevel} 레벨의 이상의 레벨은 존재하지 않습니다. 입력받은 레벨: {_level + 1}");
+            LogUtil.LogWarning($"{levelDatabase.maxLevel} 레벨의 이상의 레벨은 존재하지 않습니다. 입력받은 레벨: {_level + 1}");
         }
         else
         {

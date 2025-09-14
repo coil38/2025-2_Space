@@ -23,7 +23,7 @@ public class DamageEffectManager : MonoBehaviour
     {
         if (textPrefab == null || effectCanvas == null)
         {
-            Debug.LogError("프리팹 혹은 프리팹에 캔버스가 없읍니다.");
+            LogUtil.LogError("프리팹 혹은 프리팹에 캔버스가 없읍니다.");
             return;
         }
 

@@ -18,7 +18,7 @@ public class PlayerCore : MonoBehaviour
         {
             EventManager.f_CorrectionValueEvent.levelDatabase = DataManager.instance._levelDatabase;  //데이터 베이스 할당
         }
-        else Debug.LogError("레벨데이터 베이스가 PlayerCore시스템에 할당되지 않았습니다.");
+        else LogUtil.LogError("레벨데이터 베이스가 PlayerCore시스템에 할당되지 않았습니다.");
         EventManager.f_CorrectionValueEvent.FindMaxExpValue(Level);  //현재 레벨의 최대 경험치량 할당 이벤트 실행
         maxLevel = EventManager.f_CorrectionValueEvent.levelDatabase.maxLevel;  //최대 레벨 갱신
         GetDarkMatter(0, true);  //UI 갱신
@@ -42,7 +42,7 @@ public class PlayerCore : MonoBehaviour
     {
         if (PlayerUIManager.instance == null)     //예외처리
         {
-            Debug.LogError("플레이어 메인 UI를 찾을 수 없습니다.");
+            LogUtil.LogError("플레이어 메인 UI를 찾을 수 없습니다.");
             return;
         }
 
@@ -73,6 +73,6 @@ public class PlayerCore : MonoBehaviour
     {
         maxEXP = e.maxEXP;  //최대 경험치 갱신
         nextMaxEXP = e.nextMaxEXP;  //다음 최대 경험치 갱신
-        //Debug.Log($"이벤트 실행됨. 최대경험치량: {e.maxEXP}, 다음 최대경험치량: {e.nextMaxEXP}");
+        //LogUtil.Log($"이벤트 실행됨. 최대경험치량: {e.maxEXP}, 다음 최대경험치량: {e.nextMaxEXP}");
     }
 }

@@ -25,7 +25,7 @@ public class SoundTest : MonoBehaviour
 
         if (database == null)
         {
-            Debug.Log("사운드 데이터 베이스가 존재하지 않다");
+            LogUtil.Log("사운드 데이터 베이스가 존재하지 않다");
             return;
         }
 
@@ -38,11 +38,5 @@ public class SoundTest : MonoBehaviour
             temp.isLoop = s.loop;
             temp.clip = s.clip;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

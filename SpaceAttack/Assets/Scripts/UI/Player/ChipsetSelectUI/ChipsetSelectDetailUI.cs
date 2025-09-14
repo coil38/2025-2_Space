@@ -149,7 +149,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
         switch (currentChipset.chipsetName)
         {
             case "Chipset_Warrior":
-                Debug.Log("전사 칩셋 장착");
+                LogUtil.Log("전사 칩셋 장착");
                 if (inventoryManager != null)
                     inventoryManager.chipSet = warriorPrefab.GetComponent<ChipSetType>();
 
@@ -158,7 +158,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
                 break;
 
             case "Chipset_Archer":
-                Debug.Log("궁수 칩셋 장착");
+                LogUtil.Log("궁수 칩셋 장착");
                 if (inventoryManager != null)
                     inventoryManager.chipSet = archerPrefab.GetComponent<ChipSetType>();
 

@@ -54,7 +54,7 @@ public class PlayerCoreUI : MonoBehaviour
 
     private void Update()
     {
-        //Debug.Log($"현재 대기자수: {expInfos.Count}");
+        //LogUtil.Log($"현재 대기자수: {expInfos.Count}");
 
         if (expInfos.Count > 0 && currentCor == null)  //대기중인 정보들 업데이트
         {
@@ -73,10 +73,10 @@ public class PlayerCoreUI : MonoBehaviour
 
         bool isLevelUping = Variables.Object(this.gameObject).Get<bool>("isLevelUping");
 
-        Debug.Log("대기중..");
+        LogUtil.Log("대기중..");
         yield return new WaitUntil(() => Variables.Object(this.gameObject).Get<bool>("isLevelUping"));      //레벨업 연출 끝날 때까지 대기
         Variables.Object(this.gameObject).Set("isLevelUping", false);
-        Debug.Log("대기 종료");
+        LogUtil.Log("대기 종료");
 
         Variables.Object(this.gameObject).Set("currentLevel", expInfo.currentLevel);   //변수 할당
         Variables.Object(this.gameObject).Set("targetLevel", expInfo.currentLevel + 1);

@@ -32,7 +32,7 @@ public class WeaponArrow : MonoBehaviour
     {
         if (rb == null)
         {
-            Debug.Log("없음");
+            LogUtil.Log("없음");
         }
         rb.AddForce(dir * speed, ForceMode.Impulse);
         startPos = _startPos;
@@ -49,7 +49,7 @@ public class WeaponArrow : MonoBehaviour
             //AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);
 
             //collision.gameObject.SendMessage("ApplyDamage", attackInfo);
-            Debug.Log("화살 공격");
+            LogUtil.Log("화살 공격");
 
             Destroy(gameObject);
         }

@@ -10,7 +10,7 @@ public class ChipsetSelectObject : MonoBehaviour
     {
         if (chipsetSelectUI == null)
         {
-            Debug.LogError("칩셋선택UI프리팹이 할당되지 않았습니다.");
+            LogUtil.LogError("칩셋선택UI프리팹이 할당되지 않았습니다.");
             return;
         }
 

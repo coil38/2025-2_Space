@@ -92,7 +92,7 @@ public class CharacterMovement : MonoBehaviour
             dashDis = Mathf.Max(dashDis, 0f);
         }
 
-        //Debug.Log(dashDis);
+        //LogUtil.Log(dashDis);
 
         PlayerTimeSystem.c_dashTimer.Start();   //대쉬 쿨타임 시작
         PlayerTimeSystem.w_dashTimer.Start();   //대쉬 대기 시간(0.25 초 동안)
@@ -118,6 +118,8 @@ public class CharacterMovement : MonoBehaviour
 
         if (timer <= 0.1f || PlayerStatus.Instance.isStuned) 
             startDash = false;
+
+        LogUtil.Log("d");
     }
 
     private void ChangeCurrentDir()
@@ -150,7 +152,7 @@ public class CharacterMovement : MonoBehaviour
         if (chipset != null) // 감지 대상이 칩셋이면 칩셋받기
         {
             inventory.chipSet = chipset;
-            Debug.Log("아이템 획득");
+            LogUtil.Log("아이템 획득");
         }
     }
 

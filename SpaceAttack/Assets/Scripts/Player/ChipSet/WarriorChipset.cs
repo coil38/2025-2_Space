@@ -54,7 +54,7 @@ public class WarriorChipset : ChipSetType
             n_DamageRate += rate;
         }
         _weapon.damage = (PlayerStatus.normalDamage * n_DamageRate / 100f) * _weapon.damageRate;  //공격력 연산
-        Debug.Log($"총 공격력: {_weapon.damage}, 누적 공격수치: {n_DamageRate}");
+        LogUtil.Log($"총 공격력: {_weapon.damage}, 누적 공격수치: {n_DamageRate}");
         foreach (var skill in _skills)
             skill.damage = (PlayerStatus.normalDamage * n_DamageRate / 100f) * skill.damageRate;
     }

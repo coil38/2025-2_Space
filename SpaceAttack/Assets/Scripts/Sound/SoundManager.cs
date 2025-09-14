@@ -37,7 +37,7 @@ public class SoundManager : MonoBehaviour
 
         if (database == null)
         {
-            Debug.Log("사운드 데이터 베이스가 존재하지 않다");
+            LogUtil.Log("사운드 데이터 베이스가 존재하지 않다");
             return;
         }
 
@@ -46,7 +46,7 @@ public class SoundManager : MonoBehaviour
         {
             if (sound == null)
             {
-                Debug.Log("sound가 존재하지 않습니다.");
+                LogUtil.Log("sound가 존재하지 않습니다.");
                 return;
             }
 
@@ -167,7 +167,7 @@ public class SoundManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"{attribute}는 확인할 수 없는 속성입니다. 다시 체크해주세요");
+            LogUtil.LogError($"{attribute}는 확인할 수 없는 속성입니다. 다시 체크해주세요");
         }
     }
 
@@ -180,10 +180,10 @@ public class SoundManager : MonoBehaviour
             {
                 if (playedBGM != null)
                 {
-                    Debug.Log("재생취소");
+                    LogUtil.Log("재생취소");
                     StopBGMOrUISound(playedBGM.soundID, SoundType.BGM);  //이미 재생중이던 브금 재생종료
                 }
-                Debug.Log("재생");
+                LogUtil.Log("재생");
                 playedBGM = sound;
                 playedSound.Add(sound);
                 sound.audioSource.Play();
@@ -239,13 +239,13 @@ public class SoundManager : MonoBehaviour
                     sound.audioSource.Play();               //사운드 재생
                     playedSound.Add(sound);
 
-                    Debug.Log($"{sound.soundName} 재생");
+                    LogUtil.Log($"{sound.soundName} 재생");
                 }
             }
         }
         else
         {
-            Debug.LogError($"{obj}에 해당하는 등록정보를 확인할 수 없다(해당 오브젝트가 등록을 안한 듯).");
+            LogUtil.LogError($"{obj}에 해당하는 등록정보를 확인할 수 없다(해당 오브젝트가 등록을 안한 듯).");
         }
     }
 
@@ -265,7 +265,7 @@ public class SoundManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"{obj}에 해당하는 등록정보를 확인할 수 없다(해당 오브젝트가 등록을 안한 듯).");
+            LogUtil.LogError($"{obj}에 해당하는 등록정보를 확인할 수 없다(해당 오브젝트가 등록을 안한 듯).");
         }
     }
 }

@@ -44,14 +44,14 @@ public class InitializationOrderer : MonoBehaviour
         if (DataManager == null || EventManager == null || playerStatus == null || playerCore == null 
             || soundManager == null || bgmManager == null || uISoundManager == null || playerUIManager == null)
         {
-            if (DataManager == null) Debug.LogError("DataManger가 존재하지 않음.");
-            if (EventManager == null) Debug.LogError("EventManager가 존재하지 않음.");
-            if (playerStatus == null) Debug.LogError("playerStatus가 존재하지 않음.");
-            if (playerCore == null) Debug.LogError("playerCore가 존재하지 않음.");
-            if (soundManager == null) Debug.LogError("soundManager가 존재하지 않음.");
-            if (bgmManager == null) Debug.LogError("bgmManager가 존재하지 않음.");
-            if (uISoundManager == null) Debug.LogError("uISoundManager가 존재하지 않음.");
-            if(playerUIManager == null) Debug.LogError("playerUIManager가 존재하지 않음.");
+            if (DataManager == null) LogUtil.LogError("DataManger가 존재하지 않음.");
+            if (EventManager == null) LogUtil.LogError("EventManager가 존재하지 않음.");
+            if (playerStatus == null) LogUtil.LogError("playerStatus가 존재하지 않음.");
+            if (playerCore == null) LogUtil.LogError("playerCore가 존재하지 않음.");
+            if (soundManager == null) LogUtil.LogError("soundManager가 존재하지 않음.");
+            if (bgmManager == null) LogUtil.LogError("bgmManager가 존재하지 않음.");
+            if (uISoundManager == null) LogUtil.LogError("uISoundManager가 존재하지 않음.");
+            if(playerUIManager == null) LogUtil.LogError("playerUIManager가 존재하지 않음.");
 
             yield break;
         }

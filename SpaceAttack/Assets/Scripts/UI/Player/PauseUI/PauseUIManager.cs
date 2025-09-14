@@ -102,7 +102,7 @@ public class PauseUIManager : MonoBehaviour
 
     private void ResumeGame()
     {
-        Debug.Log("게임을 재개합니다.");
+        LogUtil.Log("게임을 재개합니다.");
         UISoundManager.PlayeOnAndOffPanel();  //패널닫기 사운드 재생
         pauseUIPanel.SetActive(false);
         Time.timeScale = 1f;           //일시정지 해제
@@ -110,28 +110,28 @@ public class PauseUIManager : MonoBehaviour
 
     private void PlayNewGame()
     {
-        Debug.Log("새로운 게임을 시작합니다.");
+        LogUtil.Log("새로운 게임을 시작합니다.");
     }
 
     private void OnAchievementPanel()
     {
-        Debug.Log("업적UI가 활성화되었습니다.");
+        LogUtil.Log("업적UI가 활성화되었습니다.");
     }
 
     private void OnHelpPanel()
     {
-        Debug.Log("도움말UI가 활성화되었습니다.");
+        LogUtil.Log("도움말UI가 활성화되었습니다.");
     }
 
     private void OnSettingPanel()
     {
-        Debug.Log("설정UI가 활성화되었습니다.");
+        LogUtil.Log("설정UI가 활성화되었습니다.");
         settingUIPanel.SetActive(true);
     }
 
     private void ExitGame()
     {
-        Debug.Log("게임을 종료합니다.");
+        LogUtil.Log("게임을 종료합니다.");
         Application.Quit();
     }
 }
