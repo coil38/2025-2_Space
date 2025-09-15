@@ -81,7 +81,7 @@ public class PlayerInputController : MonoBehaviour
     {
         float temp1 = verticalAction.ReadValue<float>();
         float temp2 = horizontalAction.ReadValue<float>();
-        
+
         if (temp1 == 0)   //상,하방향값이 0일 경우, 
         {
             verticalValue = 0f;

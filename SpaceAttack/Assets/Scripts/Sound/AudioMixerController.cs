@@ -15,19 +15,22 @@ public class AudioMixerController : MonoBehaviour
     [Header("설정UI")]
     [SerializeField] private SettingUIManager settingUIManager;
 
-    private void Awake()
-    {
-        MasterSlider.onValueChanged.AddListener(SetMasterVolume);
-        BGMSlider.onValueChanged.AddListener(SetBGMVolume);
-        SFXSlider.onValueChanged.AddListener(SetSFXVolume);
-        UISoundSlider.onValueChanged.AddListener(SetUIVolume);
-
-        //사운드값에 맞게 스라이더 초기화
-        ResetVolumeSettings();
-    }
+    private bool isOneTime = true;
 
     private void OnEnable()
     {
+        if (isOneTime)
+        {
+            MasterSlider.onValueChanged.AddListener(SetMasterVolume);
+            BGMSlider.onValueChanged.AddListener(SetBGMVolume);
+            SFXSlider.onValueChanged.AddListener(SetSFXVolume);
+            UISoundSlider.onValueChanged.AddListener(SetUIVolume);
+
+            //사운드값에 맞게 스라이더 초기화
+            ResetVolumeSettings();
+            isOneTime = false;
+        }
+
         settingUIManager.cancelSaveEvent += CancelSavedVolums;
         settingUIManager.saveEvent += SaveVolumeSettings;
         settingUIManager.resetEvent += ResetVolumeSettings;
@@ -100,7 +103,7 @@ public class AudioMixerController : MonoBehaviour
         //Debug.Log($"현재 슬라이드값: {volume}, 실제 볼륨값: {Mathf.Log10(volume) * 20f}");
 
         //변경사항 체크
-        settingUIManager.isChanged.Enqueue(true);
+        if(!isOneTime) settingUIManager.isChanged.Enqueue(true);
     }
 
     public void SetBGMVolume(float volume)  //브금 설정
@@ -109,7 +112,7 @@ public class AudioMixerController : MonoBehaviour
         else audioMixer.SetFloat("BGM", Mathf.Log10(volume) * 20f + 3f);
 
         //변경사항 체크
-        settingUIManager.isChanged.Enqueue(true);
+        if (!isOneTime) settingUIManager.isChanged.Enqueue(true);
     }
 
     public void SetSFXVolume(float volume)  //효과음 설정
@@ -118,7 +121,7 @@ public class AudioMixerController : MonoBehaviour
         else audioMixer.SetFloat("SFX", Mathf.Log10(volume) * 20f + 3f);
 
         //변경사항 체크
-        settingUIManager.isChanged.Enqueue(true);
+        if (!isOneTime) settingUIManager.isChanged.Enqueue(true);
     }
 
     public void SetUIVolume(float volume)  //UI 사운드 설정
@@ -127,6 +130,6 @@ public class AudioMixerController : MonoBehaviour
         else audioMixer.SetFloat("UI", Mathf.Log10(volume) * 20f + 3f);
 
         //변경사항 체크
-        settingUIManager.isChanged.Enqueue(true);
+        if (!isOneTime) settingUIManager.isChanged.Enqueue(true);
     }
 }

@@ -30,7 +30,7 @@ public class PlayerAttack : MonoBehaviour
     }
     void Update()
     {
-        if(playerState.isDead) return;   //사망시, 입력 안됨
+        if(playerState.isDead || Time.timeScale == 0) return;   //사망시, 입력 안됨
 
         CheckWeaponAttack();
         CheckSkillAttack();

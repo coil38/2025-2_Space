@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()            //플레이어 조작조건 및 예외처리
     {
-        if (playerState.isDead) return;
+        if (playerState.isDead || Time.timeScale == 0) return;
 
         if (!playerState.isDashing && !PlayerTimeSystem.stunTimer.IsRunning())  //대쉬 혹은 스턴 상태에서 이동 안됨
         {

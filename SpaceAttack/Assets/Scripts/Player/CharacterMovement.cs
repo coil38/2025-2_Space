@@ -118,8 +118,6 @@ public class CharacterMovement : MonoBehaviour
 
         if (timer <= 0.1f || PlayerStatus.Instance.isStuned) 
             startDash = false;
-
-        LogUtil.Log("d");
     }
 
     private void ChangeCurrentDir()
