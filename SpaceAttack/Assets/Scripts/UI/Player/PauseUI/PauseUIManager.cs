@@ -64,7 +64,7 @@ public class PauseUIManager : MonoBehaviour
         {
             //특정씬에서만 활성화하게 예외처리-----------------//
             pauseUIPanel.SetActive(true);
-            UISoundManager.PlayeOnAndOffPanel();  //패널열기 사운드 재생
+            UISoundManager.PlayeOnAndOffPanelSound();  //패널열기 사운드 재생
             Time.timeScale = 0f;           //일시정지
         }
     }
@@ -103,7 +103,7 @@ public class PauseUIManager : MonoBehaviour
     private void ResumeGame()
     {
         LogUtil.Log("게임을 재개합니다.");
-        UISoundManager.PlayeOnAndOffPanel();  //패널닫기 사운드 재생
+        UISoundManager.PlayeOnAndOffPanelSound();  //패널닫기 사운드 재생
         pauseUIPanel.SetActive(false);
         Time.timeScale = 1f;           //일시정지 해제
     }

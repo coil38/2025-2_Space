@@ -76,11 +76,8 @@ public class CharacterMovement : MonoBehaviour
         playerState.m_Particle.Stop();    //이동이 멈추면 파티클 종료
         playerState.d_Particle.Play();    //대쉬할 경우, 파티클 재생
 
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.PauseSound("Run");
-            AudioManager.instance.PlaySound("Dash");
-        }
+        PlayerSoundManager.PlayPlayerMoveSound();
+        PlayerSoundManager.PlayPlayerDashSound();
 
         dashDis = playerState.m_DashDistance;
 

@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 9131843138702807753}
   - component: {fileID: 5587432419526965161}
   - component: {fileID: 3810752942071787923}
+  - component: {fileID: 8201235517080617666}
   m_Layer: 13
   m_Name: WarriorChipset
   m_TagString: Untagged
@@ -146,6 +147,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9178b849ccbad784aa1f7609f3b4bf46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  floorSpriteSetter: {fileID: 0}
+  slashSpriteSetter: {fileID: 0}
 --- !u!114 &3682826625257007524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,6 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef54addaca257e4f85723d9c4c5f15a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  floorSpriteSetter: {fileID: 0}
 --- !u!114 &9131843138702807753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,3 +219,15 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8201235517080617666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8654506091529224949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cd870fe4fe0b614198a81d3b279d15b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

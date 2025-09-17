@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e23ab0b78cb75145871b1b9c9415ed3, type: 3}
-  m_Name: Sound_SwordSkill_2
+  m_Name: Sound_CharacterMove
   m_EditorClassIdentifier: 
-  soundID: 2005
-  soundName: SwordSkill_2
-  soundAttribute: Warrior
-  volume: 1
+  soundID: 2012
+  soundName: CharacterMove
+  soundAttribute: Character
+  volume: 0.6
   pitch: 1
   loop: 0
   is3D: 0
   soundType: 1
-  clip: {fileID: 8300000, guid: 63b19450ee5147e4b93d7453f0f461d8, type: 3}
+  clip: {fileID: 8300000, guid: 5baaf2c6262248747b124e64bbf5257e, type: 3}
   mixerGroup: {fileID: 6909636423580828950, guid: cdd5aeb38d2190b419998f3af9b3d3a6,
     type: 2}

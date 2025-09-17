@@ -64,8 +64,7 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
         {
             if (PlayerTimeSystem.w_BaseAttackTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
 
-            if (AudioManager.instance != null)
-                AudioManager.instance.PlaySound("Attack");
+            ChipsetSoundManager.PlayPlayerAttackSound();   //전사칩셋 기본공격 사운드 재생
 
             PlayerTimeSystem.w_BaseAttackTimer = w_AttackTimer; //공격 타이머 할당
 

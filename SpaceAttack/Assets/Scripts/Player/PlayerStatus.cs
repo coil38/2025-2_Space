@@ -201,8 +201,7 @@ public class PlayerStatus : MonoBehaviour
         }
         else
         {
-            if (AudioManager.instance != null)
-                AudioManager.instance.PlaySound("Hit");
+            PlayerSoundManager.PlayPlayerHitSound();
 
             if (!isRooted)
             {

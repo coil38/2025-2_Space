@@ -116,8 +116,7 @@ public class TestEnemy : MonoBehaviour
         }
         else
         {
-            if (AudioManager.instance != null)
-                AudioManager.instance.PlaySound("Hit");
+            PlayerSoundManager.PlayPlayerHitSound();
 
             LogUtil.Log("적 피격");
 

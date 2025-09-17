@@ -18,6 +18,8 @@ public class SoundManager : MonoBehaviour
 
     private List<SoundInfo> RegisterTemp = new List<SoundInfo>();    //사운드 등록용
 
+    public bool endInitialize = false;    //SoundManager 초기화완료여부 확인용 불값
+
     private void Awake()
     {
         if (instance == null)
@@ -55,20 +57,27 @@ public class SoundManager : MonoBehaviour
                 BGMOrUISoundLibrary.Add(sound);
                 continue;
             }
-
-            if (temp.ContainsKey(sound.soundAttribute))
-            {
-                temp[sound.soundAttribute].Add(sound);                 //사운드SO 리스트 추가
-            }
             else
             {
-                temp.Add(sound.soundAttribute, new List<SoundSO>());   //사운드SO 리스트 생성
-                temp[sound.soundAttribute].Add(sound);                 //사운드SO 리스트 추가
+                if (temp.ContainsKey(sound.soundAttribute))
+                {
+                    temp[sound.soundAttribute].Add(sound);                 //사운드SO 리스트 추가
+                    //LogUtil.Log($"사운드 종족:{sound.soundAttribute}, 사운드 이름: {sound.soundName}");
+                }
+                else
+                {
+                    temp.Add(sound.soundAttribute, new List<SoundSO>());   //사운드SO 리스트 생성
+                    temp[sound.soundAttribute].Add(sound);                 //사운드SO 리스트 추가
+                    //LogUtil.Log($"사운드 종족:{sound.soundAttribute}, 사운드 이름: {sound.soundName}");
+                }
             }
         }
 
         foreach (var sound in temp)
             soundLibrary.Add(sound.Key, sound.Value.ToArray());        //필드로 변환
+
+        if(temp.Count == soundLibrary.Count)
+            endInitialize = true;
     }
 
     public void RegisterGameObjectBySoundType(GameObject obj, SoundType soundType)  //BGM과 UISound용 등록함수
@@ -122,7 +131,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void RegisterGameObjectByAttribute(GameObject obj, string attribute, SoundType soundType)   //해당 오브젝트가 필요한 오디오소스 할당 및 인스턴스주소 등록
+    public void RegisterGameObjectByAttribute(GameObject obj, string attribute)   //해당 오브젝트가 필요한 오디오소스 할당 및 인스턴스주소 등록
     {
         if (soundLibrary.TryGetValue(attribute, out var sounds))
         {
@@ -239,7 +248,7 @@ public class SoundManager : MonoBehaviour
                     sound.audioSource.Play();               //사운드 재생
                     playedSound.Add(sound);
 
-                    LogUtil.Log($"{sound.soundName} 재생");
+                    //LogUtil.Log($"{sound.soundName} 재생");
                 }
             }
         }

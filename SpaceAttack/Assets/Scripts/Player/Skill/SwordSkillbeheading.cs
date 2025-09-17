@@ -68,8 +68,7 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
         {
             if (coolTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
 
-            if (AudioManager.instance != null)
-                AudioManager.instance.PlaySound("Attack");  //참격 사운드 재생
+            //참격 사운드 재생
             
             //공격 애니메이션 실행
 

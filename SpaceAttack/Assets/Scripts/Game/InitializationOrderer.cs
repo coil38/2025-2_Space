@@ -13,6 +13,7 @@ public class InitializationOrderer : MonoBehaviour
     private SoundManager soundManager;    //DataManager -> soundDatabase관련
     private BGMManager bgmManager;        //SoundManager.instance관련
     private UISoundManager uISoundManager; //SoundManager.instance관련
+    private PlayerSoundManager playerSoundManager; //SoundManager.instance관련
     private PlayerUIManager playerUIManager; //PlayerUIManager.instance관련
 
     private void Awake()
@@ -39,10 +40,11 @@ public class InitializationOrderer : MonoBehaviour
         soundManager = FindAnyObjectByType<SoundManager>();
         bgmManager = FindAnyObjectByType<BGMManager>();
         uISoundManager = FindAnyObjectByType<UISoundManager>();
+        playerSoundManager = FindAnyObjectByType<PlayerSoundManager>();
         playerUIManager = FindAnyObjectByType<PlayerUIManager>();
 
         if (DataManager == null || EventManager == null || playerStatus == null || playerCore == null 
-            || soundManager == null || bgmManager == null || uISoundManager == null || playerUIManager == null)
+            || soundManager == null || bgmManager == null || uISoundManager == null || playerSoundManager == null|| playerUIManager == null)
         {
             if (DataManager == null) LogUtil.LogError("DataManger가 존재하지 않음.");
             if (EventManager == null) LogUtil.LogError("EventManager가 존재하지 않음.");
@@ -51,7 +53,8 @@ public class InitializationOrderer : MonoBehaviour
             if (soundManager == null) LogUtil.LogError("soundManager가 존재하지 않음.");
             if (bgmManager == null) LogUtil.LogError("bgmManager가 존재하지 않음.");
             if (uISoundManager == null) LogUtil.LogError("uISoundManager가 존재하지 않음.");
-            if(playerUIManager == null) LogUtil.LogError("playerUIManager가 존재하지 않음.");
+            if (playerSoundManager == null) LogUtil.LogError("playerSoundManager가 존재하지 않음.");
+            if (playerUIManager == null) LogUtil.LogError("playerUIManager가 존재하지 않음.");
 
             yield break;
         }
@@ -67,8 +70,9 @@ public class InitializationOrderer : MonoBehaviour
         playerCore.InitializeEvent();    //EventManger -> f_CorrectionValueEvent, DataManger -> Level 관리, PlayerUIManager 인스턴스
         soundManager.Initialize();       //DataManager -> soundDatabase 받기
 
-        yield return new WaitUntil(() => SoundManager.instance != null);  //SoundManager인스턴스 존재 할 시, 넘어감
+        yield return new WaitUntil(() => SoundManager.instance != null && SoundManager.instance.endInitialize);  //SoundManager인스턴스 존재 할 시, 넘어감
         bgmManager.Initialized();        //SoundManager에서 BGM등록
         uISoundManager.Initialized();    //SoundManager에서 UI등록
+        playerSoundManager.Initialized(); //SoundManager에서 playerSound등록
     }
 }

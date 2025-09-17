@@ -25,7 +25,7 @@ public class ChipsetSelectUI : MonoBehaviour
 
     private void OnEnable()
     {
-        UISoundManager.PlayeOnAndOffPanel(); //패널열기혹은 닫기 사운드 재생
+        UISoundManager.PlayeOnAndOffPanelSound(); //패널열기혹은 닫기 사운드 재생
 
         if (chipsetDatabase == null || chipsetLayoutObject == null || lockedIcon == null)  //없을 경우, 반환처리
             return;
@@ -47,7 +47,7 @@ public class ChipsetSelectUI : MonoBehaviour
         if (PauseUIManager.Instance != null)
             PauseUIManager.Instance.cannotOnPanel = false;  //일시정지UI 활성화 방지 해제
 
-        UISoundManager.PlayeOnAndOffPanel(); //패널열기혹은 닫기 사운드 재생
+        UISoundManager.PlayeOnAndOffPanelSound(); //패널열기혹은 닫기 사운드 재생
     }
 
     private void Update()
