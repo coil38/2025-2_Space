@@ -11,6 +11,6 @@ public abstract class ChipSetType : MonoBehaviour
     public abstract Sprite iconImage { get; protected set; }
     public abstract GameObject prefab { get; protected set; }
     public abstract Animator animator { get; protected set; }
-    public abstract void SetCorrectionValue(object obj, FindCorectionValueEvent e);
+    public abstract void SetCorrectionValue(object obj, PlayerEvent e);
 
 }

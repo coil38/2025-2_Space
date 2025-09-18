@@ -18,7 +18,7 @@ public class SoundManager : MonoBehaviour
 
     private List<SoundInfo> RegisterTemp = new List<SoundInfo>();    //사운드 등록용
 
-    public bool endInitialize = false;    //SoundManager 초기화완료여부 확인용 불값
+    [HideInInspector] public bool endInitialize = false;    //SoundManager 초기화완료여부 확인용 불값
 
     private void Awake()
     {

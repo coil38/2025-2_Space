@@ -10,12 +10,12 @@ public class PlayerStatus : MonoBehaviour
     [Header("PlayerInfo")]
     public static int m_hp = 10;              //체력
     public static int m_maxhp = 10;           //최대 체력
-    public float m_speed = 5f;            //이동 속도
+    public static float m_speed = 5f;         //이동 속도
     public float m_DashDistance = 3.2f;   //대쉬 거리
     public float itemDetectDistance = 1.8f; //아이템 감지거리
-    public static float criticalRate = 5f;         //치명타 확률
-    public static float criticalHitRate = 50f;     //치명타 피해
-    public float missRate = 0f;             //회피율
+    public static float criticalChanceRate = 0.05f;         //치명타 확률
+    public static float criticalRate = 0.5f;     //치명타 피해
+    public static float missRate = 0.01f;        //회피율
     public static float normalDamage = 5;       //기본공격력
 
     public ParticleSystem m_Particle;
@@ -223,13 +223,13 @@ public class PlayerStatus : MonoBehaviour
         transform.localScale = localScale;
     }
 
-    public void SetCorrectionValue(object obj, FindCorectionValueEvent e)
+    public void SetCorrectionValue(object obj, PlayerEvent e)
     {
         if (e.correctablility)  //플레이어 스텟 보정치 주입
         {
             //LogUtil.Log("플레이어 스텟 상승");
             m_maxhp += e.heartCorrection;
-            m_speed *= 1 + e.speedCorrection / 100f;
+            m_speed *= 1 + e.speedCorrection;
             //LogUtil.Log($"{e.heartCorrection}, {e.speedCorrection} / 100");
 
             if (PlayerUIManager.instance != null)

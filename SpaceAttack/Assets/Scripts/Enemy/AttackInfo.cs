@@ -30,10 +30,10 @@ public struct AttackInfo
 
     public float CheckAndSetCritical(float damage, float criticalRate, float criticalHitRate)
     {
-        float randomValue = Random.Range(0.01f, 100f);
+        float randomValue = Random.value;
         if (randomValue < criticalRate) //크리티컬 처리
         {
-            damage += damage * criticalHitRate / 100f;
+            damage += damage * criticalHitRate;
         }
 
         return damage;

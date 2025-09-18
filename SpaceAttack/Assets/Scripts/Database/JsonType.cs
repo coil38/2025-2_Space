@@ -6,5 +6,6 @@ public enum JsonType
     SystemSound,
     Level,
     ChipsetComponent,
-    Chipset
+    Chipset,
+    Relic
 }

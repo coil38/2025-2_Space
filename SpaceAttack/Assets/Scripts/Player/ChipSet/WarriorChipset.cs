@@ -23,7 +23,7 @@ public class WarriorChipset : ChipSetType
 
     private Queue<float> n_DamageRates = new Queue<float>();
     private Queue<float> s_DamageRates = new Queue<float>();  //임시 ( 유물이 장착 또는 해지에 따라서 특정 수치가 빠져야됨 )
-    public override void SetCorrectionValue(object obj, FindCorectionValueEvent e)
+    public override void SetCorrectionValue(object obj, PlayerEvent e)
     {
         if (e.correctablility)  //공격력 보정치 주입
         {
@@ -48,15 +48,15 @@ public class WarriorChipset : ChipSetType
 
     private void UpdateAttackDamage()
     {
-        float n_DamageRate = 100f;
+        float n_DamageRate = 1f;
         foreach (var rate in n_DamageRates)
         {
             n_DamageRate += rate;
         }
-        _weapon.damage = (PlayerStatus.normalDamage * n_DamageRate / 100f) * _weapon.damageRate;  //공격력 연산
+        _weapon.damage = (PlayerStatus.normalDamage * n_DamageRate) * _weapon.damageRate;  //공격력 연산
         LogUtil.Log($"총 공격력: {_weapon.damage}, 누적 공격수치: {n_DamageRate}");
         foreach (var skill in _skills)
-            skill.damage = (PlayerStatus.normalDamage * n_DamageRate / 100f) * skill.damageRate;
+            skill.damage = (PlayerStatus.normalDamage * n_DamageRate) * skill.damageRate;
     }
 
     private void OnEnable()

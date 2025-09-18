@@ -9,8 +9,8 @@ public class LevelData
     public string levelKey;
     public int level;
     public int maxEX;
-    public int? damageCorrection;
+    public float? damageCorrection;
     public int? heartCorrection;
-    public int? speedCorrection;
+    public float? speedCorrection;
     public int? unlockedSkill;
 }

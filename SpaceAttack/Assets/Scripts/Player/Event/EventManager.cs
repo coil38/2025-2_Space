@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class EventManager : MonoBehaviour
 {
-    public static FindCorectionValueEvent f_CorrectionValueEvent;    // 무기,스킬, 레벨 등의 보정수치를 받기 위한 이벤트
+    public static PlayerEvent f_CorrectionValueEvent;    // 무기,스킬, 레벨 등의 보정수치를 받기 위한 이벤트
     void Awake()
     {
-        f_CorrectionValueEvent = new FindCorectionValueEvent();
+        f_CorrectionValueEvent = new PlayerEvent();
     }
 }

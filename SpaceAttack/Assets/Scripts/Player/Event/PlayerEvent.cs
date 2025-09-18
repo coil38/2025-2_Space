@@ -3,42 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class FindCorectionValueEvent
+public class PlayerEvent
 {
-    private EventHandler<FindCorectionValueEvent> _correctionEventHandler;
+    private EventHandler<PlayerEvent> _correctionEventHandler;  //플레이어 레벨 보정치 이벤트
 
-    public event EventHandler<FindCorectionValueEvent> correctionEventHandler
+    public event EventHandler<PlayerEvent> correctionEventHandler
     {
-        add
-        {
-            _correctionEventHandler += value;
-        }
-        remove
-        {
-            _correctionEventHandler -= value;
-        }
+        add { _correctionEventHandler += value; }
+        remove{ _correctionEventHandler -= value; }
     }
 
-    private EventHandler<FindCorectionValueEvent> _levelEventHandler;
+    private EventHandler<PlayerEvent> _levelEventHandler;  //플레이어 레벨정보 얻기 이벤트
 
-    public event EventHandler<FindCorectionValueEvent> levelEventHandler
+    public event EventHandler<PlayerEvent> levelEventHandler
     {
-        add
-        {
-            _levelEventHandler += value;
-        }
-        remove
-        {
-            _levelEventHandler -= value;
-        }
+        add { _levelEventHandler += value; }
+        remove { _levelEventHandler -= value; }
     }
 
     public LevelDatabaseSO levelDatabase;   //레벨 보정관련 데이터 베이스
 
+
     public bool correctablility;
-    public int damageCorrection;
+    public float damageCorrection;
     public int heartCorrection;
-    public int speedCorrection;
+    public float speedCorrection;
     public bool unlockability;
     public int skillNumber;
 

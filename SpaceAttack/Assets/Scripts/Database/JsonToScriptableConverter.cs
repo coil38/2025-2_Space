@@ -101,6 +101,12 @@ public class JsonToScriptableConverter : EditorWindow
                 ChipsetDataLoader.createDatabase = createDatabase;
                 ChipsetDataLoader.ConvertJsonToScriptableObjects();
             break;
+
+            case JsonType.Relic:
+                RelicDataLoader.jsonFilePath = jsonFilePath;
+                RelicDataLoader.createDatabase = createDatabase;
+                RelicDataLoader.ConvertJsonToScriptableObjects();
+            break;
         }
     }
 }

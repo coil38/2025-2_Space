@@ -127,7 +127,7 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
                 if (target.GetComponent<EnemyBase>().isDead) return;  //만약 타겟이 사망했다면 반환처리
 
             bool isCritical = false;
-            float temp = attackInfo.CheckAndSetCritical(damage, PlayerStatus.criticalRate, PlayerStatus.criticalHitRate);
+            float temp = attackInfo.CheckAndSetCritical(damage, PlayerStatus.criticalChanceRate, PlayerStatus.criticalRate);
             if (temp > damage) isCritical = true;  //크리티컬 처리
 
             attackInfo.damage = temp; //데미지 재설정

@@ -9,6 +9,7 @@ public class PlayerUIManager : MonoBehaviour
 
     [SerializeField] PlayerHPUI playerHPUI;
     [SerializeField] PlayerCoreUI playerCoreUI;
+    [SerializeField] DarkMaterialUI playerDarkMaterialUI;
 
     [Header("칩셋 UI 이미지")]
     [SerializeField] Image chipsetImage;
@@ -50,5 +51,10 @@ public class PlayerUIManager : MonoBehaviour
         skill1Image.sprite = skill1Icon;
         skill2Image.sprite = skill2Icon;
         skill3Image.sprite = skill3Icon;
+    }
+
+    public void ChangeDarkMaterialUI(bool isAdd, float value)
+    {
+        playerDarkMaterialUI.ChangeDarkMaterialUI(isAdd, value);
     }
 }

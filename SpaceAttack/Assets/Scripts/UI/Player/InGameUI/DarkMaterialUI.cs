@@ -10,17 +10,30 @@ public class DarkMaterialUI : MonoBehaviour
     public float aniDuration = 0.3f;
     public Ease aniType;
 
-    private float TestValue = 0.4f;
-    private float currentSliderValue = 1f;
+    private float currentSliderValue = 0f;
     void Start()
     {
         m_Slider = GetComponent<Slider>();
-        m_Slider.value = 1f;
     }
 
-    public void ChangeDarkMaterialUI()
+    public void ChangeDarkMaterialUI(bool isAdd, float value)
     {
-        currentSliderValue -= TestValue;
+        if (isAdd)
+        {
+            if (currentSliderValue + value > 100) return;
+            else
+            {
+                currentSliderValue = currentSliderValue + value;
+            }
+        }
+        else
+        {
+            if (currentSliderValue - value < 0) return;
+            else
+            {
+                currentSliderValue = currentSliderValue - value;
+            }
+        }
 
         m_Slider.DOValue(currentSliderValue, aniDuration).SetEase(aniType);
     }

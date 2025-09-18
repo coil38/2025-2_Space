@@ -69,7 +69,7 @@ public class PlayerCore : MonoBehaviour
 
     }
 
-    public void GetMaxExpValue(object obj, FindCorectionValueEvent e)
+    public void GetMaxExpValue(object obj, PlayerEvent e)
     {
         maxEXP = e.maxEXP;  //최대 경험치 갱신
         nextMaxEXP = e.nextMaxEXP;  //다음 최대 경험치 갱신

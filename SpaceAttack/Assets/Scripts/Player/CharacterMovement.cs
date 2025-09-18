@@ -67,7 +67,7 @@ public class CharacterMovement : MonoBehaviour
         movementAniController.UpdateMoveDirection(horizontal, vertical);  //애니메이션 이동방향 갱신
         movementAniController.PlayAnimation("Move", horizontal, vertical); //이동 애니메이션 재생
 
-        rb.MovePosition(rb.position + dir * playerState.m_speed * Time.deltaTime);   //플레이어 이동
+        rb.MovePosition(rb.position + dir * PlayerStatus.m_speed * Time.deltaTime);   //플레이어 이동
     }
 
     public void Dash()  //대쉬
@@ -148,6 +148,13 @@ public class CharacterMovement : MonoBehaviour
         {
             inventory.chipSet = chipset;
             LogUtil.Log("아이템 획득");
+        }
+
+        BaseRelic relic = selectedItem.gameObject.GetComponent<BaseRelic>();
+        if (relic != null)
+        {
+            inventory.relic = relic;
+            LogUtil.Log("유물획득");
         }
     }
 

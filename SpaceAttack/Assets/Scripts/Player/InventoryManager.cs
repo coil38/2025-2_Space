@@ -111,4 +111,84 @@ public class InventoryManager : MonoBehaviour
             skill.lineRenderer = GetComponent<LineRenderer>();
         }
     }
+
+//-----------------------------------------------------------------------------------------유물 획득용---------------------------------------------------------------------------------------
+
+    private List<BaseRelic> relics = new List<BaseRelic>();
+
+    private BaseRelic _relic;
+    public BaseRelic relic
+    {
+        get { return _relic; }
+        set
+        {
+            _relic = value;
+
+            int id = value.relicId;
+            RelicSO relic = DataManager.instance._RelicDatabase.GetRelic(id);
+            if (relic == null)
+            {
+                LogUtil.LogError($"{id}와 일치한 유물이 없습니다.");
+                return;
+            }
+
+            if (relic.relicInfos == null)
+            {
+                LogUtil.LogError("RelicInfo인스턴스가 존재하지 않습니다.");
+            }
+            
+            if (currentDarkMaterial + relic.darkMaterialCount <= 100)  //최대용량을 넘지 않을 경우
+            {
+                PlayerUIManager.instance.ChangeDarkMaterialUI(true, relic.darkMaterialCount); //암흑물질 채워지는 UI연출
+                relics.Add(value);  //유물 데이터 추가
+                SetRelicObject(value);
+                SetRelicInfo(value, relic);
+
+                currentDarkMaterial += relic.darkMaterialCount;
+            }
+            else
+            {
+                LogUtil.Log("가방이 가득 찼습니다.");
+            }
+            //암흑게이지 총량 체크
+        }
+    }
+
+    private float currentDarkMaterial;
+
+    private void DropRelic(BaseRelic m_relic)
+    {
+        //월드 드랍 연출
+
+        Color color = m_relic.gameObject.GetComponent<SpriteRenderer>().color;   //해당 칩셋을 원래 상태로 변경
+        color.a = 1f;
+        m_relic.gameObject.GetComponent<SpriteRenderer>().color = color;
+
+        m_relic.gameObject.transform.SetParent(null);                  //해당 칩셋을 Player 자식으로 넣기 해제
+
+        m_relic.gameObject.GetComponent<Collider>().enabled = true;   //감지 가능상태로 변경
+    }
+
+    private void RemoveRelicInfo(BaseRelic m_relic)
+    {
+
+    }
+
+    private void SetRelicObject(BaseRelic m_relic)              //월드의 칩셋 오브젝트 설정
+    {
+        Color color = m_relic.gameObject.GetComponent<SpriteRenderer>().color;   //해당 칩셋을 투명상태로 변경
+        color.a = 0f;
+        m_relic.gameObject.GetComponent<SpriteRenderer>().color = color;
+
+        m_relic.gameObject.transform.SetParent(this.transform);                  //해당 칩셋을 Player 자식으로 넣기
+        m_relic.gameObject.transform.localPosition = Vector3.zero;
+
+        m_relic.gameObject.GetComponent<Collider>().enabled = false;   //감지 가능상태로 변경
+    }
+
+
+    private void SetRelicInfo(BaseRelic m_relic, RelicSO m_relicSO)        //유물 효과 실행부
+    {
+        m_relic.SetEffect(true, m_relicSO.relicInfos);
+    }
 }

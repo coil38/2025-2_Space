@@ -8,6 +8,8 @@ public class DataManager : MonoBehaviour
 
     [SerializeField] private SoundDatabaseSO soundDatabase;  //사운드 데이터 베이스
     [SerializeField] private LevelDatabaseSO levelDatabase;  //레벨 데이터 베이스
+    [SerializeField] private RelicDatabaseSO relicDatabase;  //유물 데이터 베이스
+
     public SoundDatabaseSO _soundDatabase
     {
         get { return soundDatabase; }
@@ -18,9 +20,14 @@ public class DataManager : MonoBehaviour
         get { return levelDatabase; }
         private set { levelDatabase = value; }
     }
+
+    public RelicDatabaseSO _RelicDatabase
+    {
+        get { return  relicDatabase; }
+        private set {  relicDatabase = value; }
+    }
     void Awake()
     {
-
         if (instance == null)
         {
             instance = this;
