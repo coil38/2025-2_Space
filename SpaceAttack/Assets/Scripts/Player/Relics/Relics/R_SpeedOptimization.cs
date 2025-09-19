@@ -7,7 +7,7 @@ public class R_SpeedOptimization : BaseRelic  //속도 최적화
     private RelicEffectDecorator relicEffect;
 
     public override int relicId { get; protected set; }
-    RelicInfo info;
+    RelicInfo speedUpInfo;
     public void OnEnable()
     {
         relicId = 1004;
@@ -17,16 +17,14 @@ public class R_SpeedOptimization : BaseRelic  //속도 최적화
     {
         if (relicEffect == null)
         {
-            relicEffect = RelicEffectManager.MoveSpeedUp();
+            relicEffect = RelicEffectManager.GetRelicEffect(RelicEffectManager._speedUpId);
         }
 
-        foreach (var temp in infos)
+        if (speedUpInfo == null)
         {
-            if (relicEffect.relicID == temp.id)
-            {
-                info = temp;
-            }
+            speedUpInfo = infos[0];
         }
-        relicEffect.Operater(isEquip, info);
+        relicEffect.SetInfo(speedUpInfo);
+        relicEffect.Operater(isEquip);
     }
 }

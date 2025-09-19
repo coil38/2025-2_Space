@@ -59,14 +59,16 @@ public class RelicDataLoader : ScriptableObject
                     string[] m_temps = relic.relicEffectInfo.Trim().Split("]");
                     List<RelicInfo> infos = new List<RelicInfo>();
 
-                    //LogUtil.Log(string.Join(",", m_temps));
-                    //LogUtil.Log("개수 :" + m_temps.Length);
+                    LogUtil.Log(string.Join(",", m_temps));
+                    LogUtil.Log("개수 :" + m_temps.Length);
                     for (int i = 0; i < m_temps.Length; i++)
                     {
                         if (string.IsNullOrWhiteSpace(m_temps[i])) continue;
 
                         m_temps[i] = m_temps[i].Replace("[", string.Empty).Replace("]", string.Empty);
                         string[] s_temps = m_temps[i].Split(",");
+                        LogUtil.Log("시작:" + string.Join(",", s_temps));
+                        LogUtil.Log("개수 :" + s_temps.Length);
                         float[] f_temps = new float[s_temps.Length];
                         for (int j = 0; j < s_temps.Length; j++)
                         {
@@ -78,11 +80,9 @@ public class RelicDataLoader : ScriptableObject
                         switch (f_temps.Length)
                         {
                             case 2:
-                                //LogUtil.Log($"{f_temps[0]},{f_temps[1]}");
-                                if (f_temps[1] > Mathf.FloorToInt(f_temps[1]))    //소수점이 있을 경우
-                                    infos.Add(new RelicInfo((int)f_temps[0], f_temps[1]));
-                                else infos.Add(new RelicInfo((int)f_temps[0],0, (int)f_temps[1]));
-                            break;
+                                LogUtil.Log($"{f_temps[0]},{f_temps[1]}");
+                                infos.Add(new RelicInfo((int)f_temps[0], f_temps[1]));
+                                break;
                             case 3:
                                 //LogUtil.Log($"{f_temps[0]},{f_temps[1]},{f_temps[2]}");
                                 infos.Add(new RelicInfo((int)f_temps[0], f_temps[1], (int)f_temps[2]));
@@ -102,7 +102,7 @@ public class RelicDataLoader : ScriptableObject
                 }
 
                 //SO 저장
-                string assetPath = $"{outputFolder}/{relic.name}_Icon.asset";
+                string assetPath = $"{outputFolder}/Relic_{relic.name}.asset";
                 AssetDatabase.CreateAsset(relicSO, assetPath);
 
                 //에셋 이름 저장

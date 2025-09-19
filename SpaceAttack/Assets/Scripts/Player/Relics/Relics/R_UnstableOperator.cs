@@ -7,7 +7,7 @@ public class R_UnstableOperator : BaseRelic   //불안정 연산자
     private RelicEffectDecorator relicEffect;
 
     public override int relicId { get; protected set; }
-    RelicInfo info;
+    RelicInfo critChanceUpInfo;
     public void OnEnable()
     {
         relicId = 1002;
@@ -17,16 +17,14 @@ public class R_UnstableOperator : BaseRelic   //불안정 연산자
     {
         if (relicEffect == null)
         {
-            relicEffect = RelicEffectManager.CritChanceUp();
+            relicEffect = RelicEffectManager.GetRelicEffect(RelicEffectManager._critChanceUpId);
         }
 
-        foreach (var temp in infos)
+        if (critChanceUpInfo == null)
         {
-            if (relicEffect.relicID == temp.id)
-            {
-                info = temp;
-            }
+            critChanceUpInfo = infos[0];
         }
-        relicEffect.Operater(isEquip, info);
+        relicEffect.SetInfo(critChanceUpInfo);
+        relicEffect.Operater(isEquip);
     }
 }

@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class RE_ChanceToHeal : RelicEffectDecorator
 {
-    public override void SetID() { relicID = 101; }
+    public override void SetID() { relicEffectID = 101; }
 
-    public override void Operater(bool isEquip, RelicInfo info)
+    public override void Operater(bool isEquip)
     {
         if (relicEffectDecoComponent != null)
-            relicEffectDecoComponent.Operater(isEquip, info);
+            relicEffectDecoComponent.Operater(isEquip);
 
         //내부 구현
         if (isEquip)
         {
-            LogUtil.Log("회복패시브 획득");
+            LogUtil.Log("회복패시브 획득 + 정보번호: " + relicInfo.id);
         }
         else
         {

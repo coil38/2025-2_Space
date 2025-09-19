@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class RE_MoveSpeedBoost : RelicEffectDecorator
 {
-    public override void SetID() { relicID = 105; }
-    public override void Operater(bool isEquip, RelicInfo info)
+    public override void SetID() { relicEffectID = 105; }
+    public override void Operater(bool isEquip)
     {
         if (relicEffectDecoComponent != null)
-            relicEffectDecoComponent.Operater(isEquip, info);
+            relicEffectDecoComponent.Operater(isEquip);
 
         if (isEquip)
         {
-            PlayerStatus.m_speed += (PlayerStatus.m_speed * info.n);  //이속 상승
+            PlayerStatus.m_speed += (PlayerStatus.m_speed * relicInfo.n);  //이속 상승
             LogUtil.Log($"이속 상승, 현재 이속: {PlayerStatus.m_speed}");
         }
         else
         {
-            PlayerStatus.m_speed -= (PlayerStatus.m_speed * info.n);
+            PlayerStatus.m_speed -= (PlayerStatus.m_speed * relicInfo.n);
             LogUtil.Log($"이속 상승 해제, 현재 이속: {PlayerStatus.m_speed}");
         }
     }

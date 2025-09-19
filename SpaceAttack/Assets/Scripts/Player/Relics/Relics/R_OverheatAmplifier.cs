@@ -7,7 +7,7 @@ public class R_OverheatAmplifier : BaseRelic  //연산 과열 증폭기
     private RelicEffectDecorator relicEffect;
 
     public override int relicId { get; protected set; }
-    RelicInfo info;
+    RelicInfo coolDownInfo;
     public void OnEnable()
     {
         relicId = 1003;
@@ -17,16 +17,14 @@ public class R_OverheatAmplifier : BaseRelic  //연산 과열 증폭기
     {
         if (relicEffect == null)
         {
-            relicEffect = RelicEffectManager.Cdr();
+            relicEffect = RelicEffectManager.GetRelicEffect(RelicEffectManager._coolDownId);
         }
 
-        foreach (var temp in infos)
+        if (coolDownInfo == null)
         {
-            if (relicEffect.relicID == temp.id)
-            {
-                info = temp;
-            }
+            coolDownInfo = infos[0];
         }
-        relicEffect.Operater(isEquip, info);
+        relicEffect.SetInfo(coolDownInfo);
+        relicEffect.Operater(isEquip);
     }
 }

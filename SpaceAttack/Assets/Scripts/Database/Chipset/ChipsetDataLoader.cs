@@ -59,7 +59,7 @@ public class ChipsetDataLoader : EditorWindow
                 }
 
                 //SO 저장
-                string assetPath = $"{outputFolder}/{chipsetData.name}_Icon.asset";
+                string assetPath = $"{outputFolder}/Chipset_{chipsetData.name}.asset";
                 AssetDatabase.CreateAsset(chipsetSO, assetPath);
 
                 //에셋 이름 저장

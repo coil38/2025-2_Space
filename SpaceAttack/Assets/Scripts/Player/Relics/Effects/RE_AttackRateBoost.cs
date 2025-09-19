@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class RE_AttackRateBoost : RelicEffectDecorator
 {
-    public override void SetID() { relicID = 100; }
+    public override void SetID() { relicEffectID = 100; }
     
-    public override void Operater(bool isEquip, RelicInfo info)
+    public override void Operater(bool isEquip)
     {
         if(relicEffectDecoComponent != null)
-            relicEffectDecoComponent.Operater(isEquip, info);
+            relicEffectDecoComponent.Operater(isEquip);
 
         //내부 구현
         if (isEquip)
         {
             //공격력 상승
-            LogUtil.Log("공격력 상승");
+            LogUtil.Log("공격력 상승 + 정보 번호" + relicInfo.id);
         }
         else
         {

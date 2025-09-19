@@ -7,7 +7,7 @@ public class R_OverloadAlgorithm : BaseRelic   //알고리즘 과부화
     private RelicEffectDecorator relicEffect;
 
     public override int relicId { get; protected set; }
-    RelicInfo info;
+    RelicInfo attackInfo;
 
     public void OnEnable()
     {
@@ -17,17 +17,15 @@ public class R_OverloadAlgorithm : BaseRelic   //알고리즘 과부화
     {
         if (relicEffect == null)
         {
-            relicEffect = RelicEffectManager.AtkPercentUp();
+            relicEffect = RelicEffectManager.GetRelicEffect(RelicEffectManager._atkUpId);
         }
 
-        foreach (var temp in infos)
+        if (attackInfo == null)
         {
-            if (relicEffect.relicID == temp.id)
-            {
-                info = temp;
-            }
+            attackInfo = infos[0];
         }
-        relicEffect.Operater(isEquip, info);
+        relicEffect.SetInfo(attackInfo);
+        relicEffect.Operater(isEquip);
     }
 
     //public RelicInfo[] ReOrderRelicInfos()  //위 코드들은 임시 ( 재정렬후, 여러번 Operater가 실행될 때마다, 하나씩 넘기는 형식 사용

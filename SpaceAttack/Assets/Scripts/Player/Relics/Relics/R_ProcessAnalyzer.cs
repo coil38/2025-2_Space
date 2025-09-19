@@ -7,7 +7,7 @@ public class R_ProcessAnalyzer : BaseRelic  //프로세스 분석기
     private RelicEffectDecorator relicEffect;
 
     public override int relicId { get; protected set; }
-    RelicInfo info;
+    RelicInfo relicDropChanceInfo;
     public void OnEnable()
     {
         relicId = 1006;
@@ -17,16 +17,14 @@ public class R_ProcessAnalyzer : BaseRelic  //프로세스 분석기
     {
         if (relicEffect == null)
         {
-            relicEffect = RelicEffectManager.RelicDropUp();
+            relicEffect = RelicEffectManager.GetRelicEffect(RelicEffectManager._relicDropChanceUpId);
         }
 
-        foreach (var temp in infos)
+        if (relicDropChanceInfo == null)
         {
-            if (relicEffect.relicID == temp.id)
-            {
-                info = temp;
-            }
+            relicDropChanceInfo = infos[0];
         }
-        relicEffect.Operater(isEquip, info);
+        relicEffect.SetInfo(relicDropChanceInfo);
+        relicEffect.Operater(isEquip);
     }
 }

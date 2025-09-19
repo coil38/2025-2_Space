@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class RE_RelicDropRateBoost : RelicEffectDecorator
 {
-    public override void SetID() { relicID = 106; }
-    public override void Operater(bool isEquip, RelicInfo info)
+    public override void SetID() { relicEffectID = 106; }
+    public override void Operater(bool isEquip)
     {
         if (relicEffectDecoComponent != null)
-            relicEffectDecoComponent.Operater(isEquip, info);
+            relicEffectDecoComponent.Operater(isEquip);
 
         if (isEquip)
         {

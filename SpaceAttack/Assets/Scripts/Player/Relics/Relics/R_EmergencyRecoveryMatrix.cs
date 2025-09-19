@@ -6,7 +6,7 @@ public class R_EmergencyRecoveryMatrix : BaseRelic  //비상회복 메트릭스
 {
     private RelicEffectDecorator relicEffect;
     public override int relicId { get; protected set; }
-    RelicInfo info;
+    RelicInfo healChanceInfo;
     public void OnEnable()
     {
         relicId = 1001;
@@ -16,20 +16,14 @@ public class R_EmergencyRecoveryMatrix : BaseRelic  //비상회복 메트릭스
     {
         if (relicEffect == null)
         {
-            relicEffect = RelicEffectManager.HealChance();
+            relicEffect = RelicEffectManager.GetRelicEffect(RelicEffectManager._healChanceUpId);
         }
-        if (infos == null)
+
+        if (healChanceInfo == null)
         {
-            LogUtil.LogError("RelicInfo인스턴스가 존재하지 않습니다.");
-            return;
+            healChanceInfo = infos[0];
         }
-        foreach (var temp in infos)
-        {
-            if (relicEffect.relicID == temp.id)
-            {
-                info = temp;
-            }
-        }
-        relicEffect.Operater(isEquip, info);
+        relicEffect.SetInfo(healChanceInfo);
+        relicEffect.Operater(isEquip);
     }
 }

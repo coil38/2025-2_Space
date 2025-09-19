@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class RE_SkillCoolDecrease : RelicEffectDecorator
 {
-    public override void SetID() { relicID = 107; }
-    public override void Operater(bool isEquip, RelicInfo info)
+    public override void SetID() { relicEffectID = 107; }
+    public override void Operater(bool isEquip)
     {
         if (relicEffectDecoComponent != null)
-            relicEffectDecoComponent.Operater(isEquip, info);
+            relicEffectDecoComponent.Operater(isEquip);
 
         if (isEquip)
         {

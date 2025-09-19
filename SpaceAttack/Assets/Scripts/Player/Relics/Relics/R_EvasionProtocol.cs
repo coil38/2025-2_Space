@@ -7,7 +7,7 @@ public class R_EvasionProtocol : BaseRelic  //회피 프로토콜
     private RelicEffectDecorator relicEffect;
 
     public override int relicId { get; protected set; }
-    RelicInfo info;
+    RelicInfo misChanceUpInfo;
     public void OnEnable()
     {
         relicId = 1005;
@@ -17,16 +17,14 @@ public class R_EvasionProtocol : BaseRelic  //회피 프로토콜
     {
         if (relicEffect == null)
         {
-            relicEffect = RelicEffectManager.EvasionUp();
+            relicEffect = RelicEffectManager.GetRelicEffect(RelicEffectManager._misChanceUpId);
         }
 
-        foreach (var temp in infos)
+        if (misChanceUpInfo == null)
         {
-            if (relicEffect.relicID == temp.id)
-            {
-                info = temp;
-            }
+            misChanceUpInfo = infos[0];
         }
-        relicEffect.Operater(isEquip, info);
+        relicEffect.SetInfo(misChanceUpInfo);
+        relicEffect.Operater(isEquip);
     }
 }
