@@ -4759,8 +4759,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fdfef8019df590499c2cc0e51945aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  redZonePrefab: {fileID: 4967702133973236083, guid: d25f991d5830ef34ea05a0e22a612c96,
+    type: 3}
+  whiteZonePrefab: {fileID: 6589222062325572392, guid: 408f36d1f1ac38146984f9cd3b872bc5,
+    type: 3}
   projectilePrefab: {fileID: 5811752936683016364, guid: 27bc7fa579e40e64a8d542495875ef0c,
     type: 3}
+  safeZoneScale: 1.5
+  minSafeZoneDistance: 4
+  bossSafeRadius: 5
+  maxAttempts: 50
+  safeZoneCount: 3
+  spawnHeight: 0.1
   attackCooldown: 3
   player: {fileID: 194096016}
 --- !u!65 &8498225713429384174
@@ -4809,7 +4819,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 122
   m_CollisionDetection: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
