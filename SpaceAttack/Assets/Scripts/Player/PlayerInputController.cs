@@ -22,6 +22,7 @@ public class PlayerInputController : MonoBehaviour
     public static InputAction skill2Action;
     public static InputAction skill3Action;
     public static InputAction interactionAction;
+    public static InputAction subInteractionAction;
     public static InputAction dashAction;
     private void OnEnable()
     {
@@ -33,6 +34,7 @@ public class PlayerInputController : MonoBehaviour
         skill2Action = playerInput.actions["Skill2"];
         skill3Action = playerInput.actions["Skill3"];
         interactionAction = playerInput.actions["Interaction"];
+        subInteractionAction = playerInput.actions["SubInteraction"];
         dashAction = playerInput.actions["Dash"];
 
         EnableAction();
@@ -62,6 +64,7 @@ public class PlayerInputController : MonoBehaviour
         if (skill2Action != null) skill2Action.Enable();
         if (skill3Action != null) skill3Action.Enable();
         if (interactionAction != null) interactionAction.Enable();
+        if (subInteractionAction != null) subInteractionAction.Enable();
         if (dashAction != null) dashAction.Enable();
     }
 
@@ -74,6 +77,7 @@ public class PlayerInputController : MonoBehaviour
         if (skill2Action != null) skill2Action.Disable();
         if (skill3Action != null) skill3Action.Disable();
         if (interactionAction != null) interactionAction.Disable();
+        if (subInteractionAction != null) subInteractionAction.Disable();
         if (dashAction != null) dashAction.Disable();
     }
 

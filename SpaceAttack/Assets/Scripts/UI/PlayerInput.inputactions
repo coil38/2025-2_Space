@@ -69,6 +69,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "SubInteraction",
+                    "type": "Button",
+                    "id": "9b89e1fe-4ae3-48dd-99c0-7f113dfd83a4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Dash",
                     "type": "Button",
                     "id": "0cb0a62c-2031-44d1-8050-c7d747f15606",
@@ -208,6 +217,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "db3a0950-efd2-419e-9115-0622211d2757",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SubInteraction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

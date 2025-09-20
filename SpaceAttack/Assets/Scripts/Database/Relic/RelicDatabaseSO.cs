@@ -6,6 +6,7 @@ using UnityEngine;
 public class RelicDatabaseSO : ScriptableObject
 {
     public List<RelicSO> relics = new List<RelicSO>();
+    public RelicEffectDatabaseSO relicEffectDatabase;
 
     private Dictionary<int, RelicSO> relicById;
 

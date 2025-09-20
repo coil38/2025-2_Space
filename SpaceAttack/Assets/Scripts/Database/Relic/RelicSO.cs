@@ -9,6 +9,7 @@ public class RelicSO : ScriptableObject
     public string relicName;
     public int darkMaterialCount;
     public int[] relicEffects;
+    public string relicDivision;
     public string description;
     public RelicInfo[] relicInfos;
     public Sprite iconSprite;

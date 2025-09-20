@@ -7,7 +7,7 @@ using System.IO;
 using Newtonsoft.Json;
 public class ChipsetDataLoader : EditorWindow
 {
-    private static string outputFolder = "Assets/ScriptableObjects/Chipset";
+    public static string outputFolder = "Assets/ScriptableObjects/Chipset";
     private static string iconPath = "Assets/Materials/Icon/";
     public static string jsonFilePath { get; set; }
     public static bool createDatabase { get; set; }
@@ -63,7 +63,7 @@ public class ChipsetDataLoader : EditorWindow
                 AssetDatabase.CreateAsset(chipsetSO, assetPath);
 
                 //에셋 이름 저장
-                chipsetSO.chipsetName = $"Chipset_{chipsetData.name}";
+                chipsetSO.name = $"Chipset_{chipsetData.name}";
                 createdChipsets.Add(chipsetSO);
 
                 EditorUtility.SetDirty(chipsetSO);

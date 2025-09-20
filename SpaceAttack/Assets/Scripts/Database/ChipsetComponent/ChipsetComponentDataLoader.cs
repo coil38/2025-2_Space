@@ -13,6 +13,8 @@ public class ChipsetComponentDataLoader : EditorWindow
     public static string jsonFilePath { get; set; }
     public static bool createDatabase { get; set; }
 
+    public static string chipsetDatabasePath = $"{ChipsetDataLoader.outputFolder}/ChipsetDatabase.asset";
+
     public static void ConvertJsonToScriptableObjects()
     {
         if (!Directory.Exists(outputFolder))
@@ -61,7 +63,7 @@ public class ChipsetComponentDataLoader : EditorWindow
                 AssetDatabase.CreateAsset(chipComponentSO, assetPath);
 
                 //에셋 이름 저장
-                chipComponentSO.chipsetCpname = $"ChipsetComponent_{componentData.name}";
+                chipComponentSO.name = $"ChipsetComponent_{componentData.name}";
                 createdchipComponents.Add(chipComponentSO);
 
                 EditorUtility.SetDirty(chipComponentSO);
@@ -72,6 +74,13 @@ public class ChipsetComponentDataLoader : EditorWindow
             {
                 ChipsetComponentDatabaseSO database = ScriptableObject.CreateInstance<ChipsetComponentDatabaseSO>();
                 database.chipsetComponents = createdchipComponents;
+
+                //칩셋 컴포넌트 데이터 베이스 값 할당
+                ChipsetDatabaseSO chipsetDatabase = AssetDatabase.LoadAssetAtPath<ChipsetDatabaseSO>(chipsetDatabasePath);
+                chipsetDatabase.chipsetComponentDatabase = database;
+                EditorUtility.SetDirty(chipsetDatabase);
+                if (chipsetDatabase.chipsetComponentDatabase == null)
+                    LogUtil.LogError("chipsetComponentDatabase 할당에 실패했습니다.");
 
                 AssetDatabase.CreateAsset(database, $"{outputFolder}/ChipsetComponentDatabase.asset");
                 EditorUtility.SetDirty(database);

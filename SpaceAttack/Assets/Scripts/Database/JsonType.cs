@@ -7,5 +7,6 @@ public enum JsonType
     Level,
     ChipsetComponent,
     Chipset,
-    Relic
+    Relic,
+    RelicEffect
 }

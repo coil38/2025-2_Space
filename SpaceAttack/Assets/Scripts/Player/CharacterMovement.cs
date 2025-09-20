@@ -22,6 +22,11 @@ public class CharacterMovement : MonoBehaviour
     private Vector3 currentPos;
     private Vector3 targetPos;
     private float dashDis;          //예외처리용
+
+    //유물용
+    private bool isFloatingTextOn;
+    private bool isPopUpUIOn;
+    private BaseRelic currentRelic;
     private void Start()
     {
         playerState = GetComponent<PlayerStatus>();
@@ -150,12 +155,113 @@ public class CharacterMovement : MonoBehaviour
             LogUtil.Log("아이템 획득");
         }
 
+        //BaseRelic relic = selectedItem.gameObject.GetComponent<BaseRelic>();
+        //if (relic != null)
+        //{
+        //    inventory.relic = relic;
+        //    LogUtil.Log("유물획득");
+        //}
+    }
+
+    public bool isRelicNearByPlayer()
+    {
+        Collider[] items = Physics.OverlapSphere(transform.position, playerState.itemDetectDistance, itemLayer);
+        return items.Length > 0;
+    }
+
+    public BaseRelic GetRelic()
+    {
+        Collider[] items = Physics.OverlapSphere(transform.position, playerState.itemDetectDistance, itemLayer);
+
+        float minDistance = 5f;
+        float currentDis = 5f;
+        Collider selectedItem = null;
+        foreach (var item in items)
+        {
+            minDistance = Mathf.Min(minDistance, Vector3.Distance(transform.position, item.transform.position));
+            if (currentDis > minDistance)
+            {
+                selectedItem = item;
+            }
+
+            currentDis = minDistance;
+        }
+        if (selectedItem == null) return null;   //주변에 아이템이 없을 시, 반환처리
+
         BaseRelic relic = selectedItem.gameObject.GetComponent<BaseRelic>();
         if (relic != null)
         {
-            inventory.relic = relic;
-            LogUtil.Log("유물획득");
+            return relic;
         }
+        return null;
+    }
+
+    public void SetRelicFloatingText(bool onFloatingText, BaseRelic relic = null)
+    {
+        if (onFloatingText && !isFloatingTextOn || currentRelic != relic)
+        {
+            isFloatingTextOn = true;
+            if (PlayerUIManager.instance != null)
+                PlayerUIManager.instance.SetRelicFloatingUI(onFloatingText, relic);
+
+            currentRelic = relic;  //최근 유물로 갱신
+            //LogUtil.Log("유물 플로팅 텍스트 활성화");
+        }
+        else if (!onFloatingText && isFloatingTextOn)
+        {
+            isFloatingTextOn = false;
+            if (PlayerUIManager.instance != null)
+                PlayerUIManager.instance.SetRelicFloatingUI(onFloatingText);
+            //LogUtil.Log("유물 플로팅 텍스트 비활성화");
+        }
+    }
+
+    public void SetRelicPopUpUI(bool setUIOff = false, BaseRelic relic = null)
+    {
+        if (setUIOff) { isPopUpUIOn = true; }
+        LogUtil.Log("작동한다" + isPopUpUIOn);
+
+        if (!isPopUpUIOn)
+        {
+            isPopUpUIOn = true;
+            //플로팅 텍스트 활성화
+            LogUtil.Log("팝업UI 활성화");
+            if(PlayerUIManager.instance != null)
+                PlayerUIManager.instance.SetRelicPopUpUI(true, relic);
+        }
+        else
+        {
+            isPopUpUIOn = false;
+            //플로팅 텍스트 비활성화
+            LogUtil.Log("팝업UI 비활성화");
+            if (PlayerUIManager.instance != null)
+                PlayerUIManager.instance.SetRelicPopUpUI(false, relic);
+        }
+    }
+
+    public void CheckChangeRelicPopUI(BaseRelic relic)
+    {
+        if (!isPopUpUIOn || currentRelic == relic || relic == null) return;
+        LogUtil.Log("팝업UI 변경");
+        if (PlayerUIManager.instance != null)
+            PlayerUIManager.instance.SetRelicPopUpUI(true, relic);
+    }
+
+    public bool IsRelicPopUpUIActive()
+    {
+        return isPopUpUIOn;
+    }
+
+    public void AquireRelic(BaseRelic relic)
+    {
+        if (relic == null)
+        {
+            LogUtil.LogError("감지된 유물이 없습니다.");
+            return;
+        }
+
+        inventory.relic = relic;
+        LogUtil.Log("유물획득");
     }
 
     public void CheckInteraction()

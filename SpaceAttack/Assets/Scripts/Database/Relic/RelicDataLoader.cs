@@ -8,10 +8,12 @@ using UnityEngine;
 
 public class RelicDataLoader : ScriptableObject
 {
-    private static string outputFolder = "Assets/ScriptableObjects/Relic";
+    public static string outputFolder = "Assets/ScriptableObjects/Relic";
     private static string iconPath = "Assets/Materials/Icon/";
     public static string jsonFilePath { get; set; }
     public static bool createDatabase { get; set; }
+
+    public static string relicEffectDatabasePath = $"{RelicEffectDataLoader.outputFolder}/RelicEffectDatabase.asset";
 
     public static void ConvertJsonToScriptableObjects()
     {
@@ -37,6 +39,7 @@ public class RelicDataLoader : ScriptableObject
                 relicSO.relicName = relic.name;
                 relicSO.darkMaterialCount = relic.darkMaterialCount;
                 relicSO.description = relic.description;
+                relicSO.relicDivision = relic.relicDivision;
 
                 //유물 효과 대상 설정
                 if (!string.IsNullOrEmpty(relic.relicEffects))
@@ -106,7 +109,7 @@ public class RelicDataLoader : ScriptableObject
                 AssetDatabase.CreateAsset(relicSO, assetPath);
 
                 //에셋 이름 저장
-                relicSO.relicName = $"Relic_{relic.name}";
+                relicSO.name = $"Relic_{relic.name}";
                 createdRelics.Add(relicSO);
 
                 EditorUtility.SetDirty(relicSO);
@@ -117,6 +120,11 @@ public class RelicDataLoader : ScriptableObject
             {
                 RelicDatabaseSO database = ScriptableObject.CreateInstance<RelicDatabaseSO>();
                 database.relics = createdRelics;
+
+                //유물 효과 데이터 베이스 값 할당
+                database.relicEffectDatabase = AssetDatabase.LoadAssetAtPath<RelicEffectDatabaseSO>(relicEffectDatabasePath);
+                if (database.relicEffectDatabase == null)
+                    LogUtil.LogError("RelicEffectDatabase 할당에 실패했습니다.");
 
                 AssetDatabase.CreateAsset(database, $"{outputFolder}/RelicDatabase.asset");
                 EditorUtility.SetDirty(database);

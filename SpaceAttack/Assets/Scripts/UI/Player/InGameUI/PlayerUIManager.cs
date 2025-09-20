@@ -10,6 +10,8 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] PlayerHPUI playerHPUI;
     [SerializeField] PlayerCoreUI playerCoreUI;
     [SerializeField] DarkMaterialUI playerDarkMaterialUI;
+    [SerializeField] RelicFloatingUI playerRelicFloatingUI;
+    [SerializeField] RelicPopUpUI playerRelicPopUpUI;
 
     [Header("칩셋 UI 이미지")]
     [SerializeField] Image chipsetImage;
@@ -56,5 +58,15 @@ public class PlayerUIManager : MonoBehaviour
     public void ChangeDarkMaterialUI(bool isAdd, float value)
     {
         playerDarkMaterialUI.ChangeDarkMaterialUI(isAdd, value);
+    }
+
+    public void SetRelicFloatingUI(bool onFloatingText, BaseRelic relic = null)
+    {
+        playerRelicFloatingUI.SetFloatingUI(onFloatingText, relic);
+    }
+
+    public void SetRelicPopUpUI(bool onPopUpUI, BaseRelic relic = null)
+    {
+        playerRelicPopUpUI.SetRelicPopUpUI(onPopUpUI, relic);
     }
 }

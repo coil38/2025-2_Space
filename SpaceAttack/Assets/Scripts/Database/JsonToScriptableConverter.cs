@@ -107,6 +107,12 @@ public class JsonToScriptableConverter : EditorWindow
                 RelicDataLoader.createDatabase = createDatabase;
                 RelicDataLoader.ConvertJsonToScriptableObjects();
             break;
+
+            case JsonType.RelicEffect:
+                RelicEffectDataLoader.jsonFilePath = jsonFilePath;
+                RelicEffectDataLoader.createDatabase = createDatabase;
+                RelicEffectDataLoader.ConvertJsonToScriptableObjects();
+            break;
         }
     }
 }

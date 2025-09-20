@@ -9,6 +9,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isAttacking;
     private bool isUsingSkill;
+
+    private bool isOneTime;
     void Start()
     {
         characterMovement = GetComponent<CharacterMovement>();
@@ -60,6 +62,38 @@ public class PlayerMovement : MonoBehaviour
         {
             characterMovement.CheckItem();
             characterMovement.CheckInteraction();
+        }
+
+        if (characterMovement.isRelicNearByPlayer())
+        {
+            BaseRelic currentRelic = characterMovement.GetRelic();
+            if (currentRelic != null) isOneTime = true;
+            else
+            {
+                LogUtil.LogError("감지된 유물이 없습니다.");
+                return;
+            }
+
+            characterMovement.CheckChangeRelicPopUI(currentRelic);      //팝업UI교체 체크용
+            characterMovement.SetRelicFloatingText(true, currentRelic); //플로팅 텍스트 활성화
+
+            if (PlayerInputController.interactionAction.triggered)
+            {
+                characterMovement.AquireRelic(currentRelic);       //획득처리
+            }
+            else if (PlayerInputController.subInteractionAction.triggered)
+            {
+                characterMovement.SetRelicPopUpUI(false, currentRelic);        //팝업창 활성화 및 비활성화
+            }
+        }
+        else
+        {
+            if (isOneTime)
+            {
+                isOneTime = false;
+                characterMovement.SetRelicFloatingText(false);          //플로팅 텍스트 비활성화
+                characterMovement.SetRelicPopUpUI(true);                //팝업창 비활성화
+            }
         }
     }
 }
