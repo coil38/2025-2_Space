@@ -219,13 +219,12 @@ public class CharacterMovement : MonoBehaviour
     public void SetRelicPopUpUI(bool setUIOff = false, BaseRelic relic = null)
     {
         if (setUIOff) { isPopUpUIOn = true; }
-        LogUtil.Log("작동한다" + isPopUpUIOn);
 
         if (!isPopUpUIOn)
         {
             isPopUpUIOn = true;
             //플로팅 텍스트 활성화
-            LogUtil.Log("팝업UI 활성화");
+            //LogUtil.Log("팝업UI 활성화");
             if(PlayerUIManager.instance != null)
                 PlayerUIManager.instance.SetRelicPopUpUI(true, relic);
         }
@@ -233,7 +232,7 @@ public class CharacterMovement : MonoBehaviour
         {
             isPopUpUIOn = false;
             //플로팅 텍스트 비활성화
-            LogUtil.Log("팝업UI 비활성화");
+            //LogUtil.Log("팝업UI 비활성화");
             if (PlayerUIManager.instance != null)
                 PlayerUIManager.instance.SetRelicPopUpUI(false, relic);
         }
@@ -242,7 +241,7 @@ public class CharacterMovement : MonoBehaviour
     public void CheckChangeRelicPopUI(BaseRelic relic)
     {
         if (!isPopUpUIOn || currentRelic == relic || relic == null) return;
-        LogUtil.Log("팝업UI 변경");
+        //LogUtil.Log("팝업UI 변경");
         if (PlayerUIManager.instance != null)
             PlayerUIManager.instance.SetRelicPopUpUI(true, relic);
     }

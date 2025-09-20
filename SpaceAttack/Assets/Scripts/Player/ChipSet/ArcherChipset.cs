@@ -2,29 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArcherChipset : ChipSetType
+public class ArcherChipset : BaseChipset
 {
-    public override WeaponType weapon { get; protected set; }
-    public override SkillType[] skills { get; protected set; }
-    public override string chipSetName { get; protected set; }
-    public override string description { get; protected set; }
-    public override Sprite iconImage { get; protected set; }
-    public override GameObject prefab { get; protected set; }
-    public override Animator animator { get; protected set; }
-
-    //인스펙터창에서 대상 할당
-    [SerializeField] private WeaponType _weapon;
-    [SerializeField] private SkillType[] _skills;
-    [SerializeField] private Sprite _iconImage;
-    [SerializeField] private GameObject _prefab;
-    [SerializeField] private Animator _animator;
-
-    public override void SetCorrectionValue(object obj, PlayerEvent e)
-    {
-        //Debug.Log($"{e}를 스킬 보정치에 주입");
-    }
-
-    void OnEnable()      //임시
+    protected override void OnEnable()      //임시
     {
         chipSetName = "Archer";
         description = "그냥 저냥 평범한 칩셋(직업)2";
@@ -33,5 +13,12 @@ public class ArcherChipset : ChipSetType
         iconImage = _iconImage;
         prefab = _prefab;
         animator = _animator;
+
+        base.OnEnable();
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
     }
 }

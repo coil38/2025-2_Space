@@ -13,20 +13,20 @@ public class PlayerCore : MonoBehaviour
 
     public void InitializeEvent()  //이벤트 체인 구독
     {
-        EventManager.f_CorrectionValueEvent.levelEventHandler += GetMaxExpValue;
+        EventManager.playerEvent.levelEventHandler += GetMaxExpValue;
         if (DataManager.instance != null)
         {
-            EventManager.f_CorrectionValueEvent.levelDatabase = DataManager.instance._levelDatabase;  //데이터 베이스 할당
+            EventManager.playerEvent.levelDatabase = DataManager.instance._levelDatabase;  //데이터 베이스 할당
         }
         else LogUtil.LogError("레벨데이터 베이스가 PlayerCore시스템에 할당되지 않았습니다.");
-        EventManager.f_CorrectionValueEvent.FindMaxExpValue(Level);  //현재 레벨의 최대 경험치량 할당 이벤트 실행
-        maxLevel = EventManager.f_CorrectionValueEvent.levelDatabase.maxLevel;  //최대 레벨 갱신
+        EventManager.playerEvent.FindMaxExpValue(Level);  //현재 레벨의 최대 경험치량 할당 이벤트 실행
+        maxLevel = EventManager.playerEvent.levelDatabase.maxLevel;  //최대 레벨 갱신
         GetDarkMatter(0, true);  //UI 갱신
     }
 
     private void OnDisable()  //델리게이트 체인 구독 해지
     {
-        EventManager.f_CorrectionValueEvent.levelEventHandler -= GetMaxExpValue;
+        EventManager.playerEvent.levelEventHandler -= GetMaxExpValue;
     }
 
     void Update() 
@@ -57,8 +57,8 @@ public class PlayerCore : MonoBehaviour
         {
             int remainExpCount = DarkMaterialCount - maxEXP;
 
-            EventManager.f_CorrectionValueEvent.FindMaxExpValue(Level + 1);  //다음 레벨의 최대 경험치량을 찾는 이벤트 실행
-            EventManager.f_CorrectionValueEvent.FindCorectionValue(Level + 1);  //레벨 보정 여부 판단 이벤트 실행
+            EventManager.playerEvent.FindMaxExpValue(Level + 1);  //다음 레벨의 최대 경험치량을 찾는 이벤트 실행
+            EventManager.playerEvent.FindCorectionValue(Level + 1);  //레벨 보정 여부 판단 이벤트 실행
 
             DarkMaterialCount = remainExpCount;
 

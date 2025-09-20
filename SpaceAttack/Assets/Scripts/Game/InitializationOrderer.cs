@@ -66,7 +66,7 @@ public class InitializationOrderer : MonoBehaviour
         yield return new WaitUntil(() =>
         {
             return DataManager.instance != null 
-            && EventManager.f_CorrectionValueEvent != null
+            && EventManager.playerEvent != null
             && PlayerUIManager.instance != null;
         });
 

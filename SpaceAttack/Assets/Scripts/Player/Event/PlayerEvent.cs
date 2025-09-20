@@ -21,6 +21,13 @@ public class PlayerEvent
         remove { _levelEventHandler -= value; }
     }
 
+    private EventHandler<PlayerEvent> _relicAttackEventHandler;  //유물 공격력 수치 변경 이벤트
+    public event EventHandler<PlayerEvent> relicAttackEventHandler
+    {
+        add { _relicAttackEventHandler += value; }
+        remove { _relicAttackEventHandler -= value; }
+    }
+
     public LevelDatabaseSO levelDatabase;   //레벨 보정관련 데이터 베이스
 
 
@@ -58,7 +65,7 @@ public class PlayerEvent
                 skillNumber = levelSO.unlockedSkill;
             }
 
-            _correctionEventHandler.Invoke(this, EventManager.f_CorrectionValueEvent);   //이벤트 호출
+            _correctionEventHandler.Invoke(this, EventManager.playerEvent);   //이벤트 호출
         }
     }
 
@@ -87,6 +94,16 @@ public class PlayerEvent
             nextMaxEXP = levelDatabase.GetMaxExp(_level + 1);  //해당 레벨의 최대경험치양 찾기
         }
 
-        _levelEventHandler.Invoke(this, EventManager.f_CorrectionValueEvent);   //최대레벨을 찾는 이벤트 호출
+        _levelEventHandler.Invoke(this, EventManager.playerEvent);   //최대레벨을 찾는 이벤트 호출
+    }
+
+    public bool isEquip;      //장착여부
+    public float damageRate;  //데미지률
+    public void SetRelicAttackValue(bool _isEquip, float _damageRate)
+    {
+        LogUtil.Log("작동한다.");
+        isEquip = _isEquip;
+        damageRate = _damageRate;
+        _relicAttackEventHandler.Invoke(this, EventManager.playerEvent);
     }
 }

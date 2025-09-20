@@ -9,7 +9,7 @@ public class RelicFloatingUI : MonoBehaviour
         if (onFloatingText && relic != null)
         {
             gameObject.SetActive(true);
-            LogUtil.Log("플로팅 텍스트 활성화");
+            //LogUtil.Log("플로팅 텍스트 활성화");
 
             Vector3 targetPos = relic.gameObject.transform.position + Vector3.right * 0.6f;
             transform.position = targetPos;
@@ -17,7 +17,7 @@ public class RelicFloatingUI : MonoBehaviour
         else if (!onFloatingText)
         {
             gameObject.SetActive(false);
-            LogUtil.Log("플로팅 텍스트 비활성화");
+            //LogUtil.Log("플로팅 텍스트 비활성화");
         }
     }
 

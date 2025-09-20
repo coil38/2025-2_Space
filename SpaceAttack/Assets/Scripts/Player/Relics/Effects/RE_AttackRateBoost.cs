@@ -15,11 +15,13 @@ public class RE_AttackRateBoost : RelicEffectDecorator
         if (isEquip)
         {
             //공격력 상승
+            EventManager.playerEvent.SetRelicAttackValue(isEquip, relicInfo.n);
             LogUtil.Log("공격력 상승 + 정보 번호" + relicInfo.id);
         }
         else
         {
             //공격력 상승 취소
+            EventManager.playerEvent.SetRelicAttackValue(isEquip, relicInfo.n);
             LogUtil.Log("공격력 상승효과 취소");
         }
     }

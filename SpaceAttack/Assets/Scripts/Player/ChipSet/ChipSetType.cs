@@ -12,5 +12,6 @@ public abstract class ChipSetType : MonoBehaviour
     public abstract GameObject prefab { get; protected set; }
     public abstract Animator animator { get; protected set; }
     public abstract void SetCorrectionValue(object obj, PlayerEvent e);
+    public abstract void SetRelicAttackValue(object obj, PlayerEvent e);
 
 }

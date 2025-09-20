@@ -20,7 +20,7 @@ public class RelicPopUpUI : MonoBehaviour
         if (onRelicPopUp)
         {
             gameObject.SetActive(true);
-            LogUtil.Log("유물팝업UI 활성화");
+            //LogUtil.Log("유물팝업UI 활성화");
             Vector3 targetPos = relic.transform.position + relic.transform.up * 0.6f;
             transform.position = targetPos;
 
@@ -69,7 +69,7 @@ public class RelicPopUpUI : MonoBehaviour
         else
         {
             gameObject.SetActive(false);
-            LogUtil.Log("유물팝업UI 비활성화");
+            //LogUtil.Log("유물팝업UI 비활성화");
         }
     }
 

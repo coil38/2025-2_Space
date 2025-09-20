@@ -148,7 +148,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
         //칩셋 장착 내부 코드
         switch (currentChipset.chipsetName)
         {
-            case "Chipset_Warrior":
+            case "Warrior":
                 LogUtil.Log("전사 칩셋 장착");
                 if (inventoryManager != null)
                     inventoryManager.chipSet = warriorPrefab.GetComponent<ChipSetType>();
@@ -157,7 +157,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
                     PlayerUIManager.instance.SetChipsetInfo(sprites[0], sprites[1], sprites[2], sprites[3]);  //메인UI 이미지 변경
                 break;
 
-            case "Chipset_Archer":
+            case "Archer":
                 LogUtil.Log("궁수 칩셋 장착");
                 if (inventoryManager != null)
                     inventoryManager.chipSet = archerPrefab.GetComponent<ChipSetType>();
