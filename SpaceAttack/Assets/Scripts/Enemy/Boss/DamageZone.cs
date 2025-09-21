@@ -5,8 +5,9 @@ using UnityEngine;
 public class DamageZone : MonoBehaviour
 {
     public int damage = 10;
-    public float delayTime = 2f;   // 장판 표시 후 공격까지 딜레이
+    public float delayTime = 2f;   
     private bool active = false;
+    private bool hasDamaged = false; 
 
     private List<GameObject> safeZones = new List<GameObject>();
 
@@ -29,16 +30,13 @@ public class DamageZone : MonoBehaviour
         // 빨간 장판 색 진하게
         MeshRenderer mr = GetComponent<MeshRenderer>();
         if (mr != null)
-            mr.material.color = Color.red * 0.8f;
+            mr.material.color = new Color(1f, 0f, 0f, 1f); 
 
-        // 👉 여기서는 안전장판 그대로 두고
-        // 빨간 장판이 사라질 때 같이 지우도록 Destroy 순서를 변경
         Destroy(gameObject, 0.5f);
     }
 
     private void OnDestroy()
     {
-        // 빨간 장판이 사라질 때 안전장판도 같이 삭제
         foreach (var zone in safeZones)
         {
             if (zone != null)
@@ -48,7 +46,7 @@ public class DamageZone : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (!active) return;
+        if (!active || hasDamaged) return; 
 
         if (other.CompareTag("Player"))
         {
@@ -58,6 +56,8 @@ public class DamageZone : MonoBehaviour
                 attacker = this.gameObject
             };
             PlayerStatus.Instance.ApplyDamage(info);
+
+            hasDamaged = true; 
         }
     }
 }
