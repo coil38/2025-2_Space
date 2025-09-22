@@ -12,12 +12,13 @@ public class RE_MoveSpeedBoost : RelicEffectDecorator
 
         if (isEquip)
         {
-            PlayerStatus.m_speed += (PlayerStatus.m_speed * relicInfo.n);  //이속 상승
+            PlayerStatus.m_speed += (PlayerStatus.m_defultSpeed * relicInfo.n);  //이속 상승
             LogUtil.Log($"이속 상승, 현재 이속: {PlayerStatus.m_speed}");
         }
         else
         {
-            PlayerStatus.m_speed -= (PlayerStatus.m_speed * relicInfo.n);
+            PlayerStatus.m_speed -= (PlayerStatus.m_defultSpeed * relicInfo.n);
+
             LogUtil.Log($"이속 상승 해제, 현재 이속: {PlayerStatus.m_speed}");
         }
     }

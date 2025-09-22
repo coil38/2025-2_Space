@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlayerStatus : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class PlayerStatus : MonoBehaviour
     public static int m_hp = 10;              //체력
     public static int m_maxhp = 10;           //최대 체력
     public static float m_speed = 5f;         //이동 속도
+    public static float m_defultSpeed = 5f;   //기본 이동 속도
     public float m_DashDistance = 3.2f;   //대쉬 거리
     public float itemDetectDistance = 1.8f; //아이템 감지거리
     public static float criticalChanceRate = 0.05f;         //치명타 확률
@@ -20,6 +22,8 @@ public class PlayerStatus : MonoBehaviour
 
     public ParticleSystem m_Particle;
     public ParticleSystem d_Particle;
+
+    public static event Action playerHitEvent;  //플레이어 피격 이벤트
 
     [HideInInspector] public bool isInvincibility = false;
     [HideInInspector] public bool isStuned = false;
@@ -145,6 +149,16 @@ public class PlayerStatus : MonoBehaviour
         }
     }
 
+    public static void AddHp(int amount)  //체력 추가 함수
+    {
+        int targetHp = m_hp + amount;
+        if (targetHp <= m_maxhp) m_hp = targetHp;
+        else m_hp = m_maxhp;
+
+        if (PlayerUIManager.instance != null)
+            PlayerUIManager.instance.ResetHpUI(); //체력UI 갱신
+    }
+
     public void ApplyDamage(AttackInfo info)
     {
         if (info.attacker != null && info.attacker.CompareTag("SnackMonster"))  // 공격을 받는 대상인 스낵몬스터 일 경우
@@ -160,10 +174,12 @@ public class PlayerStatus : MonoBehaviour
 
     private void _ApplyDamage(AttackInfo info)
     {
+        playerHitEvent?.Invoke();  //플레이어 피격 이벤트 실행
+
         int damage = (int)info.damage;
         Vector3 dir = info.attackDirection;
 
-        float randomValue = Random.Range(0.01f, 100f);
+        float randomValue = UnityEngine.Random.Range(0.01f, 100f);
         if (randomValue < missRate)
         {
             //회피성공
@@ -229,7 +245,7 @@ public class PlayerStatus : MonoBehaviour
         {
             //LogUtil.Log("플레이어 스텟 상승");
             m_maxhp += e.heartCorrection;
-            m_speed *= 1 + e.speedCorrection;
+            m_speed += m_defultSpeed * e.speedCorrection;
             //LogUtil.Log($"{e.heartCorrection}, {e.speedCorrection} / 100");
 
             if (PlayerUIManager.instance != null)
