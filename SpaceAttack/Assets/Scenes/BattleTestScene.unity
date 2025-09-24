@@ -4335,6 +4335,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 2969174266015618835, guid: 97deca0f2801a764b95b7d70a08ca6f4,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3066237777311986929, guid: 97deca0f2801a764b95b7d70a08ca6f4,
         type: 3}
       propertyPath: m_Layer
@@ -4878,7 +4883,7 @@ MonoBehaviour:
   maxAttempts: 50
   safeZoneCount: 3
   spawnHeight: 0.1
-  attackCooldown: 3
+  attackCooldown: 4
   player: {fileID: 194096016}
 --- !u!65 &8498225713429384174
 BoxCollider:

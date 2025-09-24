@@ -19,21 +19,22 @@ public class Boss : EnemyBase
     public int safeZoneCount = 3;   // 흰색 장판 개수
     public float spawnHeight = 0.1f;
 
-    private Transform planArea;
-    public float attackCooldown = 3f;
+    [Header("쿨타임")]
+    public float attackCooldown = 20f;
     private float timer;
+
+    private Transform planArea;
     private Animator anim;
 
     public Transform player;
 
+
     protected override void Start()
     {
-        base.Start(); // ✅ EnemyBase 초기화 (hp, animator, playerStatus 등)
-
+        base.Start();
+        anim = GetComponent<Animator>();
         GameObject plan = GameObject.FindGameObjectWithTag("Plan");
         if (plan != null) planArea = plan.transform;
-
-        anim = GetComponent<Animator>();
         timer = attackCooldown;
     }
 
@@ -42,12 +43,25 @@ public class Boss : EnemyBase
         timer -= Time.deltaTime;
         if (timer <= 0f)
         {
-            DoJumpAttack();
             // BossAttack();
-
+            StartJumpAttack();
             timer = attackCooldown;
         }
     }
+
+    void StartJumpAttack()
+    {
+        anim.SetTrigger("JumpUp");
+        StartCoroutine(JumpRoutine());
+    }
+
+    IEnumerator JumpRoutine()
+    {
+        yield return new WaitForSeconds(3.2f); 
+
+        anim.SetTrigger("LandImpact");
+    }
+
     public override void ApplyDamage(AttackInfo attackInfo)
     {
         if (isDead || !canBeHit) return;
@@ -108,12 +122,14 @@ public class Boss : EnemyBase
         Vector3 size = planArea.localScale;
         Vector3 center = planArea.position;
 
+        // 빨간 장판 생성
         GameObject red = Instantiate(redZonePrefab, center + Vector3.up * spawnHeight, Quaternion.Euler(90, 0, 0));
         red.transform.localScale = new Vector3(size.x, size.y, size.z);
 
         DamageZone dz = red.GetComponent<DamageZone>();
         List<GameObject> safeZones = new List<GameObject>();
 
+        // 흰 장판 여러 개 생성
         for (int i = 0; i < safeZoneCount; i++)
         {
             bool placed = false;
@@ -150,6 +166,7 @@ public class Boss : EnemyBase
                 placed = true;
             }
         }
+
         if (dz != null)
             dz.SetSafeZones(safeZones);
     }
