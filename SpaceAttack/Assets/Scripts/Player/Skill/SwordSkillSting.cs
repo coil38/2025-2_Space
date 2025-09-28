@@ -8,10 +8,6 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
     private Timer _s_AttackTimer;  //초기값인 s_AttackTimer의 복제본
 
-    private LayerMask planLayer;   //바닥감지용 리이어 마스크
-    private LayerMask wallLayer;   //벽감지용 레이어 마스크
-    private LayerMask enemyLayer;  //적감지용 레이어 마스크
-
     private WaitForFixedUpdate waitForFixedUpdate;
 
     private Vector3 f_DetectPos;     //기즈모 그리는 용
@@ -23,6 +19,8 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
     public override void OnEnable()
     {
+        base.OnEnable();
+
         damageRate = 2f;
         damage = PlayerStatus.normalDamage * damageRate;
         //--------------------------------------------------------
@@ -37,10 +35,6 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
         coolTimer = new Timer(coolTime);
         s_AttackTimer = new Timer(attackTime);  //playerWaitTime과 attackTime이 일치하기 때문에 이렇게 함.
         _s_AttackTimer = s_AttackTimer;
-
-        planLayer |= 1 << LayerMask.NameToLayer("Plan");
-        wallLayer |= 1 << LayerMask.NameToLayer("Wall");
-        enemyLayer |= (1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("DestructableObject"));
 
         waitForFixedUpdate = new WaitForFixedUpdate();
     }
@@ -149,25 +143,24 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
             foreach (Collider col in cols)
             {
-                if (col.gameObject.CompareTag("Enemy"))
-                {
-                    Collider[] cols2 = Physics.OverlapBox(col.gameObject.transform.position, _detectSize, detectRot, enemyLayer);   //첫 타 후, 감지 범위 내 모든 적 감지
-
-                    foreach (var col2 in cols2)
-                    {
-                        if (col2.gameObject != null)
-                            col2.SendMessage("ApplyDamage", attackInfo);
-                    }
-
-                    isAttackMoving = false;
-                    //OffFloorSprite();
-                    yield break;
-                }
-                else if (col.gameObject.CompareTag("DestructableObject"))
+                if (col.gameObject.CompareTag("DestructableObject"))
                 {
                     if (col.gameObject != null)
                         col.SendMessage("ApplyDamage", attackInfo);
+
+                    continue;
                 }
+
+                Collider[] cols2 = Physics.OverlapBox(col.gameObject.transform.position, _detectSize, detectRot, enemyLayer);   //첫 타 후, 감지 범위 내 모든 적 감지
+                foreach (var col2 in cols2)
+                {
+                    if (col2.gameObject != null)
+                        col2.SendMessage("ApplyDamage", attackInfo);
+                }
+                isAttackMoving = false;
+                //OffFloorSprite();
+                yield break;
+
             }
 
             if (timer <= 0) break;  //시간 초과시, 코루틴 종료

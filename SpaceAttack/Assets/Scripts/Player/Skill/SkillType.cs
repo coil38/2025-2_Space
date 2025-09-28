@@ -46,12 +46,24 @@ public abstract class SkillType : MonoBehaviour, IAttack, ICheckAttack
     public Timer w_AttackTimer { get; protected set; }      //다음 공격 후, 플레이어 대기 타이머 !! --> w_AttackTimer와 s_AttackTimer가 같을 경우, s_AttackTimer만 사용
     public Timer s_AttackTimer { get; protected set; }      //공격 Lerp용 타이머
 
+    //----------------------------------------------------------------------------------------
+
+    //레이어
+
+    protected LayerMask planLayer;   //바닥감지용 리이어 마스크
+    protected LayerMask wallLayer;   //벽감지용 레이어 마스크
+    protected LayerMask enemyLayer;  //적감지용 레이어 마스크
 
     public abstract void CheckAttack(Vector3 currentPos);
 
     public abstract void Attack();
 
-    public abstract void OnEnable();
+    public virtual void OnEnable()  //공용 레이어 설정
+    {
+        planLayer |= 1 << LayerMask.NameToLayer("Plan");
+        wallLayer |= 1 << LayerMask.NameToLayer("Wall");
+        enemyLayer |= (1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("DestructableObject")) | (1<< LayerMask.NameToLayer("Boss"));
+    }
 
     public abstract void UpdateInfo();
 }

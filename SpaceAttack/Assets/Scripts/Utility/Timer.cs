@@ -8,12 +8,14 @@ public class Timer
     private float duration;        //지속시간
     private float remainingTimer;  //남은 시간
     private bool isRunning;        //진행 중 여부 확인
+    private bool isEndTimer;       //타이머 종료 여부
 
     public Timer(float _duration)
     {
         duration = _duration;
         remainingTimer = _duration;
         isRunning = false;
+        isEndTimer = false;
     }
 
     public void Start()             //타이머 시작
@@ -31,7 +33,12 @@ public class Timer
             {
                 isRunning = false;
                 remainingTimer = 0;
+                isEndTimer = true;   //타이머 종료 활성화
             }
+        }
+        else
+        {
+            isEndTimer = false;
         }
     }
 
@@ -49,5 +56,10 @@ public class Timer
     {
         remainingTimer = duration;
         isRunning = false;
+    }
+
+    public bool IsEndTimer()   //타이머가 시작하고 종료할 때, 한번 실행됨
+    {
+        return isEndTimer;
     }
 }

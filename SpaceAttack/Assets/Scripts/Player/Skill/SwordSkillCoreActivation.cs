@@ -11,6 +11,8 @@ public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애�
     private bool isUsingBuff;
     public override void OnEnable()
     {
+        base.OnEnable();
+
         unLockedNumber = 3;
         attackTime = 10f;
         r_AttackTime = 0.2f;

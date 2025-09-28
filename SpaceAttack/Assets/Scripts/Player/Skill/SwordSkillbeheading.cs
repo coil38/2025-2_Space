@@ -7,10 +7,6 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
     [SerializeField] private AttackRangeSetter floorSpriteSetter;  //장판 이미지 설정
     [SerializeField] private AttackRangeSetter slashSpriteSetter;  //참격 이미지 설정
 
-    private LayerMask planLayer;   //바닥감지용 리이어 마스크
-    private LayerMask wallLayer;   //벽감지용 레이어 마스크
-    private LayerMask enemyLayer;  //적감지용 레이어 마스크
-
     private Vector3 f_DetectPos;     //기즈모 그리는 용
     private Vector3 f_DetectSize;
     private Quaternion detectRot;
@@ -27,6 +23,8 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
 
     public override void OnEnable()
     {
+        base.OnEnable();
+
         damageRate = 2.5f;
         damage = PlayerStatus.normalDamage * damageRate;
         //------------------------------------------------------------------------------------------------------
@@ -41,10 +39,6 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
         coolTimer = new Timer(coolTime);
         s_AttackTimer = new Timer(attackTime);                 //임시
         _s_AttackTimer = s_AttackTimer;
-
-        planLayer |= 1 << LayerMask.NameToLayer("Plan");
-        wallLayer |= 1 << LayerMask.NameToLayer("Wall");
-        enemyLayer |= (1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("DestructableObject"));
 
         waitForFixedUpdate = new WaitForFixedUpdate();
     }

@@ -18,6 +18,13 @@ public abstract class WeaponType : MonoBehaviour, IAttack, ICheckAttack
     public Timer m_AttackTimer { get; protected set; }        //공격 이동 타이머(원거리용)
     public Timer r_AttackTimer { get; protected set; }        //공격 애니메이션 대기
 
+    //--------------------------------------------------------------------------------------------------
+
+    //레이어 설정
+    protected LayerMask planLayer;   //바닥감지용 리이어 마스크
+    protected LayerMask enemyLayer;  //적감지용 레이어 마스크
+    protected LayerMask wallLayer;   //벽감지용 레이어 마스크
+
     //내부 기능
     public float damage { get; set; }
     public float damageRate { get; protected set; }
@@ -26,9 +33,13 @@ public abstract class WeaponType : MonoBehaviour, IAttack, ICheckAttack
 
     public abstract void Attack();
 
-    //Start 대신으로 임시 지정
-    public abstract void OnEnable();
-    //Update 대신으로 임시 지정
+    public virtual void OnEnable()  //공용 레이어 설정
+    {
+        planLayer |= 1 << LayerMask.NameToLayer("Plan");
+        enemyLayer |= (1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("DestructableObject")) | (1 << LayerMask.NameToLayer("Boss"));
+        wallLayer |= 1 << LayerMask.NameToLayer("Wall");
+    }
+
     public abstract void UpdateInfo();
 
     protected void PlayAniMation(PlayerAniInfo info)

@@ -5,11 +5,6 @@ using UnityEngine;
 
 public class BowSkillConcentratedFIre : SkillType
 {
-
-    private LayerMask planLayer;   //바닥감지용 리이어 마스크
-    private LayerMask wallLayer;   //벽감지용 레이어 마스크
-    private LayerMask enemyLayer;  //적감지용 레이어 마스크
-
     private WaitForFixedUpdate waitForFixedUpdate;
     private WaitForSeconds waitForSeconds;
 
@@ -26,6 +21,8 @@ public class BowSkillConcentratedFIre : SkillType
 
     public override void OnEnable()
     {
+        base.OnEnable();
+
         mass = 0.3f;
         detectDistance = 4f;    //선택범위 반지름
         attackDistance = 2f;    //공격범위 반지름
@@ -38,10 +35,6 @@ public class BowSkillConcentratedFIre : SkillType
 
         w_AttackTimer = new Timer(r_AttackTime);
         coolTimer = new Timer(coolTime);
-
-        planLayer |= 1 << LayerMask.NameToLayer("Plan");
-        wallLayer |= 1 << LayerMask.NameToLayer("Wall");
-        enemyLayer |= (1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("DestructableObject"));
 
         waitForFixedUpdate = new WaitForFixedUpdate();
         waitForSeconds = new WaitForSeconds(attackCycle);

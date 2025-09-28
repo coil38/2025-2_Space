@@ -15,10 +15,6 @@ public class WeaponBow : WeaponType     //시전시간(발사: 애니메이션 �
     private float attackTime = 0.3f;        //이동 시간
     private float r_AttackTime = 0.2f;      //화살 발사 시간
 
-    private LayerMask planLayer;   //바닥감지용 리이어 마스크
-    private LayerMask enemyLayer;  //적감지용 레이어 마스크
-    private LayerMask wallLayer;   //벽감지용 레이어 마스크
-
     private Vector3 f_DetectPos;     //기즈모 그리는 용
     private Vector3 f_DetectSize;
     private Quaternion detectRot;
@@ -38,11 +34,7 @@ public class WeaponBow : WeaponType     //시전시간(발사: 애니메이션 �
 
     public override void OnEnable()
     {
-
-
-        planLayer |= 1 << LayerMask.NameToLayer("Plan");
-        enemyLayer |= (1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("DestructableObject"));
-        wallLayer |= 1 << LayerMask.NameToLayer("Wall");
+        base.OnEnable();
 
         w_AttackTimer = new Timer(w_attackTime);
         m_AttackTimer = new Timer(attackTime);

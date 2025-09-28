@@ -6,10 +6,6 @@ public class BowSkillBigArrow : SkillType
 {
     private Timer _s_AttackTimer;  //초기값인 s_AttackTimer의 복제본
 
-    private LayerMask planLayer;   //바닥감지용 리이어 마스크
-    private LayerMask wallLayer;   //벽감지용 레이어 마스크
-    private LayerMask enemyLayer;  //적감지용 레이어 마스크
-
     private WaitForFixedUpdate waitForFixedUpdate;
 
     private Vector3 f_DetectPos;     //기즈모 그리는 용
@@ -28,6 +24,8 @@ public class BowSkillBigArrow : SkillType
 
     public override void OnEnable()
     {
+        base.OnEnable();
+
         mass = 1.1f;
         damage = 3f;
         attackDistance = 6f;
@@ -40,10 +38,6 @@ public class BowSkillBigArrow : SkillType
         w_AttackTimer = new Timer(r_AttackTime);
         s_AttackTimer = new Timer(attackTime);                 //임시
         _s_AttackTimer = s_AttackTimer;
-
-        planLayer |= 1 << LayerMask.NameToLayer("Plan");
-        wallLayer |= 1 << LayerMask.NameToLayer("Wall");
-        enemyLayer |= (1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("DestructableObject"));
 
         waitForFixedUpdate = new WaitForFixedUpdate();
     }

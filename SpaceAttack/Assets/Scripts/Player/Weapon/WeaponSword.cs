@@ -12,9 +12,6 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
     private float detectAngle = 155f;
     private float w_attackTime = 0.4f;    //검 공격 대기 시간
 
-    private LayerMask planLayer;   //바닥감지용 리이어 마스크
-    private LayerMask enemyLayer;  //적감지용 레이어 마스크
-
     private Timer attackMoveTimer;
     private bool isDetected;       //적 감지 여부
     private float moveDuration;
@@ -24,12 +21,10 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
     private Queue<GameObject> targets = new Queue<GameObject>();
     public override void OnEnable()
     {
+        base.OnEnable();
+
         damageRate = 1f;
         damage = PlayerStatus.normalDamage * damageRate;
-        //------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-        planLayer |= 1 << LayerMask.NameToLayer("Plan");
-        enemyLayer |= (1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("DestructableObject"));
 
         attackMoveTimer = new Timer(0.1f);         //공격 이동 속도 설정
         w_AttackTimer = new Timer(w_attackTime);   //공격 대기 시간 설정
@@ -45,15 +40,22 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
             float timer = attackMoveTimer.GetRemainingTimer() / 0.1f;
             Vector3 movePos = Vector3.Lerp(_currentPos, targetPos, 1 - timer);
             attackMovePos = movePos;   //이동 위치 할당
+
+            Attack();  //적감지
+
+            if (targets.Count > 0)  //피격 대상이 있을 경우, 공격 이동 종료
+            {
+                attackMoveTimer.Reset();
+            }
         }
 
-        if (!isAttacking) return;
+        if (isAttacking && !isDetected)  //공격 중, 적이 감지되지 않을 시, 공격 이동 시작
+        {
+            moveDuration = 0.7f;
 
-        if (!isDetected) moveDuration = 0.7f;  //적 감지 안됨
-        else moveDuration = 0f;              //적 감지 됨
-
-        attackMoveTimer.Start();
-        targetPos = _currentPos + attackDirection * moveDuration;
+            attackMoveTimer.Start();
+            targetPos = _currentPos + attackDirection * moveDuration;
+        }
     }
 
     public override void CheckAttack(Vector3 currentPos)
