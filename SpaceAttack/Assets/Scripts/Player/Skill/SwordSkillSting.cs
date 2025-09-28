@@ -32,7 +32,8 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
         attackWidth = 2f;
         attackTime = 0.6f;
         r_AttackTime = 0.2f;
-        coolTime = 5f;
+        normalCoolTime = 5f;
+        coolTime = normalCoolTime;
         coolTimer = new Timer(coolTime);
         s_AttackTimer = new Timer(attackTime);  //playerWaitTime과 attackTime이 일치하기 때문에 이렇게 함.
         _s_AttackTimer = s_AttackTimer;

@@ -13,10 +13,12 @@ public class RE_SkillCoolDecrease : RelicEffectDecorator
         if (isEquip)
         {
             //스킬 쿨타임 감소
+            EventManager.playerEvent.SetCoolDownValue(isEquip, relicInfo.n);
             LogUtil.Log("칩스킬 쿨타임 감소");
         }
         else
         {
+            EventManager.playerEvent.SetCoolDownValue(isEquip, relicInfo.n);
             LogUtil.Log("스킬 쿨타임 감소 해제");
         }
     }

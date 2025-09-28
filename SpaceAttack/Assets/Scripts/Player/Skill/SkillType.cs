@@ -12,11 +12,22 @@ public abstract class SkillType : MonoBehaviour, IAttack, ICheckAttack
     public float attackWidth { get; protected set; }         //공격 너비
     public float attackTime { get; protected set; }          //공격 시간
     public float r_AttackTime { get; protected set; }      //공격 대기 시간
-    public float coolTime { get; protected set; }            //쿨타임
     public Timer coolTimer { get; protected set; }           //쿨타임 타이머
     public int unLockedNumber { get; protected set; }      //해금 대상 번호
     public bool canUse { get; set; }                        //사용 가능 여부
     //public Sprite generateSprit { get; set; }      //장판 스프라이트 이미지
+
+    protected float _coolTime;                              //쿨타임
+    public float normalCoolTime { get; protected set; }     //기본 쿨타임
+    public float coolTime
+    {
+        get { return _coolTime; }
+        set
+        {
+            _coolTime = value;
+            coolTimer = new Timer(value);                   //쿨타입값 변경시, 인스턴스 변경
+        }
+    }
 
     //------------------------------------------------------------------------------------------------------
 

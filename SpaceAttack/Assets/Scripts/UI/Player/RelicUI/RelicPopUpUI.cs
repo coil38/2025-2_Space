@@ -11,7 +11,6 @@ public class RelicPopUpUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI relicNameText;
     [SerializeField] private TextMeshProUGUI relicDivisionText;
     [SerializeField] private TextMeshProUGUI relicDarkMatCountText;
-    [SerializeField] private TextMeshProUGUI relicAbilityText;
     [SerializeField] private TextMeshProUGUI relicDescription;
     [SerializeField] private Image relicIconImage;
 
@@ -30,10 +29,9 @@ public class RelicPopUpUI : MonoBehaviour
             relicNameText.text = relicSO.relicName;                             //유물 이름할당
             relicDivisionText.text = relicSO.relicDivision;                     //유물 분류 할당
             relicDarkMatCountText.text = relicSO.darkMaterialCount.ToString();  //유물 암흑물질수 할당
-            relicDescription.text = relicSO.description;                        //유물 설명 할당
             relicIconImage.sprite = relicSO.iconSprite;                         //유물 이미지 할당
 
-            //유물 능력 할당
+            //유물 능력 설명 할당
             List<string> temp = new List<string>();
             string[] words;
 
@@ -64,7 +62,7 @@ public class RelicPopUpUI : MonoBehaviour
                 temp.Add(sentence);
             }
 
-            relicAbilityText.text = string.Join("\n", temp);
+            relicDescription.text = string.Join("\t", temp);
         }
         else
         {

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 9120134025109172745}
   - component: {fileID: 6328481745200964922}
   - component: {fileID: 3299839948880509350}
+  - component: {fileID: 696344396019591192}
   m_Layer: 0
   m_Name: DataManager
   m_TagString: Untagged
@@ -48,6 +49,15 @@ MonoBehaviour:
   soundDatabase: {fileID: 11400000, guid: 8e7404451cb989040bd19fe3f577df7d, type: 2}
   levelDatabase: {fileID: 11400000, guid: 503734204ca2dae4296e1c272c3d5fc5, type: 2}
   relicDatabase: {fileID: 11400000, guid: 1b45c49dde0325947b76f74ac75d26b5, type: 2}
+  relics:
+  - {fileID: 8321878956919145575, guid: d641f525739fe3d47a7fe87ab89da716, type: 3}
+  - {fileID: 7916508284666258841, guid: f1ff4e58a8f90bc429ba5bc16dbb5020, type: 3}
+  - {fileID: 3764639700215969576, guid: 8b39dbb22c852b1499353e153cbca1cb, type: 3}
+  - {fileID: 4631744475645521433, guid: 18a2281cec446e74289d81c032315ec2, type: 3}
+  - {fileID: 348845386328382836, guid: 933326c238024a446b714aead7ad4128, type: 3}
+  - {fileID: 6082631216394609466, guid: b692833efbe57f14ebc2fad837976753, type: 3}
+  - {fileID: 5282424491904660293, guid: 016bc9bf69ba58b47a9fbf7f9526b6e8, type: 3}
+  - {fileID: 6234618577623402650, guid: ad6d95dd53318a5419f41671af653996, type: 3}
 --- !u!114 &3299839948880509350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,5 +68,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf3351050d9322b40af65edb4a1bf804, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &696344396019591192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7133250048871053892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22b4cf70e003b5b4398e316de2d4b20a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

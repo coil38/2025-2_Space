@@ -54,7 +54,8 @@ public class BowSkillChargingShot : SkillType
         SetGaugeData(gaugeCount);
 
         r_AttackTime = 0.2f;
-        coolTime = 25f;
+        normalCoolTime = 25f;
+        coolTime = normalCoolTime;
 
         coolTimer = new Timer(coolTime);
         w_AttackTimer = new Timer(r_AttackTime);

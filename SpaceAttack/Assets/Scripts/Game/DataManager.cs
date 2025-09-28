@@ -10,6 +10,14 @@ public class DataManager : MonoBehaviour
     [SerializeField] private LevelDatabaseSO levelDatabase;  //레벨 데이터 베이스
     [SerializeField] private RelicDatabaseSO relicDatabase;  //유물 데이터 베이스
 
+    //유물들
+    [SerializeField] private GameObject[] relics;  //유물들
+
+    public GameObject[] _relics
+    {
+        get { return relics; }
+        private set { relics = value; }
+    }
     public SoundDatabaseSO _soundDatabase
     {
         get { return soundDatabase; }

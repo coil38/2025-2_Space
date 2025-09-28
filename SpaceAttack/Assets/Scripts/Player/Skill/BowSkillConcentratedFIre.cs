@@ -33,7 +33,8 @@ public class BowSkillConcentratedFIre : SkillType
         damage = 0.5f;          //한 주기동안의 공격력
         attackTime = 2.5f;      //공격 시간
         r_AttackTime = 0.2f;  //플레이어 대기 시간
-        coolTime = 12f;         //쿨타임
+        normalCoolTime = 12f;         //쿨타임
+        coolTime = normalCoolTime;
 
         w_AttackTimer = new Timer(r_AttackTime);
         coolTimer = new Timer(coolTime);

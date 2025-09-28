@@ -36,7 +36,8 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
         attackWidth = 2f;
         attackTime = 0.6f;
         r_AttackTime = 0.2f;
-        coolTime = 8f;
+        normalCoolTime = 8f;
+        coolTime = normalCoolTime;
         coolTimer = new Timer(coolTime);
         s_AttackTimer = new Timer(attackTime);                 //임시
         _s_AttackTimer = s_AttackTimer;

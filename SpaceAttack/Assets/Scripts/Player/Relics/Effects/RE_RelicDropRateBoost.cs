@@ -13,11 +13,13 @@ public class RE_RelicDropRateBoost : RelicEffectDecorator
         if (isEquip)
         {
             //칩셋 드롭확률 상승
-            LogUtil.Log("칩셋 드롭확률 상승");
+            LogUtil.Log($"칩셋 드롭확률 상승, 상승 수치: {relicInfo.n}");
+            DropRelicSystem.dropRate += relicInfo.n;
         }
         else
         {
-            LogUtil.Log("칩셋 드롭확률 상승 해제");
+            LogUtil.Log($"칩셋 드롭확률 상승 해제, 해제 수치: {relicInfo.n}");
+            DropRelicSystem.dropRate -= relicInfo.n;
         }
     }
 }

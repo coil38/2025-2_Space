@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     {
         characterMovement = GetComponent<CharacterMovement>();
         playerState = GetComponent<PlayerStatus>();
+
     }
 
     void Update()            //플레이어 조작조건 및 예외처리

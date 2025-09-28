@@ -28,6 +28,13 @@ public class PlayerEvent
         remove { _relicAttackEventHandler -= value; }
     }
 
+    private EventHandler<PlayerEvent> _coolDownEventHandler;  //유물 공격력 수치 변경 이벤트
+    public event EventHandler<PlayerEvent> coolDownEventHandler
+    {
+        add { _coolDownEventHandler += value; }
+        remove { _coolDownEventHandler -= value; }
+    }
+
     public LevelDatabaseSO levelDatabase;   //레벨 보정관련 데이터 베이스
 
 
@@ -65,7 +72,7 @@ public class PlayerEvent
                 skillNumber = levelSO.unlockedSkill;
             }
 
-            _correctionEventHandler.Invoke(this, EventManager.playerEvent);   //이벤트 호출
+            _correctionEventHandler?.Invoke(this, EventManager.playerEvent);   //이벤트 호출
         }
     }
 
@@ -94,16 +101,24 @@ public class PlayerEvent
             nextMaxEXP = levelDatabase.GetMaxExp(_level + 1);  //해당 레벨의 최대경험치양 찾기
         }
 
-        _levelEventHandler.Invoke(this, EventManager.playerEvent);   //최대레벨을 찾는 이벤트 호출
+        _levelEventHandler?.Invoke(this, EventManager.playerEvent);   //최대레벨을 찾는 이벤트 호출
     }
 
     public bool isEquip;      //장착여부
     public float damageRate;  //데미지률
     public void SetRelicAttackValue(bool _isEquip, float _damageRate)
     {
-        LogUtil.Log("작동한다.");
+        //LogUtil.Log("작동한다.");
         isEquip = _isEquip;
         damageRate = _damageRate;
-        _relicAttackEventHandler.Invoke(this, EventManager.playerEvent);
+        _relicAttackEventHandler?.Invoke(this, EventManager.playerEvent);
+    }
+
+    public float coolDownRate;  //쿨타임 감소률
+    public void SetCoolDownValue(bool _isEquip, float _coolDownRate)
+    {
+        isEquip = _isEquip;
+        coolDownRate = _coolDownRate;
+        _coolDownEventHandler?.Invoke(this, EventManager.playerEvent);
     }
 }

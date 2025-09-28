@@ -34,7 +34,8 @@ public class BowSkillBigArrow : SkillType
         attackWidth = 4f;
         attackTime = 0.6f;
         r_AttackTime = 0.2f;
-        coolTime = 8f;
+        normalCoolTime = 8f;
+        coolTime = normalCoolTime;
         coolTimer = new Timer(coolTime);
         w_AttackTimer = new Timer(r_AttackTime);
         s_AttackTimer = new Timer(attackTime);                 //임시

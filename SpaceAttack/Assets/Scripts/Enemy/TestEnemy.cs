@@ -112,6 +112,9 @@ public class TestEnemy : MonoBehaviour
         {
             isDead = true;
             animator.SetBool("Dead", true);
+
+            DropRelicSystem.DropRelicObjRandomly(transform.position);
+
             Destroy(gameObject, 1f);
         }
         else

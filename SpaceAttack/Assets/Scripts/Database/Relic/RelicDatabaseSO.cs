@@ -28,4 +28,9 @@ public class RelicDatabaseSO : ScriptableObject
 
         return null;
     }
+
+    public RelicSO[] GetRelics()
+    {
+        return relics.ToArray();
+    }
 }

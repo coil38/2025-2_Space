@@ -14,7 +14,8 @@ public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애�
         unLockedNumber = 3;
         attackTime = 10f;
         r_AttackTime = 0.2f;
-        coolTime = 25f;
+        normalCoolTime = 25f;
+        coolTime = normalCoolTime;
         coolTimer = new Timer(coolTime);
         s_AttackTimer = new Timer(attackTime);
     }
