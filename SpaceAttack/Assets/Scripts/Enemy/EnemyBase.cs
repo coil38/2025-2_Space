@@ -59,6 +59,12 @@ public abstract class EnemyBase : MonoBehaviour
     [SerializeField] protected MonsterHPUI monsterHPUI;
     protected float maxHP = 10f;
 
+    [Header("피격 시 색 변경")]
+    public Color hitColor = Color.red;       // 맞았을 때 색
+    public float hitFlashDuration = 0.2f;   // 색이 돌아오는 시
+
+    private List<Renderer> renderers = new List<Renderer>();
+
     protected PlayerStatus playerStatus;
     protected float DetectRadius => detectRadius;
     protected virtual void OnPlayerDetected(Transform player) { }
@@ -72,6 +78,8 @@ public abstract class EnemyBase : MonoBehaviour
             baseScaleX = visualTransform.localScale.x;
         else
             Debug.LogError("[EnemyBase] visualTransform is not assigned!");
+
+        renderers.AddRange(GetComponentsInChildren<SpriteRenderer>());
 
         rb = GetComponent<Rigidbody>();
 
@@ -187,6 +195,9 @@ public abstract class EnemyBase : MonoBehaviour
         if (monsterHPUI != null)
             monsterHPUI.ReduceHP(maxHP, hp);
 
+        // 몸 빨갛게 깜빡이기
+        StartCoroutine(HitFlash());
+
         // 사망 체크
         if (hp <= 0 && !isDead)
         {
@@ -228,6 +239,26 @@ public abstract class EnemyBase : MonoBehaviour
         isHit = false;
     }
 
+    //맞는 피격 이펙트
+    public IEnumerator HitFlash()
+    {
+        List<Color> originalColors = new List<Color>();
+        foreach (var r in renderers)
+        {
+            if (r is SkinnedMeshRenderer smr)
+                originalColors.Add(smr.material.color);
+            else
+                originalColors.Add(r.material.color);
+        }
+
+        for (int i = 0; i < renderers.Count; i++)
+            renderers[i].material.color = hitColor;
+
+        yield return new WaitForSeconds(hitFlashDuration);
+
+        for (int i = 0; i < renderers.Count; i++)
+            renderers[i].material.color = originalColors[i];
+    }
 
 
     protected void Flip(float moveX)

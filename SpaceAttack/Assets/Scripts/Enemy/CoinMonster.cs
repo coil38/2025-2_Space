@@ -199,6 +199,8 @@ public class CoinMonster : EnemyBase
             audioSource.PlayOneShot(hitSound);
         }
 
+        StartCoroutine(HitFlash());
+
         if (monsterHPUI != null)
             monsterHPUI.ReduceHP(maxHP, hp);
 

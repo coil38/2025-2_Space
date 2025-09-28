@@ -8,6 +8,8 @@ public class Boss : EnemyBase
     public GameObject redZonePrefab;
     public GameObject whiteZonePrefab;
     public GameObject projectilePrefab;
+    public GameObject CoinPrefab;
+    public GameObject CoinZonePrefab;
 
     [Header("장판 크기 설정")]
     public float safeZoneScale = 3f;       // 안전장판 크기
@@ -26,15 +28,26 @@ public class Boss : EnemyBase
     private Transform planArea;
     private Animator anim;
 
+    [Header("보스 사운드")]
+    public AudioClip coinAttackSound;
+    public AudioClip WariningSound;
+
     public Transform player;
+    float margin = 1f;
 
 
     protected override void Start()
     {
+
+        Collider col = GetComponent<Collider>();
         base.Start();
         anim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+
         GameObject plan = GameObject.FindGameObjectWithTag("Plan");
         if (plan != null) planArea = plan.transform;
+
+
         timer = attackCooldown;
     }
 
@@ -44,7 +57,8 @@ public class Boss : EnemyBase
         if (timer <= 0f)
         {
             // BossAttack();
-            StartJumpAttack();
+            //StartJumpAttack();
+            StartCoinRain();
             timer = attackCooldown;
         }
     }
@@ -53,6 +67,11 @@ public class Boss : EnemyBase
     {
         anim.SetTrigger("JumpUp");
         StartCoroutine(JumpRoutine());
+    }
+
+    void StartCoinRain()
+    {
+        anim.SetTrigger("CoinAttack");
     }
 
     IEnumerator JumpRoutine()
@@ -64,7 +83,7 @@ public class Boss : EnemyBase
 
     public override void ApplyDamage(AttackInfo attackInfo)
     {
-        if (isDead || !canBeHit) return;
+        if (isDead) return;
 
         // 체력 감소
         hp -= attackInfo.damage;
@@ -72,6 +91,8 @@ public class Boss : EnemyBase
         // 히트 사운드 재생
         if (hitSound != null && audioSource != null)
             audioSource.PlayOneShot(hitSound);
+
+        StartCoroutine(HitFlash());
 
         // 사망 체크
         if (hp <= 0 && !isDead)
@@ -87,10 +108,6 @@ public class Boss : EnemyBase
                 Instantiate(deathMarkPrefab, footPosition.position, Quaternion.identity);
 
             Destroy(gameObject, 1f);
-        }
-        else
-        {
-            animator.SetTrigger("Hit");
         }
     }
 
@@ -113,6 +130,68 @@ public class Boss : EnemyBase
             proj.GetComponent<Projectile>().Init(dir);
         }
     }
+
+
+    //실행 함수
+    public void DoCoinRainAttack()
+    {
+        CoinRainAttack(20); // 동전 갯수 설정
+    }
+
+    //코인 떨어지는 로직
+    public void CoinRainAttack(int coinCount = 10)
+    {
+        if (planArea == null) return;
+
+        Vector3 size = planArea.localScale;
+        Vector3 center = planArea.position;
+
+        GameObject boss = GameObject.FindGameObjectWithTag("Boss");
+        Vector2 bossXZ = boss != null ? new Vector2(boss.transform.position.x, boss.transform.position.z) : Vector2.negativeInfinity;
+        float bossRadius = 3f; // 원하는 보스 주변 안전 거리
+
+        List<Vector3> usedPositions = new List<Vector3>();
+
+        for (int i = 0; i < coinCount; i++)
+        {
+            Vector3 groundPos;
+            int safety = 0;
+
+            do
+            {
+                float randX = Random.Range(-size.x / 2f + margin, size.x / 2f - margin);
+                float randY = Random.Range(-size.y / 2f + margin, size.y / 2f - margin);
+                groundPos = new Vector3(center.x + randX, center.y, center.z + randY);
+
+                safety++;
+                if (safety > 50) break;
+
+            }
+            while (
+                   (boss != null && Vector2.Distance(new Vector2(groundPos.x, groundPos.z), bossXZ) < bossRadius) ||
+                    usedPositions.Exists(p => Vector3.Distance(p, groundPos) < 2.0f)
+                   );
+
+            usedPositions.Add(groundPos);
+
+            // 경고 장판
+            GameObject warning = Instantiate(
+                CoinZonePrefab,
+                groundPos + Vector3.up * 0.15f,
+                Quaternion.Euler(90, 0, 0)
+            );
+            warning.transform.localScale = new Vector3(2f, 2f, 1f);
+
+            // 코인 생성
+            Vector3 spawnPos = groundPos + Vector3.up * 10f;
+            GameObject coin = Instantiate(CoinPrefab, spawnPos, Quaternion.identity);
+
+            CoinProject cp = coin.GetComponent<CoinProject>();
+            cp.Init(warning);
+        }
+    }
+
+
 
     //점프 공격
     public void DoJumpAttack()
@@ -173,8 +252,27 @@ public class Boss : EnemyBase
 
     protected override void OnDeath()
     {
-        base.OnDeath(); // ✅ 기본 드롭 로직 실행
+        base.OnDeath(); 
         // 보스 전용 추가 연출 넣고 싶으면 여기서 구현
         Debug.Log("보스 처치됨!");
+    }
+
+
+
+    //여긴 보스 사운드로 채울거임
+    public void BossWariningSound()
+    {
+        if (audioSource != null && WariningSound!= null)
+        {
+            audioSource.PlayOneShot(WariningSound);
+        }
+    }
+
+    public void PlayCoinAttackSound()
+    {
+        if (audioSource != null && coinAttackSound != null)
+        {
+            audioSource.PlayOneShot(coinAttackSound);
+        }
     }
 }
