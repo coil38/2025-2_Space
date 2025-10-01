@@ -10,6 +10,7 @@ public class Boss : EnemyBase
     public GameObject projectilePrefab;
     public GameObject CoinPrefab;
     public GameObject CoinZonePrefab;
+    public GameObject canPrefab; 
 
     [Header("장판 크기 설정")]
     public float safeZoneScale = 3f;       // 안전장판 크기
@@ -31,9 +32,12 @@ public class Boss : EnemyBase
     [Header("보스 사운드")]
     public AudioClip coinAttackSound;
     public AudioClip WariningSound;
+    public AudioClip bossjumpdownSound;
 
     public Transform player;
     float margin = 1f;
+
+    public Transform headTransform; // 보스 머리 위치
 
 
     protected override void Start()
@@ -58,7 +62,8 @@ public class Boss : EnemyBase
         {
             // BossAttack();
             //StartJumpAttack();
-            StartCoinRain();
+            //StartCoinRain();
+            LaunchCansCrossAttack();
             timer = attackCooldown;
         }
     }
@@ -250,6 +255,39 @@ public class Boss : EnemyBase
             dz.SetSafeZones(safeZones);
     }
 
+    //캔 던지기
+    public void LaunchCansCrossAttack()
+    {
+        if (planArea == null || canPrefab == null || headTransform == null) return;
+
+        StartCoroutine(LaunchCansRoutine());
+    }
+
+    private IEnumerator LaunchCansRoutine()
+    {
+        Vector3 size = planArea.localScale;
+        Vector3 center = planArea.position;
+
+        int waveCount = 4;   // 3번 반복
+        int cansPerWave = 10; // 한 번에 3개
+
+        for (int wave = 0; wave < waveCount; wave++)
+        {
+            for (int i = 0; i < cansPerWave; i++)
+            {
+                float randX = Random.Range(-size.x / 2f, size.x / 2f);
+                float randY = Random.Range(-size.y / 2f, size.y / 2f); 
+
+                Vector3 targetPos = new Vector3(center.x + randX, center.y, center.z + randY);
+
+                GameObject can = Instantiate(canPrefab, headTransform.position, Quaternion.identity);
+                can.GetComponent<CanProjectile>().Init(targetPos);
+            }
+
+            yield return new WaitForSeconds(1f); 
+        }
+    }
+
     protected override void OnDeath()
     {
         base.OnDeath(); 
@@ -273,6 +311,14 @@ public class Boss : EnemyBase
         if (audioSource != null && coinAttackSound != null)
         {
             audioSource.PlayOneShot(coinAttackSound);
+        }
+    }
+
+    public void BossJumpDownSound()
+    {
+        if (audioSource != null && bossjumpdownSound != null)
+        {
+            audioSource.PlayOneShot(bossjumpdownSound);
         }
     }
 }

@@ -7,10 +7,27 @@ public class CoinProject : MonoBehaviour
     private GameObject warningZone;
     public int damage = 10;
     private bool hasCollided = false;
+    private bool soundPlayed = false;
+
+
 
     public void Init(GameObject warning)
     {
         warningZone = warning;
+    }
+
+    private void Update()
+    {
+        if (hasCollided || soundPlayed) return;
+
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 2.5f))
+        {
+            if (hit.collider.CompareTag("Plan")) 
+            {
+                soundPlayed = true;
+                CoinSoundManager.Instance.PlayGroundHit(); 
+            }
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -30,7 +47,8 @@ public class CoinProject : MonoBehaviour
 
             PlayerStatus.Instance.ApplyDamage(info);
 
-            // 장판 + 코인 제거
+            CoinSoundManager.Instance.PlayPlayerHit(); 
+
             if (warningZone != null)
                 Destroy(warningZone);
 
@@ -38,11 +56,14 @@ public class CoinProject : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Plan"))
         {
-            // 땅에 닿았을 때 데미지 없음, 그냥 제거
             if (warningZone != null)
                 Destroy(warningZone);
 
             Destroy(gameObject);
         }
+    }
+    public void PlayFallSound()
+    {
+        CoinSoundManager.Instance.PlayGroundHit();
     }
 }
