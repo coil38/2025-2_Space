@@ -33,6 +33,7 @@ public class Boss : EnemyBase
     public AudioClip coinAttackSound;
     public AudioClip WariningSound;
     public AudioClip bossjumpdownSound;
+    public AudioClip bossCanAttackSound;
 
     public Transform player;
     float margin = 1f;
@@ -60,10 +61,10 @@ public class Boss : EnemyBase
         timer -= Time.deltaTime;
         if (timer <= 0f)
         {
-            // BossAttack();
+            BossAttack();
             //StartJumpAttack();
             //StartCoinRain();
-            LaunchCansCrossAttack();
+            //LaunchCansCrossAttack();
             timer = attackCooldown;
         }
     }
@@ -117,7 +118,16 @@ public class Boss : EnemyBase
     }
 
     //총알 어택
-    void BossAttack()
+    public void BossAttack()
+    {
+        if (player == null) return;
+
+        // 애니메이션 실행
+        animator.SetTrigger("FireAttack");
+    }
+
+  
+    public void FireProjectile()
     {
         if (player == null) return;
 
@@ -135,7 +145,6 @@ public class Boss : EnemyBase
             proj.GetComponent<Projectile>().Init(dir);
         }
     }
-
 
     //실행 함수
     public void DoCoinRainAttack()
@@ -303,6 +312,14 @@ public class Boss : EnemyBase
         if (audioSource != null && WariningSound!= null)
         {
             audioSource.PlayOneShot(WariningSound);
+        }
+    }
+
+    public void BossCanAttackSound()
+    {
+        if (audioSource != null && bossCanAttackSound != null)
+        {
+            audioSource.PlayOneShot(bossCanAttackSound);
         }
     }
 
