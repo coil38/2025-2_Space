@@ -13,27 +13,17 @@ public class Boss : EnemyBase
     public GameObject CoinZonePrefab;
     public GameObject canPrefab; 
 
-    [Header("장판 크기 설정")]
+    [Header("장판 크기 설정(보스 스킬 쿵)")]
     public float safeZoneScale = 3f;       // 안전장판 크기
     public float minSafeZoneDistance = 4f; // 안전장판끼리 최소 거리
     public float bossSafeRadius = 5f;      // 보스 주변 금지 반경
     public int maxAttempts = 50;
-
-    [Header("생성 설정")]
     public int safeZoneCount = 3;   // 흰색 장판 개수
     public float spawnHeight = 0.1f;
 
-    [Header("쿨타임")]
+    [Header("쿨타임(테스트)")]
     public float attackCooldown = 20f;
     private float timer;
-
-    private Animator anim;
-
-    [Header("보스 사운드")]
-    public AudioClip coinAttackSound;
-    public AudioClip WariningSound;
-    public AudioClip bossjumpdownSound;
-    public AudioClip bossCanAttackSound;
 
     [Header("보스 스킬(퉤)")]
     public Transform planArea;
@@ -47,10 +37,14 @@ public class Boss : EnemyBase
 
     public Transform player;
     float margin = 1f;
-
+    private Animator anim;
     public Transform headTransform; // 보스 머리 위치
 
-
+    [Header("보스 사운드")]
+    public AudioClip coinAttackSound;
+    public AudioClip WariningSound;
+    public AudioClip bossjumpdownSound;
+    public AudioClip bossCanAttackSound;
     protected override void Start()
     {
 
@@ -281,7 +275,7 @@ public class Boss : EnemyBase
         BossCameraShake shake = Camera.main.GetComponent<BossCameraShake>();
         if (shake != null)
         {
-            StartCoroutine(shake.Shake(0.5f, 0.4f)); // 0.4초간 흔들기, 강도 0.25
+            StartCoroutine(shake.Shake(0.5f, 0.4f)); 
         }
     }
 
@@ -322,13 +316,11 @@ public class Boss : EnemyBase
     {
         if (planArea == null || minionPrefabs.Length == 0)
         {
-            Debug.LogWarning("⚠️ planArea 또는 minionPrefabs가 비어 있습니다.");
             return;
         }
 
         if (mouthPoint == null)
         {
-            Debug.LogWarning("⚠️ mouthPoint가 설정되지 않았습니다.");
             return;
         }
 
@@ -354,8 +346,6 @@ public class Boss : EnemyBase
                 StartCoroutine(EnableEnemyAfterLanding(enemy, 10f)); 
             }
         }
-
-        Debug.Log($"💨 {minionCount}마리의 잡몹을 입에서 날려 보냈습니다!");
     }
 
     private IEnumerator EnableEnemyAfterLanding(EnemyBase enemy, float waitAfterLand)
@@ -363,11 +353,9 @@ public class Boss : EnemyBase
         Rigidbody rb = enemy.GetComponent<Rigidbody>();
         if (rb == null) yield break;
 
-        // 착지 판정 (속도 거의 0이면 착지)
         while (Mathf.Abs(rb.velocity.y) > 0.1f)
             yield return null;
 
-        // 착지 후 3초 대기
         yield return new WaitForSeconds(waitAfterLand);
 
         if (enemy != null)
