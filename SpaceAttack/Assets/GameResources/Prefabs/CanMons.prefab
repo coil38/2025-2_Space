@@ -348,6 +348,7 @@ GameObject:
   - component: {fileID: 3859271162644156415}
   - component: {fileID: 4846051118577970345}
   - component: {fileID: 4813388956784431499}
+  - component: {fileID: -3616093932767454371}
   m_Layer: 6
   m_Name: CanMons
   m_TagString: Untagged
@@ -453,6 +454,8 @@ MonoBehaviour:
   audioSource: {fileID: 4813388956784431499}
   hitSound: {fileID: 8300000, guid: 1bc8b9ac984a0ba4a9a33ca8c3a91097, type: 3}
   monsterHPUI: {fileID: 2614539350023895746}
+  hitColor: {r: 1, g: 0, b: 0, a: 1}
+  hitFlashDuration: 0.2
   hopForce: 2.5
   hopCooldown: 1.8
   bulletPrefab: {fileID: 5542156243755027467, guid: fc7773ab55445a54da0638907c30b4b1,
@@ -606,6 +609,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-3616093932767454371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3210841994201302233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d5fb53f99dc6b3419e73930cb143c07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackDelay: 3
 --- !u!1 &3283011311989602062
 GameObject:
   m_ObjectHideFlags: 0

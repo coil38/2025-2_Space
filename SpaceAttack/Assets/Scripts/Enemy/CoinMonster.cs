@@ -98,6 +98,7 @@ public class CoinMonster : EnemyBase
     //주변 배회 상태 코드
     protected override void Patrol()
     {
+        if (!canDetectPlayer) return;
         patrolTimer += Time.deltaTime;
 
         if (isPatrolling)

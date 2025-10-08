@@ -36,7 +36,6 @@ public class ShoeMonster : EnemyBase
     protected override void Start()
     {
         base.Start();
-
         if (animator == null)
         {
             animator = GetComponentInChildren<Animator>();
@@ -65,19 +64,22 @@ public class ShoeMonster : EnemyBase
     //배회상태
     protected override void Patrol()
     {
+        if (!canDetectPlayer) return;  // 🔹 여기서 막기
         Collider[] hits = Physics.OverlapSphere(transform.position, DetectRadius, playerLayer);
         if (hits.Length > 0)
         {
+            if (!canDetectPlayer) return;  // 🔹 추가 안전장치
             OnPlayerDetected(hits[0].transform);
-            return;                    
+            return;
         }
     }
-    
+
 
     //플레이어 감지
     #region EnemyBase Override
     protected override void OnPlayerDetected(Transform player)
     {
+        if (!canDetectPlayer) return;  // 🔹 소환 직후 감지 무시
         if (playerStatus != null && playerStatus.isBeingEaten)
             return;
 
@@ -87,7 +89,7 @@ public class ShoeMonster : EnemyBase
     #endregion
     protected override void CheckAttack()
     {
-      
+        if (!canDetectPlayer) return;
     }
     #region Coroutines
 
@@ -96,6 +98,7 @@ public class ShoeMonster : EnemyBase
     {
         while (!isDead)
         {
+            if (!canDetectPlayer) { yield return null; continue; }
             if (canHop && !isHit && !isAttacking)
             {
                 Vector3 horizDir = target ? (target.position - transform.position) : Random.insideUnitSphere;

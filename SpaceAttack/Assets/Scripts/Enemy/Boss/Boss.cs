@@ -26,7 +26,6 @@ public class Boss : EnemyBase
     public float attackCooldown = 20f;
     private float timer;
 
-    private Transform planArea;
     private Animator anim;
 
     [Header("보스 사운드")]
@@ -34,6 +33,16 @@ public class Boss : EnemyBase
     public AudioClip WariningSound;
     public AudioClip bossjumpdownSound;
     public AudioClip bossCanAttackSound;
+
+    [Header("보스 스킬(퉤)")]
+    public Transform planArea;
+    public GameObject[] minionPrefabs;         // 소환할 잡몹 종류들
+    public int minionCount = 5;                // 한 번에 소환할 마리 수
+    public float minDistanceBetweenMinions = 2f; // 서로 너무 가까이 안 소환되게
+    public Transform mouthPoint; // 보스 입 위치
+    public float shootForce = 8f; // 잡몹이 날아가는 힘
+    public float upwardForce = 3f; // 살짝 위로 날아가게
+    public float spreadAngle = 60f; // 퍼지는 각도
 
     public Transform player;
     float margin = 1f;
@@ -61,10 +70,11 @@ public class Boss : EnemyBase
         timer -= Time.deltaTime;
         if (timer <= 0f)
         {
-            BossAttack();
+            //BossAttack();
             //StartJumpAttack();
             //StartCoinRain();
             //LaunchCansCrossAttack();
+            SummonMinionsSkill();
             timer = attackCooldown;
         }
     }
@@ -297,6 +307,63 @@ public class Boss : EnemyBase
         }
     }
 
+    public void SummonMinionsSkill()
+    {
+        if (planArea == null || minionPrefabs.Length == 0)
+        {
+            Debug.LogWarning("⚠️ planArea 또는 minionPrefabs가 비어 있습니다.");
+            return;
+        }
+
+        if (mouthPoint == null)
+        {
+            Debug.LogWarning("⚠️ mouthPoint가 설정되지 않았습니다.");
+            return;
+        }
+
+        for (int i = 0; i < minionCount; i++)
+        {
+            GameObject randomMinion = minionPrefabs[Random.Range(0, minionPrefabs.Length)];
+            GameObject minion = Instantiate(randomMinion, mouthPoint.position, Quaternion.identity);
+
+            float randomY = Random.Range(0f, 360f);
+            Vector3 randomDir = Quaternion.Euler(0, randomY, 0) * mouthPoint.forward;
+
+            Rigidbody rb = minion.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                Vector3 force = randomDir.normalized * shootForce + Vector3.up * upwardForce;
+                rb.AddForce(force, ForceMode.Impulse);
+            }
+
+            EnemyBase enemy = minion.GetComponent<EnemyBase>();
+            if (enemy != null)
+            {
+                enemy.canDetectPlayer = false;
+                StartCoroutine(EnableEnemyAfterLanding(enemy, 10f)); 
+            }
+        }
+
+        Debug.Log($"💨 {minionCount}마리의 잡몹을 입에서 날려 보냈습니다!");
+    }
+
+    private IEnumerator EnableEnemyAfterLanding(EnemyBase enemy, float waitAfterLand)
+    {
+        Rigidbody rb = enemy.GetComponent<Rigidbody>();
+        if (rb == null) yield break;
+
+        // 착지 판정 (속도 거의 0이면 착지)
+        while (Mathf.Abs(rb.velocity.y) > 0.1f)
+            yield return null;
+
+        // 착지 후 3초 대기
+        yield return new WaitForSeconds(waitAfterLand);
+
+        if (enemy != null)
+            enemy.canDetectPlayer = true;
+    }
+
+    //보스 죽음처리
     protected override void OnDeath()
     {
         base.OnDeath(); 
@@ -338,4 +405,5 @@ public class Boss : EnemyBase
             audioSource.PlayOneShot(bossjumpdownSound);
         }
     }
+
 }

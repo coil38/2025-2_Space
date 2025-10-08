@@ -370,6 +370,7 @@ GameObject:
   - component: {fileID: 1625576957432636737}
   - component: {fileID: 2230377501876213626}
   - component: {fileID: 3861770354675353459}
+  - component: {fileID: -8006448083748097073}
   m_Layer: 6
   m_Name: SnackMons
   m_TagString: SnackMonster
@@ -475,6 +476,8 @@ MonoBehaviour:
   audioSource: {fileID: 3861770354675353459}
   hitSound: {fileID: 8300000, guid: 1bc8b9ac984a0ba4a9a33ca8c3a91097, type: 3}
   monsterHPUI: {fileID: 2614539350023895746}
+  hitColor: {r: 1, g: 0, b: 0, a: 1}
+  hitFlashDuration: 0.2
   patrolSpeed: 2
   chaseSpeed: 3.5
   patrolChangeTime: 2
@@ -628,6 +631,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-8006448083748097073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2040890849726229375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d5fb53f99dc6b3419e73930cb143c07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackDelay: 3
 --- !u!1 &2303709362591742299
 GameObject:
   m_ObjectHideFlags: 0

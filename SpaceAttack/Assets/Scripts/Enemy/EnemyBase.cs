@@ -72,6 +72,10 @@ public abstract class EnemyBase : MonoBehaviour
     protected Transform attackTarget;
 
     public Action<EnemyBase> OnDeathAction; // 몬스터 죽을 때 이벤트
+
+    [HideInInspector]
+    public bool canDetectPlayer = true;
+
     protected virtual void Start()
     {
         if (visualTransform != null)
@@ -103,6 +107,8 @@ public abstract class EnemyBase : MonoBehaviour
     }
     protected virtual void Patrol()
     {
+        if (!canDetectPlayer) return;
+
         Collider[] hits = Physics.OverlapSphere(transform.position, DetectRadius, playerLayer);
         if (hits.Length > 0)
         {
@@ -112,6 +118,8 @@ public abstract class EnemyBase : MonoBehaviour
     }
     protected void MoveTo(Vector3 target, float speed)
     {
+        if (!canDetectPlayer) return;
+
         Vector3 direction = target - transform.position;
         direction.y = 0f; 
         direction = direction.normalized;
@@ -128,6 +136,13 @@ public abstract class EnemyBase : MonoBehaviour
 
         while (true)
         {
+            if (!canDetectPlayer) // 🔹 공격 비활성화 상태면 그냥 대기
+            {
+                yield return null;
+                continue;
+            }
+
+
             timer += Time.deltaTime / attackDuration;
             if (timer > 1 && !isHit)
             {
@@ -141,6 +156,8 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected virtual void CheckAttack()
     {
+        if (!canDetectPlayer) return;
+
         if (playerStatus == null)
         {
             Debug.LogWarning("playerStatus가 null입니다.");

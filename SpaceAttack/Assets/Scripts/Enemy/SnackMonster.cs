@@ -63,7 +63,7 @@ public class SnackMonster : EnemyBase
 
     private void FixedUpdate()
     {
-        if (isDead || isHit || isEating || isPaused)
+        if (isDead || isHit || isEating || isPaused || !canDetectPlayer)
         {
             SetIsWalking(false);
             return;
@@ -112,7 +112,7 @@ public class SnackMonster : EnemyBase
     //플레이어 감지
     protected override void OnPlayerDetected(Transform player)
     {
-        if (!isEating)
+        if (!canDetectPlayer || isEating) return;
         {
             isChasing = true;
             attackTarget = player;
@@ -135,6 +135,8 @@ public class SnackMonster : EnemyBase
     //주변 배회 상태
     private void Chase()
     {
+        if (!canDetectPlayer) return;
+
         if (attackTarget == null)
         {
             isChasing = false;
