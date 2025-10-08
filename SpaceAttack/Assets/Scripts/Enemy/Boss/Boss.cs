@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 public class Boss : EnemyBase
@@ -71,10 +72,10 @@ public class Boss : EnemyBase
         if (timer <= 0f)
         {
             //BossAttack();
-            //StartJumpAttack();
+            StartJumpAttack();
             //StartCoinRain();
             //LaunchCansCrossAttack();
-            SummonMinionsSkill();
+            //SummonMinionsSkill();
             timer = attackCooldown;
         }
     }
@@ -272,6 +273,16 @@ public class Boss : EnemyBase
 
         if (dz != null)
             dz.SetSafeZones(safeZones);
+    }
+
+    public void OnBossLand()
+    {
+        // 카메라 쉐이크 실행
+        BossCameraShake shake = Camera.main.GetComponent<BossCameraShake>();
+        if (shake != null)
+        {
+            StartCoroutine(shake.Shake(0.5f, 0.4f)); // 0.4초간 흔들기, 강도 0.25
+        }
     }
 
     //캔 던지기
