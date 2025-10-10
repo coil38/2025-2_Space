@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PauseUIManager : MonoBehaviour
 {
@@ -52,9 +53,10 @@ public class PauseUIManager : MonoBehaviour
         helpUIPanel.SetActive(false);
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (SceneManager.GetActiveScene().name == "StartUIScene") return; //시작UI일 경우, 작동안됨
+
         if(!cannotOnPanel) CheckEscape();         //일시정지 취소 가능여부 실시간 체크
     }
 
@@ -131,7 +133,12 @@ public class PauseUIManager : MonoBehaviour
 
     private void ExitGame()
     {
-        LogUtil.Log("게임을 종료합니다.");
-        Application.Quit();
+        LogUtil.Log("게임을 시작화면으로 돌아갑니다.");
+        if (SceneLoadManager.instance != null)
+        {
+            Time.timeScale = 1f;           //일시정지 취소
+            pauseUIPanel.SetActive(false);  //비활성화 처리
+            SceneLoadManager.instance.LoadScene("StartUIScene");
+        }
     }
 }

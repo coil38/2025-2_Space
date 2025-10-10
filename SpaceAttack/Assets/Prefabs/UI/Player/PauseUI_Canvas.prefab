@@ -225,6 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCanEquiping: 1
 --- !u!114 &8657142945817648627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,6 +238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bd062da1ef22044841df975f247746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipButton: 0
 --- !u!1 &189435720372352142
 GameObject:
   m_ObjectHideFlags: 0
@@ -611,6 +613,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCanEquiping: 1
 --- !u!114 &4471512269811545205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -623,6 +626,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bd062da1ef22044841df975f247746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipButton: 0
 --- !u!1 &555102307763098090
 GameObject:
   m_ObjectHideFlags: 0
@@ -758,6 +762,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCanEquiping: 1
 --- !u!114 &4828408830347226881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -770,6 +775,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bd062da1ef22044841df975f247746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipButton: 0
 --- !u!1 &585645664972245639
 GameObject:
   m_ObjectHideFlags: 0
@@ -1394,6 +1400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCanEquiping: 1
 --- !u!114 &7401513502483443376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1406,6 +1413,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bd062da1ef22044841df975f247746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipButton: 0
 --- !u!1 &976270566136298750
 GameObject:
   m_ObjectHideFlags: 0
@@ -1815,7 +1823,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6639387666517164920
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2020,7 +2028,7 @@ RectTransform:
   m_Father: {fileID: 8443934137191512683}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2197,6 +2205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCanEquiping: 1
 --- !u!114 &682548350347964957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2209,6 +2218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bd062da1ef22044841df975f247746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipButton: 0
 --- !u!1 &1780112299863898696
 GameObject:
   m_ObjectHideFlags: 0
@@ -2588,7 +2598,7 @@ RectTransform:
   m_Father: {fileID: 7287214466529750242}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3195,7 +3205,7 @@ RectTransform:
   m_Father: {fileID: 1674178780323001756}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3736,6 +3746,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCanEquiping: 1
 --- !u!114 &8336236792677697410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3748,6 +3759,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bd062da1ef22044841df975f247746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipButton: 0
 --- !u!1 &3502893610934419942
 GameObject:
   m_ObjectHideFlags: 0
@@ -4037,6 +4049,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bd062da1ef22044841df975f247746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipButton: 0
 --- !u!1 &3622494273044952711
 GameObject:
   m_ObjectHideFlags: 0
@@ -6638,6 +6651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCanEquiping: 1
 --- !u!114 &3476277281151353558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6650,6 +6664,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bd062da1ef22044841df975f247746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipButton: 0
 --- !u!1 &5406085239443325605
 GameObject:
   m_ObjectHideFlags: 0
@@ -6817,7 +6832,7 @@ RectTransform:
   m_Father: {fileID: 2178707810979588763}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -8290,7 +8305,7 @@ RectTransform:
   m_Father: {fileID: 1728058004917765050}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -8466,6 +8481,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bd062da1ef22044841df975f247746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipButton: 0
 --- !u!1 &6301912199907016074
 GameObject:
   m_ObjectHideFlags: 0
@@ -9701,6 +9717,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCanEquiping: 1
 --- !u!114 &8487354440316503321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9713,6 +9730,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bd062da1ef22044841df975f247746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipButton: 0
 --- !u!1 &6737388719661324928
 GameObject:
   m_ObjectHideFlags: 0
@@ -9977,7 +9995,7 @@ RectTransform:
   m_Father: {fileID: 7406101825015473207}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -10569,7 +10587,7 @@ RectTransform:
   m_Father: {fileID: 7220426921787168920}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -11487,7 +11505,7 @@ RectTransform:
   m_Father: {fileID: 2835592328892223784}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -12119,6 +12137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bd062da1ef22044841df975f247746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipButton: 0
 --- !u!1 &7943960544279014293
 GameObject:
   m_ObjectHideFlags: 0
@@ -12254,6 +12273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCanEquiping: 1
 --- !u!114 &382245134160432962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12266,6 +12286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bd062da1ef22044841df975f247746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipButton: 0
 --- !u!1 &7990787167663438758
 GameObject:
   m_ObjectHideFlags: 0

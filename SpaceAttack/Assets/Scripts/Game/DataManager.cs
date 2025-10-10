@@ -46,24 +46,4 @@ public class DataManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    private void Update()
-    {
-        //if (Input.GetKeyDown(KeyCode.T))
-        //{
-        //    SceneManager.LoadScene(1);
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.Y))
-        //{
-        //    if (_soundDatabase == null)
-        //    {
-        //        Debug.Log("사운드 데이터 베이스가 사라짐");
-        //    }
-        //    else
-        //    {
-        //        Debug.Log("그대로 있음");
-        //    }
-        //}
-    }
 }

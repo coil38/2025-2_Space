@@ -15,7 +15,6 @@ public class CameraFallow : MonoBehaviour
         }
     }
     private Transform target;
-    public Transform camTransform;
 
     public Vector3 cameraDir;       //방향 백터(카메라)
     public Vector3 cameraRot;
@@ -25,6 +24,7 @@ public class CameraFallow : MonoBehaviour
     public float shakeAmount = 0.1f;
     public float decreaseFactor = 1.0f;
 
+    private bool isInitialing;  //초기 중인지 여부 판단
 
     void OnEnable()
     {
@@ -35,13 +35,20 @@ public class CameraFallow : MonoBehaviour
     {
         if (target == null)
         {
-            //Debug.Log("대상이 존재하지 않다");
+            //LogUtil.Log("대상이 존재하지 않다");
             return;
         }
         else
         {
-            //Debug.Log("대상이 존재한다");
+            //LogUtil.Log("대상이 존재한다");
         }
+
+        if (isInitialing)
+        {
+            LogUtil.Log("카메라 초기설정 중...");
+            return;
+        }
+
         Vector3 newPosition = target.position + cameraDir.normalized * cameraDis;
         transform.position = Vector3.Slerp(transform.position, newPosition, FollowSpeed * Time.deltaTime);
 
@@ -59,10 +66,14 @@ public class CameraFallow : MonoBehaviour
 
     private IEnumerator FindTargetAndInitialize()
     {
+        isInitialing = true;  //초기 설정 중 활성화
+
         yield return new WaitUntil(() => PlayerStatus.Instance != null);
         Target = PlayerStatus.Instance.transform;
 
-        camTransform.rotation = Quaternion.Euler(cameraRot);
-        camTransform.position = target.position + cameraDir.normalized * cameraDis;
+        transform.rotation = Quaternion.Euler(cameraRot);
+        transform.position = target.position + cameraDir.normalized * cameraDis;
+
+        isInitialing = false;  //초기 설정 중 비활성화
     }
 }

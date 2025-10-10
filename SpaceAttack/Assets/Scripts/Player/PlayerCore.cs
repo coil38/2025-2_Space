@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerCore : MonoBehaviour
 {
-    public static int Level {  get; private set; }   //레벨
+    public static int Level {  get; set; }           //레벨
     public static int DarkMaterialCount;             //경험치량
     private static int maxEXP = 100;                 //최대 경험치량
     private static int nextMaxEXP = 100;                //다음 최대 경험치량

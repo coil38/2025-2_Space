@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 public class ClickButtonUI : MonoBehaviour, IPointerClickHandler
 {
     private HighLingthingButtonUI highLingthingButtonUI;
+    [Header("버튼 유형")]
     public bool isEquipButton = false;
 
     private void OnEnable()
@@ -23,14 +24,14 @@ public class ClickButtonUI : MonoBehaviour, IPointerClickHandler
         {
             if (highLingthingButtonUI == null) return;
 
-            if (!highLingthingButtonUI.isCanEquiping)
+            if (!highLingthingButtonUI.isCanInteracting)
             {
                 UISoundManager.PlayEquippedFailed();   //버튼 클릭 사운드 재생
             }
             else
             {
                 UISoundManager.PlayEquippedSuccessfulSound();  //장착 성공 사운드 재생
-                highLingthingButtonUI.isCanEquiping = false;   //장착 안됨 처리
+                highLingthingButtonUI.isCanInteracting = false;   //장착 안됨 처리
             }
         }
     }

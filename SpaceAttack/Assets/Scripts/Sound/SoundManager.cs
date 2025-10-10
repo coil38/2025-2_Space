@@ -189,10 +189,10 @@ public class SoundManager : MonoBehaviour
             {
                 if (playedBGM != null)
                 {
-                    LogUtil.Log("재생취소");
+                    //LogUtil.Log("재생취소");
                     StopBGMOrUISound(playedBGM.soundID, SoundType.BGM);  //이미 재생중이던 브금 재생종료
                 }
-                LogUtil.Log("재생");
+                //LogUtil.Log("재생");
                 playedBGM = sound;
                 playedSound.Add(sound);
                 sound.audioSource.Play();

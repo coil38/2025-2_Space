@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InitializationOrderer : MonoBehaviour
 {
-    private static InitializationOrderer instance;
+    public static InitializationOrderer instance;
 
     private DataManager DataManager;
     private EventManager EventManager;
@@ -16,6 +17,7 @@ public class InitializationOrderer : MonoBehaviour
     private PlayerSoundManager playerSoundManager; //SoundManager.instance관련
     private PlayerUIManager playerUIManager; //PlayerUIManager.instance관련
     private RelicEffectManager relicEffectManager; //아무관련 없음
+    public bool isInitializeDon { get; private set; } //초기여부 체크용 불값 (외부에서 확인)
 
     private void Awake()
     {
@@ -79,5 +81,8 @@ public class InitializationOrderer : MonoBehaviour
         bgmManager.Initialized();        //SoundManager에서 BGM등록
         uISoundManager.Initialized();    //SoundManager에서 UI등록
         playerSoundManager.Initialized(); //SoundManager에서 playerSound등록
+
+        LogUtil.Log("모든 설정 완료");
+        isInitializeDon = true;
     }
 }

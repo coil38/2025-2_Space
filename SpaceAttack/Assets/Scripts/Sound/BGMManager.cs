@@ -14,6 +14,8 @@ public class BGMManager : MonoBehaviour
 
         //모든 BGM구독처리
         SoundManager.instance.RegisterGameObjectBySoundType(gameObject, SoundType.BGM);
+
+        PlayBGMSound(currentScene);
     }
 
     private void OnDisable()
@@ -24,16 +26,20 @@ public class BGMManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
     {
         currentScene = scene;
-        PlayBGMSoound(scene);
-        LogUtil.Log("작동한다");
+        PlayBGMSound(scene);
+        //LogUtil.Log("작동한다");
     }
 
-    private void PlayBGMSoound(Scene scene)
+    private void PlayBGMSound(Scene scene)
     {
         switch (scene.name)
         {
+            case "StartUIScene":
+                SoundManager.instance.StopPlayedAllSound();  //모든 사운드 종료
+                //시작화면 브금 재생
+                break;
             case "LobbyScene":
-                SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
+                //SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
                 break;
 
             case "ChipsetSelectScene":

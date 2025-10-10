@@ -7,6 +7,7 @@ public class InventoryManager : MonoBehaviour
     private ChipSetType _chipSet;
     public ChipSetType chipSet
     {
+        get { return _chipSet; }
         set
         { 
             if (_chipSet != null)        //칩셋에 이미 있을 경우
@@ -116,6 +117,8 @@ public class InventoryManager : MonoBehaviour
 
     private List<BaseRelic> relics = new List<BaseRelic>();
 
+    public List<int> relicIDs = new List<int>();
+
     private BaseRelic _relic;
     public BaseRelic relic
     {
@@ -141,6 +144,7 @@ public class InventoryManager : MonoBehaviour
             {
                 PlayerUIManager.instance.ChangeDarkMaterialUI(true, relic.darkMaterialCount); //암흑물질 채워지는 UI연출
                 relics.Add(value);  //유물 데이터 추가
+                relicIDs.Add(id);   //유물 Id 추가
                 SetRelicObject(value);
                 SetRelicInfo(value, relic);
 
@@ -169,9 +173,9 @@ public class InventoryManager : MonoBehaviour
         m_relic.gameObject.GetComponent<Collider>().enabled = true;   //감지 가능상태로 변경
     }
 
-    private void RemoveRelicInfo(BaseRelic m_relic)
+    private void RemoveRelicInfo(BaseRelic m_relic, RelicSO m_relicSO)
     {
-
+        m_relic.SetEffect(false, m_relicSO.relicInfos);
     }
 
     private void SetRelicObject(BaseRelic m_relic)              //월드의 칩셋 오브젝트 설정
