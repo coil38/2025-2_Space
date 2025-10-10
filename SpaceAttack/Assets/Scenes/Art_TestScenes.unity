@@ -2476,6 +2476,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8408279893472955054, guid: 9541107c5822f594286f8457abebf1d4,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8408279893472955054, guid: 9541107c5822f594286f8457abebf1d4,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8570260818210441661, guid: 9541107c5822f594286f8457abebf1d4,
         type: 3}
       propertyPath: rollSound
@@ -2495,7 +2505,7 @@ PrefabInstance:
         type: 3}
       propertyPath: chargeSource
       value: 
-      objectReference: {fileID: 1479807515}
+      objectReference: {fileID: 0}
     - target: {fileID: 8570260818210441661, guid: 9541107c5822f594286f8457abebf1d4,
         type: 3}
       propertyPath: explosionSound
@@ -2505,7 +2515,7 @@ PrefabInstance:
         type: 3}
       propertyPath: explosionSource
       value: 
-      objectReference: {fileID: 1479807515}
+      objectReference: {fileID: 0}
     - target: {fileID: 8570260818210441661, guid: 9541107c5822f594286f8457abebf1d4,
         type: 3}
       propertyPath: triggerDistance
@@ -2521,59 +2531,23 @@ PrefabInstance:
       propertyPath: m_Center.x
       value: 0.21130562
       objectReference: {fileID: 0}
+    - target: {fileID: 8722641677778133939, guid: 9541107c5822f594286f8457abebf1d4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 1370495921233390677, guid: 9541107c5822f594286f8457abebf1d4,
+    - targetCorrespondingSourceObject: {fileID: 6188279235906015181, guid: 9541107c5822f594286f8457abebf1d4,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1763656824}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 273843350853366838, guid: 9541107c5822f594286f8457abebf1d4,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1479807518}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9541107c5822f594286f8457abebf1d4, type: 3}
---- !u!82 &1479807515 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 3568250849848372130, guid: 9541107c5822f594286f8457abebf1d4,
-    type: 3}
-  m_PrefabInstance: {fileID: 1479807514}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1479807516 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8570260818210441661, guid: 9541107c5822f594286f8457abebf1d4,
-    type: 3}
-  m_PrefabInstance: {fileID: 1479807514}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44eb29a46f482b74abc4ada36534be4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &1479807517 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 273843350853366838, guid: 9541107c5822f594286f8457abebf1d4,
-    type: 3}
-  m_PrefabInstance: {fileID: 1479807514}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1479807518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1479807517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae94be08478e8ef429c6a6531f4f724e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parent: {fileID: 1479807516}
---- !u!4 &1479807519 stripped
+--- !u!4 &1479807515 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1370495921233390677, guid: 9541107c5822f594286f8457abebf1d4,
+  m_CorrespondingSourceObject: {fileID: 6188279235906015181, guid: 9541107c5822f594286f8457abebf1d4,
     type: 3}
   m_PrefabInstance: {fileID: 1479807514}
   m_PrefabAsset: {fileID: 0}
@@ -2965,7 +2939,7 @@ Transform:
   m_LocalScale: {x: 0.8, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1479807519}
+  m_Father: {fileID: 1479807515}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1763656825
 SpriteRenderer:
@@ -4693,7 +4667,7 @@ PrefabInstance:
     - target: {fileID: 8704492035738034740, guid: 97deca0f2801a764b95b7d70a08ca6f4,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8841788894016282123, guid: 97deca0f2801a764b95b7d70a08ca6f4,
         type: 3}
