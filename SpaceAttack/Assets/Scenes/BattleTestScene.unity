@@ -273,6 +273,54 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 119073235}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &237132363
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 237132365}
+  - component: {fileID: 237132364}
+  m_Layer: 0
+  m_Name: tEST
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &237132364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237132363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 455baafe36d61184a9f2c075cdcf1dcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slashEffectPrefab: {fileID: 2768726253216058598, guid: af6dee5a3b574504f99a196536e094b4,
+    type: 3}
+  spawnPoint: {fileID: 1423204381}
+  fireRate: 0.2
+--- !u!4 &237132365
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237132363}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.5519356, y: -0.98528767, z: 0.11174297}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &306364297 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 459506622297925190, guid: aadb2cd22f0d1d647a813b80a3ac2a8c,
@@ -2585,6 +2633,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1416963551}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1423204380
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1423204381}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1423204381
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1423204380}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.03, y: -0.16, z: 0.11174297}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1430496665
 GameObject:
   m_ObjectHideFlags: 0
@@ -4925,7 +5004,7 @@ PrefabInstance:
     - target: {fileID: 8704492035738034740, guid: 97deca0f2801a764b95b7d70a08ca6f4,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8704492035738034740, guid: 97deca0f2801a764b95b7d70a08ca6f4,
         type: 3}
@@ -5286,10 +5365,6 @@ MonoBehaviour:
   safeZoneCount: 3
   spawnHeight: 0.1
   attackCooldown: 10
-  coinAttackSound: {fileID: 8300000, guid: a891d8d5a617d0d4b88e562a5d96f609, type: 3}
-  WariningSound: {fileID: 8300000, guid: 903347b98f4213b46a7990914693b7fe, type: 3}
-  bossjumpdownSound: {fileID: 8300000, guid: 0f5bebb1ce08f9a4eacf03fa30560534, type: 3}
-  bossCanAttackSound: {fileID: 8300000, guid: ea634e20d8cd7654ea2bda1e257ec3cf, type: 3}
   planArea: {fileID: 1051999786}
   minionPrefabs:
   - {fileID: 8722641677778133939, guid: 9541107c5822f594286f8457abebf1d4, type: 3}
@@ -5303,6 +5378,10 @@ MonoBehaviour:
   spreadAngle: 70
   player: {fileID: 194096016}
   headTransform: {fileID: 1976017616}
+  coinAttackSound: {fileID: 8300000, guid: a891d8d5a617d0d4b88e562a5d96f609, type: 3}
+  WariningSound: {fileID: 8300000, guid: 903347b98f4213b46a7990914693b7fe, type: 3}
+  bossjumpdownSound: {fileID: 8300000, guid: 0f5bebb1ce08f9a4eacf03fa30560534, type: 3}
+  bossCanAttackSound: {fileID: 8300000, guid: ea634e20d8cd7654ea2bda1e257ec3cf, type: 3}
 --- !u!65 &8498225713429384174
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5479,3 +5558,5 @@ SceneRoots:
   - {fileID: 1566604650}
   - {fileID: 213179135748756885}
   - {fileID: 609326734}
+  - {fileID: 237132365}
+  - {fileID: 1423204381}
