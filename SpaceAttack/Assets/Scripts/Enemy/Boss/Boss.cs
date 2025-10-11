@@ -11,7 +11,20 @@ public class Boss : EnemyBase
     public GameObject projectilePrefab;
     public GameObject CoinPrefab;
     public GameObject CoinZonePrefab;
-    public GameObject canPrefab; 
+    public GameObject canPrefab;
+
+    [Header("쿨타임 설정")]
+    public float bossAttackCooldown = 10f;
+    public float coinRainCooldown = 15f;
+    public float canAttackCooldown = 20f;
+    public float jumpAttackCooldown = 25f;
+    public float summonMinionCooldown = 30f;
+
+    private float bossAttackTimer;
+    private float coinRainTimer;
+    private float canAttackTimer;
+    private float jumpAttackTimer;
+    private float summonMinionTimer;
 
     [Header("장판 크기 설정(보스 스킬 쿵)")]
     public float safeZoneScale = 3f;       // 안전장판 크기
@@ -20,10 +33,6 @@ public class Boss : EnemyBase
     public int maxAttempts = 50;
     public int safeZoneCount = 3;   // 흰색 장판 개수
     public float spawnHeight = 0.1f;
-
-    [Header("쿨타임(테스트)")]
-    public float attackCooldown = 20f;
-    private float timer;
 
     [Header("보스 스킬(퉤)")]
     public Transform planArea;
@@ -40,15 +49,16 @@ public class Boss : EnemyBase
     private Animator anim;
     public Transform headTransform; // 보스 머리 위치
 
+
     [Header("보스 사운드")]
     public AudioClip coinAttackSound;
     public AudioClip WariningSound;
     public AudioClip bossjumpdownSound;
     public AudioClip bossCanAttackSound;
+    
+    private bool isUsingSkill = false; // 스킬 중복 방지
     protected override void Start()
     {
-
-        Collider col = GetComponent<Collider>();
         base.Start();
         anim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
@@ -56,24 +66,85 @@ public class Boss : EnemyBase
         GameObject plan = GameObject.FindGameObjectWithTag("Plan");
         if (plan != null) planArea = plan.transform;
 
-
-        timer = attackCooldown;
+        // 초기 쿨타임 세팅
+        bossAttackTimer = bossAttackCooldown;
+        coinRainTimer = coinRainCooldown;
+        canAttackTimer = canAttackCooldown;
+        jumpAttackTimer = jumpAttackCooldown;
+        summonMinionTimer = summonMinionCooldown;
     }
+
 
     void Update()
     {
-        timer -= Time.deltaTime;
-        if (timer <= 0f)
-        {
-            //BossAttack();
-            StartJumpAttack();
-            //StartCoinRain();
-            //LaunchCansCrossAttack();
-            //SummonMinionsSkill();
-            timer = attackCooldown;
-        }
+        if (isDead) return;
+
+        // 쿨타임 감소
+        bossAttackTimer -= Time.deltaTime;
+        coinRainTimer -= Time.deltaTime;
+        canAttackTimer -= Time.deltaTime;
+        jumpAttackTimer -= Time.deltaTime;
+        summonMinionTimer -= Time.deltaTime;
+
+        // 페이즈 구분
+        if (hp > 600)
+            Phase1Pattern();
+        else if (hp > 300)
+            Phase2Pattern();
+        else
+            Phase3Pattern();
     }
 
+    //페이지 컨트롤러
+    void Phase1Pattern()
+    {
+        List<System.Action> availableSkills = new List<System.Action>();
+
+        if (bossAttackTimer <= 0f) availableSkills.Add(() => { BossAttack(); bossAttackTimer = bossAttackCooldown; });
+        if (coinRainTimer <= 0f) availableSkills.Add(() => { StartCoinRain(); coinRainTimer = coinRainCooldown; });
+
+        TryUseRandomSkill(availableSkills);
+    }
+
+    void Phase2Pattern()
+    {
+        List<System.Action> availableSkills = new List<System.Action>();
+
+        if (bossAttackTimer <= 0f) availableSkills.Add(() => { BossAttack(); bossAttackTimer = bossAttackCooldown; });
+        if (coinRainTimer <= 0f) availableSkills.Add(() => { StartCoinRain(); coinRainTimer = coinRainCooldown; });
+        if (canAttackTimer <= 0f) availableSkills.Add(() => { LaunchCansCrossAttack(); canAttackTimer = canAttackCooldown; });
+        if (jumpAttackTimer <= 0f) availableSkills.Add(() => { StartJumpAttack(); jumpAttackTimer = jumpAttackCooldown; });
+
+        TryUseRandomSkill(availableSkills);
+    }
+    void Phase3Pattern()
+    {
+        List<System.Action> availableSkills = new List<System.Action>();
+
+        if (bossAttackTimer <= 0f) availableSkills.Add(() => { BossAttack(); bossAttackTimer = bossAttackCooldown; });
+        if (coinRainTimer <= 0f) availableSkills.Add(() => { StartCoinRain(); coinRainTimer = coinRainCooldown; });
+        if (canAttackTimer <= 0f) availableSkills.Add(() => { LaunchCansCrossAttack(); canAttackTimer = canAttackCooldown; });
+        if (jumpAttackTimer <= 0f) availableSkills.Add(() => { StartJumpAttack(); jumpAttackTimer = jumpAttackCooldown; });
+        if (summonMinionTimer <= 0f) availableSkills.Add(() => { SummonMinionsSkill(); summonMinionTimer = summonMinionCooldown; });
+
+        TryUseRandomSkill(availableSkills);
+    }
+    void TryUseRandomSkill(List<System.Action> availableSkills)
+    {
+        if (isUsingSkill || availableSkills.Count == 0) return;
+
+        // 가능한 스킬 중 랜덤 선택
+        System.Action chosenSkill = availableSkills[Random.Range(0, availableSkills.Count)];
+
+        StartCoroutine(UseSkillRoutine(chosenSkill));
+    }
+    IEnumerator UseSkillRoutine(System.Action skillAction)
+    {
+        isUsingSkill = true;
+        skillAction.Invoke();
+        yield return new WaitForSeconds(2f);
+        isUsingSkill = false;
+    }
     void StartJumpAttack()
     {
         anim.SetTrigger("JumpUp");
@@ -131,7 +202,7 @@ public class Boss : EnemyBase
         animator.SetTrigger("FireAttack");
     }
 
-  
+
     public void FireProjectile()
     {
         if (player == null) return;
@@ -139,15 +210,15 @@ public class Boss : EnemyBase
         Vector3 toPlayer = (player.position - transform.position).normalized;
 
         Vector3[] directions = new Vector3[4];
-        directions[0] = toPlayer;
-        directions[1] = Quaternion.Euler(0, 90, 0) * toPlayer;
-        directions[2] = Quaternion.Euler(0, -90, 0) * toPlayer;
-        directions[3] = Quaternion.Euler(0, 180, 0) * toPlayer;
+        directions[0] = toPlayer; // 정면
+        directions[1] = Quaternion.Euler(0, 90, 0) * toPlayer; // 오른쪽
+        directions[2] = Quaternion.Euler(0, -90, 0) * toPlayer; // 왼쪽
+        directions[3] = Quaternion.Euler(0, 180, 0) * toPlayer; // 뒤쪽
 
         foreach (Vector3 dir in directions)
         {
             GameObject proj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-            proj.GetComponent<Projectile>().Init(dir);
+            proj.GetComponentInChildren<VFXSlashHitBox>().SetDirection(dir);
         }
     }
 

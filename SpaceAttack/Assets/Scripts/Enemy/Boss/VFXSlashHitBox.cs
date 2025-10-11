@@ -4,23 +4,51 @@ using UnityEngine;
 
 public class VFXSlashHitBox : MonoBehaviour
 {
+    [Header("발사체 설정")]
+    public float speed = 10f;          // 이동 속도
+    public float lifeTime = 5f;        // 자동 제거 시간
+
     [Header("데미지 수치")]
     public float damage = 10f;
 
+    private Vector3 moveDir;
     private ParticleSystem ps;
+    private float timer;
 
     void Start()
     {
         ps = GetComponent<ParticleSystem>();
+        timer = lifeTime;
     }
 
-    // Unity가 자동으로 호출하는 메서드 (Send Collision Messages가 켜져 있어야 함)
+    // FireProjectile에서 방향을 받아옴
+    public void SetDirection(Vector3 dir)
+    {
+        moveDir = dir.normalized;
+
+        Quaternion rot = Quaternion.LookRotation(moveDir);
+
+        rot *= Quaternion.Euler(-90f, 0f, 0f);
+
+        transform.rotation = rot;
+    }
+
+    void Update()
+    {
+        transform.position += moveDir * speed * Time.deltaTime;
+
+        timer -= Time.deltaTime;
+        if (timer <= 0f)
+        {
+            StopAndDestroy(); 
+        }
+    }
+
+    //파티클 충돌처리
     void OnParticleCollision(GameObject other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("플레이어와 파티클 충돌 감지됨!");
-
             AttackInfo info = new AttackInfo
             {
                 damage = damage,
@@ -29,12 +57,10 @@ public class VFXSlashHitBox : MonoBehaviour
             };
 
             PlayerStatus.Instance.ApplyDamage(info);
-
             StopAndDestroy();
         }
         else if (other.CompareTag("Wall"))
         {
-            Debug.Log("벽과 파티클 충돌 감지됨!");
             StopAndDestroy();
         }
     }
@@ -43,8 +69,23 @@ public class VFXSlashHitBox : MonoBehaviour
     {
         if (ps != null)
         {
-            ps.Stop(); // 파티클 방출 중지
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
-        Destroy(gameObject); // 잠깐 잔상 남기고 삭제
+
+        // 0.1초 후 루트 삭제
+        StartCoroutine(DestroyRootNextFrame());
+    }
+
+    private IEnumerator DestroyRootNextFrame()
+    {
+        yield return null; 
+        if (transform != null)
+        {
+            Transform root = transform.root;
+            if (root != null)
+            {
+                Destroy(root.gameObject);
+            }
+        }
     }
 }
