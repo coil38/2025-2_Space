@@ -22,9 +22,8 @@ public class PauseUIManager : MonoBehaviour
     [SerializeField] private GameObject helpUIPanel;
     [SerializeField] private GameObject settingUIPanel;
 
-    [HideInInspector] public bool cannotOnPanel;  //일시정치창 활성화 방지
+    private SettingUIManager settingUIManager;
 
-    private bool cannotEscape;  //일시정지창 이외에 또다른 뎁스가 있을 경우, false처리 (esc입력 안됨)
     private void Awake()
     {
         if (Instance == null)
@@ -51,55 +50,17 @@ public class PauseUIManager : MonoBehaviour
         settingUIPanel.SetActive(false);
         achievementUIPanel.SetActive(false);
         helpUIPanel.SetActive(false);
+
+        UIESCSystem.SetPauseUI(OnPauseUI);     //일시정지 활성화_델리게이트 체인
     }
 
-    void Update()
+    public void OnPauseUI()
     {
-        if (SceneManager.GetActiveScene().name == "StartUIScene") return; //시작UI일 경우, 작동안됨
+        pauseUIPanel.SetActive(true);
+        UISoundManager.PlayeOnAndOffPanelSound();  //패널열기 사운드 재생
+        Time.timeScale = 0f;           //일시정지
 
-        if(!cannotOnPanel) CheckEscape();         //일시정지 취소 가능여부 실시간 체크
-    }
-
-    private void CheckOnPausePanel()  //설정UI가 활성화여부 실시간 체크
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            //특정씬에서만 활성화하게 예외처리-----------------//
-            pauseUIPanel.SetActive(true);
-            UISoundManager.PlayeOnAndOffPanelSound();  //패널열기 사운드 재생
-            Time.timeScale = 0f;           //일시정지
-        }
-    }
-
-    private void CheckEscape()
-    {
-        if (pauseUIPanel.activeSelf)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (!cannotEscape) ResumeGame();  //게임재개
-            }
-        }
-        else CheckOnPausePanel();
-
-        if (!pauseUIPanel.activeSelf) return;  //일시정지 창이 비활성화일 경우, return 처리
-
-        if (!cannotEscape)  //escape가능 여부 판단 처리
-        {
-            if (achievementUIPanel.activeSelf || helpUIPanel.activeSelf || settingUIPanel.activeSelf)
-            {
-                //Debug.Log("나갈수 없음");
-                cannotEscape = true;
-            }
-        }
-        else
-        {
-            if (!achievementUIPanel.activeSelf && !helpUIPanel.activeSelf && !settingUIPanel.activeSelf)
-            {
-                //Debug.Log("나갈수 있음");
-                cannotEscape = false;
-            }
-        }
+        UIESCSystem.SetUIDepth(UIType.PauseUI, ResumeGame, pauseUIPanel);
     }
 
     private void ResumeGame()
@@ -129,6 +90,11 @@ public class PauseUIManager : MonoBehaviour
     {
         LogUtil.Log("설정UI가 활성화되었습니다.");
         settingUIPanel.SetActive(true);
+
+        if (settingUIManager == null)
+            settingUIManager = GetComponentInChildren<SettingUIManager>();
+
+        UIESCSystem.SetUIDepth(UIType.PauseUI, settingUIManager.EscapeSetting, settingUIPanel);
     }
 
     private void ExitGame()

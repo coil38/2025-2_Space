@@ -12,8 +12,6 @@ public class SceneLoadManager : MonoBehaviour
     {
         if(instance == null)
             instance = this;
-         
-        StartCoroutine(WaitUtilInitializeDon());   //게임을 키고 처음 한번만 실행
     }
 
     public void LoadScene(string sceneName)
@@ -29,33 +27,6 @@ public class SceneLoadManager : MonoBehaviour
         {
             yield return null;
         }
-
-        SetSceneCondition();
-
         isSceneLoading = false;
-    }
-
-    private void SetSceneCondition()  //씬 타임스케일여부 관리
-    {
-        string sceneName = SceneManager.GetActiveScene().name;
-
-        if (sceneName == "StartUIScene")
-        {
-            Time.timeScale = 0;
-            LogUtil.Log("일시정지 처리");
-        }
-        else
-        {
-            Time.timeScale = 1;
-            LogUtil.Log("일시정지 취소 처리");
-        }
-    }
-
-    private IEnumerator WaitUtilInitializeDon()
-    {
-        yield return new WaitUntil(() => InitializationOrderer.instance != null);
-        yield return new WaitUntil(() => InitializationOrderer.instance.isInitializeDon);
-        LogUtil.Log("초기화 종료");
-        SetSceneCondition();  //씬 타임스케일여부 설정
     }
 }

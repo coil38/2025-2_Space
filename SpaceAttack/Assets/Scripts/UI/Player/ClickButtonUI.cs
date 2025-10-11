@@ -16,13 +16,21 @@ public class ClickButtonUI : MonoBehaviour, IPointerClickHandler
     }
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (highLingthingButtonUI == null) return;
+
         if (!isEquipButton)
         {
-            UISoundManager.PlayeButtonClickSound();   //버튼 클릭 사운드 재생
+            if (!highLingthingButtonUI.isCanInteracting)
+            {
+                UISoundManager.PlayEquippedFailed();   //실행 안된 사운드
+            }
+            else
+            {
+                UISoundManager.PlayeButtonClickSound();   //버튼 클릭 사운드 재생
+            }
         }
         else
         {
-            if (highLingthingButtonUI == null) return;
 
             if (!highLingthingButtonUI.isCanInteracting)
             {

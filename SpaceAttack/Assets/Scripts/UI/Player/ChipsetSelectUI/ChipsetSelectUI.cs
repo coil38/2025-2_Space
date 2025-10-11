@@ -36,16 +36,14 @@ public class ChipsetSelectUI : MonoBehaviour
 
         chipsetDetailPanel.gameObject.SetActive(false);  //칩셋 상세창 비활성화 처리
 
-        if (PauseUIManager.Instance != null)
-            PauseUIManager.Instance.cannotOnPanel = true;  //일시정지UI 활성화 방지
+        UIESCSystem.ChangeUIType(UIType.PauseUI);   //일시정지 UI 상태로 변경
         Time.timeScale = 0f;  //게임 일시정지
     }
 
     private void OnDisable()
     {
         Time.timeScale = 1f;  //게임 일시정지 해제
-        if (PauseUIManager.Instance != null)
-            PauseUIManager.Instance.cannotOnPanel = false;  //일시정지UI 활성화 방지 해제
+        UIESCSystem.ChangeUIType(UIType.SelectChipsetUI);   //칩셋 선택UI로 변경
 
         UISoundManager.PlayeOnAndOffPanelSound(); //패널열기혹은 닫기 사운드 재생
     }

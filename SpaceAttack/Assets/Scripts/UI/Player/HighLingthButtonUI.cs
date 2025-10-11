@@ -10,23 +10,28 @@ public class HighLingthingButtonUI : MonoBehaviour, IPointerEnterHandler, IPoint
     private Vector3 defualtSize;
 
     private bool _dontUsehighLingth;
-    public bool dontUsehighLingth
+    private bool _isCanInteracting = true;
+
+    public bool isCanInteracting
     {
-        get { return _dontUsehighLingth; }
+        get { return _isCanInteracting; }
         set
         {
-            if (value) rectTransform.localScale = defualtSize;  //크기 초기화
-            else isCanInteracting = true;  //하이라이트 가능할 때, 다시 장착가능 설정
-            _dontUsehighLingth = value;  //값 할당
+            if (!value)
+            {
+                rectTransform.localScale = defualtSize;  //크기 초기화
+                _dontUsehighLingth = true;  //크기 초기화
+            }
+            else _dontUsehighLingth = false;  //하이라이트 가능할 때, 다시 장착가능 설정
+            _isCanInteracting = value;  //값 할당
         }
     }
-    [HideInInspector] public bool isCanInteracting = true;  //장차가능여부 체크 ( 버튼 클릭 사운드용 )
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
         defualtSize = rectTransform.localScale;
 
-        dontUsehighLingth = false;
+        _dontUsehighLingth = false;
     }
     void OnEnable()
     {

@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-public class ExitConfirmationUI : ConfirmationUIStrategy
+public class DeleteFileConfirmationUI : ConfirmationUIStrategy
 {
     [SerializeField] Button _leftButton, _midleButton, _rightButton;
     [SerializeField] TextMeshProUGUI _leftButtonText, _midleButtonText, _rightButtonText;
@@ -13,24 +13,25 @@ public class ExitConfirmationUI : ConfirmationUIStrategy
     [SerializeField] ConfirmationUI confirmationUI;
 
     [Header("설정UI")]
-    [SerializeField] private SettingUIManager settingUIManager;
+    [SerializeField] private StartGameUI startGameUI;
 
     public override void Execute()
     {
-        _leftButtonText.text = "Save & Exit";
-        _midleButtonText.text = "Exit";
+        _leftButtonText.text = "Delete";
+        _midleButtonText.text = "Delete & Start";
         _rightButtonText.text = "Cancel";
-        _contentText.text = "Your changes have not been saved. Would you like to exit?";
+        _contentText.text = "Are you sure you want to delete this save file? This action is irreversible.";
         //각각의 버튼들 Sprite추가
         confirmationUI.gameObject.SetActive(true);
 
         _leftButton.onClick.AddListener(() =>
         {
-            LogUtil.Log("저장 버튼 동작");
-            if (settingUIManager != null)
+            LogUtil.Log("파일 삭제 버튼 동작");
+            if (startGameUI != null)
             {
-                settingUIManager.SaveSetting();  //저장하고 나가기
-                settingUIManager.gameObject.SetActive(false);   //나가기 기능
+                //해당 파일이 삭제되고 버튼 텍스트도 변경
+                startGameUI.DeleteFile();
+                startGameUI.InitializeDelete();
             }
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
 
@@ -38,11 +39,14 @@ public class ExitConfirmationUI : ConfirmationUIStrategy
 
         _midleButton.onClick.AddListener(() =>
         {
-            LogUtil.Log("저장하지 않고 나가기 동작");
-            if (settingUIManager != null)
+            LogUtil.Log("파일 삭제후 시작 동작");
+            if (startGameUI != null)
             {
-                settingUIManager.CancelSave();    //저장하지 않고 나가기
-                settingUIManager.gameObject.SetActive(false);   //나가기 기능
+                //해당 파일이 삭제되고 버튼 텍스트도 변경
+                //바로 파일 버튼 클릭 판정
+                startGameUI.InitializeDelete();
+                startGameUI.DeleteFile();
+                startGameUI.PlayeNewGame();
             }
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
 
@@ -50,9 +54,8 @@ public class ExitConfirmationUI : ConfirmationUIStrategy
 
         _rightButton.onClick.AddListener(() =>
         {
-            LogUtil.Log("취소 동작");
+            LogUtil.Log("파일 삭제 취소 동작");
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
         });
     }
-
 }

@@ -15,9 +15,9 @@ public class SettingUIManager : MonoBehaviour
 
     [Header("되묻기창용 변수")]
     [SerializeField] private ConfirmationUI confirmationUI;
-    [SerializeField] private SettingUIStrategy saveConfirmationUI;   //저장
-    [SerializeField] private SettingUIStrategy exitConfirmationUI;   //나가기
-    [SerializeField] private SettingUIStrategy resetConfirmationUI;  //초기화
+    [SerializeField] private ConfirmationUIStrategy saveConfirmationUI;   //저장
+    [SerializeField] private ConfirmationUIStrategy exitConfirmationUI;   //나가기
+    [SerializeField] private ConfirmationUIStrategy resetConfirmationUI;  //초기화
 
     public Dictionary<TMP_InputField, string> initialComands = new Dictionary<TMP_InputField, string>();  //초기값 ( 개발자 설정 )
     public Dictionary<TMP_InputField, string> currentComands = new Dictionary<TMP_InputField, string>();  //변경값 ( 변경하면서 최신 갱신 )
@@ -85,19 +85,16 @@ public class SettingUIManager : MonoBehaviour
         resetButton.onClick.RemoveAllListeners();
     }
 
-    private void Update()  //설정 Esc나가기 실시간 체크
+    public void EscapeSetting()   //설정화면 비활성화 함수 (ESC용)
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (isChanged.Count > 0)  //변경사항이 있을 경우
         {
-            if (isChanged.Count > 0)  //변경사항이 있을 경우
-            {
-                if (confirmationUI != null && exitConfirmationUI != null)
-                    confirmationUI.Show(exitConfirmationUI);
-            }
-            else  //변경사항이 없을 경우
-            {
-                gameObject.SetActive(false);
-            }
+            if (confirmationUI != null && exitConfirmationUI != null)
+                confirmationUI.Show(exitConfirmationUI);
+        }
+        else  //변경사항이 없을 경우
+        {
+            gameObject.SetActive(false);
         }
     }
 
@@ -121,6 +118,7 @@ public class SettingUIManager : MonoBehaviour
     {
         //이전 값으로 초기화
         resetEvent.Invoke();
+        isChanged.Clear();
     }
 
     public static void SaveRebinds(InputActionAsset asset)

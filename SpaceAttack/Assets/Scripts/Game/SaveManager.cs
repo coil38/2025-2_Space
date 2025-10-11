@@ -20,15 +20,13 @@ public class SaveManager : MonoBehaviour
     private string[] blockedScenes = {"StartUIScene", "LoadingScene", "CutScene" };
     private bool isOneTime; //처음 한번만 적용
 
-    public void SaveFile(string filename)
+    public void SaveFile(string filename)  //생성된 파일 저장용 함수
     {
         currentFileName = filename;   //초반에 한번 사용후, 저장
         SaveData data = new SaveData();
 
         if (playerInventory == null)
-        {
             playerInventory = FindObjectOfType<InventoryManager>();
-        }
 
         if (playerInventory != null)
         {
@@ -47,12 +45,15 @@ public class SaveManager : MonoBehaviour
         SaveSystem.Save(currentFileName, data);  //저장
     }
 
-    public void StartNewSaveFile(string fileName)
+    public void StartNewSaveFile(string fileName)  //새 파일 생성용 함수
     {
-        SceneLoadManager.instance.LoadScene("LobbyScene");
+        string sceneName = GameSceneManager.GetSceneNameByType(SceneType.LobbyScene);
+        SceneLoadManager.instance.LoadScene(sceneName);
+        InitializePlayerDatas();
 
         currentFileName = fileName;
         SaveData data = new SaveData();
+        data.SetDatas(new Vector3(0f, 0.092f, -0.3f), sceneName, 0, 0);
         SaveSystem.Save(currentFileName, data);  //저장 새 파일 생성
 
         if (!isOneTime)  //게임 키고 처음 한번만 적용
@@ -62,15 +63,43 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    public void LoadSaveFile(string fileName)
+    public void InitializePlayerDatas()  //게임 시작 전의 값으로 초기화
+    {
+        if (playerInventory == null)
+            playerInventory = FindObjectOfType<InventoryManager>();
+
+        if (playerInventory != null)
+        {
+            Vector3 defualtPos = new Vector3(0f, 0.092f, -0.3f);   //플레이어 위치초기화
+            playerInventory.transform.position = defualtPos;
+
+            //유물, 칩셋 제거
+            //플레이어 대쉬 쿨타임 초기화
+            PlayerCore.Level = 0;                                  //레벨 초기화
+            PlayerCore.DarkMaterialCount = 0;                      //경험치양 초기화
+            PlayerCore.GetDarkMatter(0, true);                     //UI초기화
+
+                                                                   //플레이어 스텟 초기화
+            PlayerStatus.m_hp = 10;                                //체력
+            PlayerStatus.m_maxhp = 10;                             //최대 체력
+            PlayerStatus.m_speed = 5f;                             //이동 속도
+            PlayerStatus.m_defultSpeed = 5f;                       //기본 이동 속도
+            PlayerStatus.criticalChanceRate = 0.05f;               //치명타 확률
+            PlayerStatus.criticalRate = 0.5f;                      //치명타 피해
+            PlayerStatus.missRate = 0.01f;                         //회피율
+            PlayerStatus.normalDamage = 5;                         //기본공격력
+        }
+    }
+
+    public void LoadSaveFile(string fileName)   //저장된 파일 불러오기용 함수
     {
         currentFileName = fileName;
         SaveData data = SaveSystem.Load<SaveData>(currentFileName);  //데이터 로드
 
+        InitializePlayerDatas();   //초기화
+
         if (playerInventory == null)
-        {
             playerInventory = FindObjectOfType<InventoryManager>();
-        }
 
         playerInventory.gameObject.transform.position = data.playerPos;  //플레이어 위치 설정
         //foreach (int itemID in data.playerItems)                         //플레이어 유물 설정
@@ -80,16 +109,22 @@ public class SaveManager : MonoBehaviour
         //playerInventory.relic =                                        //플레이어 칩셋 설정
         PlayerCore.Level = data.playerLevel;                             //플레이어 레벨 설정
         PlayerCore.DarkMaterialCount = data.playerDarkMatCount;          //플레이어 암흑물질 설정
+        PlayerCore.GetDarkMatter(0, true);                               //UI초기화
 
         SceneLoadManager.instance.LoadScene(data.sceneName);  //씬으로 이동
     }
 
-    public void SaveAndLoadButtonInfo(bool isSaving)
+    public void DeleteFile(string fileName)   //파일 삭제 함수
+    {
+        SaveSystem.Delete(fileName);   //파일 삭제
+    }
+
+    public void SaveAndLoadButtonInfo(bool isSaving)  //시작화면의 버튼 관련 정보 저장 및 불러오기용 함수
     {
         string fileName = "fileName";
         if (isSaving)
         {
-            SaveData saveData = new SaveData();
+            SavedButtonData saveData = new SavedButtonData();
             saveData.SetFildDatas(StartGameUI.fileDatas);
             SaveSystem.Save(fileName, saveData);
 
@@ -100,7 +135,7 @@ public class SaveManager : MonoBehaviour
         }
         else
         {
-            SaveData data = SaveSystem.Load<SaveData>(fileName);  //파일 데이터 로드
+            SavedButtonData data = SaveSystem.Load<SavedButtonData>(fileName);  //파일 데이터 로드
             if (data == null)
             {
                 LogUtil.Log("data가 없음");
@@ -112,7 +147,7 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    private IEnumerator SaveGame()  //10초마다 자동세이브 + 조건: 씬 로드 중 혹은 시작씬에서는 저장하지 않음.
+    private IEnumerator SaveGame()  //n초마다 자동세이브 + 조건: 씬 로드 중 혹은 시작씬에서는 저장하지 않음.
     {
         while (true)
         {

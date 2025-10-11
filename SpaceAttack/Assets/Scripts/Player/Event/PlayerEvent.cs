@@ -55,6 +55,9 @@ public class PlayerEvent
         skillNumber = 0;
 
         //정보전달
+        if (levelDatabase == null)
+            levelDatabase = DataManager.instance._levelDatabase;
+
         LevelSO levelSO = levelDatabase.GetLevelByLevel(_level);
         if (levelSO != null)
         {
@@ -83,6 +86,10 @@ public class PlayerEvent
     {
         maxEXP = 0;
         nextMaxEXP = 0;
+
+        if (levelDatabase == null)
+            levelDatabase = DataManager.instance._levelDatabase;
+
         if (levelDatabase.maxLevel < _level)  //최대레벨 예외처리
         {
             LogUtil.LogWarning($"{levelDatabase.maxLevel} 레벨의 이상의 레벨은 존재하지 않습니다. 입력받은 레벨: {_level}");

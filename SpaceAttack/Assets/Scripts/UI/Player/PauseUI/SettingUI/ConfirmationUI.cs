@@ -10,10 +10,12 @@ public class ConfirmationUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI _leftButtonText, _midleButtonText, _rightButtonText;
     [SerializeField] TextMeshProUGUI _contentText;
 
-    public void Show(SettingUIStrategy strategy)
+    public void Show(ConfirmationUIStrategy strategy)
     {
         ResetUI();
         strategy.Execute();
+        UIESCSystem.SetUIDepth(UIESCSystem.GetCurrentUIType() == UIType.PauseUI? UIType.PauseUI : UIType.StartSceneUI,
+            () => gameObject.SetActive(false), gameObject);
     }
 
     private void ResetUI()

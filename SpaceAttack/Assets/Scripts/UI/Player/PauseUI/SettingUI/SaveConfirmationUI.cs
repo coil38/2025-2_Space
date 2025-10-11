@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SaveConfirmationUI : SettingUIStrategy
+public class SaveConfirmationUI : ConfirmationUIStrategy
 {
     [SerializeField] Button _leftButton, _midleButton, _rightButton;
     [SerializeField] TextMeshProUGUI _leftButtonText, _midleButtonText, _rightButtonText;

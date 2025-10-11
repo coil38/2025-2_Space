@@ -185,8 +185,8 @@ public class ChipsetSelectDetailUI : MonoBehaviour
             equipChipsetText.text = "Equip";
             equipChipsetButton.onClick.AddListener(EquipChipset); //장착 버튼 구독 처리
 
-            //버튼 하이라이트 작동방지 끄기
-            highLingthingButtonUI.dontUsehighLingth = false;
+            //버튼 하이라이트 작동방지 켜기 (버튼 인터렉션 활성화)
+            highLingthingButtonUI.isCanInteracting = true;
 
             //버튼 입력 색상 변경
             ColorBlock cb = equipChipsetButton.colors;
@@ -198,8 +198,8 @@ public class ChipsetSelectDetailUI : MonoBehaviour
             equipChipsetText.text = "Equiped";
             equipChipsetButton.onClick.RemoveAllListeners();  //장착 버튼 구독 해제
 
-            //버튼 하이라이트 작동방지 켜기
-            highLingthingButtonUI.dontUsehighLingth = true;
+            //버튼 하이라이트 작동방지 끄기 (버튼 인터렉션 비활성화)
+            highLingthingButtonUI.isCanInteracting = false;
 
             //버튼 입력 색상 변경
             ColorBlock cb = equipChipsetButton.colors;
