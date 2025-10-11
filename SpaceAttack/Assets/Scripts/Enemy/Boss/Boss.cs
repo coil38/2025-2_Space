@@ -142,7 +142,12 @@ public class Boss : EnemyBase
     {
         isUsingSkill = true;
         skillAction.Invoke();
-        yield return new WaitForSeconds(2f);
+
+        yield return new WaitForSeconds(3f);
+
+        float skillDelay = Random.Range(2f, 5f);
+        yield return new WaitForSeconds(skillDelay);
+
         isUsingSkill = false;
     }
     void StartJumpAttack()
