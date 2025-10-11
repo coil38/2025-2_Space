@@ -33,8 +33,6 @@ public class CanProjectile : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Plan"))
         {
-            Debug.Log("Hit Plan! Creating cross explosion");
-
             transform.position = new Vector3(transform.position.x, collision.contacts[0].point.y, transform.position.z);
             rb.isKinematic = true;
 

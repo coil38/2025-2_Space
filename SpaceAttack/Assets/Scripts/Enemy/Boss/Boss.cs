@@ -145,7 +145,7 @@ public class Boss : EnemyBase
 
         yield return new WaitForSeconds(3f);
 
-        float skillDelay = Random.Range(2f, 5f);
+        float skillDelay = Random.Range(2f, 4f);
         yield return new WaitForSeconds(skillDelay);
 
         isUsingSkill = false;
@@ -230,7 +230,7 @@ public class Boss : EnemyBase
     //실행 함수
     public void DoCoinRainAttack()
     {
-        CoinRainAttack(20); // 동전 갯수 설정
+        CoinRainAttack(40); // 동전 갯수 설정
     }
 
     //코인 떨어지는 로직
