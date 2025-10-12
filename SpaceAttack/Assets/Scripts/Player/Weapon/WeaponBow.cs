@@ -133,7 +133,7 @@ public class WeaponBow : WeaponType     //시전시간(발사: 애니메이션 �
     }
     private void _Attack()
     {
-        float timer = m_AttackTimer.GetRemainingTimer() / _attackTime;
+        float timer = m_AttackTimer.GetRemainingTime() / _attackTime;
         Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
 
         detectPos = movePos;

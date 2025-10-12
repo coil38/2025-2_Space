@@ -4,16 +4,8 @@ using UnityEngine;
 
 public class ArcherChipset : BaseChipset
 {
-    protected override void OnEnable()      //임시
+    protected override void OnEnable()
     {
-        chipSetName = "Archer";
-        description = "그냥 저냥 평범한 칩셋(직업)2";
-        weapon = _weapon;
-        skills = _skills;
-        iconImage = _iconImage;
-        prefab = _prefab;
-        animator = _animator;
-
         base.OnEnable();
     }
 

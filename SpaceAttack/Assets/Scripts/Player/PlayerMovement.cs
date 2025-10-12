@@ -71,7 +71,7 @@ public class PlayerMovement : MonoBehaviour
             if (currentRelic != null) isOneTime = true;
             else
             {
-                LogUtil.LogError("감지된 유물이 없습니다.");
+                //LogUtil.LogError("감지된 유물이 없습니다.");
                 return;
             }
 

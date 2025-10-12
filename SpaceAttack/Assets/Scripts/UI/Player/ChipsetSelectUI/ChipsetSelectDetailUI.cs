@@ -22,10 +22,6 @@ public class ChipsetSelectDetailUI : MonoBehaviour
     [SerializeField] private Button cancelButton;
     [SerializeField] private TextMeshProUGUI equipChipsetText;
 
-    [Header("칩셋 프리팹")]
-    [SerializeField] private GameObject warriorPrefab;
-    [SerializeField] private GameObject archerPrefab;
-
     [HideInInspector] public ChipsetSO currentChipset;
     [HideInInspector] public ChipsetDatabaseSO chipsetDatabase;
     [HideInInspector] public int chipsetIndex;
@@ -66,12 +62,9 @@ public class ChipsetSelectDetailUI : MonoBehaviour
         equipChipsetButton.onClick.RemoveAllListeners();  //장착 버튼 구독 해제
     }
 
-    private void Update()
+    public void ESCDetailPanel()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            gameObject.SetActive(false);
-        }
+        gameObject.SetActive(false);
     }
 
     private void SetChipsetDetailOneTime()
@@ -148,24 +141,16 @@ public class ChipsetSelectDetailUI : MonoBehaviour
         //칩셋 장착 내부 코드
         switch (currentChipset.chipsetName)
         {
-            case "Warrior":
-                LogUtil.Log("전사 칩셋 장착");
-                if (inventoryManager != null)
-                    inventoryManager.chipSet = warriorPrefab.GetComponent<ChipSetType>();
-
-                if (PlayerUIManager.instance != null)
-                    PlayerUIManager.instance.SetChipsetInfo(sprites[0], sprites[1], sprites[2], sprites[3]);  //메인UI 이미지 변경
-                break;
-
-            case "Archer":
-                LogUtil.Log("궁수 칩셋 장착");
-                if (inventoryManager != null)
-                    inventoryManager.chipSet = archerPrefab.GetComponent<ChipSetType>();
-
-                if (PlayerUIManager.instance != null)
-                    PlayerUIManager.instance.SetChipsetInfo(sprites[0], sprites[1], sprites[2], sprites[3]);
-                break;
+            case "Warrior": LogUtil.Log("전사 칩셋 장착"); break;
+            case "Archer": LogUtil.Log("궁수 칩셋 장착"); break;
         }
+        GameObject prefab = DataManager.instance.GetChipsetPrfByName(currentChipset.chipsetName);
+        GameObject chipset = Instantiate(prefab, transform.position, prefab.transform.rotation);
+        if (inventoryManager != null)
+            inventoryManager.chipSet = chipset.GetComponent<ChipSetType>();
+
+        if (PlayerUIManager.instance != null)
+            PlayerUIManager.instance.SetChipsetInfo(sprites[0], sprites[1], sprites[2], sprites[3]);  //메인UI 이미지 변경
 
         equipedChipset = currentChipset;  //현재 칩셋을 장착중인 칩셋에 할당
         chipsetSelectUI.SetEquipmentText(chipsetIndex);  //장착중인 칩셋 텍스트 표시
@@ -187,6 +172,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
 
             //버튼 하이라이트 작동방지 켜기 (버튼 인터렉션 활성화)
             highLingthingButtonUI.isCanInteracting = true;
+            //LogUtil.Log("")
 
             //버튼 입력 색상 변경
             ColorBlock cb = equipChipsetButton.colors;
@@ -198,8 +184,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
             equipChipsetText.text = "Equiped";
             equipChipsetButton.onClick.RemoveAllListeners();  //장착 버튼 구독 해제
 
-            //버튼 하이라이트 작동방지 끄기 (버튼 인터렉션 비활성화)
-            highLingthingButtonUI.isCanInteracting = false;
+            //버튼 하이라이트 작동방지 끄기 (버튼 인터렉션 비활성화) - 일부로 쓰지 않음. 버튼이 알아서 처리해줌
 
             //버튼 입력 색상 변경
             ColorBlock cb = equipChipsetButton.colors;

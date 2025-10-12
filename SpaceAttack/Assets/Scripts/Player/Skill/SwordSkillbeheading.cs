@@ -134,7 +134,7 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
 
         while (true)
         {
-            float timer = s_AttackTimer.GetRemainingTimer() / _attackTime;
+            float timer = s_AttackTimer.GetRemainingTime() / _attackTime;
             Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
 
             //UpdateSlashSprite(movePos, attackDirection);  //참격 스프라이트 갱신

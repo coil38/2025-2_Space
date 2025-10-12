@@ -29,7 +29,7 @@ public class SaveData
 [System.Serializable]
 public class SavedButtonData
 {
-    public string[] fileDatas = new string[5];      //버튼 저장
+    public string[] fileDatas = new string[3];      //버튼 저장
     public void SetFildDatas(Dictionary<int, string> fileDatas)
     {
         foreach (var file in fileDatas)

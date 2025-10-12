@@ -19,23 +19,30 @@ public class BGMManager : MonoBehaviour
 
     private void PlayBGMSound(SceneType sceneType)
     {
+        //AudioSource source = GetComponent<AudioSource>();
+        //if (source != null) LogUtil.Log("오디오 소스가 존재한다.");
+        //else LogUtil.Log("오디오 소스가 존재하지 않는다.");
+
         switch (sceneType)
         {
             case SceneType.StartGameScene:
-                SoundManager.instance.StopPlayedAllSound();  //모든 사운드 종료
-                SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
+                //if(SoundManager.instance != null) 
+                 SoundManager.instance.StopPlayedAllSound();  //모든 사운드 종료
+                //SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
                 //시작화면 브금 재생
                 break;
             case SceneType.LobbyScene:
-                SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
+                //SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
                 break;
 
             case SceneType.ChipsetSelectScene:
-                SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
+                if (SoundManager.instance != null)
+                    SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
                 break;
 
             case SceneType.BattleScene:
-                SoundManager.instance.PlayBGMOrUISound(1001, SoundType.BGM);
+                if (SoundManager.instance != null)
+                    SoundManager.instance.PlayBGMOrUISound(1001, SoundType.BGM);
                 break;
         }
     }

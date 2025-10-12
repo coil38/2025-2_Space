@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class BowSkillConcentratedFIre : SkillType
+public class BowSkillConcentratedFire : SkillType
 {
     private WaitForFixedUpdate waitForFixedUpdate;
     private WaitForSeconds waitForSeconds;

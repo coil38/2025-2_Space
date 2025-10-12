@@ -37,7 +37,7 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
 
         if (isAttackMoving)
         {
-            float timer = attackMoveTimer.GetRemainingTimer() / 0.1f;
+            float timer = attackMoveTimer.GetRemainingTime() / 0.1f;
             Vector3 movePos = Vector3.Lerp(_currentPos, targetPos, 1 - timer);
             attackMovePos = movePos;   //이동 위치 할당
 

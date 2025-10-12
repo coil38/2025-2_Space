@@ -16,6 +16,8 @@ public class SceneLoadManager : MonoBehaviour
 
     public void LoadScene(string sceneName)
     {
+        if (isSceneLoading) return;
+
         StartCoroutine(LoadSceneAsync(sceneName));
     }
 

@@ -16,7 +16,6 @@ public class InitializationOrderer : MonoBehaviour
     private UISoundManager uISoundManager; //SoundManager.instance관련
     private PlayerSoundManager playerSoundManager; //SoundManager.instance관련
     private PlayerUIManager playerUIManager; //PlayerUIManager.instance관련
-    private RelicEffectManager relicEffectManager; //아무관련 없음
     public bool isInitializeDon { get; private set; } //초기여부 체크용 불값 (외부에서 확인)
 
     private void Awake()
@@ -45,11 +44,9 @@ public class InitializationOrderer : MonoBehaviour
         uISoundManager = FindAnyObjectByType<UISoundManager>();
         playerSoundManager = FindAnyObjectByType<PlayerSoundManager>();
         playerUIManager = FindAnyObjectByType<PlayerUIManager>();
-        relicEffectManager = FindAnyObjectByType<RelicEffectManager>();
 
         if (DataManager == null || EventManager == null || playerStatus == null || playerCore == null 
-            || soundManager == null || bgmManager == null || uISoundManager == null || playerSoundManager == null|| playerUIManager == null
-            || relicEffectManager == null)
+            || soundManager == null || bgmManager == null || uISoundManager == null || playerSoundManager == null|| playerUIManager == null)
         {
             if (DataManager == null) LogUtil.LogError("DataManger가 존재하지 않음.");
             if (EventManager == null) LogUtil.LogError("EventManager가 존재하지 않음.");
@@ -60,7 +57,6 @@ public class InitializationOrderer : MonoBehaviour
             if (uISoundManager == null) LogUtil.LogError("uISoundManager가 존재하지 않음.");
             if (playerSoundManager == null) LogUtil.LogError("playerSoundManager가 존재하지 않음.");
             if (playerUIManager == null) LogUtil.LogError("playerUIManager가 존재하지 않음.");
-            if (relicEffectManager == null) LogUtil.LogError("relicEffectManager가 존재하지 않음.");
 
             yield break;
         }
@@ -75,7 +71,6 @@ public class InitializationOrderer : MonoBehaviour
         playerStatus.InitializeEvent();  //EventManger -> f_CorrectionValueEven 체인처리
         playerCore.InitializeEvent();    //EventManger -> f_CorrectionValueEvent, DataManger -> Level 관리, PlayerUIManager 인스턴스
         soundManager.Initialize();       //DataManager -> soundDatabase 받기
-        relicEffectManager.Initialize(); //초기화
 
         yield return new WaitUntil(() => SoundManager.instance != null && SoundManager.instance.endInitialize);  //SoundManager인스턴스 존재 할 시, 넘어감
         bgmManager.Initialized();        //SoundManager에서 BGM등록

@@ -47,7 +47,7 @@ public class Timer
         return isRunning;
     }
 
-    public float GetRemainingTimer()   //남은 시간확인
+    public float GetRemainingTime()   //남은 시간확인
     {
         return remainingTimer;
     }

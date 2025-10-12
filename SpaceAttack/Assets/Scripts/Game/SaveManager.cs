@@ -30,11 +30,15 @@ public class SaveManager : MonoBehaviour
 
         if (playerInventory != null)
         {
+            int[] relicIds = new int[playerInventory._relics.Length];  //인벤토리의 유물들의 아이디들을 받기
+            for(int i = 0; i < playerInventory._relics.Length; i++)
+                relicIds[i] = playerInventory._relics[i].relicID;
+
             data.SetDatas(playerInventory.transform.position, 
                 SceneManager.GetActiveScene().name, 
                 PlayerCore.Level, 
                 PlayerCore.DarkMaterialCount, 
-                playerInventory.relicIDs.Count > 0 ? playerInventory.relicIDs.ToArray() : null, 
+                relicIds.Length > 0 ? relicIds : null,
                 playerInventory.chipSet != null ? playerInventory.chipSet.chipSetName : null);
         }
         else
@@ -55,12 +59,6 @@ public class SaveManager : MonoBehaviour
         SaveData data = new SaveData();
         data.SetDatas(new Vector3(0f, 0.092f, -0.3f), sceneName, 0, 0);
         SaveSystem.Save(currentFileName, data);  //저장 새 파일 생성
-
-        if (!isOneTime)  //게임 키고 처음 한번만 적용
-        {
-            StartCoroutine(SaveGame());
-            isOneTime = true;
-        }
     }
 
     public void InitializePlayerDatas()  //게임 시작 전의 값으로 초기화
@@ -73,7 +71,8 @@ public class SaveManager : MonoBehaviour
             Vector3 defualtPos = new Vector3(0f, 0.092f, -0.3f);   //플레이어 위치초기화
             playerInventory.transform.position = defualtPos;
 
-            //유물, 칩셋 제거
+            playerInventory.InitialInventoryDatas();               //유물리스트 삭제 및 암흑물질량 초기화 및 칩셋제거
+
             //플레이어 대쉬 쿨타임 초기화
             PlayerCore.Level = 0;                                  //레벨 초기화
             PlayerCore.DarkMaterialCount = 0;                      //경험치양 초기화
@@ -102,11 +101,19 @@ public class SaveManager : MonoBehaviour
             playerInventory = FindObjectOfType<InventoryManager>();
 
         playerInventory.gameObject.transform.position = data.playerPos;  //플레이어 위치 설정
-        //foreach (int itemID in data.playerItems)                         //플레이어 유물 설정
-        //{
 
-        //}
-        //playerInventory.relic =                                        //플레이어 칩셋 설정
+        RelicSO[] relics = new RelicSO[data.playerItems.Length];          //플레이어 유물 설정
+        for (int i = 0; i < data.playerItems.Length; i++)
+            relics[i] = DataManager.instance._RelicDatabase.GetRelicById(data.playerItems[i]);
+        playerInventory.SetSavedRelics(relics);
+
+        if(!string.IsNullOrEmpty(data.playerChipsetName))
+        {
+            GameObject chipsetPrf = DataManager.instance.GetChipsetPrfByName(data.playerChipsetName);  //플레이어 칩셋 설정
+            GameObject chipset = Instantiate(chipsetPrf);
+            playerInventory.chipSet = chipset.GetComponent<BaseChipset>();
+        }
+
         PlayerCore.Level = data.playerLevel;                             //플레이어 레벨 설정
         PlayerCore.DarkMaterialCount = data.playerDarkMatCount;          //플레이어 암흑물질 설정
         PlayerCore.GetDarkMatter(0, true);                               //UI초기화
@@ -136,14 +143,23 @@ public class SaveManager : MonoBehaviour
         else
         {
             SavedButtonData data = SaveSystem.Load<SavedButtonData>(fileName);  //파일 데이터 로드
-            if (data == null)
+            if (data == null || string.IsNullOrEmpty(data.fileDatas[0]))
             {
                 LogUtil.Log("data가 없음");
                 return;
             }
 
-            for (int i = 0; i < StartGameUI.fileDatas.Count; i++)
+            for (int i = 0; i < data.fileDatas.Length; i++)
                 StartGameUI.fileDatas[i] = data.fileDatas[i];
+        }
+    }
+
+    public void StartUpdateSave()
+    {
+        if (!isOneTime)  //게임 키고 처음 한번만 적용
+        {
+            StartCoroutine(SaveGame());
+            isOneTime = true;
         }
     }
 
@@ -174,7 +190,7 @@ public class SaveManager : MonoBehaviour
                 LogUtil.Log("현재는 자동저장을 할 수 없는 상태입니다.");
             }
 
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(5f);
         }
     }
 

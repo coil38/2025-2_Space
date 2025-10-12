@@ -10,29 +10,34 @@ public class DataManager : MonoBehaviour
     [SerializeField] private LevelDatabaseSO levelDatabase;  //레벨 데이터 베이스
     [SerializeField] private RelicDatabaseSO relicDatabase;  //유물 데이터 베이스
 
-    //유물들
-    [SerializeField] private GameObject[] relics;  //유물들
+    [SerializeField] private GameObject relicObject;         //유물 프리팹
+    [SerializeField] private GameObject[] chipsetPrfs;       //칩셋 프리팹
 
-    public GameObject[] _relics
+    public GameObject _relicObject
     {
-        get { return relics; }
-        private set { relics = value; }
+        get { return relicObject; }
     }
+
+    public GameObject GetChipsetPrfByName(string name)
+    {
+        foreach(var chipset in chipsetPrfs)
+            if (chipset.GetComponent<ChipSetType>().chipSetName == name)
+                return chipset;
+        return null;
+    }
+
     public SoundDatabaseSO _soundDatabase
     {
         get { return soundDatabase; }
-        private set {  soundDatabase = value; }
     }
     public LevelDatabaseSO _levelDatabase
     {
         get { return levelDatabase; }
-        private set { levelDatabase = value; }
     }
 
     public RelicDatabaseSO _RelicDatabase
     {
         get { return  relicDatabase; }
-        private set {  relicDatabase = value; }
     }
     void Awake()
     {

@@ -37,4 +37,10 @@ public class DarkMaterialUI : MonoBehaviour
 
         m_Slider.DOValue(currentSliderValue, aniDuration).SetEase(aniType);
     }
+
+    public void ResetDarkMaterialUI()
+    {
+        m_Slider.value = 0f;
+        currentSliderValue = 0f;
+    }
 }

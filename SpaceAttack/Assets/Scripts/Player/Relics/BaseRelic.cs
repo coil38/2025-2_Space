@@ -2,9 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseRelic : MonoBehaviour
+public class BaseRelic : MonoBehaviour
 {
-    public abstract int relicId { get; protected set; }
+    public int relicId {  get; private set; }
+    public string relicName { get; private set; }
+    public Sprite relicIcon { get; private set; }
 
-    public abstract void SetEffect(bool isEquip, RelicInfo[] infos);
+    public void Initialize(int relicID, string relicName, Sprite relicIcon)
+    {
+        this.relicId = relicID;
+        this.relicName = relicName;
+        if(relicIcon != null) this.relicIcon = relicIcon;
+
+        gameObject.name = relicName;
+
+        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+        if (renderer == null )
+            renderer = gameObject.AddComponent<SpriteRenderer>();
+        renderer.sprite = relicIcon;
+
+        Collider collider = GetComponent<Collider>();
+        if (collider == null)
+            collider = gameObject.AddComponent<BoxCollider>();
+        collider.isTrigger = true;
+
+        Rigidbody rigidbody = GetComponent<Rigidbody>();
+        if (rigidbody == null)
+            rigidbody = gameObject.AddComponent<Rigidbody>();
+
+        RelicAnimationController relicAniCon = GetComponent<RelicAnimationController>();
+        if (relicAniCon == null)
+            relicAniCon = gameObject.AddComponent<RelicAnimationController>();
+
+    }
 }

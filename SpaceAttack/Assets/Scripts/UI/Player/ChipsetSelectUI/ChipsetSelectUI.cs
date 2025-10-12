@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class ChipsetSelectUI : MonoBehaviour
 {
@@ -21,7 +22,6 @@ public class ChipsetSelectUI : MonoBehaviour
     private Image[] iconImages;
     private Button[] buttons;
     private GameObject[] equipedTexts;
-    private Timer feedBackTimer = new Timer(2f);
 
     private void OnEnable()
     {
@@ -36,31 +36,17 @@ public class ChipsetSelectUI : MonoBehaviour
 
         chipsetDetailPanel.gameObject.SetActive(false);  //칩셋 상세창 비활성화 처리
 
-        UIESCSystem.ChangeUIType(UIType.PauseUI);   //일시정지 UI 상태로 변경
+        UIESCSystem.ChangeUIType(UIType.SelectChipsetUI);   //일시정지 UI 상태로 변경
+        UIESCSystem.SetUIDepth(UIType.SelectChipsetUI, EndSelectChipset, gameObject);
         Time.timeScale = 0f;  //게임 일시정지
     }
 
     private void OnDisable()
     {
         Time.timeScale = 1f;  //게임 일시정지 해제
-        UIESCSystem.ChangeUIType(UIType.SelectChipsetUI);   //칩셋 선택UI로 변경
+        UIESCSystem.ChangeUIType(UIType.None);   //칩셋 선택UI로 변경
 
         UISoundManager.PlayeOnAndOffPanelSound(); //패널열기혹은 닫기 사운드 재생
-    }
-
-    private void Update()
-    {
-        feedBackTimer.Update();
-        if (!feedBackTimer.IsRunning())
-        {
-            feedBackText.text = string.Empty;
-        }
-
-        if (chipsetDetailPanel.gameObject.activeSelf) return;
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            EndSelectChipset();
-        }
     }
 
     private void SetChipsetUI()
@@ -90,7 +76,7 @@ public class ChipsetSelectUI : MonoBehaviour
 
         chipsetCount = chipsetDatabase.chipsets.Count;
 
-        for (int i = 0; i < buttons.Length; i++)  //이벤트 구독
+        for (int i = 0; i < buttons.Length; i++)  //버튼 이벤트 구독
         {
             int index = i;
 
@@ -98,6 +84,7 @@ public class ChipsetSelectUI : MonoBehaviour
             {
                 buttons[index].onClick.AddListener(() =>
                 {
+                    UIESCSystem.SetUIDepth(UIType.SelectChipsetUI, chipsetDetailPanel.ESCDetailPanel, chipsetDetailPanel.gameObject);    //Esp용 UI_Depth설정 함수
                     chipsetDetailPanel.chipsetIndex = index;
                     chipsetDetailPanel.currentChipset = chipsetDatabase.chipsets[index];
                     chipsetDetailPanel.gameObject.SetActive(true);
@@ -107,8 +94,14 @@ public class ChipsetSelectUI : MonoBehaviour
             {
                 buttons[index].onClick.AddListener(() =>
                 {
+                    buttons[index].GetComponent<HighLingthingButtonUI>().isCanInteracting = false;
                     feedBackText.text = "This Chipset is unLocked";
-                    feedBackTimer.Start();
+                    feedBackText.DOFade(0f, 2f).SetUpdate(true).OnComplete(() =>
+                    {
+                        feedBackText.text = string.Empty;
+                        feedBackText.alpha = 1f;
+                    });
+
                 });
             }
 

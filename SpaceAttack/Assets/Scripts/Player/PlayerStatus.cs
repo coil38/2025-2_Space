@@ -254,4 +254,30 @@ public class PlayerStatus : MonoBehaviour
             //플레이어 스텟보정 연출
         }
     }
+
+    InventoryManager inventory;
+    private void OnGUI()
+    {
+        GUILayout.BeginArea(new Rect(10, 350, 400, 1650));
+
+        GUILayout.Label("===플레이어 스텟===");
+        GUILayout.Label($"체력: {m_hp}, 최대 체력: {m_maxhp}");
+        GUILayout.Label($"이동속도: {m_speed}, 기본 이동 속도: {m_defultSpeed}");
+        GUILayout.Label($"치명타 피해률: {criticalRate}, 치명타 확률: {criticalChanceRate}");
+        GUILayout.Label($"회피률: {missRate} , 기본공격력: {normalDamage}");
+        GUILayout.Label($"레벨: {PlayerCore.Level} , 경험치: {PlayerCore.DarkMaterialCount}");
+
+        GUILayout.Space(10);
+
+        if (inventory == null)
+            inventory = FindObjectOfType<InventoryManager>();
+
+        GUILayout.Label($"보유중인 유물 개수: {inventory._relics.Length}");
+        foreach (var relic in inventory._relics)
+        {
+            GUILayout.Label($"{relic.relicID}:{relic.relicName}");
+        }
+
+        GUILayout.EndArea();
+    }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System.Linq;
 
 public class RelicPopUpUI : MonoBehaviour
 {
@@ -23,9 +22,15 @@ public class RelicPopUpUI : MonoBehaviour
             Vector3 targetPos = relic.transform.position + relic.transform.up * 0.6f;
             transform.position = targetPos;
 
+            if(relic.relicId < 100)
+            {
+                LogUtil.LogWarning("유물에 ID가 존재하지 않습니다.");
+                return;
+            }
+
             RelicDatabaseSO database = DataManager.instance._RelicDatabase;
             //유물 정보 입력
-            RelicSO relicSO = database.GetRelic(relic.relicId);                 //유물SO찾기
+            RelicSO relicSO = database.GetRelicById(relic.relicId);                 //유물SO찾기
             relicNameText.text = relicSO.relicName;                             //유물 이름할당
             relicDivisionText.text = relicSO.relicDivision;                     //유물 분류 할당
             relicDarkMatCountText.text = relicSO.darkMaterialCount.ToString();  //유물 암흑물질수 할당

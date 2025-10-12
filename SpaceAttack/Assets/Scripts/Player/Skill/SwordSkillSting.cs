@@ -131,7 +131,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
         while (true)
         {
-            float timer = PlayerTimeSystem.w_SkillTimer.GetRemainingTimer() / _attackTime;
+            float timer = PlayerTimeSystem.w_SkillTimer.GetRemainingTime() / _attackTime;
             Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
             attackMovePos = movePos;   //이동 위치 할당
 

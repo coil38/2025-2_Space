@@ -147,7 +147,7 @@ public class BowSkillBigArrow : SkillType
 
         while (true)
         {
-            float timer = s_AttackTimer.GetRemainingTimer() / _attackTime;
+            float timer = s_AttackTimer.GetRemainingTime() / _attackTime;
             Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
             detectPos = movePos;
 

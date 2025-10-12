@@ -14,7 +14,7 @@ public class UISoundManager : MonoBehaviour
     {
         SoundManager.instance.PlayBGMOrUISound(4003, SoundType.UI);
     }
-    public static void PlayeOnAndOffPanelSound()  //버튼 클릭 사운드 재생
+    public static void PlayeOnAndOffPanelSound()  //패널 열고 닫는 사운드 재생
     {
         SoundManager.instance.PlayBGMOrUISound(4004, SoundType.UI);
     }

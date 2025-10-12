@@ -15,6 +15,8 @@ public class RelicFloatingUI : MonoBehaviour
 
     private void Update()
     {
+        if (currentRelic == null) return;
+
         if (isOnFloating)
         {
             Vector3 targetPos = currentRelic.gameObject.transform.position + Vector3.right * 0.6f;

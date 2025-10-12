@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
@@ -115,40 +116,38 @@ public class InventoryManager : MonoBehaviour
 
 //-----------------------------------------------------------------------------------------유물 획득용---------------------------------------------------------------------------------------
 
-    private List<BaseRelic> relics = new List<BaseRelic>();
+    private List<RelicSO> relics = new List<RelicSO>();
+    public RelicSO[] _relics
+    {
+        get { return relics.ToArray(); }
+    }
 
-    public List<int> relicIDs = new List<int>();
-
-    private BaseRelic _relic;
     public BaseRelic relic
     {
-        get { return _relic; }
         set
         {
-            _relic = value;
-
             int id = value.relicId;
-            RelicSO relic = DataManager.instance._RelicDatabase.GetRelic(id);
+            RelicSO relic = DataManager.instance._RelicDatabase.GetRelicById(id);
+
             if (relic == null)
             {
-                LogUtil.LogError($"{id}와 일치한 유물이 없습니다.");
+                LogUtil.LogError($"Id_{id}인 유물이 없습니다.");
                 return;
             }
 
             if (relic.relicInfos == null)
-            {
                 LogUtil.LogError("RelicInfo인스턴스가 존재하지 않습니다.");
-            }
-            
+
             if (currentDarkMaterial + relic.darkMaterialCount <= 100)  //최대용량을 넘지 않을 경우
             {
+                LogUtil.Log($"{relic.relicName}_유물 획득, 현재 암흑게이지수치: {currentDarkMaterial}, 현재 보유중인 유물개수: {relics.Count}");
+
                 PlayerUIManager.instance.ChangeDarkMaterialUI(true, relic.darkMaterialCount); //암흑물질 채워지는 UI연출
-                relics.Add(value);  //유물 데이터 추가
-                relicIDs.Add(id);   //유물 Id 추가
-                SetRelicObject(value);
-                SetRelicInfo(value, relic);
+                relics.Add(relic);                                     //유물 데이터 추가
+                AddRelicEffects(relic);
 
                 currentDarkMaterial += relic.darkMaterialCount;
+                Destroy(value.gameObject);                             //획득한 유물 파괴
             }
             else
             {
@@ -159,6 +158,32 @@ public class InventoryManager : MonoBehaviour
     }
 
     private float currentDarkMaterial;
+
+    public void SetSavedRelics(RelicSO[] relics)       //저장된 유물을 불러오는 함수 (저장 시스템용)
+    {
+        this.relics = new List<RelicSO>(relics);       //저장
+
+        foreach (var relic in relics)
+        {
+            PlayerUIManager.instance.ChangeDarkMaterialUI(true, relic.darkMaterialCount); //암흑물질 채워지는 UI 갱신
+            AddRelicEffects(relic);
+            currentDarkMaterial += relic.darkMaterialCount;
+        }
+    }
+
+    public void InitialInventoryDatas()              //인벤토리 초기화 (저장 시스템용)
+    {
+        relics.Clear();
+        currentDarkMaterial = 0;
+        PlayerUIManager.instance.ResetDarkMaterialUI();
+
+        if (_chipSet != null)
+        {
+            RemoveChipsetToPlayerAttack(_chipSet);
+            DropChipset(_chipSet);
+            _chipSet = null;
+        }
+    }
 
     private void DropRelic(BaseRelic m_relic)
     {
@@ -173,26 +198,13 @@ public class InventoryManager : MonoBehaviour
         m_relic.gameObject.GetComponent<Collider>().enabled = true;   //감지 가능상태로 변경
     }
 
-    private void RemoveRelicInfo(BaseRelic m_relic, RelicSO m_relicSO)
+    private void RemoveRelicEffects(RelicSO m_relicSO)
     {
-        m_relic.SetEffect(false, m_relicSO.relicInfos);
+        RelicEffectManager.ApplyRelicEffect(m_relicSO, false);
     }
 
-    private void SetRelicObject(BaseRelic m_relic)              //월드의 칩셋 오브젝트 설정
+    private void AddRelicEffects(RelicSO m_relicSO)        //유물 효과 실행부
     {
-        Color color = m_relic.gameObject.GetComponent<SpriteRenderer>().color;   //해당 칩셋을 투명상태로 변경
-        color.a = 0f;
-        m_relic.gameObject.GetComponent<SpriteRenderer>().color = color;
-
-        m_relic.gameObject.transform.SetParent(this.transform);                  //해당 칩셋을 Player 자식으로 넣기
-        m_relic.gameObject.transform.localPosition = Vector3.zero;
-
-        m_relic.gameObject.GetComponent<Collider>().enabled = false;   //감지 가능상태로 변경
-    }
-
-
-    private void SetRelicInfo(BaseRelic m_relic, RelicSO m_relicSO)        //유물 효과 실행부
-    {
-        m_relic.SetEffect(true, m_relicSO.relicInfos);
+        RelicEffectManager.ApplyRelicEffect(m_relicSO, true);
     }
 }

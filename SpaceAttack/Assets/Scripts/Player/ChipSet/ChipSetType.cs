@@ -4,13 +4,13 @@ using UnityEngine;
 
 public abstract class ChipSetType : MonoBehaviour
 {
-    public abstract WeaponType weapon { get; protected set; }
-    public abstract SkillType[] skills { get; protected set; }
-    public abstract string chipSetName { get; protected set; }
-    public abstract string description { get; protected set; }
-    public abstract Sprite iconImage { get; protected set; }
-    public abstract GameObject prefab { get; protected set; }
-    public abstract Animator animator { get; protected set; }
+    public  WeaponType weapon;
+    public SkillType[] skills;
+    public string chipSetName;
+    public string description;
+    public Sprite iconImage;
+    public GameObject prefab;
+    public Animator animator;
     public abstract void SetCorrectionValue(object obj, PlayerEvent e);
     public abstract void SetRelicAttackValue(object obj, PlayerEvent e);
     public abstract void SetCoolDownValue(object obj, PlayerEvent e);

@@ -18,6 +18,7 @@ public class StartGameUI : MonoBehaviour
     [SerializeField] private Button[] fileButtons;
     [SerializeField] private Button startDeleteButton;
     [SerializeField] private Button returnButton;
+    [SerializeField] private GameObject deleteModeObj;      //ESC_삭제모드를 위한 변수
 
     [Header("되묻기창용 변수")]
     [SerializeField] private ConfirmationUI confirmationUI;
@@ -40,6 +41,7 @@ public class StartGameUI : MonoBehaviour
         settingButton.onClick.AddListener(OnSettingPanel);
         exitGameButton.onClick.AddListener(ExitGame);
 
+        SaveManager.instance.StartUpdateSave();              //실시간 저장 시작
         SaveManager.instance.SaveAndLoadButtonInfo(false);   //fileDatas 데이터 로드
 
         if (fileDatas.Count <= 0)  //파일 데이터 없을 때, 처음 한번만 실행
@@ -81,8 +83,8 @@ public class StartGameUI : MonoBehaviour
                 if (fileDatas.TryGetValue(index, out string name))
                 {
                     string fileName = GetFileName(index);
-                    LogUtil.Log(fileName);
-                    LogUtil.Log($"버튼이름: {name}, 버튼 인덱스: {index}, 기본 이름: {defualtName}");
+                    //LogUtil.Log(fileName);
+                    //LogUtil.Log($"버튼이름: {name}, 버튼 인덱스: {index}, 기본 이름: {defualtName}");
                     if (name == defualtName)
                     {
                         SaveManager.instance.StartNewSaveFile(fileName);   //현재 시간으로 저장
@@ -185,7 +187,7 @@ public class StartGameUI : MonoBehaviour
     private void StartDeleteFile()
     {
         bool cannotDelete = true;
-        GameObject deleteIconObj = null;
+        deleteModeObj.SetActive(true);
 
         for (int i = 0; i < fileButtons.Length; i++)
         {
@@ -195,7 +197,6 @@ public class StartGameUI : MonoBehaviour
                 {
                     deleteButtons[i].gameObject.SetActive(true);   //저장파일이 있는 삭제아이콘만 활성화
                     cannotDelete = false;
-                    deleteIconObj = deleteButtons[i].gameObject;
                 }
             }
             fileButtons[i].gameObject.GetComponent<HighLingthingButtonUI>().isCanInteracting = false;  //모든 버튼 상호작용 비활성화 처리
@@ -203,13 +204,13 @@ public class StartGameUI : MonoBehaviour
 
         if (cannotDelete)        //삭제할 수 없다면
         {
-            InitializeDelete();  //초기화 처리
+            ReturnToFileSelectManu();  //삭제 모드 해제처리
             startDeleteButton.gameObject.GetComponent<HighLingthingButtonUI>().isCanInteracting = false;  //삭제 시작 버튼 상호작용 비 활성화 처리
             isFileDeleting = false;
         }
         else
         {
-            UIESCSystem.SetUIDepth(UIType.StartSceneUI, ReturnToFileSelectManu, deleteIconObj);    //Esp용 UI_Depth설정 함수
+            UIESCSystem.SetUIDepth(UIType.StartSceneUI, ReturnToFileSelectManu, deleteModeObj);    //Esp용 UI_Depth설정 함수
 
             startDeleteButton.gameObject.GetComponent<HighLingthingButtonUI>().isCanInteracting = true;  //삭제 시작 버튼 상호작용 활성화 처리
             startDeleteButton.gameObject.SetActive(false);          //버튼 비활성화 처리
@@ -217,16 +218,14 @@ public class StartGameUI : MonoBehaviour
         }
     }
 
-    public void InitializeDelete()
+    public void CheckAndProcessDeleteMode()
     {
-        for (int i = 0; i < fileButtons.Length; i++)
-        {
-            deleteButtons[i].gameObject.SetActive(false);
-            fileButtons[i].gameObject.GetComponent<HighLingthingButtonUI>().isCanInteracting = true;  //모든 버튼 상호작용 활성화 처리
-        }
+        int activeButtonCount = 0;
+        foreach (var button in deleteButtons)
+            if (button.gameObject.activeSelf) activeButtonCount++;
 
-        isFileDeleting = false;
-        //LogUtil.Log("초기화");
+        if (activeButtonCount < 2) ReturnToFileSelectManu();           //파일 삭제 모드 자동 해제
+        else deleteButtons[deletedIndex].gameObject.SetActive(false);  //삭제한 버튼 아이콘만 삭제
     }
 
     private void ReturnToMainManu()
@@ -236,9 +235,19 @@ public class StartGameUI : MonoBehaviour
         subLayout.gameObject.SetActive(false);
     }
 
-    private void ReturnToFileSelectManu()
+    private void ReturnToFileSelectManu()                  //파일 삭제 모드 해제 함수
     {
         startDeleteButton.gameObject.SetActive(true);          //버튼 활성화 처리
-        InitializeDelete();
+
+        for (int i = 0; i < fileButtons.Length; i++)
+        {
+            deleteButtons[i].gameObject.SetActive(false);
+            fileButtons[i].gameObject.GetComponent<HighLingthingButtonUI>().isCanInteracting = true;  //모든 버튼 상호작용 활성화 처리
+        }
+
+        deleteModeObj.SetActive(false);
+        isFileDeleting = false;
+
+        //LogUtil.Log("삭제모드 해제");
     }
 }

@@ -60,6 +60,11 @@ public class PlayerUIManager : MonoBehaviour
         playerDarkMaterialUI.ChangeDarkMaterialUI(isAdd, value);
     }
 
+    public void ResetDarkMaterialUI()
+    {
+        playerDarkMaterialUI.ResetDarkMaterialUI();
+    }
+
     public void SetRelicFloatingUI(bool onFloatingText, BaseRelic relic = null)
     {
         playerRelicFloatingUI.SetFloatingUI(onFloatingText, relic);

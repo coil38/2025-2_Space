@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,6 +9,7 @@ public enum UIType
     StartSceneUI,     //시작화면UI
     PauseUI,          //일시정지UI
     SelectChipsetUI,  //칩셋선택UI
+    None,             //잘모를 때, 쓰는 타입(자동으로 알맞은 타입으로 바꿔줌)
 }
 
 public class UIESCSystem : MonoBehaviour  //ESC교통정리용 시스템
@@ -17,17 +19,19 @@ public class UIESCSystem : MonoBehaviour  //ESC교통정리용 시스템
     
     private static UnityAction onPauseUI;
 
+    private Timer ESCPauseTimer = new Timer(1f);
+
     private void Awake()
     {
-        GameSceneManager.sceneTypeChanged += ChangeUIType;    //씬타입 변경 이벤트 구독
+        GameSceneManager.sceneTypeChanged += ChangeUITypeByScene;    //씬타입 변경 이벤트 구독
     }
 
     private void OnDisable()
     {
-        GameSceneManager.sceneTypeChanged -= ChangeUIType;    //씬타입 변경 이벤트 구독 헤제
+        GameSceneManager.sceneTypeChanged -= ChangeUITypeByScene;    //씬타입 변경 이벤트 구독 헤제
     }
 
-    private void ChangeUIType(SceneType sceneType)
+    private static void ChangeUITypeByScene(SceneType sceneType)          //씬에 따라서 UIType을 바꾸어주는 함수
     {
         if (sceneType == SceneType.StartGameScene)
         {
@@ -35,7 +39,7 @@ public class UIESCSystem : MonoBehaviour  //ESC교통정리용 시스템
         }
         else
         {
-            ChangeUIType(UIType.PauseUI);
+            ChangeUIType(UIType.PauseUI);            //칩셋선택UI가 아닐경우,
         }
     }
 
@@ -48,32 +52,42 @@ public class UIESCSystem : MonoBehaviour  //ESC교통정리용 시스템
             switch (currentUIType)
             {
                 case UIType.StartSceneUI:
-                    LogUtil.Log("시작UI임");
+                    //LogUtil.Log("시작UI임");
                     Return();
                 break;
 
                 case UIType.SelectChipsetUI:
-                    LogUtil.Log("칩셋선택UI임");
+                    //LogUtil.Log("칩셋선택UI임");
                     Return();
                 break;
 
                 case UIType.PauseUI:
-                    LogUtil.Log("일시정지UI임");
+                    //LogUtil.Log("일시정지UI임");
                     if (depths.Count <= 0)
                     {
                         onPauseUI?.Invoke();
+                        ESCPauseTimer.Start();
+                    }
+                    else if  (depths.Count == 1 && !ESCPauseTimer.IsRunning())  //일시정지 시작 ~ 취소 사이 텀을 둔다
+                    {
+                        Return();
                     }
                     else Return();
                 break;
             }
         }
+
+        ESCPauseTimer.Update();
     }
 
     public static void ChangeUIType(UIType type)
     {
-        LogUtil.Log($"UI타입이 {type}으로 변경됨");
+        //LogUtil.Log($"UI타입이 {type}으로 변경됨");
         depths.Clear();                               //초기화
-        currentUIType = type;
+
+        if (type == UIType.None)
+            ChangeUITypeByScene(GameSceneManager.instance.currentScene);
+        else currentUIType = type;
     }
 
     public static void SetUIDepth(UIType type, UnityAction action, GameObject obj)
@@ -84,7 +98,7 @@ public class UIESCSystem : MonoBehaviour  //ESC교통정리용 시스템
         depths.Push((obj, action));
 
         //LogUtil.Log($"{obj.name}가 뎁스에 추가됨");
-        DebugFuc();
+        //DebugFuc();
     }
 
     private static void DebugFuc()
@@ -114,13 +128,9 @@ public class UIESCSystem : MonoBehaviour  //ESC교통정리용 시스템
         UnityAction action = depths.Peek().Item2;
         action?.Invoke();
 
-        if (!obj.activeSelf)  //해당 UI가 비활성화 되었을 경우, 내보내기
-        {
-            depths.Pop();
-        }
-
-        LogUtil.Log($"{obj.name}가 뎁스에서 나감");
-        DebugFuc();
+        UISoundManager.PlayeOnAndOffPanelSound();   //버튼 클릭 사운드 재생
+        //LogUtil.Log($"{obj.name}가 뎁스에서 나감");
+        //DebugFuc();
     }
 
     private void CleanDepth()    //뎁스 청소용

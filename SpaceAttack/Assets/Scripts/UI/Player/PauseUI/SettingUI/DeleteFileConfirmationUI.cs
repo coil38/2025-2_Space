@@ -30,8 +30,8 @@ public class DeleteFileConfirmationUI : ConfirmationUIStrategy
             if (startGameUI != null)
             {
                 //해당 파일이 삭제되고 버튼 텍스트도 변경
+                startGameUI.CheckAndProcessDeleteMode();
                 startGameUI.DeleteFile();
-                startGameUI.InitializeDelete();
             }
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
 
@@ -44,7 +44,7 @@ public class DeleteFileConfirmationUI : ConfirmationUIStrategy
             {
                 //해당 파일이 삭제되고 버튼 텍스트도 변경
                 //바로 파일 버튼 클릭 판정
-                startGameUI.InitializeDelete();
+                startGameUI.CheckAndProcessDeleteMode();
                 startGameUI.DeleteFile();
                 startGameUI.PlayeNewGame();
             }

@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 3473518394226331226}
   - component: {fileID: 4624599164704607658}
   - component: {fileID: 3891868057657209322}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: ArcherChipset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,14 +127,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f4e5eb6c11be7745af98014135edf61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weapon: {fileID: 832499573849115994}
-  _skills:
+  weapon: {fileID: 832499573849115994}
+  skills:
   - {fileID: 8257766772164688757}
   - {fileID: 5945549905136212788}
   - {fileID: 8356826236097632758}
-  _iconImage: {fileID: 0}
-  _prefab: {fileID: 0}
-  _animator: {fileID: 4624599164704607658}
+  chipSetName: Archer
+  description: This is so So Good
+  iconImage: {fileID: 0}
+  prefab: {fileID: 8374057566211413966}
+  animator: {fileID: 4624599164704607658}
 --- !u!114 &832499573849115994
 MonoBehaviour:
   m_ObjectHideFlags: 0

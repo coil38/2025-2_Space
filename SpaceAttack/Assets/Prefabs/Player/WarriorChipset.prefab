@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 5587432419526965161}
   - component: {fileID: 3810752942071787923}
   - component: {fileID: 8201235517080617666}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: WarriorChipset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35,7 +35,7 @@ Transform:
   m_GameObject: {fileID: 8654506091529224949}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: -2.32, y: -0.5, z: -3.12}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: -5177388603050735206, guid: 8884154dfe85442a3a3578be807dbcdf,
     type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
@@ -111,7 +111,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
@@ -127,14 +127,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6281eb5cca9ac64f8739ff30508c0c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weapon: {fileID: 9131843138702807753}
-  _skills:
+  weapon: {fileID: 9131843138702807753}
+  skills:
   - {fileID: 8277806007108734584}
   - {fileID: 5153622628775373916}
   - {fileID: 3682826625257007524}
-  _iconImage: {fileID: 0}
-  _prefab: {fileID: 1702906401407570982, guid: c7f8552bd35b62345ae939bdaa97b436, type: 3}
-  _animator: {fileID: 3810752942071787923}
+  chipSetName: Warrior
+  description: This is Very Very Good
+  iconImage: {fileID: 0}
+  prefab: {fileID: 8654506091529224949}
+  animator: {fileID: 3810752942071787923}
 --- !u!114 &5153622628775373916
 MonoBehaviour:
   m_ObjectHideFlags: 0

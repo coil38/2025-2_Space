@@ -19,7 +19,7 @@ public class RelicDatabaseSO : ScriptableObject
         }
     }
 
-    public RelicSO GetRelic(int _relicId)   //Id로 유물찾기
+    public RelicSO GetRelicById(int _relicId)   //Id로 유물찾기
     {
         if (relicById == null)
             Initialize();
@@ -32,5 +32,15 @@ public class RelicDatabaseSO : ScriptableObject
     public RelicSO[] GetRelics()
     {
         return relics.ToArray();
+    }
+
+    public int GetRelicCount()
+    {
+        return relics.Count;
+    }
+
+    public RelicSO GetRelicByIndex(int index)
+    {
+        return relics[index];
     }
 }

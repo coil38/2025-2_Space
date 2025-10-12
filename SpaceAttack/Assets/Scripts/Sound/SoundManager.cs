@@ -203,7 +203,7 @@ public class SoundManager : MonoBehaviour
             if (UISFXRegistry.TryGetValue(soundID, out SoundInfo sound))
             {
                 playedSound.Add(sound);
-                sound.audioSource.Play();
+                sound.audioSource.PlayOneShot(sound.audioSource.clip);
             }
         }
     }
@@ -232,8 +232,15 @@ public class SoundManager : MonoBehaviour
 
     public void StopPlayedAllSound()  //현재 재생중인 모든 사운드 종료
     {
-        foreach(var sound in playedSound)
+        foreach (var sound in playedSound)
+        {
+            if (sound.audioSource == null)
+            {
+                LogUtil.Log($"{sound.soundName}_audioSource가 존재하지 않습니다.");
+                continue;
+            }
             sound.audioSource?.Stop();
+        }
     }
 
     public void PlaySound(GameObject obj, string soundName)   //등록된 대상만 사용가능 및 사운드이름이 정확해야함

@@ -113,7 +113,7 @@ public class CharacterMovement : MonoBehaviour
         Timer dashTimer = PlayerTimeSystem.deshTimer;
         float dashTime = PlayerTimeSystem.m_DashTime;
 
-        float timer = dashTimer.GetRemainingTimer() / dashTime;
+        float timer = dashTimer.GetRemainingTime() / dashTime;
 
         Vector3 move = Vector3.Lerp(currentPos, targetPos, 1 - timer);
         rb.MovePosition(move);
@@ -260,7 +260,6 @@ public class CharacterMovement : MonoBehaviour
         }
 
         inventory.relic = relic;
-        LogUtil.Log("유물획득");
     }
 
     public void CheckInteraction()

@@ -18,6 +18,7 @@ public class GameSceneManager : MonoBehaviour
     public static GameSceneManager instance;
     public static Action<SceneType> sceneTypeChanged;
     public SceneType currentScene {  get; private set; }
+    public InitializationOrderer parent;
 
     private void Awake()
     {
@@ -37,6 +38,8 @@ public class GameSceneManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)  //두번 실행되는 경우가 있음
     {
+        if (InitializationOrderer.instance != parent) return;
+
         SceneType sceneType = GetSceneType(scene);            //씬 타입 변경 (씬이동시)
 
         if (sceneType != currentScene)                        //씬 타입 바뀌었을 경우, 씬 변경 이벤트 실행
@@ -45,10 +48,12 @@ public class GameSceneManager : MonoBehaviour
         if (currentScene == SceneType.StartGameScene && currentScene != sceneType)  //시작씬에서 다른 씬으로 이동할 경우
         {
             Time.timeScale = 1f;                              //일시정지 해제
+            LogUtil.Log("시작씬 일시정지 취소ㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗ");
         }
         else if (sceneType == SceneType.StartGameScene && currentScene != sceneType) //다른씬에서 시작씬으로 이동한 경우
         {
             Time.timeScale = 0f;                              //일시정지
+            LogUtil.Log("시작씬 일시정지!!!!!!!!!!!!!!!!!!!!!!");
         }
 
         currentScene = sceneType;
@@ -59,19 +64,19 @@ public class GameSceneManager : MonoBehaviour
         switch (scene.name)
         {
             case "StartUIScene":
-                //LogUtil.Log("게임시작씬");
+                LogUtil.Log("게임시작씬");
                 return SceneType.StartGameScene;
 
             case "LobbyScene":
-                //LogUtil.Log("로비씬");
+                LogUtil.Log("로비씬");
                 return SceneType.LobbyScene;
 
             case "ChipsetSelectScene":
-                //LogUtil.Log("칩셋선택씬");
+                LogUtil.Log("칩셋선택씬");
                 return SceneType.ChipsetSelectScene;
 
             case "BattleScene":
-                //LogUtil.Log("전투씬");
+                LogUtil.Log("전투씬");
                 return SceneType.BattleScene;
         }
         LogUtil.LogWarning("알맞은 씬을 찾을 수 없습니다.");
