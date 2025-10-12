@@ -48,7 +48,7 @@ public class Boss : EnemyBase
     float margin = 1f;
     private Animator anim;
     public Transform headTransform; // 보스 머리 위치
-
+    private bool isLaunchingCans = false;
 
     [Header("보스 사운드")]
     public AudioClip coinAttackSound;
@@ -160,7 +160,6 @@ public class Boss : EnemyBase
     {
         anim.SetTrigger("CoinAttack");
     }
-
     IEnumerator JumpRoutine()
     {
         yield return new WaitForSeconds(3.2f); 
@@ -358,10 +357,28 @@ public class Boss : EnemyBase
     //캔 던지기
     public void LaunchCansCrossAttack()
     {
+        if (isLaunchingCans) return; // 이미 실행 중이면 무시
         if (planArea == null || canPrefab == null || headTransform == null) return;
 
-        StartCoroutine(LaunchCansRoutine());
+        isLaunchingCans = true;
+
+        // 애니메이션 한 번만 재생
+        anim.SetTrigger("CanBlast");
+
+        // 코루틴 시작
+        StartCoroutine(WaitAndLaunchCans());
     }
+
+    private IEnumerator WaitAndLaunchCans()
+    {
+        yield return new WaitForSeconds(0.5f); // 애니메이션 타이밍 조절
+        yield return StartCoroutine(LaunchCansRoutine());
+
+        // 다 끝나면 다시 가능하게
+        isLaunchingCans = false;
+    }
+
+
 
     private IEnumerator LaunchCansRoutine()
     {
