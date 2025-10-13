@@ -49,13 +49,17 @@ public class Boss : EnemyBase
     private Animator anim;
     public Transform headTransform; // 보스 머리 위치
     private bool isLaunchingCans = false;
+    private int hitCount = 0;
 
     [Header("보스 사운드")]
     public AudioClip coinAttackSound;
     public AudioClip WariningSound;
     public AudioClip bossjumpdownSound;
     public AudioClip bossCanAttackSound;
-    
+    public AudioClip bosscancrossSound;
+    public AudioClip[] hitSounds;
+
+
     private bool isUsingSkill = false; // 스킬 중복 방지
     protected override void Start()
     {
@@ -145,7 +149,7 @@ public class Boss : EnemyBase
 
         yield return new WaitForSeconds(3f);
 
-        float skillDelay = Random.Range(2f, 4f);
+        float skillDelay = Random.Range(3f, 5f);
         yield return new WaitForSeconds(skillDelay);
 
         isUsingSkill = false;
@@ -171,16 +175,18 @@ public class Boss : EnemyBase
     {
         if (isDead) return;
 
-        // 체력 감소
         hp -= attackInfo.damage;
+        hitCount++;
 
-        // 히트 사운드 재생
-        if (hitSound != null && audioSource != null)
-            audioSource.PlayOneShot(hitSound);
+        if (hitCount % 2 == 0 && audioSource != null && hitSounds != null && hitSounds.Length > 0)
+        {
+            int rand = Random.Range(0, hitSounds.Length);
+            audioSource.PlayOneShot(hitSounds[rand]);
+        }
 
         StartCoroutine(HitFlash());
 
-        // 사망 체크
+        // 사망 처리
         if (hp <= 0 && !isDead)
         {
             isDead = true;
@@ -496,4 +502,11 @@ public class Boss : EnemyBase
         }
     }
 
+    public void BossCanCrossSound()
+    {
+        if (audioSource != null && bosscancrossSound != null)
+        {
+            audioSource.PlayOneShot(bosscancrossSound);
+        }
+    }
 }

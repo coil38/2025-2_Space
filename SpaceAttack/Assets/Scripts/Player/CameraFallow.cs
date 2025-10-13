@@ -14,12 +14,13 @@ public class CameraFallow : MonoBehaviour
             //Debug.Log($"대상이 활당됨!!, 대상이름: {value.gameObject.name}");
         }
     }
-    private Transform target;
+    [HideInInspector]
+    public Transform target;
 
     public Vector3 cameraDir;       //방향 백터(카메라)
     public Vector3 cameraRot;
     public float cameraDis = 10;
-
+    private bool isLocked = false;
     public float shakeDuration = 0;
     public float shakeAmount = 0.1f;
     public float decreaseFactor = 1.0f;
@@ -48,6 +49,7 @@ public class CameraFallow : MonoBehaviour
             LogUtil.Log("카메라 초기설정 중...");
             return;
         }
+        if (isLocked || target == null || isInitialing) return;
 
         Vector3 newPosition = target.position + cameraDir.normalized * cameraDis;
         transform.position = Vector3.Slerp(transform.position, newPosition, FollowSpeed * Time.deltaTime);
@@ -76,4 +78,17 @@ public class CameraFallow : MonoBehaviour
 
         isInitialing = false;  //초기 설정 중 비활성화
     }
+    public void ResetToTargetOffset()
+    {
+        if (target == null) return;
+
+        cameraDir = transform.position - target.position; 
+        cameraRot = transform.rotation.eulerAngles;       
+    }
+
+    public void LockCamera(bool state)
+    {
+        isLocked = state;
+    }
+
 }
