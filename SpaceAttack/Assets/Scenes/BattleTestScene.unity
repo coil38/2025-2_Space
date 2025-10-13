@@ -4996,6 +4996,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1694170009}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1703026278 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8709443718371420372, guid: c09b82ff7464cd64198bf809eaaa812e,
+    type: 3}
+  m_PrefabInstance: {fileID: 299062257}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1753276354
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6265,7 +6271,7 @@ MonoBehaviour:
   bossAttackCooldown: 10
   coinRainCooldown: 20
   canAttackCooldown: 30
-  jumpAttackCooldown: 10
+  jumpAttackCooldown: 15
   summonMinionCooldown: 45
   safeZoneScale: 1.5
   minSafeZoneDistance: 4
@@ -6284,7 +6290,7 @@ MonoBehaviour:
   shootForce: 15
   upwardForce: 4
   spreadAngle: 70
-  player: {fileID: 0}
+  player: {fileID: 1703026278}
   headTransform: {fileID: 1976017616}
   coinAttackSound: {fileID: 8300000, guid: a891d8d5a617d0d4b88e562a5d96f609, type: 3}
   WariningSound: {fileID: 8300000, guid: 903347b98f4213b46a7990914693b7fe, type: 3}

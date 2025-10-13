@@ -111,6 +111,7 @@ public class Boss : EnemyBase
             }
         }
 
+        // ✅ 페이즈 전환 중이면 패턴 스킬 호출 안함
         if (isTransitioningPhase) return;
 
         if (currentPhase == 1) Phase1Pattern();
