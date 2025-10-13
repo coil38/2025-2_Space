@@ -362,16 +362,14 @@ public class Boss : EnemyBase
 
         isLaunchingCans = true;
 
-        // 애니메이션 한 번만 재생
         anim.SetTrigger("CanBlast");
-
         // 코루틴 시작
         StartCoroutine(WaitAndLaunchCans());
     }
 
     private IEnumerator WaitAndLaunchCans()
     {
-        yield return new WaitForSeconds(0.5f); // 애니메이션 타이밍 조절
+        yield return new WaitForSeconds(3f); // 애니메이션 타이밍 조절
         yield return StartCoroutine(LaunchCansRoutine());
 
         // 다 끝나면 다시 가능하게
