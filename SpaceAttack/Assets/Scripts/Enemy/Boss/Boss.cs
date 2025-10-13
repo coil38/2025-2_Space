@@ -60,7 +60,7 @@ public class Boss : EnemyBase
     public AudioClip[] hitSounds;
     public AudioClip phaseTransitionSound;
 
-    private int currentPhase = 1;
+    public int currentPhase = 1;
     private bool isTransitioningPhase = false;
     private bool isUsingSkill = false; // 스킬 중복 방지;
     protected override void Start()
@@ -257,7 +257,10 @@ public class Boss : EnemyBase
 
         currentPhase = nextPhase; 
         isTransitioningPhase = false; 
-        Debug.Log($"== {nextPhase}페이즈 시작 ==");
+  
+           BossHealthUI ui = FindObjectOfType<BossHealthUI>();
+    if (ui != null)
+        ui.UpdatePhaseIndicators();
 
 
     }
