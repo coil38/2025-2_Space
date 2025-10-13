@@ -60,6 +60,8 @@ public class Boss : EnemyBase
     public AudioClip[] hitSounds;
 
 
+    private int currentPhase = 1;
+    private bool isTransitioningPhase = false;
     private bool isUsingSkill = false; // 스킬 중복 방지
     protected override void Start()
     {
@@ -91,12 +93,27 @@ public class Boss : EnemyBase
         summonMinionTimer -= Time.deltaTime;
 
         // 페이즈 구분
-        if (hp > 600)
-            Phase1Pattern();
-        else if (hp > 300)
-            Phase2Pattern();
-        else
-            Phase3Pattern();
+        if (!isTransitioningPhase)
+        {
+            if (hp > 600 && currentPhase != 1)
+            {
+                currentPhase = 1;
+            }
+            else if (hp <= 600 && hp > 300 && currentPhase != 2)
+            {
+                StartCoroutine(PhaseTransition(2));
+                return;
+            }
+            else if (hp <= 300 && currentPhase != 3)
+            {
+                StartCoroutine(PhaseTransition(3));
+                return;
+            }
+        }
+
+        if (currentPhase == 1) Phase1Pattern();
+        else if (currentPhase == 2) Phase2Pattern();
+        else Phase3Pattern();
     }
 
     //페이지 컨트롤러
@@ -106,7 +123,8 @@ public class Boss : EnemyBase
 
         if (bossAttackTimer <= 0f) availableSkills.Add(() => { BossAttack(); bossAttackTimer = bossAttackCooldown; });
         if (coinRainTimer <= 0f) availableSkills.Add(() => { StartCoinRain(); coinRainTimer = coinRainCooldown; });
-
+        if (jumpAttackTimer <= 0f) availableSkills.Add(() => { StartJumpAttack(); jumpAttackTimer = jumpAttackCooldown; });
+        
         TryUseRandomSkill(availableSkills);
     }
 
@@ -154,6 +172,72 @@ public class Boss : EnemyBase
 
         isUsingSkill = false;
     }
+
+    private IEnumerator PhaseTransition(int nextPhase)
+    {
+        isTransitioningPhase = true;
+
+        if (PlayerStatus.Instance != null)
+            PlayerStatus.Instance.isRooted = true;
+
+        isUsingSkill = true;
+        Animator bossAnim = GetComponent<Animator>();
+        if (audioSource != null && WariningSound != null)
+            audioSource.PlayOneShot(WariningSound);
+
+        Camera mainCam = Camera.main;
+        CameraFallow camFollow = mainCam.GetComponent<CameraFallow>();
+        if (camFollow != null)
+            camFollow.LockCamera(true);
+
+        Vector3 originalPos = mainCam.transform.position;
+        Quaternion originalRot = mainCam.transform.rotation;
+
+        Transform bossCamPoint = this.headTransform != null ? this.headTransform : this.transform;
+        Vector3 zoomPos = bossCamPoint.position + bossCamPoint.forward * 3f + Vector3.up * 2f;
+
+        float zoomDuration = 1.2f;
+        float t = 0f;
+
+        while (t < zoomDuration)
+        {
+            t += Time.deltaTime;
+            float lerp = t / zoomDuration;
+            mainCam.transform.position = Vector3.Lerp(originalPos, zoomPos, lerp);
+            mainCam.transform.rotation = Quaternion.Lerp(originalRot, Quaternion.LookRotation(bossCamPoint.position - mainCam.transform.position), lerp);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(2f); 
+
+        if (nextPhase == 2)
+            LaunchCansCrossAttack();
+        else if (nextPhase == 3)
+            SummonMinionsSkill();
+
+        t = 0f;
+        while (t < zoomDuration)
+        {
+            t += Time.deltaTime;
+            float lerp = t / zoomDuration;
+            mainCam.transform.position = Vector3.Lerp(zoomPos, originalPos, lerp);
+            mainCam.transform.rotation = Quaternion.Lerp(mainCam.transform.rotation, originalRot, lerp);
+            yield return null;
+        }
+
+        if (camFollow != null)
+            camFollow.LockCamera(false);
+
+        currentPhase = nextPhase;
+        isTransitioningPhase = false;
+        isUsingSkill = false;
+
+        if (PlayerStatus.Instance != null)
+            PlayerStatus.Instance.isRooted = false;
+    }
+
+
+
     void StartJumpAttack()
     {
         anim.SetTrigger("JumpUp");
@@ -440,7 +524,7 @@ public class Boss : EnemyBase
             if (enemy != null)
             {
                 enemy.canDetectPlayer = false;
-                StartCoroutine(EnableEnemyAfterLanding(enemy, 10f)); 
+                StartCoroutine(EnableEnemyAfterLanding(enemy, 6f)); 
             }
         }
     }
