@@ -1932,6 +1932,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3857396358985047971, guid: 63b79e9acf02312438b80997231921ec,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 15303, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 5548460579895015485, guid: 63b79e9acf02312438b80997231921ec,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1945,7 +1950,7 @@ PrefabInstance:
     - target: {fileID: 5548460579895015485, guid: 63b79e9acf02312438b80997231921ec,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.22
+      value: -2.12
       objectReference: {fileID: 0}
     - target: {fileID: 5548460579895015485, guid: 63b79e9acf02312438b80997231921ec,
         type: 3}
@@ -1986,6 +1991,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6503750722785335863, guid: 63b79e9acf02312438b80997231921ec,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8654506091529224949, guid: 63b79e9acf02312438b80997231921ec,
         type: 3}
@@ -5373,10 +5383,10 @@ MonoBehaviour:
   canPrefab: {fileID: 9205754372223083306, guid: 8543e7807f28d184e929afe577652b42,
     type: 3}
   bossAttackCooldown: 10
-  coinRainCooldown: 15
-  canAttackCooldown: 20
+  coinRainCooldown: 20
+  canAttackCooldown: 30
   jumpAttackCooldown: 25
-  summonMinionCooldown: 30
+  summonMinionCooldown: 45
   safeZoneScale: 1.5
   minSafeZoneDistance: 4
   bossSafeRadius: 5
@@ -5407,6 +5417,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bdd0e4aeb1be85a41acbf53e06af4f52, type: 3}
   - {fileID: 8300000, guid: d7776df89cf24504880013412031605c, type: 3}
   - {fileID: 8300000, guid: a2743c889f4c2884a83d64ba78b3eedf, type: 3}
+  phaseTransitionSound: {fileID: 8300000, guid: dfc3cc004960b9e43b3932545931e007,
+    type: 3}
 --- !u!65 &8498225713429384174
 BoxCollider:
   m_ObjectHideFlags: 0

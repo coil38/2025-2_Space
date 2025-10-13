@@ -58,11 +58,11 @@ public class Boss : EnemyBase
     public AudioClip bossCanAttackSound;
     public AudioClip bosscancrossSound;
     public AudioClip[] hitSounds;
-
+    public AudioClip phaseTransitionSound;
 
     private int currentPhase = 1;
     private bool isTransitioningPhase = false;
-    private bool isUsingSkill = false; // 스킬 중복 방지
+    private bool isUsingSkill = false; // 스킬 중복 방지;
     protected override void Start()
     {
         base.Start();
@@ -111,6 +111,8 @@ public class Boss : EnemyBase
             }
         }
 
+        if (isTransitioningPhase) return;
+
         if (currentPhase == 1) Phase1Pattern();
         else if (currentPhase == 2) Phase2Pattern();
         else Phase3Pattern();
@@ -153,11 +155,10 @@ public class Boss : EnemyBase
     }
     void TryUseRandomSkill(List<System.Action> availableSkills)
     {
-        if (isUsingSkill || availableSkills.Count == 0) return;
+        // 페이즈 전환 중이면 스킬 안쓰도록
+        if (isUsingSkill || availableSkills.Count == 0 || isTransitioningPhase) return;
 
-        // 가능한 스킬 중 랜덤 선택
         System.Action chosenSkill = availableSkills[Random.Range(0, availableSkills.Count)];
-
         StartCoroutine(UseSkillRoutine(chosenSkill));
     }
     IEnumerator UseSkillRoutine(System.Action skillAction)
@@ -175,15 +176,10 @@ public class Boss : EnemyBase
 
     private IEnumerator PhaseTransition(int nextPhase)
     {
-        isTransitioningPhase = true;
+        isTransitioningPhase = true; // 시작
 
         if (PlayerStatus.Instance != null)
             PlayerStatus.Instance.isRooted = true;
-
-        isUsingSkill = true;
-        Animator bossAnim = GetComponent<Animator>();
-        if (audioSource != null && WariningSound != null)
-            audioSource.PlayOneShot(WariningSound);
 
         Camera mainCam = Camera.main;
         CameraFallow camFollow = mainCam.GetComponent<CameraFallow>();
@@ -193,47 +189,77 @@ public class Boss : EnemyBase
         Vector3 originalPos = mainCam.transform.position;
         Quaternion originalRot = mainCam.transform.rotation;
 
-        Transform bossCamPoint = this.headTransform != null ? this.headTransform : this.transform;
-        Vector3 zoomPos = bossCamPoint.position + bossCamPoint.forward * 3f + Vector3.up * 2f;
+        BossIntroController intro = FindObjectOfType<BossIntroController>();
+        Transform bossCamPoint = intro != null ? intro.bossCameraPoint : null;
 
-        float zoomDuration = 1.2f;
+        Vector3 zoomTargetPos = bossCamPoint ? bossCamPoint.position : transform.position + transform.forward * 5f + Vector3.up * 3f;
+        Quaternion zoomTargetRot = bossCamPoint ? bossCamPoint.rotation : Quaternion.LookRotation(transform.position - mainCam.transform.position);
+
+        float zoomDuration = 1.5f;
         float t = 0f;
-
+       
+        if (audioSource != null && phaseTransitionSound != null)
+            audioSource.PlayOneShot(phaseTransitionSound);
+      
         while (t < zoomDuration)
         {
             t += Time.deltaTime;
             float lerp = t / zoomDuration;
-            mainCam.transform.position = Vector3.Lerp(originalPos, zoomPos, lerp);
-            mainCam.transform.rotation = Quaternion.Lerp(originalRot, Quaternion.LookRotation(bossCamPoint.position - mainCam.transform.position), lerp);
+            mainCam.transform.position = Vector3.Lerp(originalPos, zoomTargetPos, lerp);
+            mainCam.transform.rotation = Quaternion.Lerp(originalRot, zoomTargetRot, lerp);
             yield return null;
         }
 
-        yield return new WaitForSeconds(2f); 
+        yield return new WaitForSeconds(3.0f);
 
+        // 다음 페이즈 스킬 실행
         if (nextPhase == 2)
-            LaunchCansCrossAttack();
-        else if (nextPhase == 3)
-            SummonMinionsSkill();
-
-        t = 0f;
-        while (t < zoomDuration)
         {
-            t += Time.deltaTime;
-            float lerp = t / zoomDuration;
-            mainCam.transform.position = Vector3.Lerp(zoomPos, originalPos, lerp);
-            mainCam.transform.rotation = Quaternion.Lerp(mainCam.transform.rotation, originalRot, lerp);
-            yield return null;
+            LaunchCansCrossAttack();
+            bossAttackTimer += 15f;
+            coinRainTimer += 15f;
+            canAttackTimer += 15f;
+            jumpAttackTimer += 15f;
+            summonMinionTimer += 15f;
+        }
+        else if (nextPhase == 3)
+        {
+            SummonMinionsSkill();
+            bossAttackTimer += 15f;
+            coinRainTimer += 15f;
+            canAttackTimer += 15f;
+            jumpAttackTimer += 15f;
+            summonMinionTimer += 15f;
+        }
+        // 플레이어 쪽으로 복귀
+        if (PlayerStatus.Instance != null && camFollow != null)
+        {
+            t = 0f;
+            Transform player = PlayerStatus.Instance.transform;
+            Vector3 targetPos = player.position + camFollow.cameraDir.normalized * camFollow.cameraDis;
+            Quaternion targetRot = Quaternion.Euler(camFollow.cameraRot);
+
+            while (t < zoomDuration)
+            {
+                t += Time.deltaTime;
+                float lerp = t / zoomDuration;
+                mainCam.transform.position = Vector3.Lerp(zoomTargetPos, targetPos, lerp);
+                mainCam.transform.rotation = Quaternion.Slerp(zoomTargetRot, targetRot, lerp);
+                yield return null;
+            }
         }
 
         if (camFollow != null)
             camFollow.LockCamera(false);
 
-        currentPhase = nextPhase;
-        isTransitioningPhase = false;
-        isUsingSkill = false;
-
         if (PlayerStatus.Instance != null)
             PlayerStatus.Instance.isRooted = false;
+
+        currentPhase = nextPhase; 
+        isTransitioningPhase = false; 
+        Debug.Log($"== {nextPhase}페이즈 시작 ==");
+
+
     }
 
 
@@ -524,7 +550,7 @@ public class Boss : EnemyBase
             if (enemy != null)
             {
                 enemy.canDetectPlayer = false;
-                StartCoroutine(EnableEnemyAfterLanding(enemy, 6f)); 
+                StartCoroutine(EnableEnemyAfterLanding(enemy, 5f)); 
             }
         }
     }
