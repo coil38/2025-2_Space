@@ -142,6 +142,7 @@ public class InventoryManager : MonoBehaviour
             {
                 LogUtil.Log($"{relic.relicName}_유물 획득, 현재 암흑게이지수치: {currentDarkMaterial}, 현재 보유중인 유물개수: {relics.Count}");
 
+                PlayerUIManager.instance.SetPlayerItem(relic);                     //유물 이미지 할당
                 PlayerUIManager.instance.ChangeDarkMaterialUI(true, relic.darkMaterialCount); //암흑물질 채워지는 UI연출
                 relics.Add(relic);                                     //유물 데이터 추가
                 AddRelicEffects(relic);
@@ -176,6 +177,7 @@ public class InventoryManager : MonoBehaviour
         relics.Clear();
         currentDarkMaterial = 0;
         PlayerUIManager.instance.ResetDarkMaterialUI();
+        PlayerUIManager.instance.ClearPlayerItem();
 
         if (_chipSet != null)
         {
@@ -185,22 +187,20 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    private void DropRelic(BaseRelic m_relic)
+    public void DropRelic(RelicSO relicSO)
     {
         //월드 드랍 연출
-
-        Color color = m_relic.gameObject.GetComponent<SpriteRenderer>().color;   //해당 칩셋을 원래 상태로 변경
-        color.a = 1f;
-        m_relic.gameObject.GetComponent<SpriteRenderer>().color = color;
-
-        m_relic.gameObject.transform.SetParent(null);                  //해당 칩셋을 Player 자식으로 넣기 해제
-
-        m_relic.gameObject.GetComponent<Collider>().enabled = true;   //감지 가능상태로 변경
+        GameObject temp = DataManager.instance._relicObject;
+        BaseRelic relic = Instantiate(temp, transform.position, temp.transform.rotation).GetComponent<BaseRelic>();
+        relic.Initialize(relicSO.relicID, relicSO.relicName, relicSO.iconSprite); //생성한 유물 오브젝트에 유물정보 갱신
     }
 
-    private void RemoveRelicEffects(RelicSO m_relicSO)
+    public void RemoveRelic(RelicSO m_relicSO)
     {
-        RelicEffectManager.ApplyRelicEffect(m_relicSO, false);
+        PlayerUIManager.instance.ChangeDarkMaterialUI(false, m_relicSO.darkMaterialCount); //암흑물질 감소하는 UI연출
+        currentDarkMaterial -= m_relicSO.darkMaterialCount;     //암흑물질 감소
+        relics.Remove(m_relicSO);                               //유물 데이터 삭제
+        RelicEffectManager.ApplyRelicEffect(m_relicSO, false);  //유물 효과 제거
     }
 
     private void AddRelicEffects(RelicSO m_relicSO)        //유물 효과 실행부

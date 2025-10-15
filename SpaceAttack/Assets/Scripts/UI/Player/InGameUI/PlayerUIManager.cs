@@ -12,12 +12,16 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] DarkMaterialUI playerDarkMaterialUI;
     [SerializeField] RelicFloatingUI playerRelicFloatingUI;
     [SerializeField] RelicPopUpUI playerRelicPopUpUI;
+    [SerializeField] PlayerItemUI playerItemUI;
+    [SerializeField] PlayerInventoryInfoUI playerInventoryInfoUI;
 
     [Header("칩셋 UI 이미지")]
     [SerializeField] Image chipsetImage;
     [SerializeField] Image skill1Image;
     [SerializeField] Image skill2Image;
     [SerializeField] Image skill3Image;
+
+    private InventoryManager inventoryManager;
     private void Awake()
     {
         if (instance == null)
@@ -73,5 +77,27 @@ public class PlayerUIManager : MonoBehaviour
     public void SetRelicPopUpUI(bool onPopUpUI, BaseRelic relic = null)
     {
         playerRelicPopUpUI.SetRelicPopUpUI(onPopUpUI, relic);
+    }
+
+    public void SetPlayerItem(RelicSO relicSO)      //플레이어 유물 이미지 추가
+    {
+        playerItemUI.AddItem(relicSO);
+    }
+    public void RemovePlayerItem(RelicSO relicSO)   //플레이어 유물 이미지 삭제
+    {
+        if(inventoryManager == null)
+            inventoryManager = FindObjectOfType<InventoryManager>();
+        inventoryManager.DropRelic(relicSO);
+        inventoryManager.RemoveRelic(relicSO);
+        playerItemUI.RemoveItem(relicSO);
+    }
+    public void ClearPlayerItem()                   //모든 유물 이미지 삭제
+    {
+        playerItemUI.RemoveAllItems();
+    }
+
+    public void OnPlayerInventoryInfo(RelicSO relicSO)
+    {
+        playerInventoryInfoUI.SetRelicInfoUI(relicSO);
     }
 }

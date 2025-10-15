@@ -9,7 +9,7 @@ using UnityEngine;
 public class RelicDataLoader : ScriptableObject
 {
     public static string outputFolder = "Assets/ScriptableObjects/Relic";
-    private static string iconPath = "Assets/Materials/Icon/";
+    private static string iconPath = "Assets/Materials/Icon/Relic/";
     public static string jsonFilePath { get; set; }
     public static bool createDatabase { get; set; }
 

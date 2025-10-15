@@ -5,7 +5,7 @@ using UnityEngine;
 public class DropRelicSystem : MonoBehaviour
 {
     public static float defualtDropRate = 0.05f;
-    public static float dropRate = 0.05f;
+    public static float dropRate = 0.05f; //0.05f;
     public static GameObject DropRelicObjRandomly(Vector3 dropPos)
     {
         float randomValue = Random.value;

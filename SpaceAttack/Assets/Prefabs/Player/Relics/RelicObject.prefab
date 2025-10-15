@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9188872538249060346}
   - component: {fileID: 635174054313869287}
   - component: {fileID: 3551835765044046995}
-  - component: {fileID: 6889911962106002815}
+  - component: {fileID: 1455864334371869047}
   - component: {fileID: 4583060296540889242}
   m_Layer: 13
   m_Name: RelicObject
@@ -31,8 +31,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.42261827, y: 0, z: 0, w: 0.9063079}
   m_LocalPosition: {x: -8.44, y: -0.5, z: -3.72}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: 0, z: 0}
@@ -77,13 +77,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -5177388603050735206, guid: 8884154dfe85442a3a3578be807dbcdf,
-    type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 69b8325781aa5f548ad534a98b3a8ecc, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 5.16, y: 6}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -113,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef449fa94e63887498b788cd3cffe467, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &6889911962106002815
+--- !u!65 &1455864334371869047
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,8 +131,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1.0108563, z: 0.20000003}
-  m_Center: {x: 0, y: -0.0054273903, z: 1.5388836e-10}
+  m_Size: {x: 5.16, y: 6.000001, z: 0.20000039}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &4583060296540889242
 Rigidbody:
   m_ObjectHideFlags: 0
