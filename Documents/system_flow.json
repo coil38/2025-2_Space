@@ -1,0 +1,98 @@
+{
+    "projectName": "Rovoid",
+    "version": "0.0.1",
+    "description": "게임의 전체 시스템 흐름과 주요 매니저 간의 상호작용을 정의합니다.",
+
+    "managers": {
+        "GmaeManager": {
+            "description": "게임의 전체 상태(타이틀, 인게임, 게임오버 등)를 관리하는 최고 관리자",
+            "responsibilities":[
+                "게임 상태 전환",
+                "게임 시작, 재시작, 종료 처리",
+                "일시 정지"
+            ],
+            "relations":[
+                {"to": "UIManager", "action": "UI 상태 변경 요청"},
+                {"to": "SceneManager", "action": "씬 로드 요청"},
+                {"to": "PlayerManager", "action": "플레이어 데이터 초기화/저장 요청"}
+            ]
+        },
+        "SceneManager": {
+            "description": "게임의 씬(타이틀, 인게임, 로딩창 스테이지 선택 등)을 로드하고 전환하는 역할을 합니다.",
+            "responsibilities": [
+                "씬 비동기 로딩 및 언로딩",
+                "로딩 화면 표시 및 진행도 관리",
+                "씬 전환 시 데이터 전달 관리"
+            ],
+            "relations": [
+                {"from": "GmaeManager", "action": "씬 전환 명령 수신"},
+                {"to": "UIManager", "action": "로딩 화면 표시/숨김 요청"}
+            ]
+        },
+        "UIManager": {
+            "description": "모든 UI요소(버튼, 텍스트, 하트, 스킬 아이콘, 유물 아이콘, 팝업창 등)를 관리하고 표시합니다.",
+            "responsibilities": [
+                "UI 이벤트 처리 (버튼 클릭, 스킬 쿨다운 표시 등)",
+                "플레이어 정보 표시(하트, 레벨, 스킬 해금 여부 등)",
+                "팝업 및 화면 전환 효과 관리"
+            ],
+            "relations": [
+                {"to": "GmaeManager", "action": "게임 시작/재시작/게임 종료 등 시스템 기능 호출"}
+            ]
+        },
+        "PlayerManager": {
+            "description": "한 판(run) 내에서 플레이어의 상태와 데이터를 관리합니다.",
+            "responsibilities": [
+                "플레이어 스탯(체력, 공격력, 레벨, 오염도 수치, 회피 확률 수치, 치명타 확률/데미지, 이동속도) 관리",
+                "경험치 및 레벨업 처리",
+                "보유 유물 및 스킬 관리",
+                "게임 내 유물 획득 및 관리"
+            ],
+            "relations": [
+                {"to": "UIManager", "action": "플레이어 데이터 변경 시 UI 업데이트 요청"},
+                {"to": "AchievementManager", "action": "유물 획득/공격/일정 체력 유지 업적 관련 이벤트 전송"}
+            ]
+
+        },
+        "StageManager": {
+            "description": "스테이지 구성, 몬스터 생성, 루트 선택 등을 관리합니다.",
+            "responsibilities": [
+                "현재 스테이지 데이터 로드",
+                "몬스터 및 상호작용 가능한 오브젝트 배치",
+                "몬스터 처치 시 보상(경험치, 유물) 드랍 처리",
+                "클리어 조건 판정 및 보상 지급"
+            ],
+            "relations": [
+                {"to": "PlayerManager", "action": "전투 보상(경험치, 유물) 전달"},
+                {"to": "UIManager", "action": "스테이지 선택 UI 표시 요청"},
+                {"to": "AchievementManager", "action": "몬스터 처치 등 업적 관련 이벤트 전송"}
+            ]
+        },
+        "MetaManager": {
+            "description": "영구적인 성장 데이터를 관리하고 저장합니다.",
+            "responsibilities": [
+                "게임 종료 시 영구 능력치 정산",
+                "영구 능력치 강화 처리",
+                "새로운 직업, 유물 해금 상태 관리"
+            ],
+            "relations": [
+                {"to": "GmaeManager", "action": "게임 시작 시 강화된 데이터 전달"},
+                {"to": "AchievementManager", "action": "업적 보상(잠금 해제) 처리 요청 수신"}
+            ]
+        },
+        "AchievementManager": {
+            "description": "업적 시스템은 모든 데이터 관리하고 달성 여부를 판정합니다.",
+            "responsibilities": [
+                "전체 업적 목록 및 달성 조건 관리",
+                "다른 매니저로부터 게임 플레이 이벤트 수신",
+                "업적 진행도 갱싱 및 영구 저장",
+                "업적 달성 시 보상 지급 요청"
+            ],
+            "relations": [
+                {"from": "StageManager, PlayerManager", "action": "플레이 이벤트 수신"},
+                {"to": "MetaManager", "action": "영구 능력치 지급 또는 잠금 해제 요청"},
+                {"to": "UIManager", "action": "업청 진행도 표시 및 달성 팝업 요청"}
+            ]
+        }
+    }
+}
