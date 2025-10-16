@@ -1,0 +1,110 @@
+{
+    "description": "게임에 등장하는 모든 몬스터의 기본 스텟 데이터를 정의합니다.",
+    "version": "0.0.1",
+    "monsters": [
+        {
+            "monster_id": "MOB_Can",
+            "monster_name": "캔",
+            "health": 40,
+            "attack_power": 0.5,
+            "move_distance": 1.5,
+            "move_duration": 0.3,
+            "move_cooldown": 0.2,
+            "aggro_range": 15,
+            "attack_range": 10,
+            "attack_cooldown": 3.0,
+            "post_attack_delay": 2.0
+        },
+        {
+            "monster_id": "MOB_Snack",
+            "monster_name": "과자",
+            "health": 60,
+            "attack_power_per_tick": 0.5,
+            "move_speed": 0.7,
+            "swallow_duration": 3.0,
+            "aggro_range": 10,
+            "attack_charge_time": 0.8,
+            "attack_cooldown": 5.0,
+            "post_attack_delay": 1.5
+        },
+        {
+           "monster_id": "MOB_Coin",
+            "monster_name": "동전",
+            "health": 30,
+            "attack_power": 1,
+            "move_speed": 1.2,
+            "explosion_charge_range": 1.5,
+            "explosion_delay": 1.5,
+            "explosion_radius": 3,
+            "post_attack_delay": 1.5
+        },        
+        {
+            "monster_id": "MOB_Bottle",
+            "monster_name": "술병",
+            "health": 70,
+            "attack_power": 0.5,
+            "move_speed": 0.8,
+            "aggro_range": 10,
+            "dash_charge_range": 4,
+            "dash_distance": 6,
+            "post_attack_delay": 1.5
+        },
+        {
+            "monster_id": "MOB_Stump",
+            "monster_name": "그루터기",
+            "health": 100,
+            "attack_power": 0.5,
+            "ground_damage_per_tick": 0.5,
+            "move_speed": 0,
+            "aggro_attack_range": -1,
+            "dot_zone_duration": 5.0,
+            "debuff_duration": 7.0,
+            "post_attack_delay": 4.0
+        },
+        {
+            "monster_id": "MOB_Stone",
+            "monster_name": "돌 전사",
+            "health": 150,
+            "attack_power": 0.5,
+            "move_speed": 0.6,
+            "attack_range": 1.5,
+            "post_attack_delay": 1.2
+        },
+        {
+            "monster_id": "MOB_TBag_Large",
+            "monster_name": "큰 쓰레기 봉지",
+            "health": 60,
+            "attack_power": 0.5,
+            "move_speed": 0.7,
+            "aggro_range": 8,
+            "attack_range": 1.5,
+            "split_count": 1,
+            "split_quantity_min": 2,
+            "split_quantity_max": 4,
+            "post_attack_delay": 1.2
+        },
+        {
+            "monster_id": "MOB_TBag_small",
+            "monster_name": "작은 쓰레기 봉지",
+            "health": 35,
+            "attack_power": 0.5,
+            "move_speed": 0.9,
+            "aggro_range": 8,
+            "attack_range": 1.2,
+            "split_count": 0,
+            "post_attack_delay": 1.2
+        },
+        {
+            "monster_id": "MOB_MiniP",
+            "monster_name": "미니 오염물질",
+            "health": 100,
+            "attack_power": 1,
+            "move_speed_approach": 0.7,
+            "move_speed.flee": 1.5,
+            "aggro_range": 15,
+            "dash_charge_range": 7,
+            "flee_duration": 3.0,
+            "post_attack_delay": 1.5
+        }
+    ]
+}

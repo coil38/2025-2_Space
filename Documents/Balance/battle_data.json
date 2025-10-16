@@ -1,0 +1,61 @@
+{
+    "description": "플레이어의 입력을 게임 내 행동으로 매핑합니다. 키 설정 변경 시 이 데이터를 수정합니다.",
+    "version": "0.0.1",
+    "platform_keyboard": [
+        {
+            "input_key": "W",
+            "action_id": "move_forward",
+            "description": "앞으로 이동"
+        },
+        {
+            "input_key": "S",
+            "action_id": "move_backward",
+            "description": "뒤로 이동"
+        },
+        {
+            "input_key": "A",
+            "action_id": "move_left",
+            "description": "왼쪽으로 이동"
+        },
+        {
+            "input_key": "D",
+            "action_id": "move_right",
+            "description": "오른쪽으로 이동"
+        },
+        {
+            "input_key": "Space",
+            "action_id": "dodge",
+            "description": "회피"
+        },
+        {
+            "input_key": "Mouse_LeftClick",
+            "action_id": "attack_primary",
+            "description": "기본 공격"
+        },
+        {
+            "input_key": "Q",
+            "action_id": "skill_01",
+            "description": "첫 번째 스킬"
+        },
+        {
+            "input_key": "E",
+            "action_id": "skill_02",
+            "description": "두 번째 스킬"
+        },
+        {
+            "input_key": "E",
+            "action_id": "skill_03",
+            "description": "세 번째 스킬"
+        },
+        {
+            "input_key": "F",
+            "action_id": "interact_01",
+            "description": "상호작용 (아이템 줍기, 오브젝트 활성화)"
+        },
+        {
+            "input_key": "Z",
+            "action_id": "interact_02",
+            "description": "상호작용 (유물 정보 확인)"
+        }
+    ]
+}

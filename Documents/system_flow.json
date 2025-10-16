@@ -57,15 +57,15 @@
         "StageManager": {
             "description": "스테이지 구성, 몬스터 생성, 루트 선택 등을 관리합니다.",
             "responsibilities": [
-                "현재 스테이지 데이터 로드",
-                "몬스터 및 상호작용 가능한 오브젝트 배치",
+                "stageStructure 정의에 기반하여 스테이지와 룸 절차적 생성",
+                "몬스터 웨이브 및 상호작용 오브젝트(정화기, 교환기 등) 배치",
                 "몬스터 처치 시 보상(경험치, 유물) 드랍 처리",
                 "클리어 조건 판정 및 보상 지급"
             ],
             "relations": [
                 {"to": "PlayerManager", "action": "전투 보상(경험치, 유물) 전달"},
                 {"to": "UIManager", "action": "스테이지 선택 UI 표시 요청"},
-                {"to": "AchievementManager", "action": "몬스터 처치 등 업적 관련 이벤트 전송"}
+                {"to": "AchievementManager", "action": "몬스터 처치, 오브젝트 파괴 등 업적 관련 이벤트 전송"}
             ]
         },
         "MetaManager": {
@@ -94,5 +94,53 @@
                 {"to": "UIManager", "action": "업청 진행도 표시 및 달성 팝업 요청"}
             ]
         }
+    },
+    "systemFlows": [
+    {
+      "flowName": "App_Start_To_InGame",
+      "description": "플레이어가 앱을 실행해서 실제 게임 플레이에 진입하기까지의 흐름입니다.",
+      "steps": [
+        {"step": 1, "state": "AppExecution", "action": "GameManager 초기화, 기본 데이터 로드"},
+        {"step": 2, "state": "TitleScreen", "action": "UIManager가 타이틀 UI 표시. '게임 시작' 버튼 입력 대기"},
+        {"step": 3, "state": "StartGame", "action": "UIManager가 GameManager의 'StartGame' 함수 호출"},
+        {"step": 4, "state": "SceneTransition", "action": "GameManager가 SceneManager에 'InGameScene' 로드 명령 (Scene_Transition_Flow 시작)"},
+        {"step": 5, "state": "InGame_Ready", "action": "씬 로드 완료 후, PlayerManager, StageManager 초기화. 플레이어 캐릭터 생성"},
+        {"step": 6, "state": "InGame_Playing", "action": "StageManager가 첫 스테이지 루트 선택지 제시"}
+      ]
+    },
+    {
+      "flowName": "Scene_Transition_Flow",
+      "description": "한 씬에서 다른 씬으로 넘어가는 상세 흐름입니다. (예: Title -> InGame)",
+      "steps": [
+        {"step": 1, "state": "Transition_Start", "action": "GameManager가 SceneManager에 목표 씬(예: InGameScene) 로드 요청"},
+        {"step": 2, "state": "Show_LoadingUI", "action": "SceneManager가 UIManager에 로딩 화면 표시 요청"},
+        {"step": 3, "state": "Unload_CurrentScene", "action": "SceneManager가 현재 씬(예: TitleScene)을 메모리에서 해제"},
+        {"step": 4, "state": "Load_NextScene", "action": "SceneManager가 목표 씬을 비동기로 로드 시작. UIManager에 로딩 진행도(%) 전달"},
+        {"step": 5, "state": "Load_Complete", "action": "씬 로드가 100% 완료됨"},
+        {"step": 6, "state": "Hide_LoadingUI", "action": "SceneManager가 UIManager에 로딩 화면 숨김 요청"},
+        {"step": 7, "state": "Transition_End", "action": "SceneManager가 GameManager에 씬 전환 완료 보고"}
+      ]
+    },
+    {
+      "flowName": "Core_Loop_Flow",
+      "description": "인게임 내에서 반복되는 핵심 플레이 흐름입니다.",
+      "steps": [
+        {"step": 1, "state": "SelectStage", "action": "플레이어가 루트 선택. StageManager가 다음 방 생성"},
+        {"step": 2, "state": "Combat", "action": "플레이어가 몬스터와 전투. PlayerManager가 플레이어 HP/상태 관리"},
+        {"step": 3, "state": "GetReward", "action": "StageManager가 클리어 판정 후 PlayerManager에 보상(경험치, 유물) 전달"},
+        {"step": 4, "state": "LevelUp_And_Growth", "action": "PlayerManager가 경험치 체크 후 레벨업 처리. UIManager가 관련 UI 표시"},
+        {"step": 5, "state": "Loop", "action": "남은 몬스터가 있으면 2번으로, 없으면 1번(다음 스테이지 선택)으로 돌아감"}
+      ]
+    },
+    {
+      "flowName": "Run_End_To_Restart",
+      "description": "플레이어가 죽거나 클리어한 후 다시 타이틀로 돌아가는 흐름입니다.",
+      "steps": [
+        {"step": 1, "state": "PlayerDead_OR_GameClear", "action": "GameManager가 게임오버 또는 클리어 상태 감지"},
+        {"step": 2, "state": "ResultScreen", "action": "UIManager가 결과창 표시. MetaManager가 영구 재화 정산"},
+        {"step": 3, "state": "MetaGrowth", "action": "플레이어가 영구 강화. MetaManager가 데이터 저장"},
+        {"step": 4, "state": "ReturnToTitle", "action": "플레이어가 '확인' 버튼 클릭. GameManager가 SceneManager에 'TitleScene' 로드 명령"}
+      ]
     }
+  ]
 }
