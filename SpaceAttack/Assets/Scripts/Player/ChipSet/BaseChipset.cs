@@ -95,16 +95,16 @@ public class BaseChipset : ChipSetType
 
     protected virtual void OnDisable()
     {
-        EventManager.playerEvent.correctionEventHandler -= SetCorrectionValue;  //공격력, 스킬 보정 이벤트 구독 해지
-        EventManager.playerEvent.relicAttackEventHandler -= SetRelicAttackValue; //유물으로 인한 공격력 보정 이벤트 구독 해지
-        EventManager.playerEvent.coolDownEventHandler -= SetCoolDownValue;       //쿨타임 감소 이벤트 구독해제
+        PlayerEvent.correctionEventHandler -= SetCorrectionValue;  //공격력, 스킬 보정 이벤트 구독 해지
+        PlayerEvent.relicAttackEventHandler -= SetRelicAttackValue; //유물으로 인한 공격력 보정 이벤트 구독 해지
+        PlayerEvent.coolDownEventHandler -= SetCoolDownValue;       //쿨타임 감소 이벤트 구독해제
     }
 
     private IEnumerator SetEvent()
     {
         yield return new WaitUntil(() => EventManager.playerEvent != null);
-        EventManager.playerEvent.correctionEventHandler += SetCorrectionValue;  //공격력, 스킬 보정 이벤트 구독
-        EventManager.playerEvent.relicAttackEventHandler += SetRelicAttackValue; //유물으로 인한 공격력 보정 이벤트 구독
-        EventManager.playerEvent.coolDownEventHandler += SetCoolDownValue;       //쿨타임 감소 이벤트 구독해제
+        PlayerEvent.correctionEventHandler += SetCorrectionValue;  //공격력, 스킬 보정 이벤트 구독
+        PlayerEvent.relicAttackEventHandler += SetRelicAttackValue; //유물으로 인한 공격력 보정 이벤트 구독
+        PlayerEvent.coolDownEventHandler += SetCoolDownValue;       //쿨타임 감소 이벤트 구독해제
     }
 }

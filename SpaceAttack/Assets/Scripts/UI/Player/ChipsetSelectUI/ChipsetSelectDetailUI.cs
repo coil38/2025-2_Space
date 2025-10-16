@@ -37,7 +37,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
 
     void OnEnable()
     {
-        UISoundManager.PlayeOnAndOffPanelSound(); //패널열기혹은 닫기 사운드 재생
+        UISoundManager.PlayeOnAndOffPanelSound(); //패널열기 사운드 재생
 
         if (inventoryManager == null) 
             inventoryManager = FindAnyObjectByType<InventoryManager>();
@@ -52,7 +52,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
 
     void OnDisable()
     {
-        UISoundManager.PlayeOnAndOffPanelSound(); //패널열기혹은 닫기 사운드 재생
+        UISoundManager.PlayeOnAndOffPanelSound(); //패널 닫기 사운드 재생
 
         if (currentChipset == null) return;
         foreach (var button in buttons)

@@ -128,7 +128,6 @@ public class UIESCSystem : MonoBehaviour  //ESC교통정리용 시스템
         UnityAction action = depths.Peek().Item2;
         action?.Invoke();
 
-        UISoundManager.PlayeOnAndOffPanelSound();   //버튼 클릭 사운드 재생
         //LogUtil.Log($"{obj.name}가 뎁스에서 나감");
         //DebugFuc();
     }

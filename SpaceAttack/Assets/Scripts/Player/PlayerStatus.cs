@@ -71,12 +71,12 @@ public class PlayerStatus : MonoBehaviour
 
     public void InitializeEvent()  //이벤트 체인 함수
     {
-        EventManager.playerEvent.correctionEventHandler += SetCorrectionValue;  //플레이어 스텟 보정 이벤트 구독
+        PlayerEvent.correctionEventHandler += SetCorrectionValue;  //플레이어 스텟 보정 이벤트 구독
     }
 
     private void OnDisable()
     {
-        EventManager.playerEvent.correctionEventHandler -= SetCorrectionValue;  //플레이어 스텟 보정 이벤트 구독 해지
+        PlayerEvent.correctionEventHandler -= SetCorrectionValue;  //플레이어 스텟 보정 이벤트 구독 해지
     }
 
     private void Update()

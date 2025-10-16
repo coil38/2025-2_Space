@@ -32,6 +32,7 @@ public class PlayerCoreUI : MonoBehaviour
             Variables.Object(this.gameObject).Set("currentExp", expInfo.currentExp);
             Variables.Object(this.gameObject).Set("targetExp", expInfo.targetExp);
             Variables.Object(this.gameObject).Set("maxExp", expInfo.maxExp);
+            LogUtil.Log($"현재 레벨: {expInfo.currentLevel}, 현재 최대 경험치: {expInfo.maxExp}");
 
             if (expInfo.isInitial)  //초기화 설정
             {
@@ -46,8 +47,7 @@ public class PlayerCoreUI : MonoBehaviour
             }
             else
             {
-                //함수 실행
-                CustomEvent.Trigger(this.gameObject, "UpdateExp");
+                CustomEvent.Trigger(this.gameObject, "UpdateExp");  //경험치 획득 연출 실행
             }
         }
     }

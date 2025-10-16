@@ -64,11 +64,13 @@ public class PlayerInventoryInfoUI : MonoBehaviour
 
     private void OnPlayerInventoryInfoUI()
     {
+        UISoundManager.PlayeOnAndOffPanelSound();               //사운드 재생
         gameObject.SetActive(true);
         UITransform.DOAnchorPos(openPos, duration).SetEase(ease);
     }
     private void OFFPlayerInventoryInfoUI()
     {
+        UISoundManager.PlayeOnAndOffPanelSound();               //사운드 재생
         UITransform.DOAnchorPos(closedPos, duration).SetEase(ease).OnComplete(() => gameObject.SetActive(false));
     }
 

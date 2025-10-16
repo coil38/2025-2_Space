@@ -5,31 +5,31 @@ using System;
 
 public class PlayerEvent
 {
-    private EventHandler<PlayerEvent> _correctionEventHandler;  //플레이어 레벨 보정치 이벤트
+    private static EventHandler<PlayerEvent> _correctionEventHandler;  //플레이어 레벨 보정치 이벤트
 
-    public event EventHandler<PlayerEvent> correctionEventHandler
+    public static event EventHandler<PlayerEvent> correctionEventHandler
     {
         add { _correctionEventHandler += value; }
         remove{ _correctionEventHandler -= value; }
     }
 
-    private EventHandler<PlayerEvent> _levelEventHandler;  //플레이어 레벨정보 얻기 이벤트
+    private static EventHandler<PlayerEvent> _levelEventHandler;  //플레이어 레벨정보 얻기 이벤트
 
-    public event EventHandler<PlayerEvent> levelEventHandler
+    public static event EventHandler<PlayerEvent> levelEventHandler
     {
         add { _levelEventHandler += value; }
         remove { _levelEventHandler -= value; }
     }
 
-    private EventHandler<PlayerEvent> _relicAttackEventHandler;  //유물 공격력 수치 변경 이벤트
-    public event EventHandler<PlayerEvent> relicAttackEventHandler
+    private static EventHandler<PlayerEvent> _relicAttackEventHandler;  //유물 공격력 수치 변경 이벤트
+    public static event EventHandler<PlayerEvent> relicAttackEventHandler
     {
         add { _relicAttackEventHandler += value; }
         remove { _relicAttackEventHandler -= value; }
     }
 
-    private EventHandler<PlayerEvent> _coolDownEventHandler;  //유물 공격력 수치 변경 이벤트
-    public event EventHandler<PlayerEvent> coolDownEventHandler
+    private static EventHandler<PlayerEvent> _coolDownEventHandler;  //유물 공격력 수치 변경 이벤트
+    public static event EventHandler<PlayerEvent> coolDownEventHandler
     {
         add { _coolDownEventHandler += value; }
         remove { _coolDownEventHandler -= value; }
@@ -97,6 +97,7 @@ public class PlayerEvent
         else
         {
             maxEXP = levelDatabase.GetMaxExp(_level);  //해당 레벨의 최대경험치양 찾기
+            LogUtil.Log($"현재 레벨: {_level}, 다음 최대경험치: {maxEXP}");
         }
 
         if (levelDatabase.maxLevel < _level + 1)  //최대레벨 예외처리
