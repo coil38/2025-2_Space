@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이션 후, 실행) O | 공격시간 O | 플레이어 대기시간(쿨타임) O
 {
@@ -22,16 +23,13 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
         base.OnEnable();
 
         damageRate = 2f;
-        damage = PlayerStatus.normalDamage * damageRate;
         //--------------------------------------------------------
-        mass = 1f;
         unLockedNumber = 1;
         attackDistance = 3.2f;
         attackWidth = 2f;
         attackTime = 0.6f;
         r_AttackTime = 0.2f;
-        normalCoolTime = 5f;
-        coolTime = normalCoolTime;
+        coolTime = 5f;
         coolTimer = new Timer(coolTime);
         s_AttackTimer = new Timer(attackTime);  //playerWaitTime과 attackTime이 일치하기 때문에 이렇게 함.
         _s_AttackTimer = s_AttackTimer;
@@ -44,7 +42,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
         coolTimer.Update();
     }
 
-    public override void CheckAttack(Vector3 currentPos)
+    public override void CheckUse(Vector3 currentPos)
     {
         //if (!canUse)//해금여부에 따른 스킬 사용 여부
         //{
@@ -76,7 +74,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
             Vector3 attackDir = (mousePos - _currentPos).normalized;   //플레이어 기준 마우스 방향 얻기
             attackDirection = attackDir;
 
-            Invoke("Attack", r_AttackTime); //시전 애니메니션 시작 후, 시전시간동안 대기
+            Invoke("Use", r_AttackTime); //시전 애니메니션 시작 후, 시전시간동안 대기
         }
         else
         {
@@ -84,7 +82,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
         }
     }
 
-    public override void Attack()
+    public override void Use()
     {
         float _attackDistance = attackDistance;
         float _attackTime = attackTime;
@@ -120,8 +118,6 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
         detectSize = new Vector3(0.2f, 1f, attackWidth / 2);
         Vector3 _detectSize = new Vector3(1f, 1f, 1f);
 
-        AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);   //공격 정보 설정
-
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * _attackDistance;
 
@@ -146,7 +142,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
                 if (col.gameObject.CompareTag("DestructableObject"))
                 {
                     if (col.gameObject != null)
-                        col.SendMessage("ApplyDamage", attackInfo);
+                        chipset.Attack(col.gameObject, damageRate, attackDirection, ChipAttackType.Skill);
 
                     continue;
                 }
@@ -155,7 +151,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
                 foreach (var col2 in cols2)
                 {
                     if (col2.gameObject != null)
-                        col2.SendMessage("ApplyDamage", attackInfo);
+                        chipset.Attack(col2.gameObject, damageRate, attackDirection, ChipAttackType.Skill);
                 }
                 isAttackMoving = false;
                 //OffFloorSprite();

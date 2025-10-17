@@ -50,7 +50,7 @@ public class PlayerAttack : MonoBehaviour
         if (weaponType == null) return;  //현재 보유 중 무기가 없을 시, 반환
 
         //무기 시스템 연결
-        weaponType.CheckAttack(transform.position);
+        weaponType.CheckUse(transform.position);
 
         if ((playerState.m_FacingRight && weaponType.attackDirection.x > 0) || (!playerState.m_FacingRight && weaponType.attackDirection.x < 0))  //공격방향과 현재방향이 불일치 경우
         {
@@ -83,7 +83,7 @@ public class PlayerAttack : MonoBehaviour
         //스킬 시스템 연결
         foreach (var skill in skillTypes)
         {
-            skill.CheckAttack(transform.position);
+            skill.CheckUse(transform.position);
 
             if ((playerState.m_FacingRight && skill.attackDirection.x > 0) || (!playerState.m_FacingRight && skill.attackDirection.x < 0))  //공격방향과 현재방향이 불일치 경우
             {

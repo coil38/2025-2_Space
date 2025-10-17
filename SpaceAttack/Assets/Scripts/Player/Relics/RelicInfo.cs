@@ -7,13 +7,17 @@ using UnityEngine;
 public class RelicInfo
 {
     public int id;  //효과ID
-    public float n; //상수값1
-    public int z;   //자연수값1
+    public float n;
+    public float z;
+    public float y;
+    public float w;
 
-    public RelicInfo(int _id, float _n = 0f, int _z = 0)
+    public RelicInfo(int id, float n = 0f, int z = 0, float y = 0, float w = 0)
     {
-        n = _n;
-        id = _id;
-        z = _z;
+        this.id = id;
+        this.n = n;
+        this.z = z;
+        this.y = y;
+        this.w = w;
     }
 }

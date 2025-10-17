@@ -23,8 +23,6 @@ public class PlayerStatus : MonoBehaviour
     public ParticleSystem m_Particle;
     public ParticleSystem d_Particle;
 
-    public static event Action playerHitEvent;  //플레이어 피격 이벤트
-
     [HideInInspector] public bool isInvincibility = false;
     [HideInInspector] public bool isStuned = false;
     [HideInInspector] public bool isDashing = false;
@@ -174,7 +172,7 @@ public class PlayerStatus : MonoBehaviour
 
     private void _ApplyDamage(AttackInfo info)
     {
-        playerHitEvent?.Invoke();  //플레이어 피격 이벤트 실행
+        EventManager.relicEvent.OnPlayerHitEvent();    //플레이어 피격 이벤트 실행
 
         int damage = (int)info.damage;
         Vector3 dir = info.attackDirection;
@@ -202,6 +200,8 @@ public class PlayerStatus : MonoBehaviour
 
         if (m_hp <= 0)
         {
+            EventManager.relicEvent.OnPlayerDeadEvent();   //플레이어 사망 이벤트 실행
+
             if (AudioManager.instance != null)
                 AudioManager.instance.StopAllSounds();
 

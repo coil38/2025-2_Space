@@ -26,9 +26,7 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
         base.OnEnable();
 
         damageRate = 2.5f;
-        damage = PlayerStatus.normalDamage * damageRate;
         //------------------------------------------------------------------------------------------------------
-        mass = 1f;
         unLockedNumber = 2;
         attackDistance = 3.8f;
         attackWidth = 2f;
@@ -49,7 +47,7 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
         s_AttackTimer.Update();
     }
 
-    public override void CheckAttack(Vector3 currentPos)
+    public override void CheckUse(Vector3 currentPos)
     {
         //if (!canUse)//해금여부에 따른 스킬 사용 여부
         //{
@@ -81,7 +79,7 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
             Vector3 attackDir = (mousePos - _currentPos).normalized;   //플레이어 기준 마우스 방향 얻기
             attackDirection = attackDir;
 
-            Invoke("Attack", r_AttackTime);       //공격 애니메이션 후, 시전시간동안 대기
+            Invoke("Use", r_AttackTime);       //공격 애니메이션 후, 시전시간동안 대기
         }
         else
         {
@@ -89,7 +87,7 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
         }
     }
 
-    public override void Attack()
+    public override void Use()
     {
         float _attackDistance = attackDistance;
         float _attackTime = attackTime;
@@ -126,8 +124,6 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * _attackDistance;
 
-        AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);   //공격 정보 설정
-
         //Debug.Log($"장판위치: {f_DetectPos}, 시작 위치: {_currentPos}, 종료위치: {targetPos}");
         //OnFloorSprite(f_DetectSize * 2f, attackDirection, f_DetectPos);        //장판 스프라이트 켜기
         //OnSlashSprite(detectSize * 2f, attackDirection);                       //참격 스프라이트 켜기
@@ -148,7 +144,7 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
                 if (targets.Contains(col.gameObject)) continue;   //중복일 경우, 무시
                 else targets.Add(col.gameObject);                  //중복이 아닐 경우, 체크 대상에 추가
 
-                if (col.gameObject != null) col.SendMessage("ApplyDamage", attackInfo);
+                if (col.gameObject != null) chipset.Attack(col.gameObject, damageRate, attackDirection, ChipAttackType.Skill);
             }
 
             if (timer <= 0) break;  //시간 초과될 시, 코루틴 종료

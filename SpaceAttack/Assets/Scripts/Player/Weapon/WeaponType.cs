@@ -20,24 +20,29 @@ public abstract class WeaponType : MonoBehaviour, IAttack, ICheckAttack
 
     //--------------------------------------------------------------------------------------------------
 
+    //부모 칩셋타입
+    protected BaseChipset chipset;
+
     //레이어 설정
     protected LayerMask planLayer;   //바닥감지용 리이어 마스크
     protected LayerMask enemyLayer;  //적감지용 레이어 마스크
     protected LayerMask wallLayer;   //벽감지용 레이어 마스크
 
     //내부 기능
-    public float damage { get; set; }
     public float damageRate { get; protected set; }
 
-    public abstract void CheckAttack(Vector3 currentPos);
+    public abstract void CheckUse(Vector3 currentPos);
 
-    public abstract void Attack();
+    public abstract void Use();
 
     public virtual void OnEnable()  //공용 레이어 설정
     {
         planLayer |= 1 << LayerMask.NameToLayer("Plan");
         enemyLayer |= (1 << LayerMask.NameToLayer("Enemy")) | (1 << LayerMask.NameToLayer("DestructableObject")) | (1 << LayerMask.NameToLayer("Boss"));
         wallLayer |= 1 << LayerMask.NameToLayer("Wall");
+
+        if (chipset == null)
+            chipset = gameObject.GetComponent<BaseChipset>();
     }
 
     public abstract void UpdateInfo();

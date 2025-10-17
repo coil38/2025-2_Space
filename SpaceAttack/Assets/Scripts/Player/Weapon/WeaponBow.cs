@@ -49,7 +49,7 @@ public class WeaponBow : WeaponType     //시전시간(발사: 애니메이션 �
         if (!startAttack) return;
         _Attack();
     }
-    public override void CheckAttack(Vector3 currentPos)
+    public override void CheckUse(Vector3 currentPos)
     {
         _currentPos = currentPos;
 
@@ -76,7 +76,7 @@ public class WeaponBow : WeaponType     //시전시간(발사: 애니메이션 �
 
             attackDirection = attackDir;
 
-            Attack();
+            Use();
         }
         else
         {
@@ -84,7 +84,7 @@ public class WeaponBow : WeaponType     //시전시간(발사: 애니메이션 �
         }
     }
 
-    public override void Attack()
+    public override void Use()
     {
         _attackDistance = attackDistance;
         _attackTime = attackTime;

@@ -52,9 +52,10 @@ public class PlayerMovement : MonoBehaviour
 
             if (PlayerTimeSystem.c_dashTimer != null)
             {
-                if (!PlayerTimeSystem.c_dashTimer.IsRunning())
+                if (!PlayerTimeSystem.c_dashTimer.IsRunning() && !isAttacking && !isUsingSkill)
                 {
-                    if (!isAttacking && !isUsingSkill) characterMovement.Dash();  //대쉬
+                    EventManager.relicEvent.OnDashEvent();
+                    characterMovement.Dash();  //대쉬
                 }
             }
         }

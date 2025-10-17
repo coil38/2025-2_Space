@@ -97,7 +97,7 @@ public class PlayerEvent
         else
         {
             maxEXP = levelDatabase.GetMaxExp(_level);  //해당 레벨의 최대경험치양 찾기
-            LogUtil.Log($"현재 레벨: {_level}, 다음 최대경험치: {maxEXP}");
+            //LogUtil.Log($"현재 레벨: {_level}, 다음 최대경험치: {maxEXP}");
         }
 
         if (levelDatabase.maxLevel < _level + 1)  //최대레벨 예외처리

@@ -26,7 +26,7 @@ public class PlayerCore : MonoBehaviour
 
     //private void OnDisable()  //델리게이트 체인 구독 해지
     //{
-    //    EventManager.playerEvent.levelEventHandler -= GetMaxExpValue;
+    //    PlayerEvent.levelEventHandler -= GetMaxExpValue;
     //    LogUtil.Log("작동하ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㄴ다ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅇ")
     //}
 
@@ -74,6 +74,6 @@ public class PlayerCore : MonoBehaviour
     {
         maxEXP = e.maxEXP;  //최대 경험치 갱신
         nextMaxEXP = e.nextMaxEXP;  //다음 최대 경험치 갱신
-        LogUtil.Log($"이벤트 실행됨. 최대경험치량: {e.maxEXP}, 다음 최대경험치량: {e.nextMaxEXP}");
+        //LogUtil.Log($"이벤트 실행됨. 최대경험치량: {e.maxEXP}, 다음 최대경험치량: {e.nextMaxEXP}");
     }
 }

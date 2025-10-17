@@ -23,11 +23,9 @@ public class BowSkillConcentratedFire : SkillType
     {
         base.OnEnable();
 
-        mass = 0.3f;
         detectDistance = 4f;    //선택범위 반지름
         attackDistance = 2f;    //공격범위 반지름
         attackCycle = 0.5f;     //공격주기
-        damage = 0.5f;          //한 주기동안의 공격력
         attackTime = 2.5f;      //공격 시간
         r_AttackTime = 0.2f;  //플레이어 대기 시간
         normalCoolTime = 12f;         //쿨타임
@@ -45,7 +43,7 @@ public class BowSkillConcentratedFire : SkillType
         coolTimer.Update();
     }
 
-    public override void CheckAttack(Vector3 currentPos)
+    public override void CheckUse(Vector3 currentPos)
     {
         _currentPos = currentPos;
 
@@ -105,12 +103,12 @@ public class BowSkillConcentratedFire : SkillType
                 {
                     isPlayGizoms = false;
                 }
-                else Attack();
+                else Use();
             }
         }
     }
 
-    public override void Attack()
+    public override void Use()
     {
         isPlayGizoms = true;    //테스트용_범위 기즈모 활성화
         StartCoroutine(C_Attack());
@@ -118,8 +116,6 @@ public class BowSkillConcentratedFire : SkillType
 
     private IEnumerator C_Attack()
     {
-        AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);   //공격 정보 설정
-
         float totalAttackTime = 0;
         while (true)
         {
@@ -128,8 +124,7 @@ public class BowSkillConcentratedFire : SkillType
             foreach (Collider col in cols)
             {
                 Vector3 _attackDirection = (col.transform.position - targetPos).normalized; //공격 방향 설정
-                attackInfo.SetAttackInfo(damage, _attackDirection, mass);
-                if (col.gameObject != null) col.SendMessage("ApplyDamage", attackInfo);
+                if (col.gameObject != null) chipset.Attack(col.gameObject, damageRate, _attackDirection, ChipAttackType.Skill);
             }
 
             if (totalAttackTime >= attackTime) break;       //시간 초과시, 코루틴 종료

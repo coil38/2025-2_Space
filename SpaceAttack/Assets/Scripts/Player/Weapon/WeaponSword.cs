@@ -24,7 +24,6 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
         base.OnEnable();
 
         damageRate = 1f;
-        damage = PlayerStatus.normalDamage * damageRate;
 
         attackMoveTimer = new Timer(0.1f);         //공격 이동 속도 설정
         w_AttackTimer = new Timer(w_attackTime);   //공격 대기 시간 설정
@@ -41,7 +40,7 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
             Vector3 movePos = Vector3.Lerp(_currentPos, targetPos, 1 - timer);
             attackMovePos = movePos;   //이동 위치 할당
 
-            Attack();  //적감지
+            Use();  //적감지
 
             if (targets.Count > 0)  //피격 대상이 있을 경우, 공격 이동 종료
             {
@@ -58,7 +57,7 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
         }
     }
 
-    public override void CheckAttack(Vector3 currentPos)
+    public override void CheckUse(Vector3 currentPos)
     {
         _currentPos = currentPos;
 
@@ -88,7 +87,7 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
 
             attackDirection = attackDir;
 
-            Attack();
+            Use();
         }
         else
         {
@@ -96,7 +95,7 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
         }
     }
 
-    public override void Attack()
+    public override void Use()
     {
         isDetected = false;
         targets.Clear();
@@ -121,26 +120,9 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
     {
         if (PlayerTimeSystem.stunTimer.IsRunning()) return;  //플레이어 피격받는 중일 경우, 공격취소 처리 (예외처리)
 
-        AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);  //공격 정보 설정
-
         if (targets.TryDequeue(out var target))
         {
-            if(target.GetComponent<EnemyBase>() != null)
-                if (target.GetComponent<EnemyBase>().isDead) return;  //만약 타겟이 사망했다면 반환처리
-
-            bool isCritical = false;
-            float temp = attackInfo.CheckAndSetCritical(damage, PlayerStatus.criticalChanceRate, PlayerStatus.criticalRate);
-            if (temp > damage) isCritical = true;  //크리티컬 처리
-
-            attackInfo.damage = temp; //데미지 재설정
-
-            Vector3 effectPos = target.transform.position + target.transform.up * 0.5f;
-            if (DamageEffectManager.instance != null)
-                DamageEffectManager.instance.ShowDamage(effectPos, (int)temp, false, isCritical);
-
-            target.SendMessage("ApplyDamage", attackInfo);
-            Camera.main.GetComponent<CameraFallow>().CameraShack();  //카메라 흔들림 연출
-                                                                     //Debug.Log(target.name + "을 검 공격함");
+            chipset.Attack(target, damageRate, attackDirection, ChipAttackType.Weapon);
         }
     }
 

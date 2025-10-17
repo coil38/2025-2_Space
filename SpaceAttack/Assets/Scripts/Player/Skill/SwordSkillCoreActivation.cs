@@ -38,7 +38,7 @@ public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애�
         }
     }
 
-    public override void CheckAttack(Vector3 currentPos)
+    public override void CheckUse(Vector3 currentPos)
     {
         //if (!canUse)//해금여부에 따른 스킬 사용 여부
         //{
@@ -54,11 +54,11 @@ public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애�
             //물약 마시는 애니메이션
             coolTimer.Start();         //쿨타임 시작
 
-            Invoke("Attack", r_AttackTime);    //시전 시간 후, 기능 실행
+            Invoke("Use", r_AttackTime);    //시전 시간 후, 기능 실행
         }
     }
 
-    public override void Attack()
+    public override void Use()
     {
         s_AttackTimer.Start();
 

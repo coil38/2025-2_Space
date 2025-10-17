@@ -26,8 +26,8 @@ public class BowSkillBigArrow : SkillType
     {
         base.OnEnable();
 
-        mass = 1.1f;
-        damage = 3f;
+        damageRate = 1.5f;
+
         attackDistance = 6f;
         attackWidth = 4f;
         attackTime = 0.6f;
@@ -48,7 +48,7 @@ public class BowSkillBigArrow : SkillType
         s_AttackTimer.Update();
     }
 
-    public override void CheckAttack(Vector3 currentPos)
+    public override void CheckUse(Vector3 currentPos)
     {
         _currentPos = currentPos;
 
@@ -115,7 +115,7 @@ public class BowSkillBigArrow : SkillType
 
                 coolTimer.Start();         //쿨타임 시작
 
-                Attack();
+                Use();
                 isAttacking = false;
 
                 //라인랜더러값 초기화
@@ -124,7 +124,7 @@ public class BowSkillBigArrow : SkillType
         }
     }
 
-    public override void Attack()
+    public override void Use()
     {
         isPlayGizoms = true;    //테스트용_범위 기즈모 활성화
 
@@ -137,10 +137,7 @@ public class BowSkillBigArrow : SkillType
         f_DetectPos = _currentPos + (attackDirection * (_attackDistance / 2));
         f_DetectSize = new Vector3(_attackDistance / 1.5f, 1f, attackWidth / 2);
         detectRot = Quaternion.LookRotation(attackDirection, Vector2.up) * Quaternion.Euler(0, 90f, 0);
-
         detectSize = new Vector3(0.2f, 1f, attackWidth / 2);
-
-        AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);   //공격 정보 설정
 
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);
@@ -158,7 +155,7 @@ public class BowSkillBigArrow : SkillType
                 if (targets.Contains(col.gameObject)) continue;   //중복일 경우, 무시
                 else targets.Add(col.gameObject);                  //중복이 아닐 경우, 체크 대상에 추가
 
-                if (col.gameObject != null) col.SendMessage("ApplyDamage", attackInfo);
+                if (col.gameObject != null) chipset.Attack(col.gameObject, damageRate, attackDirection, ChipAttackType.Skill);
             }
 
             if (timer <= 0) break;  //시간 초과시, 코루틴 종료

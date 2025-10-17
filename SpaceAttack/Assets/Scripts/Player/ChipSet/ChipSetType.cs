@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ChipAttackType
+{
+    Weapon,
+    Skill
+}
+
 public abstract class ChipSetType : MonoBehaviour
 {
     public  WeaponType weapon;
@@ -14,5 +20,6 @@ public abstract class ChipSetType : MonoBehaviour
     public abstract void SetCorrectionValue(object obj, PlayerEvent e);
     public abstract void SetRelicAttackValue(object obj, PlayerEvent e);
     public abstract void SetCoolDownValue(object obj, PlayerEvent e);
+    public abstract void Attack(GameObject target, float damageRate, Vector3 dir, ChipAttackType type);
 
 }

@@ -37,9 +37,8 @@ public class BowSkillChargingShot : SkillType
     private float chargeTime = 1f;
     private int[] attackWidths = new int[3] {3, 5, 8 };
     private int[] attackDistances = new int[3] {8, 12, 15 };
-    private int[] damages = new int[3] {10, 20, 30 };
+    private float[] damageRates = new float[3] {2, 2.7f, 3.4f };
     private float[] attackTimes = new float[3] { 1f, 0.7f, 0.4f };
-    private float[] masses = new float[3] { 1f, 1.4f, 5f };
 
     private Timer chargeTimer;
     private int gaugeCount = 0;
@@ -64,11 +63,10 @@ public class BowSkillChargingShot : SkillType
 
     private void SetGaugeData(int _gaugeCount)
     {
-        damage = damages[_gaugeCount];
+        damageRate = damageRates[_gaugeCount];
         attackDistance = attackDistances[_gaugeCount];
         attackWidth = attackWidths[_gaugeCount];
         attackTime = attackTimes[_gaugeCount];
-        mass = masses[_gaugeCount];
 
         s_AttackTimer = new Timer(attackTime);
         _s_AttackTimer = s_AttackTimer;
@@ -100,7 +98,7 @@ public class BowSkillChargingShot : SkillType
         }
     }
 
-    public override void CheckAttack(Vector3 currentPos)
+    public override void CheckUse(Vector3 currentPos)
     {
         _currentPos = currentPos;
 
@@ -169,7 +167,7 @@ public class BowSkillChargingShot : SkillType
 
                 coolTimer.Start();         //쿨타임 시작
 
-                Attack();
+                Use();
                 isAttacking = false;
 
                 //라인랜더러값 초기화
@@ -178,7 +176,7 @@ public class BowSkillChargingShot : SkillType
         }
     }
 
-    public override void Attack()
+    public override void Use()
     {
         isPlayGizoms = true;    //테스트용_범위 기즈모 활성화
 
@@ -197,8 +195,6 @@ public class BowSkillChargingShot : SkillType
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);
 
-        AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);
-
         while (true)
         {
             float timer = s_AttackTimer.GetRemainingTime() / _attackTime;
@@ -212,7 +208,7 @@ public class BowSkillChargingShot : SkillType
                 if (targets.Contains(col.gameObject)) continue;   //중복일 경우, 무시
                 else targets.Add(col.gameObject);                  //중복이 아닐 경우, 체크 대상에 추가
 
-                if (col.gameObject != null) col.SendMessage("ApplyDamage", attackInfo);
+                if (col.gameObject != null) chipset.Attack(col.gameObject, damageRate, attackDirection, ChipAttackType.Skill);
             }
 
             if (timer <= 0) break;  //시간 초과시, 코루틴 종료
