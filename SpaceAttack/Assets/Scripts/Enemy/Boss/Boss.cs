@@ -59,10 +59,13 @@ public class Boss : EnemyBase
     public AudioClip bosscancrossSound;
     public AudioClip[] hitSounds;
     public AudioClip phaseTransitionSound;
+    public AudioClip spitSound;
+    public AudioClip dieSound;
 
     public int currentPhase = 1;
     private bool isTransitioningPhase = false;
     private bool isUsingSkill = false; // 스킬 중복 방지;
+    private bool isSpitting = false;
     protected override void Start()
     {
         base.Start();
@@ -111,7 +114,7 @@ public class Boss : EnemyBase
             }
         }
 
-        // ✅ 페이즈 전환 중이면 패턴 스킬 호출 안함
+        //  페이즈 전환 중이면 패턴 스킬 호출 안함
         if (isTransitioningPhase) return;
 
         if (currentPhase == 1) Phase1Pattern();
@@ -150,7 +153,7 @@ public class Boss : EnemyBase
         if (coinRainTimer <= 0f) availableSkills.Add(() => { StartCoinRain(); coinRainTimer = coinRainCooldown; });
         if (canAttackTimer <= 0f) availableSkills.Add(() => { LaunchCansCrossAttack(); canAttackTimer = canAttackCooldown; });
         if (jumpAttackTimer <= 0f) availableSkills.Add(() => { StartJumpAttack(); jumpAttackTimer = jumpAttackCooldown; });
-        if (summonMinionTimer <= 0f) availableSkills.Add(() => { SummonMinionsSkill(); summonMinionTimer = summonMinionCooldown; });
+        if (summonMinionTimer <= 0f) availableSkills.Add(() => { StartSpitMinions(); summonMinionTimer = summonMinionCooldown; });
 
         TryUseRandomSkill(availableSkills);
     }
@@ -193,12 +196,21 @@ public class Boss : EnemyBase
         BossIntroController intro = FindObjectOfType<BossIntroController>();
         Transform bossCamPoint = intro != null ? intro.bossCameraPoint : null;
 
+
+
         Vector3 zoomTargetPos = bossCamPoint ? bossCamPoint.position : transform.position + transform.forward * 5f + Vector3.up * 3f;
         Quaternion zoomTargetRot = bossCamPoint ? bossCamPoint.rotation : Quaternion.LookRotation(transform.position - mainCam.transform.position);
 
-        float zoomDuration = 1.5f;
+        float zoomDuration = 0.8f;
         float t = 0f;
-       
+
+        Animator anim = GetComponent<Animator>();
+        
+        if (anim != null)
+        {
+            anim.SetTrigger("Angry");
+        }
+
         if (audioSource != null && phaseTransitionSound != null)
             audioSource.PlayOneShot(phaseTransitionSound);
       
@@ -211,7 +223,7 @@ public class Boss : EnemyBase
             yield return null;
         }
 
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(3f);
 
         // 다음 페이즈 스킬 실행
         if (nextPhase == 2)
@@ -225,8 +237,8 @@ public class Boss : EnemyBase
         }
         else if (nextPhase == 3)
         {
-            SummonMinionsSkill();
-            bossAttackTimer += 15f;
+            StartSpitMinions();
+             bossAttackTimer += 15f;
             coinRainTimer += 15f;
             canAttackTimer += 15f;
             jumpAttackTimer += 15f;
@@ -262,27 +274,6 @@ public class Boss : EnemyBase
            BossHealthUI ui = FindObjectOfType<BossHealthUI>();
     if (ui != null)
         ui.UpdatePhaseIndicators();
-
-
-    }
-
-
-
-    void StartJumpAttack()
-    {
-        anim.SetTrigger("JumpUp");
-        StartCoroutine(JumpRoutine());
-    }
-
-    void StartCoinRain()
-    {
-        anim.SetTrigger("CoinAttack");
-    }
-    IEnumerator JumpRoutine()
-    {
-        yield return new WaitForSeconds(3.2f); 
-
-        anim.SetTrigger("LandImpact");
     }
 
     public override void ApplyDamage(AttackInfo attackInfo)
@@ -306,26 +297,15 @@ public class Boss : EnemyBase
             isDead = true;
             OnDeathAction?.Invoke(this);
             OnDeath();
-
-            animator.SetBool("Dead", true);
+            
             rb.velocity = Vector3.zero;
 
             if (deathMarkPrefab != null && footPosition != null)
                 Instantiate(deathMarkPrefab, footPosition.position, Quaternion.identity);
 
-            Destroy(gameObject, 1f);
+            Destroy(gameObject, 3f);
         }
     }
-
-    //총알 어택
-    public void BossAttack()
-    {
-        if (player == null) return;
-
-        // 애니메이션 실행
-        animator.SetTrigger("FireAttack");
-    }
-
 
     public void FireProjectile()
     {
@@ -473,20 +453,6 @@ public class Boss : EnemyBase
             StartCoroutine(shake.Shake(0.5f, 0.4f)); 
         }
     }
-
-    //캔 던지기
-    public void LaunchCansCrossAttack()
-    {
-        if (isLaunchingCans) return; // 이미 실행 중이면 무시
-        if (planArea == null || canPrefab == null || headTransform == null) return;
-
-        isLaunchingCans = true;
-
-        anim.SetTrigger("CanBlast");
-        // 코루틴 시작
-        StartCoroutine(WaitAndLaunchCans());
-    }
-
     private IEnumerator WaitAndLaunchCans()
     {
         yield return new WaitForSeconds(3f); // 애니메이션 타이밍 조절
@@ -525,15 +491,8 @@ public class Boss : EnemyBase
 
     public void SummonMinionsSkill()
     {
-        if (planArea == null || minionPrefabs.Length == 0)
-        {
+        if (planArea == null || minionPrefabs.Length == 0 || mouthPoint == null)
             return;
-        }
-
-        if (mouthPoint == null)
-        {
-            return;
-        }
 
         for (int i = 0; i < minionCount; i++)
         {
@@ -554,7 +513,7 @@ public class Boss : EnemyBase
             if (enemy != null)
             {
                 enemy.canDetectPlayer = false;
-                StartCoroutine(EnableEnemyAfterLanding(enemy, 5f)); 
+                StartCoroutine(EnableEnemyAfterLanding(enemy, 5f));
             }
         }
     }
@@ -572,15 +531,70 @@ public class Boss : EnemyBase
         if (enemy != null)
             enemy.canDetectPlayer = true;
     }
-
-    //보스 죽음처리
-    protected override void OnDeath()
+    public void OnSpitEvent()
     {
-        base.OnDeath(); 
-        // 보스 전용 추가 연출 넣고 싶으면 여기서 구현
-        Debug.Log("보스 처치됨!");
+
+        if (audioSource != null && spitSound != null)
+            audioSource.PlayOneShot(spitSound);
+
+        SummonMinionsSkill();
+
+        isSpitting = false;
     }
 
+    protected override void OnDeath()
+    {
+        base.OnDeath();
+        if (audioSource != null && dieSound != null)
+            audioSource.PlayOneShot(dieSound);
+        anim.SetTrigger("Dead");
+    }
+
+    //애니메이터 관련 함수
+     public void StartJumpAttack()
+    {
+        anim.SetTrigger("JumpUp");
+        StartCoroutine(JumpRoutine());
+    }
+
+    public void StartCoinRain()
+    {
+        anim.SetTrigger("CoinAttack");
+    }
+    IEnumerator JumpRoutine()
+    {
+        yield return new WaitForSeconds(3.2f);
+
+        anim.SetTrigger("LandImpact");
+    }
+
+    //총알 어택
+    public void BossAttack()
+    {
+        if (player == null) return;
+
+        // 애니메이션 실행
+        animator.SetTrigger("FireAttack");
+    }
+
+    public void LaunchCansCrossAttack()
+    {
+        if (isLaunchingCans) return; // 이미 실행 중이면 무시
+        if (planArea == null || canPrefab == null || headTransform == null) return;
+
+        isLaunchingCans = true;
+
+        anim.SetTrigger("CanBlast");
+        // 코루틴 시작
+        StartCoroutine(WaitAndLaunchCans());
+    }
+    public void StartSpitMinions()
+    {
+        if (isSpitting) return;
+
+        isSpitting = true;
+        anim.SetTrigger("Spit");
+    }
 
 
     //여긴 보스 사운드로 채울거임
@@ -623,4 +637,21 @@ public class Boss : EnemyBase
             audioSource.PlayOneShot(bosscancrossSound);
         }
     }
+
+    public void BossSpitSound()
+    {
+        if (audioSource != null && spitSound != null)
+        {
+            audioSource.PlayOneShot(spitSound);
+        }
+    }
+
+    public void BossDieSound()
+    {
+        if (audioSource != null && dieSound != null)
+        {
+            audioSource.PlayOneShot(dieSound);
+        }
+    }
+
 }

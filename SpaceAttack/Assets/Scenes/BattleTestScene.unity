@@ -6271,8 +6271,8 @@ MonoBehaviour:
   bossAttackCooldown: 10
   coinRainCooldown: 20
   canAttackCooldown: 30
-  jumpAttackCooldown: 15
-  summonMinionCooldown: 45
+  jumpAttackCooldown: 25
+  summonMinionCooldown: 40
   safeZoneScale: 1.5
   minSafeZoneDistance: 4
   bossSafeRadius: 5
@@ -6305,6 +6305,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a2743c889f4c2884a83d64ba78b3eedf, type: 3}
   phaseTransitionSound: {fileID: 8300000, guid: dfc3cc004960b9e43b3932545931e007,
     type: 3}
+  spitSound: {fileID: 8300000, guid: 6503e881c96a226419d5e7211cf9617c, type: 3}
+  dieSound: {fileID: 8300000, guid: 1306f8bac2a88544f980efa35aacfa1e, type: 3}
   currentPhase: 1
 --- !u!65 &8498225713429384174
 BoxCollider:

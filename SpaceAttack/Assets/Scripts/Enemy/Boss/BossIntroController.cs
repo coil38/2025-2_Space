@@ -91,11 +91,23 @@ public class BossIntroController : MonoBehaviour
             PlayerStatus.Instance.isRooted = false;
 
         if (bossScript != null)
+        {
             bossScript.enabled = true;
-
-        Debug.Log("보스전 시작!");
+            StartCoroutine(UseFirstPageSkillWithDelay(bossScript, 4f));
+        }
     }
 
+    private IEnumerator UseFirstPageSkillWithDelay(Boss bossScript, float delay)
+    {
+        yield return new WaitForSeconds(delay);
 
+        List<System.Action> firstPageSkills = new List<System.Action>();
+        firstPageSkills.Add(() => bossScript.BossAttack());
+        firstPageSkills.Add(() => bossScript.StartCoinRain());
+        firstPageSkills.Add(() => bossScript.StartJumpAttack());
+
+        System.Action chosenSkill = firstPageSkills[Random.Range(0, firstPageSkills.Count)];
+        chosenSkill.Invoke();
+    }
 
 }
