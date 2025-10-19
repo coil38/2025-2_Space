@@ -7,7 +7,8 @@ using DG.Tweening;
 public class PlayerHPUI : MonoBehaviour
 {
     [Header("HPSlotPrefab")]
-    [SerializeField] private GameObject HPSlot;   //체력 슬롯 프리팹
+    [SerializeField] private GameObject HPSlot;       //체력 슬롯 프리팹
+    [SerializeField] private GameObject ShildHpSlot;  //방어막 체력 슬롯 프리팹
 
     [Header("ReduceHPAnimation")]
     [SerializeField] private float r_ani_PunchScale;
@@ -15,6 +16,7 @@ public class PlayerHPUI : MonoBehaviour
     [SerializeField] private int r_ani_repeatCount = 5;
 
     private Queue<Transform> HpSlots = new Queue<Transform>();
+    private Queue<Transform> ShildSlots = new Queue<Transform>();
 
     void Start()
     {
@@ -30,12 +32,30 @@ public class PlayerHPUI : MonoBehaviour
             Transform target = this.transform;
             bool halfHeartExist = hp % 2 == 1; //절반 체력 존재여부
 
-            foreach (var hpSlot in HpSlots)
+            if (shild_hp > 0)
             {
-                if (hpSlot.GetChild(2).gameObject.activeSelf || hpSlot.GetChild(1).gameObject.activeSelf)  //절반 혹은 최대 체력이 활성화 되었을 때
+                halfHeartExist = shild_hp % 2 == 1;  //절반 쉴드 존재여부
+                foreach (var shildSlot in ShildSlots)
                 {
-                    target = hpSlot;  //마지막 대상을 갱신시킨다.
+                    if (shildSlot.GetChild(2).gameObject.activeSelf || shildSlot.GetChild(1).gameObject.activeSelf)  //절반 혹은 최대 체력이 활성화 되었을 때
+                    {
+                        target = shildSlot;  //마지막 대상을 갱신시킨다.
+                    }
                 }
+                //LogUtil.Log($"쉴드 방어_반칸 : 현재 쉴드: {shild_hp}");
+            }
+            else
+            {
+                halfHeartExist = hp % 2 == 1; //절반 체력 존재여부
+
+                foreach (var hpSlot in HpSlots)
+                {
+                    if (hpSlot.GetChild(2).gameObject.activeSelf || hpSlot.GetChild(1).gameObject.activeSelf)  //절반 혹은 최대 체력이 활성화 되었을 때
+                    {
+                        target = hpSlot;  //마지막 대상을 갱신시킨다.
+                    }
+                }
+                //LogUtil.Log("체력 방어_반칸");
             }
 
             if (target != this.transform && halfHeartExist)  //절반 체력이 존재한다면
@@ -52,6 +72,7 @@ public class PlayerHPUI : MonoBehaviour
 
             hp--;
             damageCount--;
+            shild_hp--;
         }
     }
 
@@ -100,7 +121,6 @@ public class PlayerHPUI : MonoBehaviour
             {
                 if (HpSlots.TryPeek(out var result))
                 {
-                    LogUtil.Log(result.gameObject.name);
                     result.GetChild(1).gameObject.SetActive(false);
                     result.GetChild(2).gameObject.SetActive(false);
                 }
@@ -114,12 +134,55 @@ public class PlayerHPUI : MonoBehaviour
             if (heartCount <= 0 && !halfHeartExist) break;
             else if (heartCount <= 0 && halfHeartExist)
             {
-                hpSlot.GetChild(1).gameObject.SetActive(true);   //풀체력을 활성화 시킨다
+                hpSlot.GetChild(1).gameObject.SetActive(true);   //절반 체력을 활성화 시킨다
                 break;
             }
 
             hpSlot.GetChild(2).gameObject.SetActive(true);   //풀체력을 활성화 시킨다
             heartCount--;
+        }
+
+        int maxShildCount = shildHp / 2 + (shildHp % 2 == 1 ? 1 : 0);
+        int shildCount = shildHp / 2;
+        bool halfShildExist = shildHp % 2 == 1;
+
+        int currentShildCount = ShildSlots.Count;
+
+        for (int i = 0; i < maxShildCount; i++)
+        {
+            if (currentShildCount <= 0)
+            {
+                GameObject shild = Instantiate(ShildHpSlot);
+                shild.transform.SetParent(this.transform);
+
+                Transform shildImage = shild.transform.GetChild(0);  // 1은 절반 체력, 2는 가득찬 체력 : 이들을 비활성화
+                shildImage.GetChild(1).gameObject.SetActive(false);
+                shildImage.GetChild(2).gameObject.SetActive(false);
+
+                ShildSlots.Enqueue(shildImage);   //이미 만들어진 체력슬롯 재사용
+            }
+            else
+            {
+                if (ShildSlots.TryPeek(out var result))
+                {
+                    result.GetChild(1).gameObject.SetActive(false);
+                    result.GetChild(2).gameObject.SetActive(false);
+                }
+            }
+            currentShildCount--;
+        }
+
+        foreach (var shildSlot in ShildSlots)
+        {
+            if (shildCount <= 0 && !halfShildExist) break;
+            else if (shildCount <= 0 && halfShildExist)
+            {
+                shildSlot.GetChild(1).gameObject.SetActive(true);   //절반 체력을 활성화 시킨다
+                break;
+            }
+
+            shildSlot.GetChild(2).gameObject.SetActive(true);   //풀체력을 활성화 시킨다
+            shildCount--;
         }
     }
 

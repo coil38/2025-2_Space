@@ -9,7 +9,7 @@ public class PlayerStatus : MonoBehaviour
 
     //플레이어 상태값--------------------------------------------
     [Header("PlayerInfo")]
-    public static int m_hp = 10;                     //체력
+    public static int m_hp = 8;                     //체력
     public static int m_maxhp = 10;                  //최대 체력
     public static float m_speed = 5f;                //이동 속도
     public static float m_DashDistance = 3.2f;       //대쉬 거리
@@ -22,7 +22,7 @@ public class PlayerStatus : MonoBehaviour
     public static bool cannotHealing = false;        //회복불가
     public static bool maxHpFixing = false;          //최대체력고정
     public static int losedHp = 0;                   //최대체력 변경후, 잃어버린 체력
-    public static int shild_hp = 0;                  //방어막 체력
+    public static int shild_hp = 5;                  //방어막 체력
 
     public ParticleSystem m_Particle;
     public ParticleSystem d_Particle;
@@ -130,27 +130,27 @@ public class PlayerStatus : MonoBehaviour
 
     private void CheckApplyDamage()  //다중 피격 받을 시, 예외처리 함수
     {
-        if (isStuned) isDamageProcessing = false;   // 스턴상태일때, 데미지 처리 프로세스 해제
+        //if (isStuned) isDamageProcessing = false;   // 스턴상태일때, 데미지 처리 프로세스 해제
 
         if (isInvincibility || isStuned || isDead) return;   //대쉬 무적 상태 혹은 스턴 상태일 때, 피격 안됨
 
         if (!isDamageProcessing && attackQueue.Count == 1)   //현재 공격 대기 자가 1명일 때, 그 한명의 공격만 유효 처리
         {
+            //LogUtil.Log($"한명 공격_공격 개수: {attackQueue.Count}");
+            isDamageProcessing = true;
             AttackInfo info = attackQueue.Dequeue();
             _ApplyDamage(info);
-
-            isDamageProcessing = true;
         }
         else if (!isDamageProcessing && attackQueue.Count > 1)   //현재 공격 대기 자가 1명 이상일 때, 첫 한명의 공격만 유효 처리
         {
+            //LogUtil.Log($"다중 공격_공격 개수: {attackQueue.Count}");
+            isDamageProcessing = true;
             float attackCount = attackQueue.Count - 1;
             AttackInfo info = attackQueue.Dequeue();
             _ApplyDamage(info);
 
             for (int i = 0; i < attackCount; i++)   //처음 받은 공격 개수만큼 취소(예외처리: 혹시 이 사이에 공격이 추가 되었을 수도 있음)
                 attackQueue.Dequeue();
-
-            isDamageProcessing = true;
         }
         else if (isDamageProcessing)   //현재 데미지 처리 중일 때, 모든 사람의 공격 무효 처리
         {
@@ -180,7 +180,13 @@ public class PlayerStatus : MonoBehaviour
         if (PlayerUIManager.instance != null)
             PlayerUIManager.instance.ReducePlayerUI(m_hp,shild_hp, damage); //체력감소 UI적용
 
-        m_hp -= damage;
+        if (shild_hp > 0)
+        {
+            int remain = shild_hp >= damage ? 0 : damage - shild_hp;
+            shild_hp = Math.Max(0, shild_hp - damage);
+            m_hp -= remain;
+        }
+        else m_hp -= damage;
     }
     public static void ChangeMaxHp(bool isAdd, int amount)  //최대 체력 면경 함수
     {
@@ -215,7 +221,9 @@ public class PlayerStatus : MonoBehaviour
 
         if (isInvincibility || isStuned || isDead) return;   //대쉬 무적 상태 혹은 스턴 상태일 때, 피격 안됨
 
+        LogUtil.Log($"플레이어 피격처리 시작!! 이전 데미지 처리 중: {isDamageProcessing}, 이전 공격 개수: {attackQueue.Count}");
         attackQueue.Enqueue(info);
+        LogUtil.Log($"플레이어 피격처리 시작!! 이후 데미지 처리 중: {isDamageProcessing}, 이후 공격 개수: {attackQueue.Count}");
     }
 
     private void _ApplyDamage(AttackInfo info)
@@ -274,6 +282,8 @@ public class PlayerStatus : MonoBehaviour
             rb.AddForce(dir * attackForce);                 //넉백
 
         }
+
+        isDamageProcessing = false;
     }
 
     public void Flip()  //좌우반전 로직

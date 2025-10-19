@@ -97,7 +97,6 @@ public class CharacterMovement : MonoBehaviour
         //LogUtil.Log(dashDis);
 
         PlayerTimeSystem.c_dashTimer.Start();   //대쉬 쿨타임 시작
-        PlayerTimeSystem.w_dashTimer.Start();   //대쉬 대기 시간(0.25 초 동안)
         PlayerTimeSystem.deshTimer.Start();     //대쉬 타이머 시작  (0.2 초 동안)
 
         SetDashInfo();     //대쉬 위치 설정
