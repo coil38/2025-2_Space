@@ -2,24 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class ChipDataModifiers
+{
+    public float s_attackRate;     // == Sume_attackRate
+    public float s_damageRate;
+    public float s_weaponDamageRate;
+    public float s_skillDamageRate;
+
+    public float s_coolDownRate;
+}
+
 public class BaseChipset : ChipSetType
 {
-    private List<float> attackRates = new List<float>();        //공격 데미지 리스트
-    private List<float> damageRates = new List<float>();        //피해 데미지 리스트
-    private List<float> coolDownRates = new List<float>();      //쿨 다운 리스트
-
-    private List<float> skillDamageRates = new List<float>();
-    private List<float> weaponDamageRates = new List<float>();
-
-    private float attackRateSume;
-    private float damageRateSume;
-    private float weaponDamageRateSume;
-    private float skillDamageRateSume;
+    ChipDataModifiers r_dataModifiers = new ChipDataModifiers();
 
     public override void SetCorrectionValue(object obj, PlayerEvent e)  //레벨업용 보정치 데이터 저장 함수
     {
         if (e.correctablility)  //공격력 보정치 주입
-            SetAttackRateValue(true, e.damageCorrection);
+            r_dataModifiers.s_attackRate += e.damageCorrection;
 
         if (e.unlockability)  //스킬 해금
         {
@@ -34,29 +35,41 @@ public class BaseChipset : ChipSetType
         }
     }
 
-    public override void SetRelicAttackValue(object obj, PlayerEvent e)  //유물의 공격 보정치 데이터 저장 함수
+    public override void SetChipAttackRate(object obj, PlayerEvent e)
     {
-        SetAttackRateValue(e.isEquip, e.damageRate);
+        if (e.isEquip) r_dataModifiers.s_attackRate += e.attackRate;
+        else r_dataModifiers.s_attackRate -= e.attackRate;
     }
-
-    public override void SetCoolDownValue(object obj, PlayerEvent e)  //칩셋 쿨타임 감소 데이터 저장 함수
+    public override void SetChipDamageRate(object obj, PlayerEvent e)
     {
-        if (e.isEquip) coolDownRates.Add(e.coolDownRate);
-        else coolDownRates.Remove(e.coolDownRate);
+        if (e.isEquip) r_dataModifiers.s_damageRate += e.damageRate;
+        else r_dataModifiers.s_damageRate -= e.damageRate;
+    }
+    public override void SetChipWeaponDamageRate(object obj, PlayerEvent e)
+    {
+        if (e.isEquip) r_dataModifiers.s_weaponDamageRate += e.weaponDamageRate;
+        else r_dataModifiers.s_weaponDamageRate -= e.weaponDamageRate;
+    }
+    public override void SetChipSkillDamageRate(object obj, PlayerEvent e)
+    {
+        if (e.isEquip) r_dataModifiers.s_skillDamageRate += e.skillDamageRate;
+        else r_dataModifiers.s_skillDamageRate -= e.skillDamageRate;
+    }
+    
+
+    public override void SetCoolDownRate(object obj, PlayerEvent e)  //칩셋 쿨타임 감소 데이터 저장 함수
+    {
+        if (e.isEquip) r_dataModifiers.s_coolDownRate += e.coolDownRate;
+        else r_dataModifiers.s_coolDownRate -= e.coolDownRate;
         UpdateCoolDown();
     }
 
     private void UpdateCoolDown()
     {
-        float _coolDownRate = 0f;
-        foreach (var rate in coolDownRates)
-        {
-            _coolDownRate += rate;
-        }
         foreach (var skill in skills)
         {
-            skill.coolTime = skill.normalCoolTime - skill.normalCoolTime * _coolDownRate;
-            LogUtil.Log($"스킬 기본 쿨타임: {skill.normalCoolTime}, 변경된 스킬 쿨타임: {skill.coolTime}, 쿨타임비율: {_coolDownRate}");
+            skill.coolTime = skill.normalCoolTime - skill.normalCoolTime * r_dataModifiers.s_coolDownRate;
+            LogUtil.Log($"스킬 기본 쿨타임: {skill.normalCoolTime}, 변경된 스킬 쿨타임: {skill.coolTime}, 쿨타임비율: {r_dataModifiers.s_coolDownRate}");
         }
     }
 
@@ -65,7 +78,16 @@ public class BaseChipset : ChipSetType
         if (target.GetComponent<EnemyBase>() != null)
             if (target.GetComponent<EnemyBase>().isDead) return;                                         //만약 타겟이 사망했다면 반환처리
 
-        AttackContext ctx = new AttackContext(target, damageRate, dir, type, attackRateSume, damageRateSume, weaponDamageRateSume, skillDamageRateSume);
+        AttackContext ctx = new AttackContext(
+            target,
+            damageRate,
+            dir,
+            type,
+            r_dataModifiers.s_attackRate,
+            r_dataModifiers.s_damageRate,
+            r_dataModifiers.s_weaponDamageRate,
+            r_dataModifiers.s_skillDamageRate
+            );
         AttackEventManager.RaiseAttack(ctx);
         //Debug.Log(target.name + "에게 공격함");
     }
@@ -77,69 +99,22 @@ public class BaseChipset : ChipSetType
 
     protected virtual void OnDisable()
     {
-        PlayerEvent.correctionEventHandler -= SetCorrectionValue;  //공격력, 스킬 보정 이벤트 구독 해지
-        PlayerEvent.relicAttackEventHandler -= SetRelicAttackValue; //유물으로 인한 공격력 보정 이벤트 구독 해지
-        PlayerEvent.coolDownEventHandler -= SetCoolDownValue;       //쿨타임 감소 이벤트 구독해제
+        PlayerEvent.correctionEventHandler -= SetCorrectionValue;           //레벨업(공격력, 스킬) 보정 이벤트 구독 해지
+        PlayerEvent.chipAttackEventHandler -= SetChipAttackRate;            //공격력 보정 이벤트 구독 해지
+        PlayerEvent.chipDamageEventHandler -= SetChipDamageRate;            //데미지 보정 이벤트 구독 해지
+        PlayerEvent.chipWeaponDamageEventHandler -= SetChipWeaponDamageRate;//기본 공격 데미지 보정 이벤트 구독 해지
+        PlayerEvent.chipSkillDamageEventHandler -= SetChipSkillDamageRate;  //스킬 데미지 보정 이벤트 구독 해지
+        PlayerEvent.chipcoolDownEventHandler -= SetCoolDownRate;            //쿨타임 배율 이벤트 구독해지
     }
 
     private IEnumerator SetEvent()
     {
         yield return new WaitUntil(() => EventManager.playerEvent != null);
-        PlayerEvent.correctionEventHandler += SetCorrectionValue;  //공격력, 스킬 보정 이벤트 구독
-        PlayerEvent.relicAttackEventHandler += SetRelicAttackValue; //유물으로 인한 공격력 보정 이벤트 구독
-        PlayerEvent.coolDownEventHandler += SetCoolDownValue;       //쿨타임 감소 이벤트 구독해제
-    }
-
-    private void SetDamageRateValue(bool isAdd, float value)
-    {
-        if (isAdd)
-        {
-            damageRates.Add(value);
-            damageRateSume += value;
-        }
-        else
-        {
-            damageRates.Remove(value);
-            damageRateSume -= value;
-        }
-    }
-    private void SetAttackRateValue(bool isAdd, float value)
-    {
-        if (isAdd)
-        {
-            attackRates.Add(value);
-            attackRateSume += value;
-        }
-        else
-        {
-            attackRates.Remove(value);
-            attackRateSume -= value;
-        }
-    }
-    private void SetSkillDamageRateValue(bool isAdd, float value)
-    {
-        if (isAdd)
-        {
-            skillDamageRates.Add(value);
-            skillDamageRateSume += value;
-        }
-        else
-        {
-            skillDamageRates.Remove(value);
-            skillDamageRateSume -= value;
-        }
-    }
-    private void SetWeaponDamageRateValue(bool isAdd, float value)
-    {
-        if (isAdd)
-        {
-            weaponDamageRates.Add(value);
-            weaponDamageRateSume += value;
-        }
-        else
-        {
-            weaponDamageRates.Remove(value);
-            weaponDamageRateSume -= value;
-        }
+        PlayerEvent.correctionEventHandler += SetCorrectionValue;            //레벨업(공격력, 스킬) 보정 이벤트 구독
+        PlayerEvent.chipAttackEventHandler += SetChipAttackRate;             //공격력 보정 이벤트 구독
+        PlayerEvent.chipDamageEventHandler += SetChipDamageRate;             //데미지 보정 이벤트 구독
+        PlayerEvent.chipWeaponDamageEventHandler += SetChipWeaponDamageRate; //기본 공격 데미지 보정 이벤트 구독
+        PlayerEvent.chipSkillDamageEventHandler += SetChipSkillDamageRate;   //스킬 데미지 보정 이벤트 구독
+        PlayerEvent.chipcoolDownEventHandler += SetCoolDownRate;             //쿨타임 배율 이벤트 구독해제
     }
 }

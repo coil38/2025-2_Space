@@ -121,8 +121,6 @@ public class TestEnemy : MonoBehaviour
         {
             PlayerSoundManager.PlayPlayerHitSound();
 
-            LogUtil.Log("적 피격");
-
             animator.SetTrigger("Hit");          //피격 애니메이션
             rb.AddForce(dir * hitForce);         //넉백
         }

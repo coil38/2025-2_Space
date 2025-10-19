@@ -25,7 +25,7 @@ public class PlayerInventorySlot : MonoBehaviour, IPointerClickHandler
         image.sprite = sprite;
         ChangeColorA();
 
-        LogUtil.Log($"{relic.relicName}획득");
+        //LogUtil.Log($"{relic.relicName}획득");
     }
 
     public void RemoveItemImage()

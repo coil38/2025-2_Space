@@ -8,7 +8,6 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
 
     private float attackDistance = 2f;
     private float r_AttackTime = 0.3f;
-    private float mass = 1f;
     private float detectAngle = 155f;
     private float w_attackTime = 0.4f;    //검 공격 대기 시간
 

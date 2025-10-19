@@ -140,7 +140,7 @@ public class InventoryManager : MonoBehaviour
 
             if (currentDarkMaterial + relic.darkMaterialCount <= 100)  //최대용량을 넘지 않을 경우
             {
-                LogUtil.Log($"{relic.relicName}_유물 획득, 현재 암흑게이지수치: {currentDarkMaterial}, 현재 보유중인 유물개수: {relics.Count}");
+                //LogUtil.Log($"{relic.relicName}_유물 획득, 현재 암흑게이지수치: {currentDarkMaterial}, 현재 보유중인 유물개수: {relics.Count}");
 
                 PlayerUIManager.instance.SetPlayerItem(relic);                     //유물 이미지 할당
                 PlayerUIManager.instance.ChangeDarkMaterialUI(true, relic.darkMaterialCount); //암흑물질 채워지는 UI연출

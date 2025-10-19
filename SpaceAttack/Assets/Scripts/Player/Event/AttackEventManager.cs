@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class AttackEventManager
+public class AttackEventManager
 {
     public static event Action<AttackContext> OnAttackStarted;
     public static event Action<AttackContext> OnAttackFinished;
@@ -61,5 +61,11 @@ public static class AttackEventManager
             value += context.weaponDamagekRateSume;
 
         return (PlayerStatus.normalDamage * (1 + context.attackRateSume)) * (1 + context.damageRateSume) * context.damageRate * value;
+    }
+
+    public static void InitialEvent()
+    {
+        OnAttackFinished = null;
+        OnAttackStarted = null;
     }
 }

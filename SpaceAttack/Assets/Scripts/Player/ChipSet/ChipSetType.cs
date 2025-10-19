@@ -18,8 +18,11 @@ public abstract class ChipSetType : MonoBehaviour
     public GameObject prefab;
     public Animator animator;
     public abstract void SetCorrectionValue(object obj, PlayerEvent e);
-    public abstract void SetRelicAttackValue(object obj, PlayerEvent e);
-    public abstract void SetCoolDownValue(object obj, PlayerEvent e);
+    public abstract void SetChipAttackRate(object obj, PlayerEvent e);
+    public abstract void SetChipDamageRate(object obj, PlayerEvent e);
+    public abstract void SetChipWeaponDamageRate(object obj, PlayerEvent e);
+    public abstract void SetChipSkillDamageRate(object obj, PlayerEvent e);
+    public abstract void SetCoolDownRate(object obj, PlayerEvent e);
     public abstract void Attack(GameObject target, float damageRate, Vector3 dir, ChipAttackType type);
 
 }

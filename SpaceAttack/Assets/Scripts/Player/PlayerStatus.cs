@@ -12,13 +12,16 @@ public class PlayerStatus : MonoBehaviour
     public static int m_hp = 10;              //체력
     public static int m_maxhp = 10;           //최대 체력
     public static float m_speed = 5f;         //이동 속도
-    public static float m_defultSpeed = 5f;   //기본 이동 속도
-    public float m_DashDistance = 3.2f;   //대쉬 거리
+    public static float m_DashDistance = 3.2f;   //대쉬 거리
     public float itemDetectDistance = 1.8f; //아이템 감지거리
     public static float criticalChanceRate = 0.05f;         //치명타 확률
     public static float criticalRate = 0.5f;     //치명타 피해
     public static float missRate = 0.01f;        //회피율
-    public static float normalDamage = 5;       //기본공격력
+    public static float normalDamage = 50;       //기본공격력
+    public static float hitRate = 1f;            //피격배율
+    public static bool cannotHealing = false;    //회복불가
+    public static bool maxHpFixing = false;      //최대체력고정
+    public static int losedHp = 0;     //최대체력 변경후, 잃어버린 체력
 
     public ParticleSystem m_Particle;
     public ParticleSystem d_Particle;
@@ -47,6 +50,7 @@ public class PlayerStatus : MonoBehaviour
 
     private Queue<AttackInfo> attackQueue = new Queue<AttackInfo>();
     private bool isDamageProcessing;
+    private int currentHP;
 
     private void Awake()   //싱글톤화
     {
@@ -85,6 +89,13 @@ public class PlayerStatus : MonoBehaviour
         isStuned = PlayerTimeSystem.stunTimer.IsRunning();
 
         CheckApplyDamage();    //피격 체킹
+
+        if (currentHP > m_hp)  //플레이어 쳐력을 잂는 이벤트 실행
+        {
+            int amount = currentHP - m_hp;
+            EventManager.relicEvent.OnPlayerLoseHp(amount);
+        }
+        currentHP = m_hp;
     }
 
     private void Root(bool isRooted)
@@ -149,12 +160,36 @@ public class PlayerStatus : MonoBehaviour
 
     public static void AddHp(int amount)  //체력 추가 함수
     {
+        if (cannotHealing) return;
+
         int targetHp = m_hp + amount;
         if (targetHp <= m_maxhp) m_hp = targetHp;
         else m_hp = m_maxhp;
 
-        if (PlayerUIManager.instance != null)
-            PlayerUIManager.instance.ResetHpUI(); //체력UI 갱신
+        if (PlayerUIManager.instance != null) PlayerUIManager.instance.ResetHpUI(); //체력UI 갱신
+    }
+
+    public static void ChangeMaxHp(bool isAdd, int amount)
+    {
+        if (maxHpFixing) return;
+
+        if(isAdd) m_maxhp += amount;
+        else
+        {
+            m_maxhp -= amount;
+            if (m_maxhp < m_hp)
+            {
+                losedHp = m_hp - m_maxhp;
+                m_hp = m_maxhp;
+            }
+        }
+        if (PlayerUIManager.instance != null) PlayerUIManager.instance.ResetHpUI(); //체력UI 갱신
+    }
+
+    public static void RecoverLosedHp()
+    {
+        PlayerStatus.m_hp += PlayerStatus.losedHp;
+        losedHp = 0;
     }
 
     public void ApplyDamage(AttackInfo info)
@@ -172,10 +207,10 @@ public class PlayerStatus : MonoBehaviour
 
     private void _ApplyDamage(AttackInfo info)
     {
-        EventManager.relicEvent.OnPlayerHitEvent();    //플레이어 피격 이벤트 실행
-
         int damage = (int)info.damage;
         Vector3 dir = info.attackDirection;
+
+        EventManager.relicEvent.OnPlayerHitEvent(damage);    //플레이어 피격 이벤트 실행
 
         float randomValue = UnityEngine.Random.Range(0.01f, 100f);
         if (randomValue < missRate)
@@ -196,7 +231,7 @@ public class PlayerStatus : MonoBehaviour
         if(PlayerUIManager.instance != null)
             PlayerUIManager.instance.ReducePlayerUI(m_hp, damage); //체력감소 UI적용
 
-        m_hp -= damage;
+        m_hp -= (int) (damage * hitRate);
 
         if (m_hp <= 0)
         {
@@ -245,7 +280,7 @@ public class PlayerStatus : MonoBehaviour
         {
             //LogUtil.Log("플레이어 스텟 상승");
             m_maxhp += e.heartCorrection;
-            m_speed += m_defultSpeed * e.speedCorrection;
+            m_speed += DataManager.instance.i_speed * e.speedCorrection;
             //LogUtil.Log($"{e.heartCorrection}, {e.speedCorrection} / 100");
 
             if (PlayerUIManager.instance != null)
@@ -262,7 +297,7 @@ public class PlayerStatus : MonoBehaviour
 
         GUILayout.Label("===플레이어 스텟===");
         GUILayout.Label($"체력: {m_hp}, 최대 체력: {m_maxhp}");
-        GUILayout.Label($"이동속도: {m_speed}, 기본 이동 속도: {m_defultSpeed}");
+        GUILayout.Label($"이동속도: {m_speed}, 기본 이동 속도: {DataManager.instance.i_speed}");
         GUILayout.Label($"치명타 피해률: {criticalRate}, 치명타 확률: {criticalChanceRate}");
         GUILayout.Label($"회피률: {missRate} , 기본공격력: {normalDamage}");
         GUILayout.Label($"레벨: {PlayerCore.Level} , 경험치: {PlayerCore.DarkMaterialCount}");

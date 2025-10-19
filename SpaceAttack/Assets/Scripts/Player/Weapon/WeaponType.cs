@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class WeaponType : MonoBehaviour, IAttack, ICheckAttack
+public abstract class WeaponType : MonoBehaviour, IUse, ICheckUse
 {
     //임시로 플레이어에 할당
     public event Action<PlayerAniInfo> weaponAniDelegate;  //애니메이션 실행 또는 공격본활성화를 위한 델리게이트

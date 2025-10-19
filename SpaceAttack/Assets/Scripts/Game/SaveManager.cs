@@ -82,7 +82,6 @@ public class SaveManager : MonoBehaviour
             PlayerStatus.m_hp = 10;                                //체력
             PlayerStatus.m_maxhp = 10;                             //최대 체력
             PlayerStatus.m_speed = 5f;                             //이동 속도
-            PlayerStatus.m_defultSpeed = 5f;                       //기본 이동 속도
             PlayerStatus.criticalChanceRate = 0.05f;               //치명타 확률
             PlayerStatus.criticalRate = 0.5f;                      //치명타 피해
             PlayerStatus.missRate = 0.01f;                         //회피율

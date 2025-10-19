@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class RelicDisponcer : MonoBehaviour
 {
+    public int[] ids;
+    private int index;
     public void DropRelicObjRandomly()
     {
         if (DataManager.instance == null || DataManager.instance._RelicDatabase.GetRelicCount() == 0)
@@ -12,9 +14,9 @@ public class RelicDisponcer : MonoBehaviour
             return;
         }
 
-        RelicSO[] relics = DataManager.instance._RelicDatabase.GetRelics();
-        int randomValue2 = Random.Range(0, relics.Length);
-        RelicSO relic = DataManager.instance._RelicDatabase.GetRelicByIndex(randomValue2);  //받은 유물중, 랜덤index의 유물 받기
+        if (index >= ids.Length) return;
+
+        RelicSO relic = DataManager.instance._RelicDatabase.GetRelicById(ids[index]);  //받은 유물중, 랜덤index의 유물 받기
 
         GameObject temp = DataManager.instance._relicObject;
         GameObject relicObj = Instantiate(temp, transform.position + Vector3.up * 10, temp.transform.rotation);
@@ -28,6 +30,7 @@ public class RelicDisponcer : MonoBehaviour
         float force = 3f;
         relicObj.GetComponent<Rigidbody>().AddForce(dir * force);
 
+        index++;
     }
 
     private void OnTriggerEnter(Collider other)

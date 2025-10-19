@@ -12,7 +12,7 @@ public class RelicInfo
     public float y;
     public float w;
 
-    public RelicInfo(int id, float n = 0f, int z = 0, float y = 0, float w = 0)
+    public RelicInfo(int id, float n = 0f, float z = 0, float y = 0, float w = 0)
     {
         this.id = id;
         this.n = n;

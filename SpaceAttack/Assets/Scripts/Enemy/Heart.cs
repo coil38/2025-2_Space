@@ -21,7 +21,7 @@ public class Heart : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             // 플레이어 체력 회복
-            PlayerStatus.m_hp = Mathf.Min(PlayerStatus.m_hp + healAmount, PlayerStatus.m_maxhp);
+            PlayerStatus.AddHp(healAmount);
 
             // UI 갱신 (필요하다면)
             if (PlayerUIManager.instance != null)

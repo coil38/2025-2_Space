@@ -83,13 +83,17 @@ public class RelicDataLoader : ScriptableObject
                         switch (f_temps.Length)
                         {
                             case 2:
-                                LogUtil.Log($"{f_temps[0]},{f_temps[1]}");
                                 infos.Add(new RelicInfo((int)f_temps[0], f_temps[1]));
                                 break;
                             case 3:
-                                //LogUtil.Log($"{f_temps[0]},{f_temps[1]},{f_temps[2]}");
-                                infos.Add(new RelicInfo((int)f_temps[0], f_temps[1], (int)f_temps[2]));
-                            break;
+                                infos.Add(new RelicInfo((int)f_temps[0], f_temps[1], f_temps[2]));
+                                break;
+                            case 4:
+                                infos.Add(new RelicInfo((int)f_temps[0], f_temps[1], f_temps[2], f_temps[3]));
+                                break;
+                            case 5:
+                                infos.Add(new RelicInfo((int)f_temps[0], f_temps[1], f_temps[2], f_temps[3], f_temps[4]));
+                                break;
                         }
                     }
 

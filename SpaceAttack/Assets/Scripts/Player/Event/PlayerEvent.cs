@@ -20,19 +20,40 @@ public class PlayerEvent
         add { _levelEventHandler += value; }
         remove { _levelEventHandler -= value; }
     }
-
-    private static EventHandler<PlayerEvent> _relicAttackEventHandler;  //유물 공격력 수치 변경 이벤트
-    public static event EventHandler<PlayerEvent> relicAttackEventHandler
+     
+    private static EventHandler<PlayerEvent> _chipAttackEventHandler;  //칩셋 공격력 배율 변경 이벤트
+    public static event EventHandler<PlayerEvent> chipAttackEventHandler
     {
-        add { _relicAttackEventHandler += value; }
-        remove { _relicAttackEventHandler -= value; }
+        add { _chipAttackEventHandler += value; }
+        remove { _chipAttackEventHandler -= value; }
     }
 
-    private static EventHandler<PlayerEvent> _coolDownEventHandler;  //유물 공격력 수치 변경 이벤트
-    public static event EventHandler<PlayerEvent> coolDownEventHandler
+    private static event EventHandler<PlayerEvent> _chipDamageEventHandler;  //칩셋 데미지 배율 변경 이벤트
+    public static event EventHandler<PlayerEvent> chipDamageEventHandler
     {
-        add { _coolDownEventHandler += value; }
-        remove { _coolDownEventHandler -= value; }
+        add { _chipDamageEventHandler += value; }
+        remove { _chipDamageEventHandler -= value; }
+    }
+
+    private static event EventHandler<PlayerEvent> _chipWeaponDamageEventHandler;  //칩셋 기본공격 데미지 배율 변경 이벤트
+    public static event EventHandler<PlayerEvent> chipWeaponDamageEventHandler
+    {
+        add { _chipWeaponDamageEventHandler += value; }
+        remove { _chipWeaponDamageEventHandler -= value; }
+    }
+
+    private static event EventHandler<PlayerEvent> _chipSkillDamageEventHandler;  //칩셋 스킬 데미지 배율 변경 이벤트
+    public static event EventHandler<PlayerEvent> chipSkillDamageEventHandler
+    {
+        add { _chipSkillDamageEventHandler += value; }
+        remove { _chipSkillDamageEventHandler -= value; }
+    }
+
+    private static EventHandler<PlayerEvent> _chipcoolDownEventHandler;  //칩셋 스킬 쿨타임 배율 변경 이벤트
+    public static event EventHandler<PlayerEvent> chipcoolDownEventHandler
+    {
+        add { _chipcoolDownEventHandler += value; }
+        remove { _chipcoolDownEventHandler -= value; }
     }
 
     public LevelDatabaseSO levelDatabase;   //레벨 보정관련 데이터 베이스
@@ -113,20 +134,53 @@ public class PlayerEvent
     }
 
     public bool isEquip;      //장착여부
-    public float damageRate;  //데미지률
-    public void SetRelicAttackValue(bool _isEquip, float _damageRate)
+    public float attackRate;  //데미지률
+    public void SetChipAttackRate(bool _isEquip, float _attackRate)
     {
         //LogUtil.Log("작동한다.");
         isEquip = _isEquip;
+        attackRate = _attackRate;
+        _chipAttackEventHandler?.Invoke(this, EventManager.playerEvent);
+    }
+
+    public float damageRate;
+    public void SetChipDamageRate(bool _isEquip, float _damageRate)
+    {
+        isEquip = _isEquip;
         damageRate = _damageRate;
-        _relicAttackEventHandler?.Invoke(this, EventManager.playerEvent);
+        _chipDamageEventHandler?.Invoke(this, EventManager.playerEvent);
+    }
+
+    public float weaponDamageRate;
+    public void SetChipWeaponDamageRate(bool _isEquip, float _weaponDamageRate)
+    {
+        isEquip = _isEquip;
+        weaponDamageRate = _weaponDamageRate;
+        _chipWeaponDamageEventHandler?.Invoke(this, EventManager.playerEvent);
+    }
+
+    public float skillDamageRate;
+    public void SetChipSkillDamageRate(bool _isEquip, float _skillDamageRate)
+    {
+        isEquip = _isEquip;
+        skillDamageRate = _skillDamageRate;
+        _chipSkillDamageEventHandler?.Invoke(this, EventManager.playerEvent);
     }
 
     public float coolDownRate;  //쿨타임 감소률
-    public void SetCoolDownValue(bool _isEquip, float _coolDownRate)
+    public void SetCoolDownRate(bool _isEquip, float _coolDownRate)
     {
         isEquip = _isEquip;
         coolDownRate = _coolDownRate;
-        _coolDownEventHandler?.Invoke(this, EventManager.playerEvent);
+        _chipcoolDownEventHandler?.Invoke(this, EventManager.playerEvent);
+    }
+
+    public static void Initialize()
+    {
+        _chipAttackEventHandler = null;
+        _chipDamageEventHandler = null;
+        _chipWeaponDamageEventHandler = null;
+        _chipSkillDamageEventHandler = null;
+        _chipcoolDownEventHandler = null;
     }
 }

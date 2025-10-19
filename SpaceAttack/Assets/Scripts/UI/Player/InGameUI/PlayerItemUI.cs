@@ -31,7 +31,7 @@ public class PlayerItemUI : MonoBehaviour
         }
         else
         {
-            LogUtil.Log($"아이템_{currentIndex} 획득");
+            //LogUtil.Log($"아이템_{currentIndex} 획득");
             slots[currentIndex].AddItemImage(relicSO);
         }
 
