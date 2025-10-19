@@ -5,55 +5,50 @@ using UnityEngine;
 public class WeaponArrow : MonoBehaviour
 {
     private Rigidbody rb;
+    private ChipSetType chipset;      //칩셋
 
-    private bool isFired = false;
-    private Vector3 startPos;
-    private float damage;
-    private Vector3 attackDirection;
-    private float fireDistance;
+
+    private Vector3 startPos;         //시작위치
+    private Vector3 attackDirection;  //이동 방향
+    private float moveDistance;       //최대 이동 거리
+    private float damageRate;         //데미지 비율
+    private float addedCritChanceRate;
+    private float addedCritRate;
+
     void OnEnable()
     {
         rb = GetComponent<Rigidbody>();
+        startPos = transform.position;
     }
 
     void Update()
     {
-        if (isFired)
-        {
-            float dis = Vector3.Distance(transform.position, startPos);
-            if (dis > fireDistance)
-            {
-                Destroy(gameObject);
-            }
-        }
+        float dis = Vector3.Distance(transform.position, startPos);
+        if (dis > moveDistance) Destroy(gameObject);
     }
 
-    public void Fire(Vector3 _startPos, Vector3 dir, float speed, float _damage, float dis)  //이동 위치, 이동방향, 이동 속도, 공격력
+    public void Fire(Vector3 dir, float speed, float damageRate, float dis, float addedCriChanceRate, float addedCriRate, ChipSetType chipset)  //이동 위치, 이동방향, 이동 속도, 공격력
     {
         if (rb == null)
-        {
-            LogUtil.Log("없음");
-        }
+            rb = gameObject.GetComponent<Rigidbody>();
+
         rb.AddForce(dir * speed, ForceMode.Impulse);
-        startPos = _startPos;
-        damage = _damage;
         attackDirection = dir;
-        fireDistance = dis;
-        isFired = true;
+        moveDistance = dis;
+        this.chipset = chipset;
+        this.damageRate = damageRate;
+        this.addedCritRate = addedCriRate;
+        this.addedCritChanceRate = addedCriChanceRate;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Enemy") || other.gameObject.layer == LayerMask.NameToLayer("Boss"))
         {
-            //AttackInfo attackInfo = new AttackInfo(damage, attackDirection, mass);
-
-            //collision.gameObject.SendMessage("ApplyDamage", attackInfo);
-            LogUtil.Log("화살 공격");
-
+            chipset.Attack(other.gameObject, damageRate, attackDirection, addedCritChanceRate, addedCritRate, ChipAttackType.Weapon);
             Destroy(gameObject);
         }
-        else if(collision.gameObject.layer != LayerMask.NameToLayer("Player"))
+        else if (other.gameObject.layer != LayerMask.NameToLayer("Player"))
         {
             Destroy(gameObject);
         }

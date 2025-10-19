@@ -12,8 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c493b9d51bd30244b9f2b7f29d763e9, type: 3}
   m_Name: ChipComp_Warrior_Sting
   m_EditorClassIdentifier: 
-  chipsetComponentKey: Warrior_Sting
+  chipsetCompID: 104
   chipsetCpname: Warrior_Sting
   componentType: 2
   iconSprite: {fileID: 21300000, guid: 9f618bcb86ace6046b0b4a92c7988ec8, type: 2}
   description: This is Warriors StingSkill
+  damageRate:
+  - 1.2
+  coolTime:
+  - 5
+  addedCritRate:
+  - 0.15
+  addedCritChanceRate:
+  - 0.15
+  attackTime:
+  - 1
+  attackRange:
+  - 8

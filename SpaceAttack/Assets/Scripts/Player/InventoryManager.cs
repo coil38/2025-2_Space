@@ -39,15 +39,8 @@ public class InventoryManager : MonoBehaviour
 
     private void DropChipset(ChipSetType m_chipSet)
     {
-        //월드 드랍 연출
-
-        //Color color = m_chipSet.gameObject.GetComponent<SpriteRenderer>().color;   //해당 칩셋을 원래 상태로 변경
-        //color.a = 1f;
-        //m_chipSet.gameObject.GetComponent<SpriteRenderer>().color = color;
-
         m_chipSet.gameObject.transform.SetParent(null);                  //해당 칩셋을 Player 자식으로 넣기 해제
-
-        m_chipSet.gameObject.GetComponent<Collider>().enabled = true;   //감지 가능상태로 변경
+        Destroy(m_chipSet.gameObject);                                   //칩셋 오브젝트 파괴
     }
 
     private void RemoveChipsetToPlayerAttack(ChipSetType m_chipSet)
@@ -90,7 +83,6 @@ public class InventoryManager : MonoBehaviour
     private void SetChipsetToPlayerAttack()        //PlayerAttack 스크립트에 접근 구현
     {
         playerAttack.WeaponType = _chipSet.weapon;
-        PlayerTimeSystem.w_BaseAttackTimer = _chipSet.weapon.w_AttackTimer;  //대기시간 설정
 
         //PMAC용
         aniController.SetAnimator(_chipSet.animator, _chipSet.name, true);  //공격본의 애니메이터 할당처리
@@ -102,7 +94,6 @@ public class InventoryManager : MonoBehaviour
         _chipSet.weapon.weaponAniDelegate += temp.PlayAttackAnimation;    //애니메이션 실행 코드 체인 구독 처리
 
         playerAttack.SkillTypes = _chipSet.skills;
-        PlayerTimeSystem.w_SkillTimer = _chipSet.skills[0].s_AttackTimer;  //대기시간 설정
 
         foreach (var skill in _chipSet.skills)
         {

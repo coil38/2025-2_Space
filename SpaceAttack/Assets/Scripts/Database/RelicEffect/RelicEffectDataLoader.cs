@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 public class RelicEffectDataLoader : EditorWindow
 {
     public static string outputFolder = "Assets/ScriptableObjects/RelicEffect";
-    private static string iconPath = "Assets/Materials/Icon/";
+    //private static string iconPath = "Assets/Materials/Icon/";
     public static string jsonFilePath { get; set; }
     public static bool createDatabase { get; set; }
 

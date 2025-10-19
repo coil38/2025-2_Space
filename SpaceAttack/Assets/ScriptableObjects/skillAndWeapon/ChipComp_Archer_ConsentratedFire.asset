@@ -12,8 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c493b9d51bd30244b9f2b7f29d763e9, type: 3}
   m_Name: ChipComp_Archer_ConsentratedFire
   m_EditorClassIdentifier: 
-  chipsetComponentKey: Archer_ConsentratedFire
+  chipsetCompID: 109
   chipsetCpname: Archer_ConsentratedFire
   componentType: 3
   iconSprite: {fileID: 21300000, guid: 7775829df457f744fbd4f39654ef7f7a, type: 3}
   description: This is Archers ConsentratedFireSkill
+  damageRate:
+  - 1.5
+  coolTime:
+  - 12
+  addedCritRate:
+  - 0.15
+  addedCritChanceRate:
+  - 0.1
+  attackTime:
+  - 1.5
+  attackRange:
+  - 8

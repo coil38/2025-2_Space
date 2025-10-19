@@ -2,30 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션 중, 실행) O | 공격시간 X | 플레이어 대기시간 O
+public class WeaponSword : WeaponType
 {
-    //임시로 플레이어에 할당
-
-    private float attackDistance = 2f;
-    private float r_AttackTime = 0.3f;
+    //검사용 변수들
     private float detectAngle = 155f;
-    private float w_attackTime = 0.4f;    //검 공격 대기 시간
 
+    //공격 이동을 위한 변수들
     private Timer attackMoveTimer;
     private bool isDetected;       //적 감지 여부
-    private float moveDuration;
+    private float moveDistance = 0.7f;
     private Vector3 targetPos;
 
-    //공격용
+    //범위공격용
     private Queue<GameObject> targets = new Queue<GameObject>();
     public override void OnEnable()
     {
-        base.OnEnable();
-
-        damageRate = 1f;
-
+        chipsetCompID = 103;
         attackMoveTimer = new Timer(0.1f);         //공격 이동 속도 설정
-        w_AttackTimer = new Timer(w_attackTime);   //공격 대기 시간 설정
+        base.OnEnable();
     }
 
     public override void UpdateInfo()
@@ -39,20 +33,16 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
             Vector3 movePos = Vector3.Lerp(_currentPos, targetPos, 1 - timer);
             attackMovePos = movePos;   //이동 위치 할당
 
-            Use();  //적감지
+            Use();  //공격이동 중, 계속 공격처리
 
             if (targets.Count > 0)  //피격 대상이 있을 경우, 공격 이동 종료
-            {
                 attackMoveTimer.Reset();
-            }
         }
 
         if (isAttacking && !isDetected)  //공격 중, 적이 감지되지 않을 시, 공격 이동 시작
         {
-            moveDuration = 0.7f;
-
             attackMoveTimer.Start();
-            targetPos = _currentPos + attackDirection * moveDuration;
+            targetPos = _currentPos + attackDirection * moveDistance;
         }
     }
 
@@ -62,31 +52,27 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
 
         if (Input.GetMouseButtonDown(0))  //마우스 클릭시, 공격
         {
-            if (PlayerTimeSystem.w_BaseAttackTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
-
-            ChipsetSoundManager.PlayPlayerAttackSound();   //전사칩셋 기본공격 사운드 재생
-
-            PlayerTimeSystem.w_BaseAttackTimer = w_AttackTimer; //공격 타이머 할당
-
-            PlayerAniInfo aniInfo = new PlayerAniInfo("isAttacking", AniType.Trrigger, 1.33f / w_attackTime);  //공격 애니메이션 실행
-            PlayAniMation(aniInfo);
-
-            PlayerTimeSystem.w_BaseAttackTimer.Start();                 //다음 공격 전 대기 체크 시작
+            if (PlayerTimeSystem.w_BaseAttackTimer.IsRunning()) return;   //다음 공격 대기 체크 실행중, 리턴
 
             isAttacking = true;
 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);   //마우스 위치 받기
+            ChipsetSoundManager.PlayPlayerAttackSound();                  //사운드 재생
+            
+            PlayerAniInfo aniInfo = new PlayerAniInfo("isAttacking", AniType.Trrigger, 1.33f / attackTime);  //공격 애니메이션 실행
+            PlayAniMation(aniInfo);
+
+            PlayerTimeSystem.w_BaseAttackTimer.Start();                   //공격 타이머 시작
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);  //마우스 위치 받기
             Vector3 mousePos = Vector3.zero;
 
             if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, planLayer))
                 mousePos = hit.point;
             mousePos.y = _currentPos.y;
 
-            Vector3 attackDir = (mousePos - _currentPos).normalized * attackDistance;   //플레이어 기준 마우스 방향 얻기
+            attackDirection = (mousePos - _currentPos).normalized * attackDistance;   //플레이어 기준 마우스 방향 얻기
 
-            attackDirection = attackDir;
-
-            Use();
+            CheckUse2();
         }
         else
         {
@@ -94,7 +80,7 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
         }
     }
 
-    public override void Use()
+    private void CheckUse2()
     {
         isDetected = false;
         targets.Clear();
@@ -107,22 +93,19 @@ public class WeaponSword : WeaponType     //시전시간(근접: 애니메이션
             if (Vector3.Angle(attackDirection, dirToEnemy) <= detectAngle / 2f)            //각도내에 적에게만 공격
             {
                 isDetected = true;   //적 확인
-
-                //Debug.Log(enemyCol.gameObject.name + "을 감지했습니다.");
                 targets.Enqueue(enemyCol.gameObject);
-                Invoke("_Attack", r_AttackTime);   //공격준비 시간동안 공격
+                //Debug.Log(enemyCol.gameObject.name + "을 감지했습니다.");
             }
         }
+        if(enemyCols.Length > 0) Invoke("Use", readyAttackTime);
     }
 
-    private void _Attack()
+    public override void Use()
     {
         if (PlayerTimeSystem.stunTimer.IsRunning()) return;  //플레이어 피격받는 중일 경우, 공격취소 처리 (예외처리)
 
         if (targets.TryDequeue(out var target))
-        {
-            chipset.Attack(target, damageRate, attackDirection, ChipAttackType.Weapon);
-        }
+            chipset.Attack(target, damageRate, attackDirection, addedCritChanceRate, addedCritRate, ChipAttackType.Weapon);
     }
 
     private void OnDrawGizmos()

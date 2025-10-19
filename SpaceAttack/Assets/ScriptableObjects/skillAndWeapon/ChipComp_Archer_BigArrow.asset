@@ -12,8 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c493b9d51bd30244b9f2b7f29d763e9, type: 3}
   m_Name: ChipComp_Archer_BigArrow
   m_EditorClassIdentifier: 
-  chipsetComponentKey: Archer_BigArrow
+  chipsetCompID: 108
   chipsetCpname: Archer_BigArrow
   componentType: 2
   iconSprite: {fileID: 21300000, guid: 8ddf79353916b1e4da8c93af9c091cab, type: 3}
   description: This is Archers BigArrowSkill
+  damageRate:
+  - 1
+  coolTime:
+  - 5
+  addedCritRate:
+  - 0.1
+  addedCritChanceRate:
+  - 0.2
+  attackTime:
+  - 1
+  attackRange:
+  - 8

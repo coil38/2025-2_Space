@@ -5,10 +5,11 @@ using UnityEngine;
 public class DataManager : MonoBehaviour
 {
     public static DataManager instance;   //싱글톤 패턴
-
-    [SerializeField] private SoundDatabaseSO soundDatabase;  //사운드 데이터 베이스
-    [SerializeField] private LevelDatabaseSO levelDatabase;  //레벨 데이터 베이스
-    [SerializeField] private RelicDatabaseSO relicDatabase;  //유물 데이터 베이스
+    
+    [SerializeField] private SoundDatabaseSO soundDatabase;        //사운드 데이터 베이스
+    [SerializeField] private LevelDatabaseSO levelDatabase;        //레벨 데이터 베이스
+    [SerializeField] private RelicDatabaseSO relicDatabase;        //유물 데이터 베이스
+    [SerializeField] private ChipsetComponentDatabaseSO chipcompDatabase;  //칩셋 컴포넌트 데이터 베이스
 
     [SerializeField] private GameObject relicObject;         //유물 프리팹
     [SerializeField] private GameObject[] chipsetPrfs;       //칩셋 프리팹
@@ -28,6 +29,7 @@ public class DataManager : MonoBehaviour
     private float hitRate = 1f;               //피격배율
     private bool cannotHealing = false;       //회복불가
     private bool maxHpFixing = false;         //최대체력고정
+
 
     public int i_hp { get { return m_hp; } }
     public int i_maxhp { get { return m_maxhp; } }
@@ -68,6 +70,10 @@ public class DataManager : MonoBehaviour
     {
         get { return  relicDatabase; }
     }
+    public ChipsetComponentDatabaseSO _chipCompDatabase
+    {
+        get { return chipcompDatabase; }
+    }
     void Awake()
     {
         if (instance == null)
@@ -104,6 +110,5 @@ public class DataManager : MonoBehaviour
         AttackEventManager.InitialEvent();                           //이벤트 초기화
         RelicEvent.InitializeEvent();
         PlayerEvent.Initialize();
-
     }
 }

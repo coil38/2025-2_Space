@@ -12,8 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c493b9d51bd30244b9f2b7f29d763e9, type: 3}
   m_Name: ChipComp_Archer_BaseAttack
   m_EditorClassIdentifier: 
-  chipsetComponentKey: Archer_BaseAttack
+  chipsetCompID: 107
   chipsetCpname: Archer_BaseAttack
   componentType: 1
   iconSprite: {fileID: 21300000, guid: e629095dd1c966c4fb6df43a9b8536f4, type: 3}
   description: This is Archers BaseAttack
+  damageRate:
+  - 0.5
+  coolTime:
+  - 0.3
+  addedCritRate:
+  - 0
+  addedCritChanceRate:
+  - 0
+  attackTime:
+  - 0.3
+  attackRange:
+  - 8

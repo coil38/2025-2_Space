@@ -36,9 +36,9 @@ public class ChipsetDatabaseSO : ScriptableObject
             Initialize();
         if (chipsetByKey.TryGetValue(chipsetKey, out ChipsetSO chipset))
         {
-            foreach (var key in chipset.chipsetComponentKeys)
+            foreach (var id in chipset.chipsetComponentIDs)
             {
-                ChipsetComponentSO temp = chipsetComponentDatabase.GetChipsetComponent(key);
+                ChipsetComponentSO temp = chipsetComponentDatabase.GetChipsetComponentByID(id);
                 if (temp.componentType == type)
                 {
                     return temp;

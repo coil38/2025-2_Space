@@ -7,7 +7,7 @@ public class ChipsetSO : ScriptableObject
 {
     public string chipsetKey;
     public string chipsetName;
-    public string[] chipsetComponentKeys;
+    public int[] chipsetComponentIDs;
     public Sprite iconSprite;
     public string description;
 }

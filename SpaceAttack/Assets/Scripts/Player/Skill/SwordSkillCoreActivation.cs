@@ -11,22 +11,16 @@ public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애�
     private bool isUsingBuff;
     public override void OnEnable()
     {
-        base.OnEnable();
-
         unLockedNumber = 3;
-        attackTime = 10f;
-        r_AttackTime = 0.2f;
-        normalCoolTime = 25f;
-        coolTime = normalCoolTime;
-        coolTimer = new Timer(coolTime);
-        s_AttackTimer = new Timer(attackTime);
+        chipsetCompID = 106;
+        base.OnEnable();
     }
 
     public override void UpdateInfo()
     {
-        s_AttackTimer.Update();
+        base.UpdateInfo();
 
-        if (isUsingBuff && !s_AttackTimer.IsRunning())
+        if (isUsingBuff)
         {
             isUsingBuff = false;
 
@@ -40,28 +34,24 @@ public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애�
 
     public override void CheckUse(Vector3 currentPos)
     {
-        //if (!canUse)//해금여부에 따른 스킬 사용 여부
-        //{
-        //    //Debug.Log("스킬_코어활성화가 해금되지 않았습니다");
-        //    return;
-        //}
+        //if (!canUse) return;         //해금여부에 따른 스킬 사용 여부
 
         if (PlayerInputController.skill3Action.triggered)
         {
+            if (PlayerTimeSystem.w_SkillTimer != null)
+                if (PlayerTimeSystem.w_SkillTimer.IsRunning()) return;
+
             if (coolTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
 
             //물약 마시는 사운드
             //물약 마시는 애니메이션
             coolTimer.Start();         //쿨타임 시작
-
-            Invoke("Use", r_AttackTime);    //시전 시간 후, 기능 실행
+            Use();                     //즉시 사용 처리
         }
     }
 
     public override void Use()
     {
-        s_AttackTimer.Start();
-
         Debug.Log("버프사용 시작");
 
         isUsingBuff = true;

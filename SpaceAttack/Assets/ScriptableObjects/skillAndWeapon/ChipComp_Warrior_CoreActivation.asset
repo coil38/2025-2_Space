@@ -10,10 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c493b9d51bd30244b9f2b7f29d763e9, type: 3}
-  m_Name: ChipComp_Warrior_CoreActivation
+  m_Name: ChipsetComponent_Warrior_CoreActivation
   m_EditorClassIdentifier: 
-  chipsetComponentKey: Warrior_CoreActivation
+  chipsetCompID: 106
   chipsetCpname: Warrior_CoreActivation
   componentType: 4
   iconSprite: {fileID: 21300000, guid: d038ee1e0fedf8740abc6262173dd3d8, type: 2}
   description: This is Warriors CoreActivationSkill
+  damageRate:
+  - 0
+  coolTime:
+  - 15
+  addedCritRate:
+  - 0.5
+  addedCritChanceRate:
+  - 0.3
+  attackTime:
+  - 0
+  attackRange:
+  - 0

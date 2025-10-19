@@ -33,7 +33,12 @@ public class AttackEventManager
         bool isCritical = false;
         AttackInfo info = new AttackInfo(CalculateAttackDamage(context), dir);      //공격 정보 생성
 
-        float criDamage = info.CheckAndSetCritical(info.damage, PlayerStatus.criticalChanceRate, PlayerStatus.criticalRate);
+        float criDamage = info.CheckAndSetCritical(
+            info.damage, 
+            PlayerStatus.criticalChanceRate + context.addedCritChanceRate, 
+            PlayerStatus.criticalRate + context.addedCritRate
+            );
+
         if (criDamage > info.damage) isCritical = true;                             //크리티컬 처리
         info.damage = criDamage;                                                    //크리데미지 적용
 

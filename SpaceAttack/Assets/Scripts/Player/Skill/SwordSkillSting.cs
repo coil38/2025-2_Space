@@ -1,80 +1,65 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이션 후, 실행) O | 공격시간 O | 플레이어 대기시간(쿨타임) O
 {
-    [SerializeField] private AttackRangeSetter floorSpriteSetter;  //장판 이미지 설정
-
-    private Timer _s_AttackTimer;  //초기값인 s_AttackTimer의 복제본
-
-    private WaitForFixedUpdate waitForFixedUpdate;
-
     private Vector3 f_DetectPos;     //기즈모 그리는 용
     private Vector3 f_DetectSize;
     private Quaternion detectRot;
 
     private Vector3 detectPos;
-    private Vector3 detectSize;
+
+    private WaitForFixedUpdate waitForFixedUpdate;
 
     public override void OnEnable()
     {
-        base.OnEnable();
-
-        damageRate = 2f;
-        //--------------------------------------------------------
         unLockedNumber = 1;
         attackDistance = 3.2f;
         attackWidth = 2f;
-        attackTime = 0.6f;
-        r_AttackTime = 0.2f;
-        coolTime = 5f;
-        coolTimer = new Timer(coolTime);
-        s_AttackTimer = new Timer(attackTime);  //playerWaitTime과 attackTime이 일치하기 때문에 이렇게 함.
-        _s_AttackTimer = s_AttackTimer;
-
         waitForFixedUpdate = new WaitForFixedUpdate();
+
+        chipsetCompID = 104;
+        base.OnEnable();
     }
 
-    public override void UpdateInfo()
-    {
-        coolTimer.Update();
-    }
+    public override void UpdateInfo() { base.UpdateInfo(); }
 
     public override void CheckUse(Vector3 currentPos)
     {
-        //if (!canUse)//해금여부에 따른 스킬 사용 여부
-        //{
-        //    //Debug.Log("스킬_찌르기가 해금되지 않았습니다");
-        //    return;
-        //}
+        //if (!canUse) return;                                      //해금여부에 따른 스킬 사용 여부
 
         _currentPos = currentPos;
 
-        if (PlayerInputController.skill1Action.triggered)  //플레이어 입력감지
+        if (PlayerInputController.skill1Action.triggered)           //플레이어 입력감지
         {
-            if (coolTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
+            if (PlayerTimeSystem.w_SkillTimer != null)
+                if (PlayerTimeSystem.w_SkillTimer.IsRunning()) return;
 
-            //찌르기 사운드 재생
-            
-            //공격 시전 애니메이션 실행
-
-            coolTimer.Start();         //쿨타임 시작
+            if (coolTimer.IsRunning()) return;                      //쿨타임 중 실행불가처리
 
             isAttacking = true;
 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);   //마우스 위치 받기
-            Vector3 mousePos = Vector3.zero;
+            //찌르기 사운드 재생
+            //공격 시전 애니메이션 실행
 
-            if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, planLayer))
-                mousePos = hit.point;
-            mousePos.y = _currentPos.y;
+            coolTimer.Start();                                       //쿨타임 시작
+            attackDirection = GetAttackDirection(currentPos);        //공격 방향 설정
 
-            Vector3 attackDir = (mousePos - _currentPos).normalized;   //플레이어 기준 마우스 방향 얻기
-            attackDirection = attackDir;
+            _attackDistance = attackDistance;
+            _attackTime = attackTime;
 
-            Invoke("Use", r_AttackTime); //시전 애니메니션 시작 후, 시전시간동안 대기
+            if (Physics.Raycast(_currentPos, attackDirection, out RaycastHit hit, attackDistance, wallLayer))   //벽이 있을 경우의 예외처리(이동거리, 이동시간)
+            {
+                _attackDistance = Vector3.Distance(hit.point, _currentPos);
+
+                if (attackDistance >= _attackDistance)
+                    _attackTime *= _attackDistance / attackDistance;
+            }
+            PlayerTimeSystem.SetChipTimer(_attackTime, ChipAttackType.Skill);    //스킬 사용 타임 설정
+            PlayerTimeSystem.w_SkillTimer.Start();                               //스킬 사용 시작
+
+            Invoke("Use", readyAttackTime);                          //시전 애니메니션 시작 후, 시전시간동안 대기
         }
         else
         {
@@ -84,28 +69,6 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
     public override void Use()
     {
-        float _attackDistance = attackDistance;
-        float _attackTime = attackTime;
-
-        if (Physics.Raycast(_currentPos, attackDirection, out RaycastHit hit, attackDistance, wallLayer))   //벽이 있을 경우의 예외처리(이동거리, 이동시간)
-        {
-            _attackDistance = Vector3.Distance(hit.point, _currentPos);
-
-            if (attackDistance >= _attackDistance)
-            {
-                _attackTime *= _attackDistance / attackDistance;
-                s_AttackTimer = new Timer(_attackTime);
-            }
-            else s_AttackTimer = _s_AttackTimer;
-        }
-        else
-        {
-            s_AttackTimer = _s_AttackTimer;
-        }
-
-        PlayerTimeSystem.w_SkillTimer = s_AttackTimer;
-        PlayerTimeSystem.w_SkillTimer.Start();                 //다음 공격 전 대기 체크 시작
-
         StartCoroutine(C_Attack(_attackDistance, _attackTime));
     }
 
@@ -121,17 +84,13 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * _attackDistance;
 
-        //OnFloorSprite(f_DetectSize*2, attackDirection, f_DetectPos);        //장판 스프라이트 켜기
-
         isAttackMoving = true;
 
         while (true)
         {
             float timer = PlayerTimeSystem.w_SkillTimer.GetRemainingTime() / _attackTime;
             Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
-            attackMovePos = movePos;   //이동 위치 할당
-
-            //UpdateFloorSprite(f_DetectPos);  //장판 스프라이트 위치 갱신
+            attackMovePos = movePos;                                                              //이동 위치 할당
 
             detectPos = movePos;
 
@@ -142,8 +101,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
                 if (col.gameObject.CompareTag("DestructableObject"))
                 {
                     if (col.gameObject != null)
-                        chipset.Attack(col.gameObject, damageRate, attackDirection, ChipAttackType.Skill);
-
+                        chipset.Attack(col.gameObject, damageRate, attackDirection, addedCritChanceRate, addedCritRate, ChipAttackType.Skill);
                     continue;
                 }
 
@@ -151,10 +109,9 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
                 foreach (var col2 in cols2)
                 {
                     if (col2.gameObject != null)
-                        chipset.Attack(col2.gameObject, damageRate, attackDirection, ChipAttackType.Skill);
+                        chipset.Attack(col2.gameObject, damageRate, attackDirection, addedCritChanceRate, addedCritRate, ChipAttackType.Skill);
                 }
                 isAttackMoving = false;
-                //OffFloorSprite();
                 yield break;
 
             }
@@ -163,27 +120,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
             yield return waitForFixedUpdate;
         }
-        //OffFloorSprite();
         isAttackMoving = false;
-    }
-
-    private void OnFloorSprite(Vector3 size, Vector3 direction, Vector3 pos)
-    {
-        if (floorSpriteSetter == null) return;
-
-        floorSpriteSetter.gameObject.SetActive(true);
-        floorSpriteSetter.SetAttackRange(new Vector3(size.x, size.z, 1f), RangeType.FloorSquare); //크기설정
-        floorSpriteSetter.transform.rotation = Quaternion.LookRotation(-direction, Vector3.up);   //회전설정
-        floorSpriteSetter.transform.position = pos + new Vector3(0f, -0.8f, 0f); ;  //위치설정
-    }
-    private void UpdateFloorSprite(Vector3 pos)
-    {
-        floorSpriteSetter.transform.position = pos + new Vector3(0f, -0.8f, 0f); ;  //위치설정
-    }
-    private void OffFloorSprite()
-    {
-        if (floorSpriteSetter == null) return;
-        floorSpriteSetter.gameObject.SetActive(false);
     }
 
     private void OnDrawGizmos()

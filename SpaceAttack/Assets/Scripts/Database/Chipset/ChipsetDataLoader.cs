@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using Newtonsoft.Json;
+using UnityEngine.Rendering;
 public class ChipsetDataLoader : EditorWindow
 {
     public static string outputFolder = "Assets/ScriptableObjects/Chipset";
@@ -39,15 +40,16 @@ public class ChipsetDataLoader : EditorWindow
                 chipsetSO.description = chipsetData.description;
 
                 //칩셋 컴포넌트 추가
-                if (!string.IsNullOrEmpty(chipsetData.chipsetComponentKeys))
+                if (!string.IsNullOrEmpty(chipsetData.chipsetComponentIDs))
                 {
-                    string[] temps = chipsetData.chipsetComponentKeys.Split(",");
+                    string[] temps = chipsetData.chipsetComponentIDs.Trim().Split(",");
+                    int[] results = new int[temps.Length];
                     for (int i = 0; i < temps.Length; i++)
                     {
-                        temps[i] = temps[i].Replace(" ", string.Empty);
+                        if (int.TryParse(temps[i], out int result))
+                            results[i] = result;
                     }
-
-                    chipsetSO.chipsetComponentKeys = temps;
+                    chipsetSO.chipsetComponentIDs = results;
                 }
 
                 if (!string.IsNullOrEmpty(chipsetData.iconPath))

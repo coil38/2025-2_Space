@@ -36,9 +36,16 @@ public class ChipsetComponentDataLoader : EditorWindow
                 ChipsetComponentSO chipComponentSO = ScriptableObject.CreateInstance<ChipsetComponentSO>();
 
                 //데이터 복사
-                chipComponentSO.chipsetComponentKey = componentData.chipsetComponentKey;
+                chipComponentSO.chipsetCompID = componentData.chipsetCompID;
                 chipComponentSO.chipsetCpname = componentData.name;
                 chipComponentSO.description = componentData.description;
+
+                chipComponentSO.damageRate = GetFloatArray(componentData.damageRate);
+                chipComponentSO.coolTime = GetFloatArray(componentData.coolTime);
+                chipComponentSO.addedCritRate = GetFloatArray(componentData.addedCritRate);
+                chipComponentSO.addedCritChanceRate = GetFloatArray(componentData.addedCritChanceRate);
+                chipComponentSO.attackTime = GetFloatArray(componentData.attackTime);
+                chipComponentSO.attackRange = GetFloatArray(componentData.attackRange);
 
                 if (System.Enum.TryParse(componentData.componentTypeString.ToUpper(), out ChipsetComponentType parsedType))
                 {
@@ -96,6 +103,22 @@ public class ChipsetComponentDataLoader : EditorWindow
             EditorUtility.DisplayDialog("Error", $"Failed to Convert JSON : {e.Message}", "OK");
             LogUtil.LogError($"JSON 변환 오류: {e}");
         }
+    }
+
+    private static float[] GetFloatArray(string text)
+    {
+        if (!string.IsNullOrEmpty(text))
+        {
+            string[] temps = text.Trim().Split(",");
+            float[] results = new float[temps.Length];
+            for (int i = 0; i < temps.Length; i++)
+            {
+                if (float.TryParse(temps[i], out float result))
+                    results[i] = result;
+            }
+            return results;
+        }
+        return null;
     }
 }
 #endif

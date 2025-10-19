@@ -4,82 +4,66 @@ using UnityEngine;
 
 public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니메이션 후, 실행) O | 공격시간 O | 플레이어 대기시간(쿨타임) O
 {
-    [SerializeField] private AttackRangeSetter floorSpriteSetter;  //장판 이미지 설정
-    [SerializeField] private AttackRangeSetter slashSpriteSetter;  //참격 이미지 설정
-
     private Vector3 f_DetectPos;     //기즈모 그리는 용
     private Vector3 f_DetectSize;
     private Quaternion detectRot;
 
     private Vector3 detectPos;
-    private Vector3 detectSize;
 
     private List<GameObject> targets = new List<GameObject>();
 
-    private Timer _s_AttackTimer;  //초기값인 s_AttackTimer의 복제본
     private WaitForFixedUpdate waitForFixedUpdate;
-
-    private Quaternion currentRotation;  //최근 회전값(장판, 참격 스프라이트용)
 
     public override void OnEnable()
     {
-        base.OnEnable();
-
-        damageRate = 2.5f;
-        //------------------------------------------------------------------------------------------------------
         unLockedNumber = 2;
-        attackDistance = 3.8f;
         attackWidth = 2f;
-        attackTime = 0.6f;
-        r_AttackTime = 0.2f;
-        normalCoolTime = 8f;
-        coolTime = normalCoolTime;
-        coolTimer = new Timer(coolTime);
-        s_AttackTimer = new Timer(attackTime);                 //임시
-        _s_AttackTimer = s_AttackTimer;
-
         waitForFixedUpdate = new WaitForFixedUpdate();
+
+        chipsetCompID = 105;
+        base.OnEnable();
     }
 
-    public override void UpdateInfo()
-    {
-        coolTimer.Update();
-        s_AttackTimer.Update();
-    }
+    public override void UpdateInfo() { base.UpdateInfo(); }
 
     public override void CheckUse(Vector3 currentPos)
     {
-        //if (!canUse)//해금여부에 따른 스킬 사용 여부
-        //{
-        //    //Debug.Log("스킬_참격이 해금되지 않았습니다");
-        //    return;
-        //}
+        //if (!canUse) return; //해금여부에 따른 스킬 사용 여부
 
         _currentPos = currentPos;
 
-        if (PlayerInputController.skill2Action.triggered)  //플레이어 입력감지
+        if (PlayerInputController.skill2Action.triggered)       //플레이어 입력감지
         {
-            if (coolTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
+            if (PlayerTimeSystem.w_SkillTimer != null)
+                if (PlayerTimeSystem.w_SkillTimer.IsRunning()) return;
 
-            //참격 사운드 재생
-            
-            //공격 애니메이션 실행
-
-            coolTimer.Start();         //쿨타임 시작
+            if (coolTimer.IsRunning()) return;                  //다음 공격 대기 체크 실행중, 리턴
 
             isAttacking = true;
+            //참격 사운드 재생
+            //공격 애니메이션 실행
 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);   //마우스 위치 받기
-            Vector3 mousePos = Vector3.zero;
+            coolTimer.Start();                                  //쿨타임 시작
 
-            if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, planLayer))
-                mousePos = hit.point;
-            mousePos.y = _currentPos.y;
+            PlayerTimeSystem.SetChipTimer(attackTime * 0.2f, ChipAttackType.Skill);
+            PlayerTimeSystem.w_SkillTimer.Start();                                    //스킬 사용 시작
 
-            Vector3 attackDir = (mousePos - _currentPos).normalized;   //플레이어 기준 마우스 방향 얻기
-            attackDirection = attackDir;
+            attackDirection = GetAttackDirection(currentPos);
 
-            Invoke("Use", r_AttackTime);       //공격 애니메이션 후, 시전시간동안 대기
+            _attackDistance = attackDistance;
+            _attackTime = attackTime;
+            if (Physics.Raycast(_currentPos, attackDirection, out RaycastHit hit, attackDistance, wallLayer))   //벽이 있을 경우의 예외처리(이동거리, 이동시간)
+            {
+                _attackDistance = Vector3.Distance(hit.point, _currentPos);
+
+                if (attackDistance >= _attackDistance)
+                {
+                    _attackTime *= _attackDistance / attackDistance;
+                }
+            }
+
+            projectileMoveTime = _attackTime;
+            Invoke("Use", attackTime * 0.1f);
         }
         else
         {
@@ -89,27 +73,8 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
 
     public override void Use()
     {
-        float _attackDistance = attackDistance;
-        float _attackTime = attackTime;
-
-        if (Physics.Raycast(_currentPos, attackDirection, out RaycastHit hit, attackDistance, wallLayer))   //벽이 있을 경우의 예외처리(이동거리, 이동시간)
-        {
-            _attackDistance = Vector3.Distance(hit.point, _currentPos);
-
-            if (attackDistance >= _attackDistance)
-            {
-                _attackTime *= _attackDistance / attackDistance;
-                s_AttackTimer = new Timer(_attackTime);
-            }
-            else s_AttackTimer = _s_AttackTimer;
-        }
-        else
-        {
-            s_AttackTimer = _s_AttackTimer;
-        }
-
-        s_AttackTimer.Start();                                   //다음 공격 전 대기 체크 시작
-
+        LogUtil.Log("참격 발사체 이동 시작");
+        p_MoveTimer.Start();
         StartCoroutine(C_Attack(_attackDistance, _attackTime));
     }
 
@@ -124,17 +89,10 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * _attackDistance;
 
-        //Debug.Log($"장판위치: {f_DetectPos}, 시작 위치: {_currentPos}, 종료위치: {targetPos}");
-        //OnFloorSprite(f_DetectSize * 2f, attackDirection, f_DetectPos);        //장판 스프라이트 켜기
-        //OnSlashSprite(detectSize * 2f, attackDirection);                       //참격 스프라이트 켜기
-
         while (true)
         {
-            float timer = s_AttackTimer.GetRemainingTime() / _attackTime;
+            float timer = p_MoveTimer.GetRemainingTime() / _attackTime;
             Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
-
-            //UpdateSlashSprite(movePos, attackDirection);  //참격 스프라이트 갱신
-            //UpdateFloorSprite(movePos, attackDirection);  //장판 스프라이트 갱신
 
             detectPos = movePos;
             Collider[] cols = Physics.OverlapBox(detectPos, detectSize, detectRot, enemyLayer);   //감지 범위 내 적 감지
@@ -144,7 +102,7 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
                 if (targets.Contains(col.gameObject)) continue;   //중복일 경우, 무시
                 else targets.Add(col.gameObject);                  //중복이 아닐 경우, 체크 대상에 추가
 
-                if (col.gameObject != null) chipset.Attack(col.gameObject, damageRate, attackDirection, ChipAttackType.Skill);
+                if (col.gameObject != null) chipset.Attack(col.gameObject, damageRate, attackDirection, addedCritChanceRate, addedCritRate, ChipAttackType.Skill);
             }
 
             if (timer <= 0) break;  //시간 초과될 시, 코루틴 종료
@@ -153,49 +111,6 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
         }
 
         targets.Clear();
-        //OffFloorSprite();   //장판 스프라이트 끄기
-        //OffSlashSprite();   //참격 스프라이트 끄기
-    }
-    private void OnFloorSprite(Vector3 size, Vector3 direction, Vector3 pos)
-    {
-        if (floorSpriteSetter == null) return;
-
-        floorSpriteSetter.gameObject.SetActive(true);
-        floorSpriteSetter.SetAttackRange(new Vector3(size.x, size.z, 1f), RangeType.FloorSquare); //크기설정
-        floorSpriteSetter.transform.rotation = Quaternion.LookRotation(-direction, Vector3.up);   //회전설정
-        floorSpriteSetter.transform.position = pos + new Vector3(0f, -0.8f, 0f); ;  //위치설정
-
-    }
-    private void OffFloorSprite()
-    {
-        if (floorSpriteSetter == null) return;
-
-        floorSpriteSetter.gameObject.SetActive(false);
-    }
-    private void OnSlashSprite(Vector3 size, Vector3 direction)
-    {
-        if (slashSpriteSetter == null) return;
-
-        slashSpriteSetter.gameObject.SetActive(true);
-        slashSpriteSetter.SetAttackRange(new Vector3(size.x + 0.2f, size.z, 1f), RangeType.Square); //크기설정
-        slashSpriteSetter.transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
-    }
-    private void UpdateSlashSprite(Vector3 pos, Vector3 direction)
-    {
-        if (slashSpriteSetter == null) return;
-
-        slashSpriteSetter.transform.position = pos + new Vector3(0f, -0.5f, 0f);
-        slashSpriteSetter.transform.rotation = Quaternion.LookRotation(direction, Vector3.up);   //회전설정
-    }
-    private void UpdateFloorSprite(Vector3 pos, Vector3 direction)
-    {
-        floorSpriteSetter.transform.rotation = Quaternion.LookRotation(-direction, Vector3.up);   //회전설정
-    }
-    private void OffSlashSprite()
-    {
-        if (slashSpriteSetter == null) return;
-
-        slashSpriteSetter.gameObject.SetActive(false);
     }
 
     private void OnDrawGizmos()

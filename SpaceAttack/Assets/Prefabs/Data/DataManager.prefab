@@ -53,6 +53,7 @@ MonoBehaviour:
   soundDatabase: {fileID: 11400000, guid: 8e7404451cb989040bd19fe3f577df7d, type: 2}
   levelDatabase: {fileID: 11400000, guid: 503734204ca2dae4296e1c272c3d5fc5, type: 2}
   relicDatabase: {fileID: 11400000, guid: 1b45c49dde0325947b76f74ac75d26b5, type: 2}
+  chipcompDatabase: {fileID: 11400000, guid: a217638537a80f240943adf8d87a82bf, type: 2}
   relicObject: {fileID: 5835097034357973256, guid: 90dc94b55095fef458373050f7eaf9f2,
     type: 3}
   chipsetPrfs:
@@ -119,6 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c2fe5cb5f2be054db0998a7dfe45bda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parent: {fileID: 0}
 --- !u!114 &5219511333070242321
 MonoBehaviour:
   m_ObjectHideFlags: 0

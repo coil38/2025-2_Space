@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class BowSkillBigArrow : SkillType
 {
-    private Timer _s_AttackTimer;  //초기값인 s_AttackTimer의 복제본
-
     private WaitForFixedUpdate waitForFixedUpdate;
 
     private Vector3 f_DetectPos;     //기즈모 그리는 용
@@ -13,10 +11,6 @@ public class BowSkillBigArrow : SkillType
     private Quaternion detectRot;
 
     private Vector3 detectPos;
-    private Vector3 detectSize;
-
-    private float _attackDistance;
-    private float _attackTime;
 
     private List<GameObject> targets = new List<GameObject>();
 
@@ -24,29 +18,14 @@ public class BowSkillBigArrow : SkillType
 
     public override void OnEnable()
     {
-        base.OnEnable();
-
-        damageRate = 1.5f;
-
-        attackDistance = 6f;
         attackWidth = 4f;
-        attackTime = 0.6f;
-        r_AttackTime = 0.2f;
-        normalCoolTime = 8f;
-        coolTime = normalCoolTime;
-        coolTimer = new Timer(coolTime);
-        w_AttackTimer = new Timer(r_AttackTime);
-        s_AttackTimer = new Timer(attackTime);                 //임시
-        _s_AttackTimer = s_AttackTimer;
-
         waitForFixedUpdate = new WaitForFixedUpdate();
+
+        chipsetCompID = 108;
+        base.OnEnable();
     }
 
-    public override void UpdateInfo()
-    {
-        coolTimer.Update();
-        s_AttackTimer.Update();
-    }
+    public override void UpdateInfo() { base.UpdateInfo(); }
 
     public override void CheckUse(Vector3 currentPos)
     {
@@ -54,12 +33,15 @@ public class BowSkillBigArrow : SkillType
 
         if (PlayerInputController.skill1Action.triggered)
         {
-            if (coolTimer.IsRunning() || PlayerTimeSystem.w_SkillTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
+            if (PlayerTimeSystem.w_SkillTimer != null)
+                if (PlayerTimeSystem.w_SkillTimer.IsRunning()) return;
 
-            isAttacking = true;                 //플레이어 입력감지
+            if (coolTimer.IsRunning()) return;                      //쿨타임 체크
+
+            isAttacking = true;                                     //플레이어 입력감지
             lineRenderer.enabled = true;
 
-            PlayerTimeSystem.w_SkillTimer = w_AttackTimer;
+            PlayerTimeSystem.SetChipTimer(0.2f, ChipAttackType.Skill);
             PlayerTimeSystem.w_SkillTimer.Start();                 //다음 공격 전 대기 체크 시작
         }
         
@@ -67,18 +49,7 @@ public class BowSkillBigArrow : SkillType
         {
             PlayerTimeSystem.w_SkillTimer.Start();                 //다음 공격 전 대기 체크 시작
 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);   //마우스 위치 받기
-            Vector3 mousePos = Vector3.zero;
-
-            if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, planLayer))
-                mousePos = hit.point;
-            mousePos.y = _currentPos.y;
-
-            Vector3 attackDir = (mousePos - _currentPos).normalized;   //플레이어 기준 마우스 방향 얻기
-
-            attackDirection = attackDir;
-
-            //벽이 있을 경우의 예외처리(이동거리, 이동시간)----------------------------------------------------------------------------------------------------
+            attackDirection = GetAttackDirection(currentPos);
 
             _attackDistance = attackDistance;
             _attackTime = attackTime;
@@ -90,14 +61,11 @@ public class BowSkillBigArrow : SkillType
                 if (attackDistance >= _attackDistance)
                 {
                     _attackTime *= _attackDistance / attackDistance;
-                    s_AttackTimer = new Timer(_attackTime);
                 }
-                else s_AttackTimer = _s_AttackTimer;
             }
-            else s_AttackTimer = _s_AttackTimer;
 
             Vector3 startPos = _currentPos;
-            Vector3 targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);
+            Vector3 targetPos = _currentPos + attackDirection * _attackDistance;
 
             //라인랜더러 설정----------------------------------------------------------------------------------------------------------------------------------
             lineRenderer.positionCount = 2;
@@ -109,15 +77,12 @@ public class BowSkillBigArrow : SkillType
             {
                 //공격 사운드 재생
                 //공격 애니메이션 재생
-
-                PlayerTimeSystem.w_SkillTimer = w_AttackTimer;
-                PlayerTimeSystem.w_SkillTimer.Start();                 //다음 공격 전 대기 체크 시작
-
                 coolTimer.Start();         //쿨타임 시작
 
+                projectileMoveTime = _attackTime;
                 Use();
-                isAttacking = false;
 
+                isAttacking = false;
                 //라인랜더러값 초기화
                 lineRenderer.enabled = false;
             }
@@ -128,7 +93,7 @@ public class BowSkillBigArrow : SkillType
     {
         isPlayGizoms = true;    //테스트용_범위 기즈모 활성화
 
-        s_AttackTimer.Start();                                   //다음 공격 전 대기 체크 시작
+        p_MoveTimer.Start();
         StartCoroutine(C_Attack(_attackDistance, _attackTime));
     }
 
@@ -144,7 +109,7 @@ public class BowSkillBigArrow : SkillType
 
         while (true)
         {
-            float timer = s_AttackTimer.GetRemainingTime() / _attackTime;
+            float timer = p_MoveTimer.GetRemainingTime() / _attackTime;
             Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
             detectPos = movePos;
 
@@ -155,7 +120,7 @@ public class BowSkillBigArrow : SkillType
                 if (targets.Contains(col.gameObject)) continue;   //중복일 경우, 무시
                 else targets.Add(col.gameObject);                  //중복이 아닐 경우, 체크 대상에 추가
 
-                if (col.gameObject != null) chipset.Attack(col.gameObject, damageRate, attackDirection, ChipAttackType.Skill);
+                if (col.gameObject != null) chipset.Attack(col.gameObject, damageRate, attackDirection, addedCritChanceRate, addedCritRate, ChipAttackType.Skill);
             }
 
             if (timer <= 0) break;  //시간 초과시, 코루틴 종료

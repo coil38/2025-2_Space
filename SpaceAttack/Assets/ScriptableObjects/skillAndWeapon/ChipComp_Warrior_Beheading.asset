@@ -10,10 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c493b9d51bd30244b9f2b7f29d763e9, type: 3}
-  m_Name: ChipComp_Warrior_Beheading
+  m_Name: ChipsetComponent_Warrior_Beheading
   m_EditorClassIdentifier: 
-  chipsetComponentKey: Warrior_Beheading
+  chipsetCompID: 105
   chipsetCpname: Warrior_Beheading
   componentType: 3
   iconSprite: {fileID: 21300000, guid: 065c9b8f681048e4f9c2d42e7fbe1aaa, type: 2}
   description: This is Warriors BeheadingSkill
+  damageRate:
+  - 1.3
+  coolTime:
+  - 10
+  addedCritRate:
+  - 0.1
+  addedCritChanceRate:
+  - 0.2
+  attackTime:
+  - 1
+  attackRange:
+  - 6

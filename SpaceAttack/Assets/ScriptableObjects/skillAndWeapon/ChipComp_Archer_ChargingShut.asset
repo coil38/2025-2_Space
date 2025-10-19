@@ -12,8 +12,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c493b9d51bd30244b9f2b7f29d763e9, type: 3}
   m_Name: ChipComp_Archer_ChargingShut
   m_EditorClassIdentifier: 
-  chipsetComponentKey: Archer_ChargingShut
+  chipsetCompID: 110
   chipsetCpname: Archer_ChargingShut
   componentType: 4
   iconSprite: {fileID: 21300000, guid: 5704e7b035f943f4f8e1657ac56b72c5, type: 3}
   description: This is Archers _ChargingShutSkill
+  damageRate:
+  - 1.2
+  - 1.4
+  - 1.8
+  coolTime:
+  - 25
+  - 25
+  - 25
+  addedCritRate:
+  - 0.1
+  - 1.4
+  - 2
+  addedCritChanceRate:
+  - 0.1
+  - 0.2
+  - 0.4
+  attackTime:
+  - 1
+  - 1
+  - 1
+  attackRange:
+  - 8
+  - 10
+  - 15

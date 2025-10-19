@@ -73,7 +73,7 @@ public class BaseChipset : ChipSetType
         }
     }
 
-    public override void Attack(GameObject target, float damageRate, Vector3 dir, ChipAttackType type)   //스킬, 무기 공용 공격함수
+    public override void Attack(GameObject target, float damageRate, Vector3 dir, float addedCriChanceRate, float addedCriRate, ChipAttackType type)   //스킬, 무기 공용 공격함수
     {
         if (target.GetComponent<EnemyBase>() != null)
             if (target.GetComponent<EnemyBase>().isDead) return;                                         //만약 타겟이 사망했다면 반환처리
@@ -83,6 +83,8 @@ public class BaseChipset : ChipSetType
             damageRate,
             dir,
             type,
+            addedCriRate,
+            addedCriChanceRate,
             r_dataModifiers.s_attackRate,
             r_dataModifiers.s_damageRate,
             r_dataModifiers.s_weaponDamageRate,

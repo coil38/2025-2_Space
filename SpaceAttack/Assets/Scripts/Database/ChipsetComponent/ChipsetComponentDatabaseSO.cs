@@ -8,22 +8,22 @@ public class ChipsetComponentDatabaseSO : ScriptableObject
     public List<ChipsetComponentSO> chipsetComponents = new List<ChipsetComponentSO>();
 
     //캐싱을 위한 사전
-    private Dictionary<string, ChipsetComponentSO> chipsetComponentByKey;
+    private Dictionary<int, ChipsetComponentSO> chipsetComponentByID;
 
     public void Initialize()
     {
-        chipsetComponentByKey = new Dictionary<string, ChipsetComponentSO>();
+        chipsetComponentByID = new Dictionary<int, ChipsetComponentSO>();
         foreach (var component in chipsetComponents)
         {
-            chipsetComponentByKey[component.chipsetComponentKey] = component;
+            chipsetComponentByID[component.chipsetCompID] = component;
         }
     }
 
-    public ChipsetComponentSO GetChipsetComponent(string chipsetComponentKey)
+    public ChipsetComponentSO GetChipsetComponentByID(int id)
     {
-        if (chipsetComponentByKey == null)
+        if (chipsetComponentByID == null)
             Initialize();
-        if(chipsetComponentByKey.TryGetValue(chipsetComponentKey, out ChipsetComponentSO component))
+        if(chipsetComponentByID.TryGetValue(id, out ChipsetComponentSO component))
             return component;
 
         return null;

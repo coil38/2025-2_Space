@@ -11,52 +11,21 @@ public class BowSkillChargingShot : SkillType
     private Quaternion detectRot;
 
     private Vector3 detectPos;
-    private Vector3 detectSize;
-
-    private float _attackDistance;
-    private float _attackTime;
 
     private List<GameObject> targets = new List<GameObject>();
 
     private bool isPlayGizoms;
 
-    private Timer _s_AttackTimer;  //초기값인 s_AttackTimer의 복제본
-
-
-    //게이지 한 줄 충전시간(1초)
-
-    //1차 게이지 데이터 공격 너비(3), 공격 사거리(8), 공격력(10), 공격시간(1초), 질량(0.4)
-
-    //2차 게이지 데이터 공격 너비(5), 공격 사거리(12), 공격력(20), 공격시간(0.7초), 질량(0.7)
-
-    //3차 게이지 데이터 공격 너비(8), 공격 사거리(15), 공격력(30), 공격시간(0.4초), 질량(0.9)
-
-    //쿨 타임(25초)
-    //플레이어 대기 시간(게이지 차징 중일 때, 항상)
-
-    private float chargeTime = 1f;
-    private int[] attackWidths = new int[3] {3, 5, 8 };
-    private int[] attackDistances = new int[3] {8, 12, 15 };
-    private float[] damageRates = new float[3] {2, 2.7f, 3.4f };
-    private float[] attackTimes = new float[3] { 1f, 0.7f, 0.4f };
-
-    private Timer chargeTimer;
     private int gaugeCount = 0;
     private const int maxGaugeCount = 3;
 
     public override void OnEnable()
     {
+        chipsetCompID = 110;
         base.OnEnable();
 
+        gaugeCount = 0;
         SetGaugeData(gaugeCount);
-
-        r_AttackTime = 0.2f;
-        normalCoolTime = 25f;
-        coolTime = normalCoolTime;
-
-        coolTimer = new Timer(coolTime);
-        w_AttackTimer = new Timer(r_AttackTime);
-        chargeTimer = new Timer(chargeTime);
 
         waitForFixedUpdate = new WaitForFixedUpdate();
     }
@@ -64,23 +33,21 @@ public class BowSkillChargingShot : SkillType
     private void SetGaugeData(int _gaugeCount)
     {
         damageRate = damageRates[_gaugeCount];
+        addedCritChanceRate = addedCritChanceRates[_gaugeCount];
+        addedCritRate = addedCritRates[_gaugeCount];
         attackDistance = attackDistances[_gaugeCount];
-        attackWidth = attackWidths[_gaugeCount];
+        attackWidth = attackDistances[_gaugeCount] * 0.25f;
         attackTime = attackTimes[_gaugeCount];
-
-        s_AttackTimer = new Timer(attackTime);
-        _s_AttackTimer = s_AttackTimer;
+        coolTime = coolTimes[_gaugeCount];
     }
 
     public override void UpdateInfo()
     {
-        coolTimer.Update();
-        s_AttackTimer.Update();
-        chargeTimer.Update();
+        base.UpdateInfo();
 
         if (isAttacking)           //차징
         {
-            bool isCharging = chargeTimer.IsRunning();
+            bool isCharging = PlayerTimeSystem.w_SkillTimer.IsRunning();
             if (isCharging)
             {
                 //차징 중..
@@ -92,7 +59,8 @@ public class BowSkillChargingShot : SkillType
                 if (gaugeCount < maxGaugeCount)
                 {
                     SetGaugeData(gaugeCount);
-                    chargeTimer.Start();                           //차지 재시작
+                    PlayerTimeSystem.SetChipTimer(attackTime, ChipAttackType.Skill);
+                    PlayerTimeSystem.w_SkillTimer.Start();                           //스킬 사용 타이머 시작
                 }
             }
         }
@@ -104,33 +72,24 @@ public class BowSkillChargingShot : SkillType
 
         if (PlayerInputController.skill3Action.triggered)
         {
-            if (coolTimer.IsRunning() || PlayerTimeSystem.w_SkillTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
+            if (PlayerTimeSystem.w_SkillTimer != null)
+                if (PlayerTimeSystem.w_SkillTimer.IsRunning()) return;
 
-            chargeTimer.Start();                                //차지 타이밍 시작
+            if (coolTimer.IsRunning()) return;                  //쿨타임 처리
+
+            gaugeCount = 0;
+            SetGaugeData(gaugeCount);
+
+            PlayerTimeSystem.SetChipTimer(attackTime, ChipAttackType.Skill);
+            PlayerTimeSystem.w_SkillTimer.Start();                           //스킬 사용 타이머 시작
 
             isAttacking = true;                                 //플레이어 입력감지
             lineRenderer.enabled = true;
-
-            PlayerTimeSystem.w_SkillTimer = w_AttackTimer;
-            PlayerTimeSystem.w_SkillTimer.Start();                 //다음 공격 전 대기 체크 시작
         }
 
         if (isAttacking)
         {
-            PlayerTimeSystem.w_SkillTimer.Start();                 //다음 공격 전 대기 체크 시작
-
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);   //마우스 위치 받기
-            Vector3 mousePos = Vector3.zero;
-
-            if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, planLayer))
-                mousePos = hit.point;
-            mousePos.y = _currentPos.y;
-
-            Vector3 attackDir = (mousePos - _currentPos).normalized;   //플레이어 기준 마우스 방향 얻기
-
-            attackDirection = attackDir;
-
-            //벽이 있을 경우의 예외처리(이동거리, 이동시간)----------------------------------------------------------------------------------------------------
+            attackDirection = GetAttackDirection(currentPos);
 
             _attackDistance = attackDistance;
             _attackTime = attackTime;
@@ -140,36 +99,38 @@ public class BowSkillChargingShot : SkillType
                 _attackDistance = Vector3.Distance(hit2.point, _currentPos);
 
                 if (attackDistance >= _attackDistance)
-                {
                     _attackTime *= _attackDistance / attackDistance;
-                    s_AttackTimer = new Timer(_attackTime);
-                }
-                else s_AttackTimer = _s_AttackTimer;
             }
-            else s_AttackTimer = _s_AttackTimer;
 
             Vector3 startPos = _currentPos;
             Vector3 targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);
 
-            //라인랜더러 설정----------------------------------------------------------------------------------------------------------------------------------
+            //라인랜더러 설정
             lineRenderer.positionCount = 2;
             lineRenderer.startWidth = attackWidth;
             lineRenderer.SetPosition(0, startPos);
             lineRenderer.SetPosition(1, targetPos);
+
+            LogUtil.Log(gaugeCount);
+            if(gaugeCount >= maxGaugeCount) PlayerTimeSystem.w_SkillTimer.Start();
 
             if (Input.GetMouseButtonDown(0))  //공격 감지 및 공격
             {
                 //공격 사운드 재생
                 //공격 애니메이션 재생
 
-                PlayerTimeSystem.w_SkillTimer = w_AttackTimer;
-                PlayerTimeSystem.w_SkillTimer.Start();                 //다음 공격 전 대기 체크 시작
+                LogUtil.Log("작작ㄱ동한다ㅏ");
 
-                coolTimer.Start();         //쿨타임 시작
+                PlayerTimeSystem.SetChipTimer(attackTime, ChipAttackType.Skill);
+                PlayerTimeSystem.w_SkillTimer.Start();                             //스킬 사용 처리
+
+                coolTimer.Start();                                                 //쿨타임 시작
+
+                projectileMoveTime = _attackTime;                                  //발사체시간 설정
 
                 Use();
-                isAttacking = false;
 
+                isAttacking = false;
                 //라인랜더러값 초기화
                 lineRenderer.enabled = false;
             }
@@ -180,7 +141,7 @@ public class BowSkillChargingShot : SkillType
     {
         isPlayGizoms = true;    //테스트용_범위 기즈모 활성화
 
-        s_AttackTimer.Start();                                   //다음 공격 전 대기 체크 시작
+        p_MoveTimer.Start();                                   //다음 공격 전 대기 체크 시작
         StartCoroutine(C_Attack(_attackDistance, _attackTime));
     }
 
@@ -197,7 +158,7 @@ public class BowSkillChargingShot : SkillType
 
         while (true)
         {
-            float timer = s_AttackTimer.GetRemainingTime() / _attackTime;
+            float timer = p_MoveTimer.GetRemainingTime() / _attackTime;
             Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
             detectPos = movePos;
 
@@ -208,7 +169,7 @@ public class BowSkillChargingShot : SkillType
                 if (targets.Contains(col.gameObject)) continue;   //중복일 경우, 무시
                 else targets.Add(col.gameObject);                  //중복이 아닐 경우, 체크 대상에 추가
 
-                if (col.gameObject != null) chipset.Attack(col.gameObject, damageRate, attackDirection, ChipAttackType.Skill);
+                if (col.gameObject != null) chipset.Attack(col.gameObject, damageRate, attackDirection, addedCritChanceRate, addedCritRate, ChipAttackType.Skill);
             }
 
             if (timer <= 0) break;  //시간 초과시, 코루틴 종료

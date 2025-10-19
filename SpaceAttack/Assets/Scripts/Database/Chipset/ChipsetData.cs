@@ -6,7 +6,7 @@ public class ChipsetData
 {
     public string chipsetKey;
     public string name;
-    public string chipsetComponentKeys;
+    public string chipsetComponentIDs;
     public string iconPath;
     public string description;
 }

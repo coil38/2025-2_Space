@@ -21,6 +21,31 @@ public class PlayerTimeSystem : MonoBehaviour
 
     //스킬 대기
     public static Timer w_SkillTimer;
+    private static Dictionary<float, Timer> skillTimers = new Dictionary<float, Timer>();
+    private static Dictionary<float, Timer> weaponTimers = new Dictionary<float, Timer>();
+
+    public static void SetChipTimer(float time, ChipAttackType type)           //스킬, 기본공격 타이머 설정 함수
+    {
+        if (type == ChipAttackType.Weapon)
+        {
+            if (weaponTimers.TryGetValue(time, out Timer timer)) w_BaseAttackTimer = timer;
+            else
+            {
+                LogUtil.Log($"새로운 공격 타이머 저장: {time}");
+                w_BaseAttackTimer = new Timer(time);
+                weaponTimers.Add(time, w_BaseAttackTimer);
+            }
+        }
+        else if (type == ChipAttackType.Skill)
+        {
+            if (skillTimers.TryGetValue(time, out var value)) w_SkillTimer = value;
+            else
+            {
+                w_SkillTimer = new Timer(time);
+                skillTimers.Add(time, w_SkillTimer);
+            }
+        }
+    }
 
     void Start()
     {
