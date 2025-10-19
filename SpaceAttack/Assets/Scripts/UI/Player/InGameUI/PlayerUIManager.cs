@@ -39,9 +39,9 @@ public class PlayerUIManager : MonoBehaviour
         playerHPUI.GenerateHPSlot();
     }
 
-    public void ReducePlayerUI(int hp, int damage)
+    public void ReducePlayerUI(int hp, int shild_hp, int damage)
     {
-        playerHPUI.ReduceHPUI(hp, damage);
+        playerHPUI.ReduceHPUI(hp, shild_hp, damage);
     }
 
     public void UpdatePlayerEXP(ExpInfo expInfo)

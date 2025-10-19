@@ -9,19 +9,20 @@ public class PlayerStatus : MonoBehaviour
 
     //플레이어 상태값--------------------------------------------
     [Header("PlayerInfo")]
-    public static int m_hp = 10;              //체력
-    public static int m_maxhp = 10;           //최대 체력
-    public static float m_speed = 5f;         //이동 속도
-    public static float m_DashDistance = 3.2f;   //대쉬 거리
-    public float itemDetectDistance = 1.8f; //아이템 감지거리
-    public static float criticalChanceRate = 0.05f;         //치명타 확률
-    public static float criticalRate = 0.5f;     //치명타 피해
-    public static float missRate = 0.01f;        //회피율
-    public static float normalDamage = 50;       //기본공격력
-    public static float hitRate = 1f;            //피격배율
-    public static bool cannotHealing = false;    //회복불가
-    public static bool maxHpFixing = false;      //최대체력고정
-    public static int losedHp = 0;     //최대체력 변경후, 잃어버린 체력
+    public static int m_hp = 10;                     //체력
+    public static int m_maxhp = 10;                  //최대 체력
+    public static float m_speed = 5f;                //이동 속도
+    public static float m_DashDistance = 3.2f;       //대쉬 거리
+    public float itemDetectDistance = 1.8f;          //아이템 감지거리
+    public static float criticalChanceRate = 0.05f;  //치명타 확률
+    public static float criticalRate = 0.5f;         //치명타 피해
+    public static float missRate = 0.01f;            //회피율
+    public static float normalDamage = 50;           //기본공격력
+    public static float hitRate = 1f;                //피격배율
+    public static bool cannotHealing = false;        //회복불가
+    public static bool maxHpFixing = false;          //최대체력고정
+    public static int losedHp = 0;                   //최대체력 변경후, 잃어버린 체력
+    public static int shild_hp = 0;                  //방어막 체력
 
     public ParticleSystem m_Particle;
     public ParticleSystem d_Particle;
@@ -84,7 +85,6 @@ public class PlayerStatus : MonoBehaviour
     private void Update()
     {
         //각각의 상태 실행여부값 할당
-        isDashing = PlayerTimeSystem.w_dashTimer.IsRunning();
         isInvincibility = PlayerTimeSystem.invincibilityTimer.IsRunning();
         isStuned = PlayerTimeSystem.stunTimer.IsRunning();
 
@@ -158,6 +158,10 @@ public class PlayerStatus : MonoBehaviour
         }
     }
 
+    public static void AddShildHp(int amount)
+    {
+        shild_hp += amount;
+    }
     public static void AddHp(int amount)  //체력 추가 함수
     {
         if (cannotHealing) return;
@@ -169,7 +173,16 @@ public class PlayerStatus : MonoBehaviour
         if (PlayerUIManager.instance != null) PlayerUIManager.instance.ResetHpUI(); //체력UI 갱신
     }
 
-    public static void ChangeMaxHp(bool isAdd, int amount)
+    public static void ReduceHp(int amount)  // 체력 감소 함수
+    {
+        int damage = (int)(amount * hitRate);
+
+        if (PlayerUIManager.instance != null)
+            PlayerUIManager.instance.ReducePlayerUI(m_hp,shild_hp, damage); //체력감소 UI적용
+
+        m_hp -= damage;
+    }
+    public static void ChangeMaxHp(bool isAdd, int amount)  //최대 체력 면경 함수
     {
         if (maxHpFixing) return;
 
@@ -228,10 +241,7 @@ public class PlayerStatus : MonoBehaviour
         float mass = 1f;
         float attackForce = mass * 100f;
 
-        if(PlayerUIManager.instance != null)
-            PlayerUIManager.instance.ReducePlayerUI(m_hp, damage); //체력감소 UI적용
-
-        m_hp -= (int) (damage * hitRate);
+        ReduceHp(damage);     //플레이어 체력 감소
 
         if (m_hp <= 0)
         {

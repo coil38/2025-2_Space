@@ -94,6 +94,8 @@ public class DataManager : MonoBehaviour
         PlayerStatus.hitRate = hitRate;                              //피격 배율
         PlayerStatus.cannotHealing = cannotHealing;                  //회복불가여부
         PlayerStatus.maxHpFixing = maxHpFixing;                      //최대체력 고정여부
+        PlayerStatus.losedHp = 0;                                    //잃어버린 체력
+        PlayerStatus.shild_hp = 0;                                   //방어막 하트
 
         PlayerTimeSystem.c_DashTime = c_DashTime;                    //대시 쿨타임
         PlayerTimeSystem.m_DashTime = m_DashTime;                    //대시 시간

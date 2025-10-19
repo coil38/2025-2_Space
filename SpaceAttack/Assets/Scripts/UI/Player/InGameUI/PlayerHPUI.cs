@@ -21,7 +21,7 @@ public class PlayerHPUI : MonoBehaviour
         GenerateHPSlot();
     }
 
-    public void ReduceHPUI(int hp, int damage)
+    public void ReduceHPUI(int hp, int shild_hp, int damage)        //체력UI 감소 함수
     {
         int damageCount = damage;          //줄어들 데미지 횟수
 
@@ -70,10 +70,11 @@ public class PlayerHPUI : MonoBehaviour
         }
     }
 
-    public void GenerateHPSlot()
+    public void GenerateHPSlot()             //체력UI 재구성 함수
     {
         int maxHp = PlayerStatus.m_maxhp;
         int hp = PlayerStatus.m_hp;
+        int shildHp = PlayerStatus.shild_hp;
 
         int maxHeartCount = maxHp / 2 + (maxHp % 2 == 1 ? 1 : 0);
 
@@ -99,6 +100,7 @@ public class PlayerHPUI : MonoBehaviour
             {
                 if (HpSlots.TryPeek(out var result))
                 {
+                    LogUtil.Log(result.gameObject.name);
                     result.GetChild(1).gameObject.SetActive(false);
                     result.GetChild(2).gameObject.SetActive(false);
                 }

@@ -35,7 +35,6 @@ public class PlayerTimeSystem : MonoBehaviour
         stunTimer.Update();
         invincibilityTimer.Update();
         deshTimer.Update();
-        w_dashTimer.Update();
         c_dashTimer.Update();
 
         if(w_BaseAttackTimer != null) 
