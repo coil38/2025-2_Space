@@ -30,7 +30,6 @@ public class DataManager : MonoBehaviour
     private bool cannotHealing = false;       //회복불가
     private bool maxHpFixing = false;         //최대체력고정
 
-
     public int i_hp { get { return m_hp; } }
     public int i_maxhp { get { return m_maxhp; } }
     public float i_speed { get { return m_speed; } }
@@ -102,6 +101,7 @@ public class DataManager : MonoBehaviour
         PlayerStatus.maxHpFixing = maxHpFixing;                      //최대체력 고정여부
         PlayerStatus.losedHp = 0;                                    //잃어버린 체력
         PlayerStatus.shild_hp = 0;                                   //방어막 하트
+        PlayerStatus.maxDarkMaterialCount = 100;                     //최대암흑물질량
 
         PlayerTimeSystem.c_DashTime = c_DashTime;                    //대시 쿨타임
         PlayerTimeSystem.m_DashTime = m_DashTime;                    //대시 시간

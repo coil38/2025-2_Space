@@ -71,6 +71,7 @@ public class SaveManager : MonoBehaviour
             Vector3 defualtPos = new Vector3(0f, 0.092f, -0.3f);   //플레이어 위치초기화
             playerInventory.transform.position = defualtPos;
 
+            DataManager.instance.InitializePlayerStatus();         //플레이어 데이터 초기화
             playerInventory.InitialInventoryDatas();               //유물리스트 삭제 및 암흑물질량 초기화 및 칩셋제거
 
             //플레이어 대쉬 쿨타임 초기화

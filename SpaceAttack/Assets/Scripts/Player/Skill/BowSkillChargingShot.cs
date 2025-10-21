@@ -119,8 +119,6 @@ public class BowSkillChargingShot : SkillType
                 //공격 사운드 재생
                 //공격 애니메이션 재생
 
-                LogUtil.Log("작작ㄱ동한다ㅏ");
-
                 PlayerTimeSystem.SetChipTimer(attackTime, ChipAttackType.Skill);
                 PlayerTimeSystem.w_SkillTimer.Start();                             //스킬 사용 처리
 

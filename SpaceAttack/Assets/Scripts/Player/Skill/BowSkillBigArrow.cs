@@ -18,7 +18,7 @@ public class BowSkillBigArrow : SkillType
 
     public override void OnEnable()
     {
-        attackWidth = 4f;
+        attackWidth = 2.5f;
         waitForFixedUpdate = new WaitForFixedUpdate();
 
         chipsetCompID = 108;

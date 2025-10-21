@@ -12,6 +12,7 @@ public abstract class WeaponType : MonoBehaviour, IUse, ICheckUse
     public bool isAttacking { get; protected set; }         //공격 여부
     public Vector3 attackMovePos { get; protected set; }    //공격 이동 위치 변수
     public bool isAttackMoving { get; protected set; }      //공격 이동 여부
+    public float normalAttackTime { get { return chipCompSO.attackTime[0]; } }
     public float attackTime
     {
         get { return _attackTime; }
@@ -37,7 +38,8 @@ public abstract class WeaponType : MonoBehaviour, IUse, ICheckUse
     protected float readyAttackTime;
     protected float damageRate;
     private float _attackTime;
-
+    private ChipsetComponentSO chipCompSO;
+    
     //레이어 설정
     protected LayerMask planLayer;   //바닥감지용 리이어 마스크
     protected LayerMask enemyLayer;  //적감지용 레이어 마스크
@@ -56,7 +58,7 @@ public abstract class WeaponType : MonoBehaviour, IUse, ICheckUse
         if (chipset == null)
             chipset = gameObject.GetComponent<BaseChipset>();
 
-        ChipsetComponentSO chipCompSO = DataManager.instance._chipCompDatabase.GetChipsetComponentByID(chipsetCompID);
+        chipCompSO = DataManager.instance._chipCompDatabase.GetChipsetComponentByID(chipsetCompID);
         damageRate = chipCompSO.damageRate[0];
         coolTime = chipCompSO.coolTime[0];
         addedCritChanceRate = chipCompSO.addedCritChanceRate[0];
@@ -69,7 +71,7 @@ public abstract class WeaponType : MonoBehaviour, IUse, ICheckUse
 
     protected void PlayAniMation(PlayerAniInfo info)
     {
-        weaponAniDelegate.Invoke(info);
+        weaponAniDelegate?.Invoke(info);
     }
 
 }

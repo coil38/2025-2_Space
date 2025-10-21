@@ -13,12 +13,12 @@ public class PlayerEvent
         remove{ _correctionEventHandler -= value; }
     }
 
-    private static EventHandler<PlayerEvent> _levelEventHandler;  //플레이어 레벨정보 얻기 이벤트
+    private static EventHandler<PlayerEvent> _levelUpEventHandler;  //플레이어 레벨정보 얻기 이벤트
 
-    public static event EventHandler<PlayerEvent> levelEventHandler
+    public static event EventHandler<PlayerEvent> levelUpEventHandler
     {
-        add { _levelEventHandler += value; }
-        remove { _levelEventHandler -= value; }
+        add { _levelUpEventHandler += value; }
+        remove { _levelUpEventHandler -= value; }
     }
      
     private static EventHandler<PlayerEvent> _chipAttackEventHandler;  //칩셋 공격력 배율 변경 이벤트
@@ -54,6 +54,13 @@ public class PlayerEvent
     {
         add { _chipcoolDownEventHandler += value; }
         remove { _chipcoolDownEventHandler -= value; }
+    }
+
+    private static EventHandler<PlayerEvent> _chipattackTimeDownHandler;  //칩셋 공격속도 배율 변경 이벤트
+    public static event EventHandler<PlayerEvent> chipattackTimeDownHandler
+    {
+        add { _chipattackTimeDownHandler += value; }
+        remove { _chipattackTimeDownHandler -= value; }
     }
 
     public LevelDatabaseSO levelDatabase;   //레벨 보정관련 데이터 베이스
@@ -103,7 +110,7 @@ public class PlayerEvent
     public int maxEXP;
     public int nextMaxEXP;
 
-    public void FindMaxExpValue(int _level)
+    public void LevelUp(int _level)
     {
         maxEXP = 0;
         nextMaxEXP = 0;
@@ -130,7 +137,7 @@ public class PlayerEvent
             nextMaxEXP = levelDatabase.GetMaxExp(_level + 1);  //해당 레벨의 최대경험치양 찾기
         }
 
-        _levelEventHandler?.Invoke(this, EventManager.playerEvent);   //최대레벨을 찾는 이벤트 호출
+        _levelUpEventHandler?.Invoke(this, EventManager.playerEvent);   //최대레벨을 찾는 이벤트 호출
     }
 
     public bool isEquip;      //장착여부
@@ -173,6 +180,14 @@ public class PlayerEvent
         isEquip = _isEquip;
         coolDownRate = _coolDownRate;
         _chipcoolDownEventHandler?.Invoke(this, EventManager.playerEvent);
+    }
+
+    public float attackTimeRate;
+    public void SetAttackTimeRate(bool _isEquip, float _attackTimeRate)
+    {
+        isEquip = _isEquip;
+        attackTimeRate = _attackTimeRate;
+        _chipattackTimeDownHandler?.Invoke(this, EventManager.playerEvent);
     }
 
     public static void Initialize()

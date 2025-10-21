@@ -24,7 +24,7 @@ public class PlayerTimeSystem : MonoBehaviour
     private static Dictionary<float, Timer> skillTimers = new Dictionary<float, Timer>();
     private static Dictionary<float, Timer> weaponTimers = new Dictionary<float, Timer>();
 
-    public static void SetChipTimer(float time, ChipAttackType type)           //스킬, 기본공격 타이머 설정 함수
+    public static void SetChipTimer(float time, ChipAttackType type) //스킬, 기본공격 타이머 설정 함수
     {
         if (type == ChipAttackType.Weapon)
         {
@@ -45,6 +45,18 @@ public class PlayerTimeSystem : MonoBehaviour
                 skillTimers.Add(time, w_SkillTimer);
             }
         }
+    }
+    public static void SetStunTimer(float time)  //스턴 타이머 설정 함수
+    {
+        m_stunTime = time;
+        stunTimer = new Timer(time);
+    }
+
+    public static void SetAndStartInvincibilityTimer(float time)
+    {
+        m_invincibilityTime = time;
+        invincibilityTimer = new Timer(time);
+        invincibilityTimer.Start();
     }
 
     void Start()

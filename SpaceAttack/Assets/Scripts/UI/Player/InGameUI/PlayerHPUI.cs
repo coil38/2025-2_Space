@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Linq;
 
 public class PlayerHPUI : MonoBehaviour
 {
@@ -15,8 +16,8 @@ public class PlayerHPUI : MonoBehaviour
     [SerializeField] private float r_ani_Duration = 0.3f;
     [SerializeField] private int r_ani_repeatCount = 5;
 
-    private Queue<Transform> HpSlots = new Queue<Transform>();
-    private Queue<Transform> ShildSlots = new Queue<Transform>();
+    private List<Transform> HpSlots = new List<Transform>();
+    private List<Transform> ShildSlots = new List<Transform>();
 
     void Start()
     {
@@ -102,86 +103,61 @@ public class PlayerHPUI : MonoBehaviour
         int heartCount = hp / 2;
         bool halfHeartExist = hp % 2 == 1;
 
-        int currentHeartCount = HpSlots.Count;
-
-        for (int i = 0; i < maxHeartCount; i++)  //빈어있는 최대체력 생성
-        {
-            if (currentHeartCount <= 0)
-            {
-                GameObject hpSlot = Instantiate(HPSlot);
-                hpSlot.transform.SetParent(this.transform);
-
-                Transform hpImage = hpSlot.transform.GetChild(0);  // 1은 절반 체력, 2는 가득찬 체력 : 이들을 비활성화
-                hpImage.GetChild(1).gameObject.SetActive(false);
-                hpImage.GetChild(2).gameObject.SetActive(false);
-
-                HpSlots.Enqueue(hpImage);   //이미 만들어진 체력슬롯 재사용
-            }
-            else
-            {
-                if (HpSlots.TryPeek(out var result))
-                {
-                    result.GetChild(1).gameObject.SetActive(false);
-                    result.GetChild(2).gameObject.SetActive(false);
-                }
-            }
-
-            currentHeartCount--;
-        }
-
         foreach (var hpSlot in HpSlots)
+            Destroy(hpSlot.parent.gameObject);
+        HpSlots.Clear();
+
+        for (int i = 0; i < maxHeartCount; i++)
         {
-            if (heartCount <= 0 && !halfHeartExist) break;
+            GameObject hpSlot = Instantiate(HPSlot);
+            hpSlot.transform.SetParent(this.transform);
+
+            Transform hpImage = hpSlot.transform.GetChild(0);  // 1은 절반 체력, 2는 가득찬 체력 : 이들을 비활성화
+            hpImage.GetChild(1).gameObject.SetActive(false);
+            hpImage.GetChild(2).gameObject.SetActive(false);
+
+            HpSlots.Add(hpImage);   //이미 만들어진 체력슬롯 재사용
+
+            if (heartCount <= 0 && !halfHeartExist) continue;
             else if (heartCount <= 0 && halfHeartExist)
             {
-                hpSlot.GetChild(1).gameObject.SetActive(true);   //절반 체력을 활성화 시킨다
-                break;
+                HpSlots[i].GetChild(1).gameObject.SetActive(true);   //절반 체력을 활성화 시킨다
+                continue;
             }
 
-            hpSlot.GetChild(2).gameObject.SetActive(true);   //풀체력을 활성화 시킨다
+            HpSlots[i].GetChild(2).gameObject.SetActive(true);   //풀체력을 활성화 시킨다
             heartCount--;
         }
+
+        //--------------------------------------------------------------------------방어막 하트-----------------------------------------------------------
 
         int maxShildCount = shildHp / 2 + (shildHp % 2 == 1 ? 1 : 0);
         int shildCount = shildHp / 2;
         bool halfShildExist = shildHp % 2 == 1;
 
-        int currentShildCount = ShildSlots.Count;
+        foreach (var shild in ShildSlots)
+            Destroy(shild.parent.gameObject);
+        ShildSlots.Clear();
 
         for (int i = 0; i < maxShildCount; i++)
         {
-            if (currentShildCount <= 0)
-            {
-                GameObject shild = Instantiate(ShildHpSlot);
-                shild.transform.SetParent(this.transform);
+            GameObject shild = Instantiate(ShildHpSlot);
+            shild.transform.SetParent(this.transform);
 
-                Transform shildImage = shild.transform.GetChild(0);  // 1은 절반 체력, 2는 가득찬 체력 : 이들을 비활성화
-                shildImage.GetChild(1).gameObject.SetActive(false);
-                shildImage.GetChild(2).gameObject.SetActive(false);
+            Transform shildImage = shild.transform.GetChild(0);  // 1은 절반 체력, 2는 가득찬 체력 : 이들을 비활성화
+            shildImage.GetChild(1).gameObject.SetActive(false);
+            shildImage.GetChild(2).gameObject.SetActive(false);
 
-                ShildSlots.Enqueue(shildImage);   //이미 만들어진 체력슬롯 재사용
-            }
-            else
-            {
-                if (ShildSlots.TryPeek(out var result))
-                {
-                    result.GetChild(1).gameObject.SetActive(false);
-                    result.GetChild(2).gameObject.SetActive(false);
-                }
-            }
-            currentShildCount--;
-        }
+            ShildSlots.Add(shildImage);   //이미 만들어진 체력슬롯 재사용
 
-        foreach (var shildSlot in ShildSlots)
-        {
-            if (shildCount <= 0 && !halfShildExist) break;
+            if (shildCount <= 0 && !halfShildExist) continue;
             else if (shildCount <= 0 && halfShildExist)
             {
-                shildSlot.GetChild(1).gameObject.SetActive(true);   //절반 체력을 활성화 시킨다
-                break;
+                ShildSlots[i].GetChild(1).gameObject.SetActive(true);   //절반 체력을 활성화 시킨다
+                continue;
             }
 
-            shildSlot.GetChild(2).gameObject.SetActive(true);   //풀체력을 활성화 시킨다
+            ShildSlots[i].GetChild(2).gameObject.SetActive(true);   //풀체력을 활성화 시킨다
             shildCount--;
         }
     }

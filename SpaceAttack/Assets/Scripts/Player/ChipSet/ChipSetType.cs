@@ -23,6 +23,7 @@ public abstract class ChipSetType : MonoBehaviour
     public abstract void SetChipWeaponDamageRate(object obj, PlayerEvent e);
     public abstract void SetChipSkillDamageRate(object obj, PlayerEvent e);
     public abstract void SetCoolDownRate(object obj, PlayerEvent e);
+    public abstract void SetAttackTime(object obj, PlayerEvent e);
     public abstract void Attack(GameObject target, float damageRate, Vector3 dir, float addedCriChanceRate, float addedCriRate, ChipAttackType type);
 
 }

@@ -80,6 +80,13 @@ public class DamageEffectManager : MonoBehaviour
         }
         ShowDamageText(position, text, color, isCritical);
     }
+    public void ShowDoubleAttack(Vector3 position)
+    {
+        string text = $"DamageX2";
+        Color color = Color.cyan;
+
+        ShowDamageText(position, text, color);
+    }
 
     public void ShowHeal(Vector3 position, int amount)
     {

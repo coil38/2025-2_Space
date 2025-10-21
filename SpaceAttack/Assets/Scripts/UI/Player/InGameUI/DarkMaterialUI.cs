@@ -40,7 +40,13 @@ public class DarkMaterialUI : MonoBehaviour
 
     public void ResetDarkMaterialUI()
     {
+        m_Slider.maxValue = 100;
         m_Slider.value = 0f;
         currentSliderValue = 0f;
+    }
+
+    public void ChangeMaxDarkMaterial(int value)
+    {
+        m_Slider.maxValue = value;
     }
 }

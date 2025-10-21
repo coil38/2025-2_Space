@@ -11,8 +11,12 @@ public class AttackEventManager
     {
         OnAttackStarted?.Invoke(context);
 
-        if (context.IsReattack) Attack(context);
+        if (context.IsReattack)
+            Attack(context);
         Attack(context);
+
+        if (context.IsReattack) 
+            DamageEffectManager.instance.ShowDoubleAttack(context.target.transform.position + context.target.transform.up * 0.5f);
         Camera.main.GetComponent<CameraFallow>().CameraShack();                     //카메라 흔들림 연출
 
         OnAttackFinished?.Invoke(context);
@@ -47,7 +51,10 @@ public class AttackEventManager
 
         Vector3 effectPos = target.transform.position + target.transform.up * 0.5f;
         if (DamageEffectManager.instance != null)                                   //데미지 이펙트 적용
-            DamageEffectManager.instance.ShowDamage(effectPos, (int)criDamage, false, isCritical);
+        {
+            if(!context.IsReattack)
+                DamageEffectManager.instance.ShowDamage(effectPos, (int)criDamage, false, isCritical);
+        }
 
         target.SendMessage("ApplyDamage", info);                                    //공격 함수
 
@@ -59,13 +66,13 @@ public class AttackEventManager
 
     private static float CalculateAttackDamage(AttackContext context)            //데미지 계산 함수 (크리티컬 미포함)
     {
-        float value = 1;
+        float value = 0;
         if (context.attackType == ChipAttackType.Skill)
             value += context.skillDamageRateSume;
         else if (context.attackType == ChipAttackType.Weapon)
             value += context.weaponDamagekRateSume;
 
-        return (PlayerStatus.normalDamage * (1 + context.attackRateSume)) * (1 + context.damageRateSume) * context.damageRate * value;
+        return (PlayerStatus.normalDamage * (1 + context.attackRateSume)) * context.damageRateSume * context.damageRate * value;
     }
 
     public static void InitialEvent()

@@ -10,6 +10,7 @@ public abstract class SkillType : MonoBehaviour
     public int unLockedNumber { get; protected set; }      //해금 대상 번호
     public bool isUnLocked { get; set; }                   //사용 가능 여부
     public float normalCoolTime { get { return chipCompSO.coolTime[0]; } }
+    public float normalAttackTime { get { return chipCompSO.attackTime[0]; } }
     public float coolTime
     {
         get { return _coolTime; }
@@ -24,7 +25,7 @@ public abstract class SkillType : MonoBehaviour
         get { return m_attackTime; }
         set
         {
-            LogUtil.Log($"공격시간은 : {value * 1.1f}");
+            //LogUtil.Log($"공격시간은 : {value * 1.1f}");
             PlayerTimeSystem.SetChipTimer(value * 1.1f, ChipAttackType.Skill);
             readyAttackTime = value * 0.5f;
             m_attackTime = value;
@@ -74,7 +75,7 @@ public abstract class SkillType : MonoBehaviour
         set
         {
             _projectileMoveTime = value;
-            LogUtil.Log($"발사체 이동 타이머설정, 설정시간: {value}");
+            //LogUtil.Log($"발사체 이동 타이머설정, 설정시간: {value}");
             p_MoveTimer = new Timer(value);
         }
     }
@@ -127,6 +128,11 @@ public abstract class SkillType : MonoBehaviour
     {
         coolTimer?.Update();
         p_MoveTimer?.Update();
+    }
+
+    protected void PlayAniMation(PlayerAniInfo info)
+    {
+        skillAniDelegate?.Invoke(info);
     }
 
     protected Vector3 GetAttackDirection(Vector3 currentPos)

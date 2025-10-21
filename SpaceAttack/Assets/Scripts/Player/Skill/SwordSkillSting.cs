@@ -29,8 +29,6 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
     {
         //if (!canUse) return;                                      //해금여부에 따른 스킬 사용 여부
 
-        _currentPos = currentPos;
-
         if (PlayerInputController.skill1Action.triggered)           //플레이어 입력감지
         {
             if (PlayerTimeSystem.w_SkillTimer != null)
@@ -38,10 +36,16 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
             if (coolTimer.IsRunning()) return;                      //쿨타임 중 실행불가처리
 
+            LogUtil.Log($"스킬 쿨타임: {coolTime}");
+
+            _currentPos = currentPos;
             isAttacking = true;
 
             //찌르기 사운드 재생
             //공격 시전 애니메이션 실행
+
+            PlayerTimeSystem.SetChipTimer(_attackTime, ChipAttackType.Skill);    //스킬 사용 타임 설정
+            PlayerTimeSystem.w_SkillTimer.Start();                               //스킬 사용 시작
 
             coolTimer.Start();                                       //쿨타임 시작
             attackDirection = GetAttackDirection(currentPos);        //공격 방향 설정
@@ -56,8 +60,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
                 if (attackDistance >= _attackDistance)
                     _attackTime *= _attackDistance / attackDistance;
             }
-            PlayerTimeSystem.SetChipTimer(_attackTime, ChipAttackType.Skill);    //스킬 사용 타임 설정
-            PlayerTimeSystem.w_SkillTimer.Start();                               //스킬 사용 시작
+            projectileMoveTime = _attackTime;
 
             Invoke("Use", readyAttackTime);                          //시전 애니메니션 시작 후, 시전시간동안 대기
         }
@@ -69,6 +72,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
     public override void Use()
     {
+        p_MoveTimer.Start();
         StartCoroutine(C_Attack(_attackDistance, _attackTime));
     }
 
@@ -88,7 +92,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
         while (true)
         {
-            float timer = PlayerTimeSystem.w_SkillTimer.GetRemainingTime() / _attackTime;
+            float timer = p_MoveTimer.GetRemainingTime() / _attackTime;
             Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
             attackMovePos = movePos;                                                              //이동 위치 할당
 

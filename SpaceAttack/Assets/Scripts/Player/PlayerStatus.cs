@@ -23,6 +23,7 @@ public class PlayerStatus : MonoBehaviour
     public static bool maxHpFixing = false;          //최대체력고정
     public static int losedHp = 0;                   //최대체력 변경후, 잃어버린 체력
     public static int shild_hp = 5;                  //방어막 체력
+    public static int maxDarkMaterialCount = 100;    //암흑물질 최대수치
 
     public ParticleSystem m_Particle;
     public ParticleSystem d_Particle;
@@ -51,7 +52,6 @@ public class PlayerStatus : MonoBehaviour
 
     private Queue<AttackInfo> attackQueue = new Queue<AttackInfo>();
     private bool isDamageProcessing;
-    private int currentHP;
 
     private void Awake()   //싱글톤화
     {
@@ -89,13 +89,6 @@ public class PlayerStatus : MonoBehaviour
         isStuned = PlayerTimeSystem.stunTimer.IsRunning();
 
         CheckApplyDamage();    //피격 체킹
-
-        if (currentHP > m_hp)  //플레이어 쳐력을 잂는 이벤트 실행
-        {
-            int amount = currentHP - m_hp;
-            EventManager.relicEvent.OnPlayerLoseHp(amount);
-        }
-        currentHP = m_hp;
     }
 
     private void Root(bool isRooted)
@@ -158,9 +151,10 @@ public class PlayerStatus : MonoBehaviour
         }
     }
 
-    public static void AddShildHp(int amount)
+    public static void ChangeShildHp(bool isAdd, int amount)
     {
-        shild_hp += amount;
+        if (isAdd) shild_hp += amount;
+        else shild_hp -= amount;
     }
     public static void AddHp(int amount)  //체력 추가 함수
     {
@@ -173,9 +167,11 @@ public class PlayerStatus : MonoBehaviour
         if (PlayerUIManager.instance != null) PlayerUIManager.instance.ResetHpUI(); //체력UI 갱신
     }
 
-    public static void ReduceHp(int amount)  // 체력 감소 함수
+    public void ReduceHp(int amount)  // 체력 감소 함수
     {
         int damage = (int)(amount * hitRate);
+
+        EventManager.relicEvent.OnPlayerLoseHp(damage);
 
         if (PlayerUIManager.instance != null)
             PlayerUIManager.instance.ReducePlayerUI(m_hp,shild_hp, damage); //체력감소 UI적용
@@ -187,6 +183,8 @@ public class PlayerStatus : MonoBehaviour
             m_hp -= remain;
         }
         else m_hp -= damage;
+
+        CheckPlayerDead();
     }
     public static void ChangeMaxHp(bool isAdd, int amount)  //최대 체력 면경 함수
     {
@@ -198,6 +196,7 @@ public class PlayerStatus : MonoBehaviour
             m_maxhp -= amount;
             if (m_maxhp < m_hp)
             {
+                LogUtil.Log($"감소량: {amount}, 감소후, 최대체력: {m_maxhp}, 현재체력: {m_hp}");
                 losedHp = m_hp - m_maxhp;
                 m_hp = m_maxhp;
             }
@@ -205,10 +204,21 @@ public class PlayerStatus : MonoBehaviour
         if (PlayerUIManager.instance != null) PlayerUIManager.instance.ResetHpUI(); //체력UI 갱신
     }
 
+    public static void ChangeMaxDarkMatCount(bool isAdd, int amount)
+    {
+        amount = Math.Abs(amount);
+        if (isAdd) maxDarkMaterialCount += amount;
+        else maxDarkMaterialCount -= amount;
+
+        PlayerUIManager.instance.ChangeMaxDarkMaterial(maxDarkMaterialCount);
+    }
+
     public static void RecoverLosedHp()
     {
-        PlayerStatus.m_hp += PlayerStatus.losedHp;
+        LogUtil.Log($"플레이어 체력:{m_hp}, 잃어버린 체력: {losedHp}");
+        m_hp += losedHp;
         losedHp = 0;
+        if (PlayerUIManager.instance != null) PlayerUIManager.instance.ResetHpUI(); //체력UI 갱신
     }
 
     public void ApplyDamage(AttackInfo info)
@@ -221,9 +231,33 @@ public class PlayerStatus : MonoBehaviour
 
         if (isInvincibility || isStuned || isDead) return;   //대쉬 무적 상태 혹은 스턴 상태일 때, 피격 안됨
 
-        LogUtil.Log($"플레이어 피격처리 시작!! 이전 데미지 처리 중: {isDamageProcessing}, 이전 공격 개수: {attackQueue.Count}");
         attackQueue.Enqueue(info);
-        LogUtil.Log($"플레이어 피격처리 시작!! 이후 데미지 처리 중: {isDamageProcessing}, 이후 공격 개수: {attackQueue.Count}");
+    }
+
+    private void CheckPlayerDead()
+    {
+        if (m_hp > 0) return;                            //유물중, 다시 살아나는 유물이 있어서 나누어 놓음
+        isDead = true;
+        m_hp = 0;
+        EventManager.relicEvent.OnPlayerDeadEvent();
+
+        if (isDead)
+        {
+            EventManager.relicEvent.OnPlayerDeadEvent();   //플레이어 사망 이벤트 실행
+
+            if (AudioManager.instance != null)
+                AudioManager.instance.StopAllSounds();
+
+            GetComponent<Rigidbody>().useGravity = false;  //피격방지
+            GetComponent<Collider>().enabled = false;
+            if (!isRooted)
+            {
+                movemetAniController.PlayAnimation("Dead");   //사망 애니메이션 재생
+            }
+            //플레이어 사망 연출 시작
+
+            LogUtil.Log("플레이어 사망");
+        }
     }
 
     private void _ApplyDamage(AttackInfo info)
@@ -231,7 +265,7 @@ public class PlayerStatus : MonoBehaviour
         int damage = (int)info.damage;
         Vector3 dir = info.attackDirection;
 
-        EventManager.relicEvent.OnPlayerHitEvent(damage);    //플레이어 피격 이벤트 실행
+        EventManager.relicEvent.OnPlayerHitEventStart(damage, info.attacker);    //플레이어 피격 이벤트 실행
 
         float randomValue = UnityEngine.Random.Range(0.01f, 100f);
         if (randomValue < missRate)
@@ -251,38 +285,19 @@ public class PlayerStatus : MonoBehaviour
 
         ReduceHp(damage);     //플레이어 체력 감소
 
-        if (m_hp <= 0)
-        {
-            EventManager.relicEvent.OnPlayerDeadEvent();   //플레이어 사망 이벤트 실행
-
-            if (AudioManager.instance != null)
-                AudioManager.instance.StopAllSounds();
-
-            GetComponent<Rigidbody>().useGravity = false;  //피격방지
-            GetComponent<Collider>().enabled = false;
-            if (!isRooted)
-            {
-                movemetAniController.PlayAnimation("Dead");   //사망 애니메이션 재생
-            }
-            //플레이어 사망 연출 시작
-            isDead = true;
-            LogUtil.Log("플레이어 사망");
-        }
-        else
+        if (!isDead)
         {
             PlayerSoundManager.PlayPlayerHitSound();
-
             if (!isRooted)
             {
                 PlayerTimeSystem.stunTimer.Start();   //스턴 타이머 시작
                 movemetAniController.PlayAnimation("Hit");  //피격 애니메이션 ( 속박상태가 아닐 경우 )
             }
-
             LogUtil.Log($"플레이어 피격, 현재 체력: {m_hp}");
             rb.AddForce(dir * attackForce);                 //넉백
-
         }
 
+        EventManager.relicEvent.OnPlayerHitEventEnd(); //피격 종료 이벤트 실행
         isDamageProcessing = false;
     }
 

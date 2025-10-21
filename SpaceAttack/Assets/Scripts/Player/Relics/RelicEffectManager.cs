@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class RelicEffectManager : MonoBehaviour
 {
@@ -77,15 +75,15 @@ public class RelicEffectManager : MonoBehaviour
     }
     private void CritChanceBoost(bool isEquip, RelicInfo info) //102 - 치명타 확률이 n% 상승한다.
     {
-        if (isEquip) PlayerStatus.criticalChanceRate += DataManager.instance.i_criticalChanceRate * info.n;
-        else PlayerStatus.criticalChanceRate -= DataManager.instance.i_criticalChanceRate * info.n;
+        if (isEquip) PlayerStatus.criticalChanceRate += info.n;
+        else PlayerStatus.criticalChanceRate -= info.n;
         LogUtil.Log($"치명타율 변경, 현재 치명타율: {PlayerStatus.criticalChanceRate}");
     }
 
     private void EvasionRateBoost(bool isEquip, RelicInfo info) //103 - 회피 확률이 n% 증가합니다.
     {
-        if (isEquip) PlayerStatus.missRate += DataManager.instance.i_missRate * info.n;  //회피율 상승
-        else PlayerStatus.missRate -= DataManager.instance.i_missRate * info.n;
+        if (isEquip) PlayerStatus.missRate += info.n;  //회피율 상승
+        else PlayerStatus.missRate -= info.n;
         LogUtil.Log($"회피율 변경, 현재 회피율: {PlayerStatus.missRate}");
     }
 
@@ -116,7 +114,7 @@ public class RelicEffectManager : MonoBehaviour
 
         if (analyzerCount >= weaknessAnalyzerInfo.n)
         {
-            LogUtil.Log("피해량 증가");
+            LogUtil.Log($"적에게 {weaknessAnalyzerInfo.n}회 공격을 적중시킬 때마다, {weaknessAnalyzerInfo.z}초간 피해량이 {weaknessAnalyzerInfo.y}% 증가");
             EventManager.playerEvent.SetChipDamageRate(true, weaknessAnalyzerInfo.y);   //피해량 증가 적용
             TimerEvent.Add(weaknessAnalyzerInfo.z, OffWeaknessAnalyzerBuff);  //일정시간후, 자동 피해량 감소
             analyzerCount = 0;
@@ -133,19 +131,18 @@ public class RelicEffectManager : MonoBehaviour
 
     private void SkillCoolDecrease(bool isEquip, RelicInfo info)//106 - 모든 스킬 재사용 대기 시간이 n% 감소합니다.
     {
-        if (isEquip) EventManager.playerEvent.SetCoolDownRate(isEquip, info.n);
-        else EventManager.playerEvent.SetCoolDownRate(isEquip, info.n);
+        EventManager.playerEvent.SetCoolDownRate(isEquip, info.n);
         LogUtil.Log("칩스킬 쿨타임 변경");
     }
 
-    private void AttackSpeedUp(bool isEquip, RelicInfo info)    //107 - 공격 속도가 n% 증가합니다.                       !!!!!!!!!!!보류!!!!!!!!!!!!!!!
+    private void AttackSpeedUp(bool isEquip, RelicInfo info)    //107 - 공격 속도가 n% 증가합니다.
     {
-
+        EventManager.playerEvent.SetAttackTimeRate(isEquip, info.n);
     }
     private void CritDamageBoost(bool isEquip, RelicInfo info)  //108 - 치명타 피해량이 n% 증가합니다.
     {
-        if (isEquip) PlayerStatus.criticalRate += DataManager.instance.i_criticalRate * info.n;
-        else PlayerStatus.criticalRate -= DataManager.instance.i_criticalRate * info.n;
+        if (isEquip) PlayerStatus.criticalRate += info.n;
+        else PlayerStatus.criticalRate -= info.n;
     }
     private void MaxHeart(bool isEquip, RelicInfo info)         //109 - 최대 하트가 n칸 증가합니다.
     {
@@ -153,6 +150,7 @@ public class RelicEffectManager : MonoBehaviour
     }
 
     private int bloodPowerAmount = 0;
+    private int bloodPowerCount = 0;
     private RelicInfo bloodPowerInfo;
     private void BloodPower(bool isEquip, RelicInfo info)       //110 - 잃은 하트 n칸 당 공격력이 z% 증가하지만, 최대 하트가 y칸 감소합니다.
     {
@@ -162,16 +160,22 @@ public class RelicEffectManager : MonoBehaviour
         {
             RelicEvent.playerLoseHpEvent -= OnBloodPower;
             PlayerStatus.RecoverLosedHp();                       //잃어버린 체력 되돌리기
+            bloodPowerAmount = 0;
+            EventManager.playerEvent.SetChipAttackRate(false, bloodPowerInfo.z * bloodPowerCount);
+            bloodPowerCount = 0;
         }
-        PlayerStatus.ChangeMaxHp(!isEquip, (int)info.y);
+        PlayerStatus.ChangeMaxHp(!isEquip, (int)(info.y * 2));
+        LogUtil.Log(info.y);
     }
     private void OnBloodPower(int amount)
     {
         bloodPowerAmount += amount;
         if (bloodPowerAmount / 2 >= bloodPowerInfo.n)
         {
+            LogUtil.Log($"누적 피해 : {bloodPowerAmount}, 공격력 수치: {bloodPowerInfo.z}, 받은 데미지: {amount}");
             EventManager.playerEvent.SetChipAttackRate(true, bloodPowerInfo.z);
-            bloodPowerAmount -= (int) bloodPowerInfo.n;
+            bloodPowerAmount -= (int)(bloodPowerInfo.n * 2);
+            bloodPowerCount++;
         }
     }
     private void GlassCannon(bool isEquip, RelicInfo info)      //111 - 모든 공격의 피해량이 n% 증가합니다.
@@ -184,15 +188,20 @@ public class RelicEffectManager : MonoBehaviour
     }
 
     private RelicInfo lifeToSkillPowerInfo;
-    private void LifeToSkillPower(bool isEquip, RelicInfo info) //113 - 스킬 사용 시 모든 하트 중 n 칸 소모하며, 해당 스킬의 피해량이 z% 증가합니다.   !!!!!!!!!!!보류!!!!!!!!!!!!!!!
+    private void LifeToSkillPower(bool isEquip, RelicInfo info) //113 - 스킬 사용 시 모든 하트 중 n 칸 소모하며, 해당 스킬의 피해량이 z% 증가합니다.
     {
         lifeToSkillPowerInfo = info;
-        if (isEquip) RelicEvent.playerUseSkillEvent += OnLifeToSkillPower;
-        else RelicEvent.playerUseSkillEvent -= OnLifeToSkillPower;
+        if (isEquip) AttackEventManager.OnAttackStarted += OnLifeToSkillPower;
+        else AttackEventManager.OnAttackStarted -= OnLifeToSkillPower;
     }
-    private void OnLifeToSkillPower()
+    private void OnLifeToSkillPower(AttackContext context)
     {
-        
+        if (context.attackType == ChipAttackType.Skill)
+        {
+            if (PlayerStatus.Instance != null)
+                PlayerStatus.Instance.ReduceHp((int) lifeToSkillPowerInfo.n);
+            context.damageRateSume *= (1 + lifeToSkillPowerInfo.z);
+        }
     }
     private void SkillCoolincrease(bool isEquip, RelicInfo info) //114 - 스킬 재사용 대기시간이 n% 증가합니다.
     {
@@ -228,9 +237,25 @@ public class RelicEffectManager : MonoBehaviour
         if (isEquip) PlayerStatus.m_speed -= DataManager.instance.i_speed * info.n;
         else PlayerStatus.m_speed += DataManager.instance.i_speed * info.n;
     }
-    private void LastReserve(bool isEquip, RelicInfo info)       //119 - 최대 하트가 n칸으로 고정되지만, z초마다 보호막 하트 y개를 얻습니다 (최대 w칸 중첩) !!!!!!!!!!!보류!!!!!!!!!!!!!!!
-    {
 
+    private RelicInfo lastReserveInfo;
+    private int lastReserveCumCount = 0;
+    private void LastReserve(bool isEquip, RelicInfo info)       //119 - 최대 하트가 n칸으로 고정되지만, z초마다 보호막 하트 y개를 얻습니다 (최대 w칸 중첩)
+    {
+        lastReserveInfo = info;
+        if (isEquip)
+        {
+            PlayerStatus.ChangeMaxHp(info.n > PlayerStatus.m_maxhp, Mathf.Abs((int)info.n - PlayerStatus.m_maxhp));
+            PlayerStatus.maxHpFixing = true;
+            TimerEvent.Add(info.z, OnLastReserve);
+        }
+    }
+    private void OnLastReserve()
+    {
+        PlayerStatus.ChangeShildHp(true, (int)lastReserveInfo.y);
+        lastReserveCumCount++;
+        if (lastReserveCumCount < lastReserveInfo.w)
+            TimerEvent.Add(lastReserveInfo.z, OnLastReserve);
     }
 
     private RelicInfo failSafeInfo;
@@ -254,7 +279,7 @@ public class RelicEffectManager : MonoBehaviour
     {
         if (failSafeCumCount >= failSafeInfo.w) return;
 
-        if (PlayerStatus.m_hp <= failSafeInfo.n)
+        if (PlayerStatus.m_hp / 2 + (PlayerStatus.m_hp % 2 == 1 ? 1:0) <= failSafeInfo.n)
         {
             PlayerStatus.cannotHealing = true;
             //공격속도 증가
@@ -304,9 +329,9 @@ public class RelicEffectManager : MonoBehaviour
         if (isEquip) PlayerStatus.criticalChanceRate -= DataManager.instance.i_criticalChanceRate * info.n;
         else PlayerStatus.criticalChanceRate += DataManager.instance.i_criticalChanceRate * info.n;
     }
-    private void AttackSpeedDecrease(bool isEquip, RelicInfo info)//124 - 공격 속도가 n% 감소합니다. !!!!!!!!!!!보류!!!!!!!!!!!!!!!!
+    private void AttackSpeedDecrease(bool isEquip, RelicInfo info)//124 - 공격 속도가 n% 감소합니다.
     {
-
+        EventManager.playerEvent.SetAttackTimeRate(!isEquip, info.n);
     }
     private void SkillDamageDecrease(bool isEquip, RelicInfo info)//125 - 스킬 피해랴이 n% 감소합니다.
     {
@@ -324,12 +349,41 @@ public class RelicEffectManager : MonoBehaviour
     }
     private void InvincibleTimeAfterHitDecrease(bool isEquip, RelicInfo info)//128 - 피격 후 발생하는 무적 시간이 n% 감소합니다.
     {
-        /////////// 보류 !!!!!!!!!!!!!!!!!!!!!!
+        if (isEquip) PlayerTimeSystem.SetStunTimer(PlayerTimeSystem.m_stunTime - DataManager.instance.i_m_stunTime * info.n);
+        else PlayerTimeSystem.SetStunTimer(PlayerTimeSystem.m_stunTime + DataManager.instance.i_m_stunTime * info.n);
     }
+
+    private RelicInfo damageFromEliteBossPercentInfo;
+    private bool isAddDamageFromEliteBossPercent = false;
     private void DamageFromEliteBossPercent(bool isEquip, RelicInfo info)//129 - 엘리트/보스 몬스터에게 받는 피해가 n%증가합니다.
     {
-
+        damageFromEliteBossPercentInfo = info;
+        if (isEquip) RelicEvent.playerHitEventStart += OnDamageFromEliteBossPercentInfo;
+        else
+        {
+            RelicEvent.playerHitEventStart -= OnDamageFromEliteBossPercentInfo;
+            if (isAddDamageFromEliteBossPercent)
+            {
+                PlayerStatus.hitRate -= DataManager.instance.i_hitRate * damageFromEliteBossPercentInfo.n;
+                isAddDamageFromEliteBossPercent = false;
+            }
+        }
     }
+    private void OnDamageFromEliteBossPercentInfo(int damage, GameObject attacker)
+    {
+        if (attacker == null) return;
+        if (attacker.gameObject.CompareTag("Boss") || attacker.gameObject.CompareTag("Elite"))
+        {
+            PlayerStatus.hitRate += DataManager.instance.i_hitRate * damageFromEliteBossPercentInfo.n;
+            isAddDamageFromEliteBossPercent = true;
+        }
+        else
+        {
+            PlayerStatus.hitRate -= DataManager.instance.i_hitRate * damageFromEliteBossPercentInfo.n;
+            isAddDamageFromEliteBossPercent = false;
+        }
+    }
+
     private void DashDistanceDecrease(bool isEquip, RelicInfo info) //130 - 대시의 이동 거리가 n% 감소합니다.
     {
         if (isEquip) PlayerStatus.m_DashDistance -= DataManager.instance.i_DashDistance * info.n;
@@ -341,7 +395,8 @@ public class RelicEffectManager : MonoBehaviour
     }
     private void ExpGainDecrease(bool isEquip, RelicInfo info)       //132 - 획득하는 경험치가 n% 감소합니다.
     {
-        /////////////////보류!!!!!!!!!!!!!!!!!!!!!!1
+        if (isEquip) DropEXPSystem.dropExpCount -= (int)(DropEXPSystem.i_dropExpCount * info.n);
+        else DropEXPSystem.dropExpCount += (int)(DropEXPSystem.i_dropExpCount * info.n);
     }
 
     private RelicInfo baseAttackSpeedOnHitInfo;
@@ -356,13 +411,13 @@ public class RelicEffectManager : MonoBehaviour
         float randomValue = UnityEngine.Random.value;
         if (randomValue <= baseAttackSpeedOnHitInfo.n)
         {
-            //공격 속도 상승
+            EventManager.playerEvent.SetAttackTimeRate(true, baseAttackSpeedOnHitInfo.y); //공격 속도 상승
             TimerEvent.Add(baseAttackSpeedOnHitInfo.z, OffBaseAttackSpeedOnHit);
         }
     }
     private void OffBaseAttackSpeedOnHit()
     {
-        //공격속도 감소
+        EventManager.playerEvent.SetAttackTimeRate(false, baseAttackSpeedOnHitInfo.y); //공격속도 감소
     }
 
     private RelicInfo attackSpeedOnKillInfo;
@@ -374,12 +429,12 @@ public class RelicEffectManager : MonoBehaviour
     }
     private void OnAttackSpeedOnKill()
     {
-        //공격 속도 상승
+        EventManager.playerEvent.SetAttackTimeRate(true, attackSpeedOnKillInfo.z); //공격 속도 상승
         TimerEvent.Add(attackSpeedOnKillInfo.n, OffOnAttackSpeedOnKill);
     }
     private void OffOnAttackSpeedOnKill()
     {
-        //공격속도 감소
+        EventManager.playerEvent.SetAttackTimeRate(false, attackSpeedOnKillInfo.z); //공격속도 감소
     }
 
     private RelicInfo skillDamageNextAttackInfo;
@@ -426,18 +481,66 @@ public class RelicEffectManager : MonoBehaviour
         EventManager.playerEvent.SetChipAttackRate(false, critDamageAttackPowerOnCritInfo.z);
     }
 
+    private RelicInfo maxHeartShieldOnStartInfo;
     private void MaxHeartShieldOnStart(bool isEquip, RelicInfo info)      //137 - 스테이지 시작 시 하트 n칸 만큼의 보호막을 얻습니다.
     {
-        //////////////////보류!!!!!!!!!!!!!!!!!!!!111
+        maxHeartShieldOnStartInfo = info;
+        if (isEquip) RelicEvent.startStageEvent += OnMaxHeartShieldOnStart;
+        else RelicEvent.startStageEvent -= OnMaxHeartShieldOnStart;
     }
+    private void OnMaxHeartShieldOnStart()
+    {
+        PlayerStatus.ChangeShildHp(true, (int)maxHeartShieldOnStartInfo.n);
+    }
+
+    private RelicInfo shieldIfNoHitInfo;
     private void ShieldIfNoHit(bool isEquip, RelicInfo info)              //138 - n초 동안 피격당하지 않으면, 최대 하트 z칸 만큼의 보호막을 얻습니다.
     {
-        //////////////////보류!!!!!!!!!!!!!!!!!!!!111
+        shieldIfNoHitInfo = info;
+        if (isEquip)
+        {
+            RelicEvent.playerHitEventStart += OffShieldIfNoHit;
+            TimerEvent.Add(info.n, OnShieldIfNoHit);
+        }
+        else RelicEvent.playerHitEventStart -= OffShieldIfNoHit;
     }
+    private void OnShieldIfNoHit()  //보호막 생성 함수
+    {
+        PlayerStatus.ChangeMaxHp(true, (int)shieldIfNoHitInfo.z);
+    }
+    private void OffShieldIfNoHit(int damage, GameObject attacker)  //보호막 생성 취소 후, 다시 생성 함수
+    {
+        TimerEvent.Remove(OnShieldIfNoHit);
+        TimerEvent.Add(shieldIfNoHitInfo.n, OnShieldIfNoHit);
+    }
+
+    private RelicInfo ignoreEliteBossDamageChanceInfo;
+    private float currentHitRate;
     private void IgnoreEliteBossDamageChance(bool isEquip, RelicInfo info)//139 - 엘리트/보스 몬스터의 공격에 피격 시, n% 확률로 피해를 무시합니다.
     {
-        //////////////////보류!!!!!!!!!!!!!!!!!!!!111
+        if (isEquip)
+        {
+            RelicEvent.playerHitEventStart += OnIgnoreEliteBossDamageChance;
+            RelicEvent.playerHitEventEnd += OffIgnoreEliteBossDamageChance;
+        }
+        else
+        {
+            RelicEvent.playerHitEventStart -= OnIgnoreEliteBossDamageChance;
+            RelicEvent.playerHitEventEnd -= OffIgnoreEliteBossDamageChance;
+        }
     }
+    private void OnIgnoreEliteBossDamageChance(int damage, GameObject attacker)
+    {
+        currentHitRate = PlayerStatus.hitRate;
+        float randomValue = UnityEngine.Random.value;
+        if (randomValue <= ignoreEliteBossDamageChanceInfo.n)
+            PlayerStatus.hitRate = 0;
+    }
+    private void OffIgnoreEliteBossDamageChance()
+    {
+        PlayerStatus.hitRate = currentHitRate;
+    }
+
     private void DashDistanceincrease(bool isEquip, RelicInfo info)       //140 - 대시의 이동 거리가 n% 증가합니다.
     {
         if (isEquip) PlayerStatus.m_DashDistance += DataManager.instance.i_DashDistance * info.n;
@@ -475,39 +578,140 @@ public class RelicEffectManager : MonoBehaviour
     }
     private void ExpGainincrease(bool isEquip, RelicInfo info)             //145 - 획득하는 경험치가 n% 증가합니다.
     {
-        //////////////////보류!!!!!!!!!!!!!!!!!!!!111
+        if (isEquip) DropEXPSystem.dropExpCount += (int)(DropEXPSystem.i_dropExpCount * info.n);
+        else DropEXPSystem.dropExpCount -= (int)(DropEXPSystem.i_dropExpCount * info.n);
     }
+
+    private RelicInfo corruptionOnLevelupInfo;
+    private int addedDarkMatCount;
     private void CorruptionOnLevelup(bool isEquip, RelicInfo info)         //146 - 레벨 업 시 증가하는 오염도 게이지가 n 추가로 증가합니다.
     {
-        //////////////////보류!!!!!!!!!!!!!!!!!!!!111
+        corruptionOnLevelupInfo = info;
+        if (isEquip) PlayerEvent.levelUpEventHandler += OnCorruptionOnLevelup;
+        else
+        {
+            PlayerEvent.levelUpEventHandler -= OnCorruptionOnLevelup;
+            PlayerStatus.ChangeMaxDarkMatCount(false, addedDarkMatCount);
+            addedDarkMatCount = 0;
+        }
     }
+    private void OnCorruptionOnLevelup(object obj, PlayerEvent e)
+    {
+        PlayerStatus.ChangeMaxDarkMatCount(true, (int)corruptionOnLevelupInfo.n);
+        addedDarkMatCount += (int)corruptionOnLevelupInfo.n;
+    }
+
+    private RelicInfo overLoadCoreInfo;
+    private int overLoadCoreCount;
     private void OverLoadCore(bool isEquip, RelicInfo info)                //147 - 스킬 사용 시 다음 n회의 기본 공격이 강화되어 z% 피해 데미지가 증가합니다.
     {
-
+        overLoadCoreInfo = info;
+        if (isEquip)
+        {
+            RelicEvent.playerUseSkillEvent += OnOverLoadCore;
+            AttackEventManager.OnAttackStarted += OnOverLoadCore2;
+        }
+        else
+        {
+            RelicEvent.playerUseSkillEvent += OnOverLoadCore;
+            AttackEventManager.OnAttackStarted += OnOverLoadCore2;
+            overLoadCoreCount = 0;
+        }
     }
+    private void OnOverLoadCore()  //스킬 사용시, 강공 가능 상태로 전환
+    {
+        overLoadCoreCount = (int)overLoadCoreInfo.n;
+    }
+    private void OnOverLoadCore2(AttackContext context) //기본 공격시, 강공 적용
+    {
+        if (overLoadCoreCount <= 0) return;
+        if (context.attackType == ChipAttackType.Weapon)
+        {
+            context.damageRate *= (1 + overLoadCoreInfo.z);
+            overLoadCoreCount--;
+        }
+    }
+
     private void Execute(bool isEquip, RelicInfo info)                     //148 - 체력이 n% 이하인 일반 몬스터를 즉시 처치합니다. (엘리트/보스 몬스터에게는 적용되지 않음)
     {
         //////////////////보류!!!!!!!!!!!!!!!!!!!!111
     }
+
+    private RelicInfo noHitShieldHeartInfo;
+    private int noHitShieldHeartCount;
     private void NoHitShieldHeart(bool isEquip, RelicInfo info)            //149 - n초 동안 피격당하지 않으면, 추가 하트의 보호막이 z개 추가 됩니다. (최대 y개)
     {
-        //////////////////보류!!!!!!!!!!!!!!!!!!!!111
+        shieldIfNoHitInfo = info;
+        if (isEquip)
+        {
+            RelicEvent.playerHitEventStart += OffNoHitShieldHeart;
+            TimerEvent.Add(info.n, OnNoHitShieldHeart);
+        }
+        else RelicEvent.playerHitEventStart -= OffNoHitShieldHeart;
     }
+    private void OnNoHitShieldHeart()  //보호막 생성 함수
+    {
+        if (noHitShieldHeartCount >= noHitShieldHeartInfo.y) return;
+        PlayerStatus.ChangeMaxHp(true, (int)noHitShieldHeartInfo.z);
+        noHitShieldHeartCount++;
+    }
+    private void OffNoHitShieldHeart(int damage, GameObject attacker)  //보호막 생성 취소 후, 다시 생성 함수
+    {
+        TimerEvent.Remove(OnShieldIfNoHit);
+        TimerEvent.Add(noHitShieldHeartInfo.n, OnShieldIfNoHit);
+    }
+
+    private RelicInfo resurrectionInfo;
+    private int resurrectionCount;
     private void Resurrection(bool isEquip, RelicInfo info)                //150 - 죽었을 경우 하트 n개를 생성되며, z초간 무적 상태가 됩니다. (게임 진행 간 y회)
     {
-
+        resurrectionInfo = info;
+        if (isEquip) RelicEvent.playerDeadEvent += OnResurrection;
+        else RelicEvent.playerDeadEvent -= OnResurrection;
     }
+    private void OnResurrection()
+    {
+        if (resurrectionCount >= resurrectionInfo.y) return;
+
+        PlayerStatus.Instance.isDead = false;
+        PlayerStatus.AddHp((int)resurrectionInfo.n);
+        resurrectionCount++;
+    }
+
+    private RelicInfo autoCleanseInfo;
     private void AutoCleanse(bool isEquip, RelicInfo info)                 //151 - 하트를 잃을때 마다 n%확률로 부여된 해로운 효과 z개를 제거합니다.
     {
-
+        autoCleanseInfo = info;
+        if (isEquip) RelicEvent.playerLoseHpEvent += OnAutoCleanseInfo;
+        else RelicEvent.playerLoseHpEvent -= OnAutoCleanseInfo;
     }
+    private void OnAutoCleanseInfo(int damage)
+    {
+        float randomValue = UnityEngine.Random.value;
+        if (randomValue <= autoCleanseInfo.n)
+        {
+            //해로운 효과 삭제
+        }
+    }
+
+    private RelicInfo counterCoreInfo;
     private void CounterCore(bool isEquip, RelicInfo info)                 //152 - 하트를 읽을때 마다 n% 확률로 zm범위의 몬스터들을 경직 시킵니다. (보스 몬스터에게는 적용되지 않음)
     {
-
+        counterCoreInfo = info;
+        if (isEquip) RelicEvent.playerLoseHpEvent += OnCounterCore;
+        else RelicEvent.playerLoseHpEvent -= OnCounterCore;
+    }
+    private void OnCounterCore(int damage)
+    {
+        float randomValue = UnityEngine.Random.value;
+        if (randomValue <= autoCleanseInfo.n)
+        {
+            // zm범위의 몬스터들을 경직 시킵니다
+        }
     }
     private void DebuffImmunity(bool isEquip, RelicInfo info)              //153 - 구속을 제외한 모든 디버프에 면역 상태가 됩니다.
     {
-
+        //보류~~
     }
     private void RelicDropRateBoost(bool isEquip, RelicInfo info)          //154 - 오염된 프로세스 드랍 확률이 n% 증가합니다.
     {
@@ -517,7 +721,7 @@ public class RelicEffectManager : MonoBehaviour
     }
     private void CorruptionIncrease(bool isEquip, RelicInfo info)          //155 - 플레이어 오염도 수치가 n 증가합니다.
     {
-
+        PlayerStatus.ChangeMaxDarkMatCount(isEquip, (int)info.n);
     }
 
 }

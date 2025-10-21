@@ -6,7 +6,8 @@ using UnityEngine;
 public class RelicEvent
 {
     public static event Action<int> playerLoseHpEvent;     //플레이어 체력 잃음 O
-    public static event Action<int> playerHitEvent;        //플레이어 피격 O
+    public static event Action<int, GameObject> playerHitEventStart;        //플레이어 피격 O
+    public static event Action playerHitEventEnd;          //플레이어 피격 종료 O
     public static event Action playerAttckEvent;           //플레이어 모든 공격 O
     public static event Action playerUseSkillEvent;        //플레이어 스킬 사용 O
     public static event Action playerSkillAttackEvent;     //플레이어 공격 스킬 사용 O
@@ -17,9 +18,14 @@ public class RelicEvent
     public static event Action startStageEvent;            //스테이지 시작    
     public static event Action criticalEvent;              //크리티컬 성공    O
 
-    public void OnPlayerHitEvent(int damageAmount)
+    public void OnPlayerHitEventStart(int damageAmount, GameObject attacker)
     {
-        playerHitEvent?.Invoke(damageAmount);
+        playerHitEventStart?.Invoke(damageAmount, attacker);
+    }
+
+    public void OnPlayerHitEventEnd()
+    {
+        playerHitEventEnd?.Invoke();
     }
 
     public void OnPlayerAttackEvent()
@@ -70,7 +76,7 @@ public class RelicEvent
 
     public static void InitializeEvent()
     {
-        playerHitEvent = null;
+        playerHitEventStart = null;
         playerAttckEvent = null;
         playerUseSkillEvent = null;
         playerSkillAttackEvent = null;

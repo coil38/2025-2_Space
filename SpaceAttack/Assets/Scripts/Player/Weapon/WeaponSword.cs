@@ -33,7 +33,7 @@ public class WeaponSword : WeaponType
             Vector3 movePos = Vector3.Lerp(_currentPos, targetPos, 1 - timer);
             attackMovePos = movePos;   //이동 위치 할당
 
-            Use();  //공격이동 중, 계속 공격처리
+            CheckUse2();  //공격이동 중, 계속 공격처리
 
             if (targets.Count > 0)  //피격 대상이 있을 경우, 공격 이동 종료
                 attackMoveTimer.Reset();

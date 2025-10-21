@@ -13,13 +13,13 @@ public class PlayerCore : MonoBehaviour
 
     public void InitializeEvent()  //이벤트 체인 구독
     {
-        PlayerEvent.levelEventHandler += GetMaxExpValue;
+        PlayerEvent.levelUpEventHandler += GetMaxExpValue;
         if (DataManager.instance != null)
         {
             EventManager.playerEvent.levelDatabase = DataManager.instance._levelDatabase;  //데이터 베이스 할당
         }
         else LogUtil.LogError("레벨데이터 베이스가 PlayerCore시스템에 할당되지 않았습니다.");
-        EventManager.playerEvent.FindMaxExpValue(Level);  //현재 레벨의 최대 경험치량 할당 이벤트 실행
+        EventManager.playerEvent.LevelUp(Level);  //현재 레벨의 최대 경험치량 할당 이벤트 실행
         maxLevel = EventManager.playerEvent.levelDatabase.maxLevel;  //최대 레벨 갱신
         GetDarkMatter(0, true);  //UI 갱신
     }
@@ -58,7 +58,7 @@ public class PlayerCore : MonoBehaviour
         {
             int remainExpCount = DarkMaterialCount - maxEXP;
 
-            EventManager.playerEvent.FindMaxExpValue(Level + 1);  //다음 레벨의 최대 경험치량을 찾는 이벤트 실행
+            EventManager.playerEvent.LevelUp(Level + 1);  //다음 레벨의 최대 경험치량을 찾는 이벤트 실행
             EventManager.playerEvent.FindCorectionValue(Level + 1);  //레벨 보정 여부 판단 이벤트 실행
 
             DarkMaterialCount = remainExpCount;
