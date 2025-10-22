@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CameraFallow : MonoBehaviour
 {
+    public static CameraFallow instance;
+
     public float FollowSpeed = 2.0f;
     public Transform Target
     {
@@ -27,6 +29,18 @@ public class CameraFallow : MonoBehaviour
 
     private bool isInitialing;  //초기 중인지 여부 판단
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     void OnEnable()
     {
         StartCoroutine(FindTargetAndInitialize());

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 
 public class PauseUIManager : MonoBehaviour
 {
@@ -21,6 +22,9 @@ public class PauseUIManager : MonoBehaviour
     [SerializeField] private GameObject achievementUIPanel;
     [SerializeField] private GameObject helpUIPanel;
     [SerializeField] private GameObject settingUIPanel;
+
+    [Header("블러효과")]
+    [SerializeField] private Volume pauseVolume;
 
     private SettingUIManager settingUIManager;
 
@@ -52,6 +56,8 @@ public class PauseUIManager : MonoBehaviour
         helpUIPanel.SetActive(false);
 
         UIESCSystem.SetPauseUI(OnPauseUI);     //일시정지 활성화_델리게이트 체인
+
+        pauseVolume.weight = 0;                //블러효과 종료
     }
 
     public void OnPauseUI()
@@ -61,6 +67,7 @@ public class PauseUIManager : MonoBehaviour
         Time.timeScale = 0f;           //일시정지
 
         UIESCSystem.SetUIDepth(UIType.PauseUI, ResumeGame, pauseUIPanel);
+        pauseVolume.weight = 1;                //블러효과 실행
     }
 
     private void ResumeGame()
@@ -69,6 +76,7 @@ public class PauseUIManager : MonoBehaviour
         UISoundManager.PlayeOnAndOffPanelSound();  //패널닫기 사운드 재생
         pauseUIPanel.SetActive(false);
         Time.timeScale = 1f;           //일시정지 해제
+        pauseVolume.weight = 0;                //블러효과 종료
     }
 
     private void PlayNewGame()
@@ -105,6 +113,7 @@ public class PauseUIManager : MonoBehaviour
             if(GameSceneManager.instance.currentScene != SceneType.StartGameScene)
                 Time.timeScale = 1f;           //일시정지 취소
             pauseUIPanel.SetActive(false);  //비활성화 처리
+            pauseVolume.weight = 0;                //블러효과 종료
             SceneLoadManager.instance.LoadScene("StartUIScene");
         }
     }

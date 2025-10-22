@@ -17,7 +17,7 @@ public class PlayerStatus : MonoBehaviour
     public static float criticalChanceRate = 0.05f;  //치명타 확률
     public static float criticalRate = 0.5f;         //치명타 피해
     public static float missRate = 0.01f;            //회피율
-    public static float normalDamage = 50;           //기본공격력
+    public static float normalDamage = 10;           //기본공격력
     public static float hitRate = 1f;                //피격배율
     public static bool cannotHealing = false;        //회복불가
     public static bool maxHpFixing = false;          //최대체력고정
@@ -53,6 +53,8 @@ public class PlayerStatus : MonoBehaviour
     private Queue<AttackInfo> attackQueue = new Queue<AttackInfo>();
     private bool isDamageProcessing;
 
+    private GUIStyle labelStyle;
+
     private void Awake()   //싱글톤화
     {
         if (Instance == null)
@@ -64,6 +66,10 @@ public class PlayerStatus : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        labelStyle = new GUIStyle();
+        labelStyle.fontSize = 25;
+        labelStyle.normal.textColor = Color.white;
     }
     private void OnEnable()
     {
@@ -328,24 +334,24 @@ public class PlayerStatus : MonoBehaviour
     InventoryManager inventory;
     private void OnGUI()
     {
-        GUILayout.BeginArea(new Rect(10, 350, 400, 1650));
+        GUILayout.BeginArea(new Rect(10, 350, 800, 1650));
 
-        GUILayout.Label("===플레이어 스텟===");
-        GUILayout.Label($"체력: {m_hp}, 최대 체력: {m_maxhp}");
-        GUILayout.Label($"이동속도: {m_speed}, 기본 이동 속도: {DataManager.instance.i_speed}");
-        GUILayout.Label($"치명타 피해률: {criticalRate}, 치명타 확률: {criticalChanceRate}");
-        GUILayout.Label($"회피률: {missRate} , 기본공격력: {normalDamage}");
-        GUILayout.Label($"레벨: {PlayerCore.Level} , 경험치: {PlayerCore.DarkMaterialCount}");
+        GUILayout.Label("===플레이어 스텟===", labelStyle);
+        GUILayout.Label($"체력: {m_hp}, 최대 체력: {m_maxhp}", labelStyle);
+        GUILayout.Label($"이동속도: {m_speed}, 기본 이동 속도: {DataManager.instance.i_speed}", labelStyle);
+        GUILayout.Label($"치명타 피해률: {criticalRate}, 치명타 확률: {criticalChanceRate}", labelStyle);
+        GUILayout.Label($"회피률: {missRate} , 기본공격력: {normalDamage}", labelStyle);
+        GUILayout.Label($"레벨: {PlayerCore.Level} , 경험치: {PlayerCore.DarkMaterialCount}", labelStyle);
 
-        GUILayout.Space(10);
+        GUILayout.Space(50);
 
         if (inventory == null)
             inventory = FindObjectOfType<InventoryManager>();
 
-        GUILayout.Label($"보유중인 유물 개수: {inventory._relics.Length}");
+        GUILayout.Label($"보유중인 유물 개수: {inventory._relics.Length}", labelStyle);
         foreach (var relic in inventory._relics)
         {
-            GUILayout.Label($"{relic.relicID}:{relic.relicName}");
+            GUILayout.Label($"{relic.relicID}:{relic.relicName}", labelStyle);
         }
 
         GUILayout.EndArea();
