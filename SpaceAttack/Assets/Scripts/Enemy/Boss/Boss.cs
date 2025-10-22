@@ -68,6 +68,8 @@ public class Boss : EnemyBase
     private bool isTransitioningPhase = false;
     private bool isUsingSkill = false; // 스킬 중복 방지;
     private bool isSpitting = false;
+    public Transform bodyCenter;
+    public GameObject scrapExplosionPrefab;
     protected override void Start()
     {
         base.Start();
@@ -294,6 +296,11 @@ public class Boss : EnemyBase
 
         StartCoroutine(HitFlash());
 
+        if (scrapExplosionPrefab != null && bodyCenter != null)
+        {
+            Instantiate(scrapExplosionPrefab, bodyCenter.position, Quaternion.identity);
+        }
+
         // 사망 처리
         if (hp <= 0 && !isDead)
         {
@@ -329,11 +336,8 @@ public class Boss : EnemyBase
         }
     }
 
-    //실행 함수
-    public void DoCoinRainAttack()
-    {
-        CoinRainAttack(40); // 동전 갯수 설정
-    }
+    
+    
 
     //코인 떨어지는 로직
     public void CoinRainAttack(int coinCount = 10)
@@ -518,7 +522,7 @@ public class Boss : EnemyBase
             if (enemy != null)
             {
                 enemy.canDetectPlayer = false;
-                StartCoroutine(EnableEnemyAfterLanding(enemy, 5f));
+                StartCoroutine(EnableEnemyAfterLanding(enemy, 4f));
             }
         }
     }
@@ -536,17 +540,7 @@ public class Boss : EnemyBase
         if (enemy != null)
             enemy.canDetectPlayer = true;
     }
-    public void OnSpitEvent()
-    {
-
-        if (audioSource != null && spitSound != null)
-            audioSource.PlayOneShot(spitSound);
-
-        SummonMinionsSkill();
-
-        isSpitting = false;
-    }
-
+    //보스 죽음 처리
     protected override void OnDeath()
     {
         base.OnDeath();
@@ -564,7 +558,7 @@ public class Boss : EnemyBase
             audioSource.PlayOneShot(dieSound);
         anim.SetTrigger("Dead");
     }
-
+    //콜리더 on/off
     public void DisableCollider()
     {
         if (bossCollider != null)
@@ -576,7 +570,7 @@ public class Boss : EnemyBase
         if (bossCollider != null)
             bossCollider.enabled = true;
     }
-    //애니메이터 관련 함수
+    //이벤트 관련 함수
     public void StartJumpAttack()
     {
         anim.SetTrigger("JumpUp");
@@ -593,8 +587,17 @@ public class Boss : EnemyBase
 
         anim.SetTrigger("LandImpact");
     }
+    public void OnSpitEvent()
+    {
 
-    //총알 어택
+        if (audioSource != null && spitSound != null)
+            audioSource.PlayOneShot(spitSound);
+
+        SummonMinionsSkill();
+
+        isSpitting = false;
+    }
+
     public void BossAttack()
     {
         if (player == null) return;
@@ -622,6 +625,10 @@ public class Boss : EnemyBase
         anim.SetTrigger("Spit");
     }
 
+    public void DoCoinRainAttack()
+    {
+        CoinRainAttack(45); // 동전 갯수 설정
+    }
 
     //여긴 보스 사운드로 채울거임
     public void BossWariningSound()

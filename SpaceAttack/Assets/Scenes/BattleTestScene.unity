@@ -929,6 +929,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 492846545}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &495835702
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 495835703}
+  m_Layer: 6
+  m_Name: BossBody
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &495835703
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 495835702}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.24, y: 3.77, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8498225713429384177}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &513985173
 GameObject:
   m_ObjectHideFlags: 0
@@ -5961,6 +5992,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1530104607}
+    - targetCorrespondingSourceObject: {fileID: 8419184792199718916, guid: 97deca0f2801a764b95b7d70a08ca6f4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 495835703}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8704492035738034740, guid: 97deca0f2801a764b95b7d70a08ca6f4,
         type: 3}
@@ -6284,7 +6319,7 @@ MonoBehaviour:
   - {fileID: 8722641677778133939, guid: 9541107c5822f594286f8457abebf1d4, type: 3}
   - {fileID: 2040890849726229375, guid: bf2597b6dd1c15e4398a00628aee49a0, type: 3}
   - {fileID: 3210841994201302233, guid: d050b10c2f1f7bb49999ccd2284bded5, type: 3}
-  minionCount: 3
+  minionCount: 5
   minDistanceBetweenMinions: 4
   mouthPoint: {fileID: 1530104607}
   shootForce: 15
@@ -6308,6 +6343,9 @@ MonoBehaviour:
   player: {fileID: 1703026278}
   headTransform: {fileID: 1976017616}
   currentPhase: 1
+  bodyCenter: {fileID: 495835703}
+  scrapExplosionPrefab: {fileID: 5871170155388014710, guid: 94c26192b48945942a12f157bcaba2aa,
+    type: 3}
 --- !u!65 &8498225713429384174
 BoxCollider:
   m_ObjectHideFlags: 0
