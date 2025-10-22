@@ -207,6 +207,13 @@ public class CoinMonster : EnemyBase
 
         if (hp <= 0)
         {
+            isDead = true;
+            canBeHit = false;
+
+            Collider col = GetComponent<Collider>();
+            if (col != null)
+                col.enabled = false;
+
             base.ApplyDamage(attackInfo);
 
             state = CoinMonsterState.Patrol;  

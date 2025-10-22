@@ -219,6 +219,11 @@ public abstract class EnemyBase : MonoBehaviour
         if (hp <= 0 && !isDead)
         {
             isDead = true;
+            canBeHit = false;
+
+            Collider col = GetComponent<Collider>();
+            if (col != null)
+                col.enabled = false;
 
             OnDeathAction?.Invoke(this);
 

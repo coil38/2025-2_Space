@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 public class Boss : EnemyBase
@@ -44,13 +43,6 @@ public class Boss : EnemyBase
     public float upwardForce = 3f; // 살짝 위로 날아가게
     public float spreadAngle = 60f; // 퍼지는 각도
 
-    public Transform player;
-    float margin = 1f;
-    private Animator anim;
-    public Transform headTransform; // 보스 머리 위치
-    private bool isLaunchingCans = false;
-    private int hitCount = 0;
-
     [Header("보스 사운드")]
     public AudioClip coinAttackSound;
     public AudioClip WariningSound;
@@ -62,6 +54,16 @@ public class Boss : EnemyBase
     public AudioClip spitSound;
     public AudioClip dieSound;
 
+
+    //변수 선언들
+    public Transform player;
+    float margin = 1f;
+    private Animator anim;
+    public Transform headTransform; // 보스 머리 위치
+    private bool isLaunchingCans = false;
+    private int hitCount = 0;
+    private Collider bossCollider;
+    private List<GameObject> summonedMinions = new List<GameObject>();
     public int currentPhase = 1;
     private bool isTransitioningPhase = false;
     private bool isUsingSkill = false; // 스킬 중복 방지;
@@ -69,6 +71,7 @@ public class Boss : EnemyBase
     protected override void Start()
     {
         base.Start();
+        bossCollider = GetComponent<Collider>();
         anim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
 
@@ -98,16 +101,16 @@ public class Boss : EnemyBase
         // 페이즈 구분
         if (!isTransitioningPhase)
         {
-            if (hp > 600 && currentPhase != 1)
+            if (hp > 3500 && currentPhase != 1)
             {
                 currentPhase = 1;
             }
-            else if (hp <= 600 && hp > 300 && currentPhase != 2)
+            else if (hp <= 3500 && hp > 1500 && currentPhase != 2)
             {
                 StartCoroutine(PhaseTransition(2));
                 return;
             }
-            else if (hp <= 300 && currentPhase != 3)
+            else if (hp <= 1500 && currentPhase != 3)
             {
                 StartCoroutine(PhaseTransition(3));
                 return;
@@ -499,6 +502,8 @@ public class Boss : EnemyBase
             GameObject randomMinion = minionPrefabs[Random.Range(0, minionPrefabs.Length)];
             GameObject minion = Instantiate(randomMinion, mouthPoint.position, Quaternion.identity);
 
+            summonedMinions.Add(minion);
+
             float randomY = Random.Range(0f, 360f);
             Vector3 randomDir = Quaternion.Euler(0, randomY, 0) * mouthPoint.forward;
 
@@ -545,13 +550,34 @@ public class Boss : EnemyBase
     protected override void OnDeath()
     {
         base.OnDeath();
+
+        foreach (GameObject minion in summonedMinions)
+        {
+            if (minion != null)
+            {
+                Destroy(minion);
+            }
+        }
+        summonedMinions.Clear();
+
         if (audioSource != null && dieSound != null)
             audioSource.PlayOneShot(dieSound);
         anim.SetTrigger("Dead");
     }
 
+    public void DisableCollider()
+    {
+        if (bossCollider != null)
+            bossCollider.enabled = false;
+    }
+
+    public void EnableCollider()
+    {
+        if (bossCollider != null)
+            bossCollider.enabled = true;
+    }
     //애니메이터 관련 함수
-     public void StartJumpAttack()
+    public void StartJumpAttack()
     {
         anim.SetTrigger("JumpUp");
         StartCoroutine(JumpRoutine());
