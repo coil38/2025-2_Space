@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class VFXSlashHitBox : MonoBehaviour
 {
+    public AudioSource audioSource;
+
     [Header("발사체 설정")]
     public float speed = 10f;          // 이동 속도
     public float lifeTime = 5f;        // 자동 제거 시간
@@ -19,6 +21,11 @@ public class VFXSlashHitBox : MonoBehaviour
     {
         ps = GetComponent<ParticleSystem>();
         timer = lifeTime;
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource != null)
+        {
+            audioSource.Play(); // 발사와 동시에 소리 재생
+        }
     }
 
     // FireProjectile에서 방향을 받아옴
@@ -71,7 +78,10 @@ public class VFXSlashHitBox : MonoBehaviour
         {
             ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
-
+        if (audioSource != null)
+        {
+            audioSource.Stop(); // 파티클이 멈출 때 소리도 멈추게
+        }
         // 0.1초 후 루트 삭제
         StartCoroutine(DestroyRootNextFrame());
     }
