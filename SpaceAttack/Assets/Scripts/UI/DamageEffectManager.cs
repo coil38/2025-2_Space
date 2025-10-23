@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UIElements;
 
 public class DamageEffectManager : MonoBehaviour
 {
@@ -84,6 +85,18 @@ public class DamageEffectManager : MonoBehaviour
     {
         string text = $"DamageX2";
         Color color = Color.cyan;
+
+        ShowDamageText(position, text, color);
+    }
+    public void ShowWeaknessAnalyzer(Vector3 position, bool isOn, int count = 0)
+    {
+        string text = $"WeaknessAnalyzer X {count}";
+        Color color = Color.cyan;
+        if (!isOn)
+        {
+            text = $"WeaknessAnalyzerOneDown";
+            color = Color.red;
+        }
 
         ShowDamageText(position, text, color);
     }

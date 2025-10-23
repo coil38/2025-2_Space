@@ -25,6 +25,7 @@ public class PlayerInventoryInfoUI : MonoBehaviour
 
     private RectTransform UITransform;
     private RelicSO currentRelic;
+    private int currentRelicInstanceId;
 
     private void OnEnable()
     {
@@ -40,7 +41,7 @@ public class PlayerInventoryInfoUI : MonoBehaviour
         UITransform = GetComponent<RectTransform>();
         UITransform.position = UITransform.position + (Vector3)closedPos;
     }
-    public void SetRelicInfoUI(RelicSO relicSO)
+    public void SetRelicInfoUI(RelicSO relicSO, int relicInstanceId)
     {
         OnPlayerInventoryInfoUI();
         LogUtil.Log("인벤토리 유물정보UI 활성화");
@@ -51,6 +52,7 @@ public class PlayerInventoryInfoUI : MonoBehaviour
             return;
         }
         currentRelic = relicSO;
+        currentRelicInstanceId = relicInstanceId;
 
         //유물 정보 입력
         relicNameText.text = relicSO.relicName;                             //유물 이름할당
@@ -76,7 +78,7 @@ public class PlayerInventoryInfoUI : MonoBehaviour
 
     private void RemoveRelic()
     {
-        PlayerUIManager.instance.RemovePlayerItem(currentRelic);
+        PlayerUIManager.instance.RemovePlayerItem(currentRelic, currentRelicInstanceId);
         gameObject.SetActive(false);
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEditor.Rendering;
 
 public class PlayerStatus : MonoBehaviour
 {
@@ -219,12 +220,18 @@ public class PlayerStatus : MonoBehaviour
         PlayerUIManager.instance.ChangeMaxDarkMaterial(maxDarkMaterialCount);
     }
 
-    public static void RecoverLosedHp()
+    public static void RecoverLosedHp(int amount)  //잃어버린 체력값 보충
     {
         LogUtil.Log($"플레이어 체력:{m_hp}, 잃어버린 체력: {losedHp}");
-        m_hp += losedHp;
+        m_hp += amount;
         losedHp = 0;
         if (PlayerUIManager.instance != null) PlayerUIManager.instance.ResetHpUI(); //체력UI 갱신
+    }
+    public static int GetLosedHp()                  //잃어버린 체력값 받기 함수
+    {
+        int temp = losedHp;
+        losedHp = 0;
+        return temp;
     }
 
     public void ApplyDamage(AttackInfo info)

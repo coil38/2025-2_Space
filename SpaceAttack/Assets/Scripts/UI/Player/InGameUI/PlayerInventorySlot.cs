@@ -10,6 +10,7 @@ public class PlayerInventorySlot : MonoBehaviour, IPointerClickHandler
     public Image image { get; private set; }
     public Sprite itemImage {  get; private set; }
     public RelicSO relic { get; private set; }
+    public int relicInstanceId { get; private set; }
 
     private void OnEnable()
     {
@@ -17,9 +18,10 @@ public class PlayerInventorySlot : MonoBehaviour, IPointerClickHandler
         image = Array.Find(images, i => i.gameObject != this.gameObject);
     }
 
-    public void AddItemImage(RelicSO relic)
+    public void AddItemImage(RelicSO relic, int relicInstanceId)
     {
         this.relic = relic;
+        this.relicInstanceId = relicInstanceId;
         Sprite sprite = relic.iconSprite;
         itemImage = sprite;
         image.sprite = sprite;
@@ -31,6 +33,8 @@ public class PlayerInventorySlot : MonoBehaviour, IPointerClickHandler
     public void RemoveItemImage()
     {
         itemImage = null;
+        relic = null;
+        relicInstanceId = -1;
         image.sprite = null;
         ChangeColorA();
     }
@@ -50,6 +54,6 @@ public class PlayerInventorySlot : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         if (relic == null) return;
-        PlayerUIManager.instance.OnPlayerInventoryInfo(relic);
+        PlayerUIManager.instance.OnPlayerInventoryInfo(relic, relicInstanceId);
     }
 }

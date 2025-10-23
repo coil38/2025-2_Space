@@ -84,25 +84,25 @@ public class PlayerUIManager : MonoBehaviour
         playerRelicPopUpUI.SetRelicPopUpUI(onPopUpUI, relic);
     }
 
-    public void SetPlayerItem(RelicSO relicSO)      //플레이어 유물 이미지 추가
+    public void SetPlayerItem(RelicSO relicSO, int RelicInstanceId)      //플레이어 유물 이미지 추가
     {
-        playerItemUI.AddItem(relicSO);
+        playerItemUI.AddItem(relicSO, RelicInstanceId);
     }
-    public void RemovePlayerItem(RelicSO relicSO)   //플레이어 유물 이미지 삭제
+    public void RemovePlayerItem(RelicSO relicSO, int relicInstanceId)   //플레이어 유물 이미지 삭제
     {
         if(inventoryManager == null)
             inventoryManager = FindObjectOfType<InventoryManager>();
         inventoryManager.DropRelic(relicSO);
-        inventoryManager.RemoveRelic(relicSO);
-        playerItemUI.RemoveItem(relicSO);
+        inventoryManager.RemoveRelic(relicSO, relicInstanceId);
+        playerItemUI.RemoveItem(relicSO, relicInstanceId);
     }
     public void ClearPlayerItem()                   //모든 유물 이미지 삭제
     {
         playerItemUI.RemoveAllItems();
     }
 
-    public void OnPlayerInventoryInfo(RelicSO relicSO)          //플레이어 인벤토리정보UI 활성화
+    public void OnPlayerInventoryInfo(RelicSO relicSO, int relicInstanceId)          //플레이어 인벤토리정보UI 활성화
     {
-        playerInventoryInfoUI.SetRelicInfoUI(relicSO);
+        playerInventoryInfoUI.SetRelicInfoUI(relicSO, relicInstanceId);
     }
 }

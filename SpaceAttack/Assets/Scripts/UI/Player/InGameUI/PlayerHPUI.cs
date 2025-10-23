@@ -21,6 +21,12 @@ public class PlayerHPUI : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(Initialize());
+    }
+    private IEnumerator Initialize()
+    {
+        Canvas canvas = gameObject.transform.parent.GetComponent<Canvas>();
+        yield return new WaitUntil(() => canvas.renderMode == RenderMode.ScreenSpaceCamera);
         GenerateHPSlot();
     }
 
@@ -109,8 +115,7 @@ public class PlayerHPUI : MonoBehaviour
 
         for (int i = 0; i < maxHeartCount; i++)
         {
-            GameObject hpSlot = Instantiate(HPSlot);
-            hpSlot.transform.SetParent(this.transform);
+            GameObject hpSlot = Instantiate(HPSlot, gameObject.transform, false);
 
             Transform hpImage = hpSlot.transform.GetChild(0);  // 1은 절반 체력, 2는 가득찬 체력 : 이들을 비활성화
             hpImage.GetChild(1).gameObject.SetActive(false);
@@ -141,8 +146,7 @@ public class PlayerHPUI : MonoBehaviour
 
         for (int i = 0; i < maxShildCount; i++)
         {
-            GameObject shild = Instantiate(ShildHpSlot);
-            shild.transform.SetParent(this.transform);
+            GameObject shild = Instantiate(ShildHpSlot, gameObject.transform, false);
 
             Transform shildImage = shild.transform.GetChild(0);  // 1은 절반 체력, 2는 가득찬 체력 : 이들을 비활성화
             shildImage.GetChild(1).gameObject.SetActive(false);

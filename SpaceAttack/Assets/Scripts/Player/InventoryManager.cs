@@ -107,10 +107,18 @@ public class InventoryManager : MonoBehaviour
 
 //-----------------------------------------------------------------------------------------유물 획득용---------------------------------------------------------------------------------------
 
-    private List<RelicSO> relics = new List<RelicSO>();
+    private Dictionary<int, RelicSO> relics = new Dictionary<int, RelicSO>();
+    private int relicInstanceId = 0;
     public RelicSO[] _relics
     {
-        get { return relics.ToArray(); }
+        get 
+        {
+            List<RelicSO> temp = new List<RelicSO>();
+            foreach (var r in relics)
+                temp.Add(r.Value);
+            return temp.ToArray(); 
+        }
+
     }
 
     public BaseRelic relic
@@ -132,11 +140,10 @@ public class InventoryManager : MonoBehaviour
             if (currentDarkMaterial + relic.darkMaterialCount <= 100)  //최대용량을 넘지 않을 경우
             {
                 //LogUtil.Log($"{relic.relicName}_유물 획득, 현재 암흑게이지수치: {currentDarkMaterial}, 현재 보유중인 유물개수: {relics.Count}");
-
-                PlayerUIManager.instance.SetPlayerItem(relic);                     //유물 이미지 할당
+                int relicInstanceID = AddRelic(relic);
+                PlayerUIManager.instance.SetPlayerItem(relic, relicInstanceID);               //유물 이미지 할당
                 PlayerUIManager.instance.ChangeDarkMaterialUI(true, relic.darkMaterialCount); //암흑물질 채워지는 UI연출
-                relics.Add(relic);                                     //유물 데이터 추가
-                AddRelicEffects(relic);
+                AddRelicEffects(relic, relicInstanceID);                           //유물 데이터 추가
 
                 currentDarkMaterial += relic.darkMaterialCount;
                 Destroy(value.gameObject);                             //획득한 유물 파괴
@@ -153,19 +160,22 @@ public class InventoryManager : MonoBehaviour
 
     public void SetSavedRelics(RelicSO[] relics)       //저장된 유물을 불러오는 함수 (저장 시스템용)
     {
-        this.relics = new List<RelicSO>(relics);       //저장
-
+        relicInstanceId = 0;
         foreach (var relic in relics)
         {
+            AddRelic(relic);       //저장
             PlayerUIManager.instance.ChangeDarkMaterialUI(true, relic.darkMaterialCount); //암흑물질 채워지는 UI 갱신
-            AddRelicEffects(relic);
             currentDarkMaterial += relic.darkMaterialCount;
         }
+        foreach (var relic in this.relics)
+            AddRelicEffects(relic.Value, relic.Key);
     }
 
     public void InitialInventoryDatas()              //인벤토리 초기화 (저장 시스템용)
     {
         relics.Clear();
+        relicInstanceId = 0;
+
         currentDarkMaterial = 0;
         PlayerUIManager.instance.ResetDarkMaterialUI();
         PlayerUIManager.instance.ClearPlayerItem();
@@ -186,16 +196,23 @@ public class InventoryManager : MonoBehaviour
         relic.Initialize(relicSO.relicID, relicSO.relicName, relicSO.iconSprite); //생성한 유물 오브젝트에 유물정보 갱신
     }
 
-    public void RemoveRelic(RelicSO m_relicSO)
+    public void RemoveRelic(RelicSO m_relicSO, int relicInstanceId)
     {
         PlayerUIManager.instance.ChangeDarkMaterialUI(false, m_relicSO.darkMaterialCount); //암흑물질 감소하는 UI연출
         currentDarkMaterial -= m_relicSO.darkMaterialCount;     //암흑물질 감소
-        relics.Remove(m_relicSO);                               //유물 데이터 삭제
-        RelicEffectManager.ApplyRelicEffect(m_relicSO, false);  //유물 효과 제거
+        relics.Remove(relicInstanceId);                               //유물 데이터 삭제
+        RelicEffectManager.ApplyRelicEffect(m_relicSO, false, relicInstanceId);  //유물 효과 제거
     }
 
-    private void AddRelicEffects(RelicSO m_relicSO)        //유물 효과 실행부
+    private void AddRelicEffects(RelicSO m_relicSO ,int relicInstanceId)        //유물 효과 실행부
     {
-        RelicEffectManager.ApplyRelicEffect(m_relicSO, true);
+        RelicEffectManager.ApplyRelicEffect(m_relicSO, true, relicInstanceId);
+    }
+
+    private int AddRelic(RelicSO relicSO)
+    {
+        relicInstanceId++;
+        relics.Add(relicInstanceId, relicSO);
+        return relicInstanceId;
     }
 }

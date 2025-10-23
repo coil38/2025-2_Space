@@ -22,6 +22,12 @@ public class TimerEvent : MonoBehaviour
         if (data != null)
             timerEventDatas.Remove(data);
     }
+    public static void RemoveAll(Action action)
+    {
+        TimerEventData[] datas = timerEventDatas.FindAll(t => t.timer.IsRunning() && t.action == action).ToArray();
+        foreach(var data in  datas)
+            timerEventDatas.Remove(data);
+    }
 
     private void Update()
     {
