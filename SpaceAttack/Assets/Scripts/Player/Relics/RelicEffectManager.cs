@@ -2,12 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class RelicEffectManager : MonoBehaviour
 {
     private static Dictionary<int, Type> relicEffectMap;
-    private static Dictionary<int, RelicEffectType> relicEffects = new Dictionary<int, RelicEffectType>();
+    private static Dictionary<int, RelicEffectType[]> relicEffects = new Dictionary<int, RelicEffectType[]>();
 
     private void Awake()
     {
@@ -36,30 +35,41 @@ public class RelicEffectManager : MonoBehaviour
 
     public static void ApplyRelicEffect(RelicSO relicSO, bool isEquip, int relicInstanceId)     //해당 유물의 모든 효과실행 함수
     {
+        int effectCount = 0;
+        RelicEffectType[] effects = new RelicEffectType[relicSO.relicEffects.Length];
+
+        if (!relicEffects.TryGetValue(relicInstanceId, out var instance))
+            relicEffects.Add(relicInstanceId, new RelicEffectType[relicSO.relicEffects.Length]);//새로운 인스턴스 일 경우, 효과 배열 생성
+
+
         foreach (int effectId in relicSO.relicEffects)   //유물 효과ID받기
         {
             RelicInfo info = Array.Find(relicSO.relicInfos, p => p.id == effectId);   //유물 정보 찾기
             if (info == null)
                 LogUtil.LogError($"유물ID_{effectId}에 맞는 유물효과정보를 찾을 수 없습니다. {relicSO.name}유물을 확인해주세요");
 
-            if (relicEffects.TryGetValue(relicInstanceId, out var instance))
+            if (relicEffects.TryGetValue(relicInstanceId, out var instances))
             {
-                instance.Excute(isEquip, info);
-                LogUtil.Log($"기존의 인스턴스 실행: 장착여부: {isEquip}, 인스턴스번호: {relicInstanceId}, 유물이름: {relicSO.relicName}");
-            }
-            else
-            {
-                if (relicEffectMap.TryGetValue(effectId, out var value))  //알맞은 유물효과 인스턴스 찾기
+                if(isEquip)
                 {
-                    RelicEffectType effect = (RelicEffectType)Activator.CreateInstance(value);
-                    effect.Excute(isEquip, info);
-                    relicEffects.Add(relicInstanceId, effect);
-
-                    LogUtil.Log($"새로운 인스턴스 생성후, 실행: 장착여부: {isEquip}, 인스턴스번호: {relicInstanceId}, 유물이름: {relicSO.relicName}");
+                    if (relicEffectMap.TryGetValue(effectId, out var value))  //알맞은 유물효과 인스턴스 찾기
+                    {
+                        effects[effectCount] = (RelicEffectType)Activator.CreateInstance(value);
+                        effects[effectCount].Excute(isEquip, info);
+                        relicEffects[relicInstanceId] = effects;
+                        LogUtil.Log($"장착여부: {isEquip}, 인스턴스번호: {relicInstanceId}, 유물이름: {relicSO.relicName}");
+                    }
+                }
+                else
+                {
+                    instances[effectCount].Excute(isEquip, info);
+                    LogUtil.Log($"장착여부: {isEquip} 인스턴스번호: {relicInstanceId}, 유물이름: {relicSO.relicName}");
                 }
             }
 
             if (!isEquip) relicEffects.Remove(relicInstanceId);            //장착해제일 경우, 기록 데이터 제거
+
+            effectCount++;
         }
     }
 
@@ -298,6 +308,8 @@ public class RelicEffectManager : MonoBehaviour
             float value = Math.Max(DataManager.instance.i_hitRate, info.n);
             if (isEquip) PlayerStatus.hitRate = value;
             else PlayerStatus.hitRate = DataManager.instance.i_hitRate;
+
+            LogUtil.Log("짜자자자ㅏ자잦자ㅏㅈㅈ자자자자잦동" + $"{info.n}, {PlayerStatus.hitRate}");
         }
     }
     private class GambleHit : RelicEffectType               //117 - 공격 시 n% 확률로 z배의 피해를, y% 확률로 w배의 피해를 줍니다.

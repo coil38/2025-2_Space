@@ -18,7 +18,7 @@ public abstract class WeaponType : MonoBehaviour, IUse, ICheckUse
         get { return _attackTime; }
         set
         {
-            LogUtil.Log($"공격시간은 : {value * 1.1f}");
+            //LogUtil.Log($"공격시간은 : {value * 1.1f}");
             PlayerTimeSystem.SetChipTimer(value * 1.1f, ChipAttackType.Weapon);
             readyAttackTime = value * 0.5f;
             _attackTime = value;

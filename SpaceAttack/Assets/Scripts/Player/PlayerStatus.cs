@@ -176,12 +176,17 @@ public class PlayerStatus : MonoBehaviour
 
     public void ReduceHp(int amount)  // 체력 감소 함수
     {
+        int temp = amount;
         int damage = (int)(amount * hitRate);
+        LogUtil.Log($"기본 데미지: {temp}, 바뀐 데미지: {damage}");
 
         EventManager.relicEvent.OnPlayerLoseHp(damage);
 
         if (PlayerUIManager.instance != null)
             PlayerUIManager.instance.ReducePlayerUI(m_hp,shild_hp, damage); //체력감소 UI적용
+
+        if (DamageEffectManager.instance != null)
+            DamageEffectManager.instance.ShowDamage(transform.position + transform.up * 0.3f, damage, true);
 
         if (shild_hp > 0)
         {
@@ -280,22 +285,17 @@ public class PlayerStatus : MonoBehaviour
 
         EventManager.relicEvent.OnPlayerHitEventStart(damage, info.attacker);    //플레이어 피격 이벤트 실행
 
-        float randomValue = UnityEngine.Random.Range(0.01f, 100f);
-        if (randomValue < missRate)
+        float randomValue = UnityEngine.Random.value;
+        if (randomValue <= missRate)            //회피성공
         {
-            //회피성공
             if (DamageEffectManager.instance != null)
                 DamageEffectManager.instance.ShowMiss(transform.position + transform.up * 0.3f);
-        }
-        else
-        {
-            if (DamageEffectManager.instance != null)
-                DamageEffectManager.instance.ShowDamage(transform.position + transform.up * 0.3f, damage, true);
+            
+            return;
         }
 
         float mass = 1f;
         float attackForce = mass * 100f;
-
         ReduceHp(damage);     //플레이어 체력 감소
 
         if (!isDead)
@@ -348,7 +348,7 @@ public class PlayerStatus : MonoBehaviour
         GUILayout.Label($"이동속도: {m_speed}, 기본 이동 속도: {DataManager.instance.i_speed}", labelStyle);
         GUILayout.Label($"치명타 피해률: {criticalRate}, 치명타 확률: {criticalChanceRate}", labelStyle);
         GUILayout.Label($"회피률: {missRate} , 기본공격력: {normalDamage}", labelStyle);
-        GUILayout.Label($"레벨: {PlayerCore.Level} , 경험치: {PlayerCore.DarkMaterialCount}", labelStyle);
+        GUILayout.Label($"레벨: {PlayerCore.Level} , 경험치: {PlayerCore.DarkMaterialCount}, 피격배율: {hitRate}", labelStyle);
 
         GUILayout.Space(50);
 

@@ -75,9 +75,9 @@ public class BaseChipset : ChipSetType
     {
         if(e.isEquip) r_dataModifiers.s_attackTimeRate += e.attackTimeRate;
         else r_dataModifiers.s_attackTimeRate -= e.attackTimeRate;
-        UpdateAttackSpeed();
+        UpdateAttackTime();
     }
-    private void UpdateAttackSpeed()
+    private void UpdateAttackTime()
     {
         weapon.attackTime = weapon.normalAttackTime * (1 - r_dataModifiers.s_attackTimeRate);
         LogUtil.Log($"기본공격 기본 공속: {weapon.normalAttackTime}, 변경된 공속: {weapon.attackTime}, 공속배율: {r_dataModifiers.s_attackTimeRate}");

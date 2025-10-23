@@ -37,7 +37,8 @@ public class PlayerHPUI : MonoBehaviour
         while (damageCount > 0 && hp > 0)
         {
             Transform target = this.transform;
-            bool halfHeartExist = hp % 2 == 1; //절반 체력 존재여부
+            bool halfHeartExist = false; //절반 체력 존재여부
+            bool isShildZero = false;
 
             if (shild_hp > 0)
             {
@@ -49,11 +50,12 @@ public class PlayerHPUI : MonoBehaviour
                         target = shildSlot;  //마지막 대상을 갱신시킨다.
                     }
                 }
-                //LogUtil.Log($"쉴드 방어_반칸 : 현재 쉴드: {shild_hp}");
+                //LogUtil.Log($"쉴드 방어_반칸 : 현재 쉴드 인덱스: {ShildSlots.IndexOf(target)}, 절반여부: {halfHeartExist}, 현재 쉴드: {shild_hp}");
             }
             else
             {
                 halfHeartExist = hp % 2 == 1; //절반 체력 존재여부
+                isShildZero = true;
 
                 foreach (var hpSlot in HpSlots)
                 {
@@ -62,7 +64,7 @@ public class PlayerHPUI : MonoBehaviour
                         target = hpSlot;  //마지막 대상을 갱신시킨다.
                     }
                 }
-                //LogUtil.Log("체력 방어_반칸");
+                //LogUtil.Log($"체력_반칸 : 현재 체력 인덱스: {HpSlots.IndexOf(target)}, 절반여부: {halfHeartExist}, 현재 체력: {hp}");
             }
 
             if (target != this.transform && halfHeartExist)  //절반 체력이 존재한다면
@@ -77,9 +79,9 @@ public class PlayerHPUI : MonoBehaviour
                 ChangeUIAnimation(target, true);             //체력감소 애니메이션 재생
             }
 
-            hp--;
             damageCount--;
-            shild_hp--;
+            if (isShildZero) hp--;
+            else shild_hp--;
         }
     }
 
