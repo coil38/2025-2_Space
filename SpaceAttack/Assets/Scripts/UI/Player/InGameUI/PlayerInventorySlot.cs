@@ -30,7 +30,7 @@ public class PlayerInventorySlot : MonoBehaviour, IPointerClickHandler
         //LogUtil.Log($"{relic.relicName}획득");
     }
 
-    public void RemoveItemImage()
+    public void RemoveItem()
     {
         itemImage = null;
         relic = null;

@@ -36,7 +36,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
             if (coolTimer.IsRunning()) return;                      //쿨타임 중 실행불가처리
 
-            LogUtil.Log($"스킬 쿨타임: {coolTime}");
+            //LogUtil.Log($"스킬 쿨타임: {coolTime}");
 
             _currentPos = currentPos;
             isAttacking = true;
@@ -72,6 +72,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
     public override void Use()
     {
+        base.Use();
         p_MoveTimer.Start();
         StartCoroutine(C_Attack(_attackDistance, _attackTime));
     }

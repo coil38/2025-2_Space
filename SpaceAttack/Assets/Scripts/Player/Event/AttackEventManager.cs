@@ -10,13 +10,14 @@ public class AttackEventManager
     public static void RaiseAttack(AttackContext context)
     {
         OnAttackStarted?.Invoke(context);
+        LogUtil.Log("공격시작");
 
         if (context.IsReattack)
             Attack(context);
         Attack(context);
 
         if (context.IsReattack) 
-            DamageEffectManager.instance.ShowDoubleAttack(context.target.transform.position + context.target.transform.up * 0.5f);
+            DamageEffectManager.instance.ShowDoubleAttack();
         Camera.main.GetComponent<CameraFallow>().CameraShack();                     //카메라 흔들림 연출
 
         OnAttackFinished?.Invoke(context);
@@ -58,10 +59,20 @@ public class AttackEventManager
 
         target.SendMessage("ApplyDamage", info);                                    //공격 함수
 
-        if (target.gameObject != null) return;
-        if (target.GetComponent<EnemyBase>() != null)
-            if (target.GetComponent<EnemyBase>().isDead) return;
-        EventManager.relicEvent.OnKilledEnemyEvent();                           //적 처치 성공 이벤트 실행
+        if (target.gameObject == null)
+        {
+            EventManager.relicEvent.OnKilledEnemyEvent();
+        }
+        else if (target.GetComponent<EnemyBase>() != null)                               //적 처치 성공 이벤트 실행
+        {
+            if (target.GetComponent<EnemyBase>().isDead)
+                EventManager.relicEvent.OnKilledEnemyEvent();
+        }
+        else if (target.GetComponent<TestEnemy>() != null)
+        {
+            if (target.GetComponent<TestEnemy>().isDead)
+                EventManager.relicEvent.OnKilledEnemyEvent();
+        }
     }
 
     private static float CalculateAttackDamage(AttackContext context)            //데미지 계산 함수 (크리티컬 미포함)

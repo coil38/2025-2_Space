@@ -91,7 +91,7 @@ public class TestEnemy : MonoBehaviour
             dirToEnemy.y = 0f;
             if (Vector3.Angle(attackDirection, dirToEnemy) <= detectAngle / 2f)            //각도내에 적에게만 공격
             {
-                AttackInfo info = new AttackInfo(damage, attackDirection);
+                AttackInfo info = new AttackInfo(damage, attackDirection, 1, gameObject);
                 playerCol.SendMessage("ApplyDamage", info);
             }
         }
@@ -114,6 +114,7 @@ public class TestEnemy : MonoBehaviour
             animator.SetBool("Dead", true);
 
             DropRelicSystem.DropRelicObjRandomly(transform.position);
+            DropEXPSystem.DropEXP();
 
             Destroy(gameObject, 1f);
         }

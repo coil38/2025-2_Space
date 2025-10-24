@@ -45,20 +45,20 @@ public class PlayerItemUI : MonoBehaviour
         int targetIndex = 0;
 
         targetIndex = relicInstanceIds.IndexOf(relicInstanceId);
-        slots[targetIndex].RemoveItemImage();
+        slots[targetIndex].RemoveItem();
         relicInstanceIds.RemoveAt(targetIndex);
 
         for (int i = targetIndex; i < currentIndex - 1; i++)
         {
             RelicSO relic = slots[i + 1].relic;
-            slots[i + 1].RemoveItemImage();
-            slots[i].AddItemImage(relic, relicInstanceId);
+            slots[i].AddItemImage(relic, slots[i + 1].relicInstanceId);
+            slots[i + 1].RemoveItem();
         }
 
         if(currentIndex >= minSlotCount)
         {
-            slots.RemoveAt(currentIndex);
             Destroy(slots[currentIndex].gameObject);
+            slots.RemoveAt(currentIndex);
         }
         currentIndex--;
     }
@@ -68,7 +68,7 @@ public class PlayerItemUI : MonoBehaviour
         Initialize();
         foreach (var slot in slots)
         {
-            slot.RemoveItemImage();
+            slot.RemoveItem();
         }
     }
 

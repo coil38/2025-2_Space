@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using UnityEditor.Rendering;
 
 public class PlayerStatus : MonoBehaviour
 {
@@ -10,7 +9,7 @@ public class PlayerStatus : MonoBehaviour
 
     //플레이어 상태값--------------------------------------------
     [Header("PlayerInfo")]
-    public static int m_hp = 8;                     //체력
+    public static int m_hp = 9;                     //체력
     public static int m_maxhp = 10;                  //최대 체력
     public static float m_speed = 5f;                //이동 속도
     public static float m_DashDistance = 3.2f;       //대쉬 거리
@@ -162,6 +161,8 @@ public class PlayerStatus : MonoBehaviour
     {
         if (isAdd) shild_hp += amount;
         else shild_hp -= amount;
+        shild_hp = Mathf.Max(0, shild_hp);
+        if (PlayerUIManager.instance != null) PlayerUIManager.instance.ResetHpUI(); //체력UI 갱신
     }
     public static void AddHp(int amount)  //체력 추가 함수
     {
@@ -178,7 +179,9 @@ public class PlayerStatus : MonoBehaviour
     {
         int temp = amount;
         int damage = (int)(amount * hitRate);
-        LogUtil.Log($"기본 데미지: {temp}, 바뀐 데미지: {damage}");
+        //LogUtil.Log($"기본 데미지: {temp}, 바뀐 데미지: {damage}");
+
+        if (damage <= 0) return;
 
         EventManager.relicEvent.OnPlayerLoseHp(damage);
 
@@ -289,9 +292,9 @@ public class PlayerStatus : MonoBehaviour
         if (randomValue <= missRate)            //회피성공
         {
             if (DamageEffectManager.instance != null)
-                DamageEffectManager.instance.ShowMiss(transform.position + transform.up * 0.3f);
-            
-            return;
+                DamageEffectManager.instance.ShowMiss();
+
+            damage = 0;
         }
 
         float mass = 1f;
@@ -344,11 +347,12 @@ public class PlayerStatus : MonoBehaviour
         GUILayout.BeginArea(new Rect(10, 350, 800, 1650));
 
         GUILayout.Label("===플레이어 스텟===", labelStyle);
-        GUILayout.Label($"체력: {m_hp}, 최대 체력: {m_maxhp}", labelStyle);
+        GUILayout.Label($"체력: {m_hp}, 최대 체력: {m_maxhp}, 쉴드 체력: {shild_hp}", labelStyle);
         GUILayout.Label($"이동속도: {m_speed}, 기본 이동 속도: {DataManager.instance.i_speed}", labelStyle);
         GUILayout.Label($"치명타 피해률: {criticalRate}, 치명타 확률: {criticalChanceRate}", labelStyle);
         GUILayout.Label($"회피률: {missRate} , 기본공격력: {normalDamage}", labelStyle);
         GUILayout.Label($"레벨: {PlayerCore.Level} , 경험치: {PlayerCore.DarkMaterialCount}, 피격배율: {hitRate}", labelStyle);
+        GUILayout.Label($"오염된 프로세스 드랍률: {DropRelicSystem.dropRate}", labelStyle);
 
         GUILayout.Space(50);
 

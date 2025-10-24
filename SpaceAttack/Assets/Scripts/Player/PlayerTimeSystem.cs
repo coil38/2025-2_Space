@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class PlayerTimeSystem : MonoBehaviour
@@ -48,8 +49,10 @@ public class PlayerTimeSystem : MonoBehaviour
     }
     public static void SetStunTimer(float time)  //스턴 타이머 설정 함수
     {
+        float temp = m_stunTime;
         m_stunTime = time;
         stunTimer = new Timer(time);
+        LogUtil.Log($"기존 스턴시간: {temp}, 변경된 스턴 시간: {m_stunTime}");
     }
 
     public static void SetAndStartInvincibilityTimer(float time)

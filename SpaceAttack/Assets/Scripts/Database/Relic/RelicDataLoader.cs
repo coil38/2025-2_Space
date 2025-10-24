@@ -44,14 +44,12 @@ public class RelicDataLoader : ScriptableObject
                 //유물 효과 대상 설정
                 if (!string.IsNullOrEmpty(relic.relicEffects))
                 {
-                    string[] temps = relic.relicEffects.Split(",");
+                    string[] temps = relic.relicEffects.Trim().Split(",");
                     int[] temps2 = new int[temps.Length];
                     for (int i = 0; i < temps.Length; i++)
                     {
-                        if (int.TryParse(temps[i].Trim(), out int res))
-                        {
+                        if (int.TryParse(temps[i], out int res))
                             temps2[i] = res;
-                        }
                     }
                     relicSO.relicEffects = temps2;
                 }

@@ -2,14 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UIElements;
-
 public class DamageEffectManager : MonoBehaviour
 {
     [SerializeField] private GameObject textPrefab;
     private Canvas effectCanvas;
 
     public static DamageEffectManager instance { get; private set; }
+
     private void Awake()
     {
         if (instance == null)
@@ -81,17 +80,22 @@ public class DamageEffectManager : MonoBehaviour
         }
         ShowDamageText(position, text, color, isCritical);
     }
-    public void ShowDoubleAttack(Vector3 position)
+    public void ShowDoubleAttack()
     {
+        Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
+
         string text = $"DamageX2";
         Color color = Color.cyan;
 
         ShowDamageText(position, text, color);
     }
-    public void ShowWeaknessAnalyzer(Vector3 position, bool isOn, int count = 0)
+    public void ShowWeaknessAnalyzer(bool isOn, int count = 0)
     {
+        Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
+
         string text = $"WeaknessAnalyzer X {count}";
         Color color = Color.cyan;
+
         if (!isOn)
         {
             text = $"WeaknessAnalyzerOneDown";
@@ -101,6 +105,69 @@ public class DamageEffectManager : MonoBehaviour
         ShowDamageText(position, text, color);
     }
 
+    public void ShowAttackSpeedUp(bool isOn)
+    {
+        Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
+
+        string text = "AttackSpeedUp";
+        Color color = Color.cyan;
+        if (!isOn)
+        {
+            text = "AttackSpeedDown";
+            color = Color.red;
+        }
+        ShowDamageText(position, text, color);
+    }
+    public void ShowAttackValueUp(bool isOn)
+    {
+        Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
+
+        Color color = Color.cyan;
+        string text = "AttackValueUp";
+        if (!isOn)
+        {
+            text = "AttackValueDown";
+            color = Color.red;
+        }
+        ShowDamageText(position, text, color);
+    }
+
+    public void ShowGetShild(bool isOn)
+    {
+        Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
+
+        Color color = Color.cyan;
+        string text = "GetShild";
+        if (!isOn)
+        {
+            text = "LoseShild";
+            color = Color.red;
+        }
+        ShowDamageText(position, text, color);
+    }
+
+    public void ShowSpeedUp(bool isOn)
+    {
+        Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
+
+        Color color = Color.cyan;
+        string text = "SpeedUp";
+        if (!isOn)
+        {
+            text = "SpeedDown";
+            color = Color.red;
+        }
+        ShowDamageText(position, text, color);
+    }
+
+    public void ShowResurrection()
+    {
+        Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
+
+        Color color = Color.yellow;
+        string text = "Resurrection";
+        ShowDamageText(position, text, color);
+    }
     public void ShowHeal(Vector3 position, int amount)
     {
         string text = amount.ToString();
@@ -108,8 +175,10 @@ public class DamageEffectManager : MonoBehaviour
         ShowDamageText(position, text, color);
     }
 
-    public void ShowMiss(Vector3 position)
+    public void ShowMiss()
     {
+        Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
+
         ShowDamageText(position, "Miss", Color.gray);
     }
 }

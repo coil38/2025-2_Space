@@ -25,9 +25,9 @@ public class RelicDisponcer : MonoBehaviour
 
         float randX = UnityEngine.Random.Range(-1f, 1f);
         float randZ = UnityEngine.Random.Range(-1f, 1f);
-
+        
         Vector3 dir = new Vector3(randX, 1, randZ).normalized;
-        float force = 3f;
+        float force = 1f;
         relicObj.GetComponent<Rigidbody>().AddForce(dir * force);
 
         index++;

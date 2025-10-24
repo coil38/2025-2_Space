@@ -73,6 +73,7 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
 
     public override void Use()
     {
+        base.Use();
         LogUtil.Log("참격 발사체 이동 시작");
         p_MoveTimer.Start();
         StartCoroutine(C_Attack(_attackDistance, _attackTime));

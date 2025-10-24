@@ -6,7 +6,7 @@ using UnityEngine;
 public class DropEXPSystem : MonoBehaviour
 {
     public static int dropExpCount = 10;   //평균 값 | 표준편차 = 10 * 0.4
-    public static float stdDevRate = 0.4f; //표준편차 비울
+    public static float stdDevRate = 0.2f; //표준편차 비울
     public static int i_dropExpCount = 10;
 
     public static void DropEXP()
