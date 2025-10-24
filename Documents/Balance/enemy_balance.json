@@ -105,6 +105,32 @@
             "dash_charge_range": 7,
             "flee_duration": 3.0,
             "post_attack_delay": 1.5
+        },
+        {
+            "monster_id": "MOB_Doll",
+            "monster_name": "낡은 인형",
+            "health": 150,
+            "move_speed": 0.9,
+            "aggro_range": -1,
+            "summon_cooldown": 8.0,
+            "wandat_duration": 5.0,
+            "summon_details" : {
+                "count": 3,
+                "red_yarn_chance": 0.25,
+                "normal_yarn": {
+                    "monster_id": "MOB_YarnBall_Normal",
+                    "health": 30,
+                    "attack_power": 0.5,
+                    "move_speed": 1.1
+                },
+                "red_yarn": {
+                    "monster_id": "MOB_YarnBall_Red",
+                    "health": 30,
+                    "attack_power": 1.0,
+                    "move_speed": 1.1
+                }
+            }
+                
         }
     ]
 }
