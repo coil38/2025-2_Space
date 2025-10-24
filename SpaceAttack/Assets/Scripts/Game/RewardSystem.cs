@@ -1,0 +1,99 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System;
+
+public enum RewardType
+{
+    MonsterDrop,          //몬스터 드랍
+    RewardBox,            //보상 상자
+    HiddenBox,            //히든 상자
+    SupplyBox,            //보급 상자
+    MiddleBossBox,        //중간 보스 상자
+    Purifier,             //정화기
+    Exchanger             //교환기
+}
+
+public class RewardSystem : MonoBehaviour
+{
+    public static float defualtDropRate = 0.05f;
+    public static float defualtItemDropRate = 0.05f;
+
+    public static float RelicDropRate = 0.05f; //0.05f;
+    public static float itemDropRate = 0.05f;
+
+    private static RewardData[] rewardDatas = new RewardData[]
+    {
+        new RewardData(RewardType.MonsterDrop, 0.01f, 0f, 0f, 0.2f),
+        new RewardData(RewardType.RewardBox, 0.3f, 0f, 0.01f, 0.5f),
+        new RewardData(RewardType.HiddenBox, 0.9f, 0f, 0.2f, 0.9f),
+        new RewardData(RewardType.SupplyBox, 0.8f, 0f, 0.3f, 0.9f),
+        new RewardData(RewardType.MiddleBossBox, 1f, 0f, 1f, 1f),
+        new RewardData(RewardType.Purifier, 0f, 1f, 0f, 0f),
+        new RewardData(RewardType.Exchanger, 1f, 0f, 0f, 0f)
+    };
+
+    public static void ChangeRewerdDataRate(RewardType rewardType, bool isAdd, float itemRate)         //유물에서 보상타입의 아이템 드랍확률 조정 함수
+    {
+        RewardData rewardData = Array.Find(rewardDatas, r => r.rewardType == rewardType);
+        float temp = rewardData.dropItemRate;
+        if (isAdd) rewardData.dropItemRate += itemRate;
+        else rewardData.dropItemRate -= itemRate;
+        LogUtil.Log($"아이템 드랍확률 조정 - 타입:{rewardType}, 증가여부:{isAdd}, 증가 수치: {itemRate}, 변경전 수치: {temp}, 변경후 수치: {rewardData.dropItemRate}");
+    }
+
+    public static void DropRewards(RewardType rewardType, Vector3 dropPos)               //공용 아이템 드랍 함수
+    {
+        RewardData rewardData = Array.Find(rewardDatas, r => r.rewardType == rewardType);
+
+        float randomValue = UnityEngine.Random.value;
+        if (randomValue <= rewardData.normalRelicRate + RelicDropRate + itemDropRate + rewardData.dropItemRate)
+            DropRelicObjRandomly(dropPos);
+    }
+
+    private static GameObject DropRelicObjRandomly(Vector3 dropPos)           //유물 드랍 함수
+    {
+        float randomValue = UnityEngine.Random.value;
+        if (randomValue <= RelicDropRate)  //5퍼센트 확률
+        {
+            if (DataManager.instance == null || DataManager.instance._RelicDatabase.GetRelicCount() == 0)
+            {
+                LogUtil.LogError("DataManager 인스턴스가 생성되지 않거나 유물이 할당되지 않았습니다.");
+                return null;
+            }
+
+            RelicSO[] relics = DataManager.instance._RelicDatabase.GetRelics();
+            int randomValue2 = UnityEngine.Random.Range(0, relics.Length);
+            RelicSO relic = DataManager.instance._RelicDatabase.GetRelicByIndex(randomValue2);  //받은 유물중, 랜덤index의 유물 받기
+
+            GameObject temp = DataManager.instance._relicObject;
+            GameObject relicObj = Instantiate(temp, dropPos, temp.transform.rotation);
+
+            relicObj.GetComponent<BaseRelic>().Initialize(relic.relicID, relic.relicName, relic.iconSprite); //생성한 유물 오브젝트에 유물정보 갱신
+
+            return relicObj;
+        }
+
+        LogUtil.Log("유물 드랍 실패");
+        return null;  //null을 반환할 경우, 유물 드랍 실패
+    }
+}
+
+public class RewardData
+{
+    public RewardType rewardType;
+    public float dropItemRate;          //아이템 드랍 확률
+    public float normalRelicRate;       //일반 유물 드랍 확률
+    public float purifiedRelicRate;     //정화된 유물 드랍 확룰
+    public float sourceRelicRate;       //근원 유물 드랍 확률
+    public float halfHpRate;            //절반 체력 드랍 확률
+
+    public RewardData(RewardType rewardType, float normalRelicRate, float purifiedRelicRate, float sourceRelicRate, float halfHpRate)
+    {
+        this.rewardType = rewardType;
+        this.normalRelicRate = normalRelicRate;
+        this.purifiedRelicRate = purifiedRelicRate;
+        this.sourceRelicRate = sourceRelicRate;
+        this.halfHpRate = halfHpRate;
+    }
+}

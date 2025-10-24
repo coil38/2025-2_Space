@@ -113,7 +113,7 @@ public class TestEnemy : MonoBehaviour
             isDead = true;
             animator.SetBool("Dead", true);
 
-            DropRelicSystem.DropRelicObjRandomly(transform.position);
+            RewardSystem.DropRewards(RewardType.MonsterDrop, transform.position);
             DropEXPSystem.DropEXP();
 
             Destroy(gameObject, 1f);

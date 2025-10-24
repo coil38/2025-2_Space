@@ -352,7 +352,7 @@ public class PlayerStatus : MonoBehaviour
         GUILayout.Label($"치명타 피해률: {criticalRate}, 치명타 확률: {criticalChanceRate}", labelStyle);
         GUILayout.Label($"회피률: {missRate} , 기본공격력: {normalDamage}", labelStyle);
         GUILayout.Label($"레벨: {PlayerCore.Level} , 경험치: {PlayerCore.DarkMaterialCount}, 피격배율: {hitRate}", labelStyle);
-        GUILayout.Label($"오염된 프로세스 드랍률: {DropRelicSystem.dropRate}", labelStyle);
+        GUILayout.Label($"오염된 프로세스 드랍률: {RewardSystem.RelicDropRate}", labelStyle);
 
         GUILayout.Space(50);
 

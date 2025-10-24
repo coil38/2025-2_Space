@@ -569,7 +569,7 @@ public class RelicEffectManager : MonoBehaviour
         public override void Excute(bool isEquip, RelicInfo info)
         {
             base.Excute(isEquip, info);
-
+            RewardSystem.ChangeRewerdDataRate(RewardType.MonsterDrop, isEquip, info.n);
         }
     }
     private class ExpGainDecrease : RelicEffectType               //132 - 획득하는 경험치가 n% 감소합니다.
@@ -1033,8 +1033,8 @@ public class RelicEffectManager : MonoBehaviour
         public override void Excute(bool isEquip, RelicInfo info)
         {
             base.Excute(isEquip, info);
-            if (isEquip) DropRelicSystem.dropRate += info.n;
-            else DropRelicSystem.dropRate -= info.n;
+            if (isEquip) RewardSystem.RelicDropRate += info.n;
+            else RewardSystem.RelicDropRate -= info.n;
             LogUtil.Log($"칩셋 드롭확률 변경, 변경 수치: {info.n}");
         }
     }
