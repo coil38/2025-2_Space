@@ -5349,7 +5349,13 @@ MonoBehaviour:
   - {fileID: 3210841994201302233, guid: d050b10c2f1f7bb49999ccd2284bded5, type: 3}
   - {fileID: 2040890849726229375, guid: bf2597b6dd1c15e4398a00628aee49a0, type: 3}
   countdownText: {fileID: 1311555674}
+  maxLevelRepeat: 4
+  endSceneName: ChipsetSelectScene
+  endSceneDelay: 3
   monstersPerWave: 5
+  maxWaveCount: 2
+  levelPrefab: {fileID: 0}
+  currentLevel: {fileID: 0}
   startDelay: 4
   nextWaveDelay: 8
 --- !u!4 &1872383989
@@ -6303,8 +6309,8 @@ MonoBehaviour:
     type: 3}
   canPrefab: {fileID: 9205754372223083306, guid: 8543e7807f28d184e929afe577652b42,
     type: 3}
-  bossAttackCooldown: 15
-  coinRainCooldown: 25
+  bossAttackCooldown: 10
+  coinRainCooldown: 15
   canAttackCooldown: 25
   jumpAttackCooldown: 30
   summonMinionCooldown: 45
