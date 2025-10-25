@@ -41,6 +41,30 @@ public class RelicDataLoader : ScriptableObject
                 relicSO.description = relic.description;
                 relicSO.relicDivision = relic.relicDivision;
 
+                //유물 타입 설정
+                switch (relic.relicType)
+                {
+                    case 0:
+                        relicSO.relicType = RelicType.NormalRelic; break;
+                    case 1:
+                        relicSO.relicType = RelicType.PurifiedRelic; break;
+                    case 2:
+                        relicSO.relicType = RelicType.SourceRelic; break;
+                }
+                //함께 장착 방지용 대상설정
+                if (!string.IsNullOrEmpty(relic.cannotEquipRelicId))
+                {
+                    LogUtil.Log(relic.cannotEquipRelicId);
+                    string[] temps = relic.cannotEquipRelicId.Trim().Split(",");
+                    int[] temps2 = new int[temps.Length];
+                    for (int i = 0; i < temps.Length; i++)
+                    {
+                        if (int.TryParse(temps[i], out int res))
+                            temps2[i] = res;
+                    }
+                    relicSO.cannotEquipRelicId = temps2;
+                }
+
                 //유물 효과 대상 설정
                 if (!string.IsNullOrEmpty(relic.relicEffects))
                 {
@@ -60,16 +84,16 @@ public class RelicDataLoader : ScriptableObject
                     string[] m_temps = relic.relicEffectInfo.Trim().Split("]");
                     List<RelicInfo> infos = new List<RelicInfo>();
 
-                    LogUtil.Log(string.Join(",", m_temps));
-                    LogUtil.Log("개수 :" + m_temps.Length);
+                    //LogUtil.Log(string.Join(",", m_temps));
+                    //LogUtil.Log("개수 :" + m_temps.Length);
                     for (int i = 0; i < m_temps.Length; i++)
                     {
                         if (string.IsNullOrWhiteSpace(m_temps[i])) continue;
 
                         m_temps[i] = m_temps[i].Replace("[", string.Empty).Replace("]", string.Empty);
                         string[] s_temps = m_temps[i].Split(",");
-                        LogUtil.Log("시작:" + string.Join(",", s_temps));
-                        LogUtil.Log("개수 :" + s_temps.Length);
+                        //LogUtil.Log("시작:" + string.Join(",", s_temps));
+                        //LogUtil.Log("개수 :" + s_temps.Length);
                         float[] f_temps = new float[s_temps.Length];
                         for (int j = 0; j < s_temps.Length; j++)
                         {

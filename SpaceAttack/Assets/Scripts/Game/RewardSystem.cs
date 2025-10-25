@@ -16,11 +16,16 @@ public enum RewardType
 
 public class RewardSystem : MonoBehaviour
 {
+    [SerializeField] private GameObject _halfHeartPrf;
+    private static GameObject halfHeartPrf;
+
     public static float defualtDropRate = 0.05f;
     public static float defualtItemDropRate = 0.05f;
 
     public static float RelicDropRate = 0.05f; //0.05f;
     public static float itemDropRate = 0.05f;
+
+    private static InventoryManager inventoryManager;  //플레이어 인벤토리
 
     private static RewardData[] rewardDatas = new RewardData[]
     {
@@ -33,6 +38,11 @@ public class RewardSystem : MonoBehaviour
         new RewardData(RewardType.Exchanger, 1f, 0f, 0f, 0f)
     };
 
+    private void Awake()
+    {
+        halfHeartPrf = _halfHeartPrf;
+    }
+
     public static void ChangeRewerdDataRate(RewardType rewardType, bool isAdd, float itemRate)         //유물에서 보상타입의 아이템 드랍확률 조정 함수
     {
         RewardData rewardData = Array.Find(rewardDatas, r => r.rewardType == rewardType);
@@ -42,40 +52,78 @@ public class RewardSystem : MonoBehaviour
         LogUtil.Log($"아이템 드랍확률 조정 - 타입:{rewardType}, 증가여부:{isAdd}, 증가 수치: {itemRate}, 변경전 수치: {temp}, 변경후 수치: {rewardData.dropItemRate}");
     }
 
-    public static void DropRewards(RewardType rewardType, Vector3 dropPos)               //공용 아이템 드랍 함수
+    public static void DropRewards(RewardType rewardType, Vector3 dropPos)                //공용 아이템 드랍 함수
     {
-        RewardData rewardData = Array.Find(rewardDatas, r => r.rewardType == rewardType);
+        if (inventoryManager == null)
+            inventoryManager = PlayerStatus.Instance.GetComponent<InventoryManager>();
 
-        float randomValue = UnityEngine.Random.value;
-        if (randomValue <= rewardData.normalRelicRate + RelicDropRate + itemDropRate + rewardData.dropItemRate)
-            DropRelicObjRandomly(dropPos);
+        RewardData rewardData = Array.Find(rewardDatas, r => r.rewardType == rewardType); //알맞은 보상 데이터 찾기
+
+        if (GetRandomValue() <= rewardData.normalRelicRate + RelicDropRate + itemDropRate + rewardData.dropItemRate)   //일반 유물 드랍 확률
+            DropRelicObjRandomly(RelicType.NormalRelic, dropPos);
+
+        if (GetRandomValue() <= rewardData.purifiedRelicRate + RelicDropRate + itemDropRate + rewardData.dropItemRate) //정화된 유물 드랍 확률
+            DropRelicObjRandomly(RelicType.PurifiedRelic, dropPos);
+
+        if (GetRandomValue() <= rewardData.sourceRelicRate + RelicDropRate + itemDropRate + rewardData.dropItemRate)   //근원 유물 드랍 확률
+            DropRelicObjRandomly(RelicType.SourceRelic, dropPos);
+
+        if (GetRandomValue() <= rewardData.halfHpRate + itemDropRate + rewardData.dropItemRate)   //하트 절반 드랍 확률
+            DropHeartObj(dropPos);
     }
 
-    private static GameObject DropRelicObjRandomly(Vector3 dropPos)           //유물 드랍 함수
+    private static void DropRelicObjRandomly(RelicType relicType, Vector3 dropPos)           //유물 드랍 함수
     {
-        float randomValue = UnityEngine.Random.value;
-        if (randomValue <= RelicDropRate)  //5퍼센트 확률
+        if (DataManager.instance == null || DataManager.instance._RelicDatabase.GetRelicCount() == 0)
         {
-            if (DataManager.instance == null || DataManager.instance._RelicDatabase.GetRelicCount() == 0)
-            {
-                LogUtil.LogError("DataManager 인스턴스가 생성되지 않거나 유물이 할당되지 않았습니다.");
-                return null;
-            }
-
-            RelicSO[] relics = DataManager.instance._RelicDatabase.GetRelics();
-            int randomValue2 = UnityEngine.Random.Range(0, relics.Length);
-            RelicSO relic = DataManager.instance._RelicDatabase.GetRelicByIndex(randomValue2);  //받은 유물중, 랜덤index의 유물 받기
-
-            GameObject temp = DataManager.instance._relicObject;
-            GameObject relicObj = Instantiate(temp, dropPos, temp.transform.rotation);
-
-            relicObj.GetComponent<BaseRelic>().Initialize(relic.relicID, relic.relicName, relic.iconSprite); //생성한 유물 오브젝트에 유물정보 갱신
-
-            return relicObj;
+            LogUtil.LogError("DataManager 인스턴스가 생성되지 않거나 유물이 할당되지 않았습니다.");
+            return;
         }
 
-        LogUtil.Log("유물 드랍 실패");
-        return null;  //null을 반환할 경우, 유물 드랍 실패
+        RelicSO[] relicSOs = DataManager.instance._RelicDatabase.GetRelicsByType(relicType);
+        int randomValue = UnityEngine.Random.Range(0, relicSOs.Length);
+        LogUtil.Log($"유물 타입: {relicType}, 뽑힌 유물 순서: {randomValue}, 대상 유물 개수: {relicSOs.Length}");
+        RelicSO relic = DataManager.instance._RelicDatabase.GetRelicByIndex(randomValue);  //받은 유물중, 랜덤 유물 리스트index의 유물 받기
+
+        int[] cannotGetIds = relic.cannotEquipRelicId;
+        bool isExit = false;
+        foreach (var id in cannotGetIds)
+        {
+            foreach (var item in inventoryManager._relics)
+            {
+                if (id == item.relicID) isExit = true;
+            }
+        }
+        if (isExit) DropRelicObjRandomly(relicType, dropPos);    //대상이 존재할 경우 재실행
+
+        GameObject temp = DataManager.instance._relicObject;
+        GameObject relicObj = Instantiate(temp, dropPos, temp.transform.rotation);
+
+        relicObj.GetComponent<BaseRelic>().Initialize(relic.relicID, relic.relicName, relic.iconSprite); //생성한 유물 오브젝트에 유물정보 갱신
+    }
+
+    private static void DropHeartObj(Vector3 dropPos)
+    {
+        if (halfHeartPrf != null)
+        {
+            Vector3 randomOffset = new Vector3(
+                UnityEngine.Random.Range(-1.5f, 1.5f),
+                0.5f,
+                UnityEngine.Random.Range(-1.5f, 1.5f)
+            );
+
+            Vector3 spawnPos = dropPos + randomOffset;
+            Instantiate(halfHeartPrf, spawnPos, halfHeartPrf.transform.rotation);
+        }
+        else
+        {
+            LogUtil.Log("하트프리팹이 존재하지 않습니다.");
+        }
+    }
+
+    private static float GetRandomValue()
+    {
+        return UnityEngine.Random.value;
     }
 }
 

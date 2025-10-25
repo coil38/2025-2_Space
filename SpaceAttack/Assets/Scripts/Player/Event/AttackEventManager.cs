@@ -10,7 +10,7 @@ public class AttackEventManager
     public static void RaiseAttack(AttackContext context)
     {
         OnAttackStarted?.Invoke(context);
-        LogUtil.Log("공격시작");
+        //LogUtil.Log("공격시작");
 
         if (context.IsReattack)
             Attack(context);
