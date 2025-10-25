@@ -196,31 +196,24 @@ public class CoinMonster : EnemyBase
         hp -= attackInfo.damage;
 
         if (hitSound != null && audioSource != null)
-        {
             audioSource.PlayOneShot(hitSound);
-        }
 
-        StartCoroutine(HitFlash());
+        StartHitFlash();
 
         if (monsterHPUI != null)
             monsterHPUI.ReduceHP(maxHP, hp);
 
         if (hp <= 0)
         {
-            isDead = true;
-            canBeHit = false;
+            if (!isDead)
+            {
+                OnDeathAction?.Invoke(this);
 
-            Collider col = GetComponent<Collider>();
-            if (col != null)
-                col.enabled = false;
-
-            base.ApplyDamage(attackInfo);
-
-            state = CoinMonsterState.Patrol;  
-            hasExploded = true;
-
-            if (explodeRangeVisual != null)
-                explodeRangeVisual.SetActive(false);
+                hasExploded = true;
+                if (explodeRangeVisual != null)
+                    explodeRangeVisual.SetActive(false);
+                base.ApplyDamage(attackInfo);
+            }
 
             return;
         }
@@ -228,10 +221,7 @@ public class CoinMonster : EnemyBase
         rb.velocity = Vector3.zero;
         rb.AddForce(attackInfo.attackDirection * 0.5f, ForceMode.Impulse);
 
-        if (state == CoinMonsterState.ExplodeReady)
-        {
-            return;
-        }
+        if (state == CoinMonsterState.ExplodeReady) return;
 
         StartCoroutine(HitProcess());
     }
@@ -295,16 +285,18 @@ public class CoinMonster : EnemyBase
             Explode(); 
         }
     }
-    
+
     //폭발 코드
     public void Explode()
     {
         if (hasExploded) return;
         hasExploded = true;
+        isDead = true; 
 
         if (explodeRangeVisual != null)
-            Destroy(explodeRangeVisual); 
+            Destroy(explodeRangeVisual);
 
+        // 공격 처리
         Collider[] cols = Physics.OverlapSphere(transform.position, explodeDistance, attackLayer);
         foreach (var col in cols)
         {
@@ -312,15 +304,16 @@ public class CoinMonster : EnemyBase
             AttackInfo info = new AttackInfo(explosionDamage, dir * explosionKnockbackForce);
             col.SendMessage("ApplyDamage", info, SendMessageOptions.DontRequireReceiver);
         }
+
         foreach (var sr in GetComponentsInChildren<SpriteRenderer>())
-        {
             sr.enabled = false;
-        }
 
         if (monsterHPUI != null)
             monsterHPUI.ReduceHP(maxHP, 0);
 
-        OnDeathAction?.Invoke(this);
+        OnDeathAction?.Invoke(this);  
+
+        Destroy(gameObject, 1f);  
     }
 
     //코인몬스터 소리

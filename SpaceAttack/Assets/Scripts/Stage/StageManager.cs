@@ -10,52 +10,70 @@ public class StageManager : MonoBehaviour
     public GameObject[] monsterPrefabs;
 
     [Header("UI")]
-    public Text countdownText; // 화면에 표시할 Text
+    public Text countdownText;
+
+    [Header("레벨 반복")]
+    public int maxLevelRepeat = 4;     // 한 레벨 반복 횟수
+    private int currentLevelRepeat = 0; // 현재 레벨 반복 카운트
+
+    [Header("게임 종료 씬")]
+    public string endSceneName = "ChipsetSelectScene";
+    public float endSceneDelay = 3f;  // 마지막 후 대기 시간
 
     private List<EnemyBase> aliveMonsters = new List<EnemyBase>();
     private GameObject[] planObjects;
+    float margin = 3.5f;
 
     [Header("웨이브 설정")]
     public int monstersPerWave = 3;
     private int currentWave = 0;
+    public int maxWaveCount = 2;
+
+    [Header("레벨 설정")]
+    public GameObject levelPrefab;
+    public GameObject currentLevel;
 
     [Header("대기 시간")]
-    public float startDelay = 4f;  // 스테이지 시작 전 대기
-    public float nextWaveDelay = 8f; // 웨이브 완료 후 대기
+    public float startDelay = 3f;
+    public float nextWaveDelay = 6f;
 
     private void Start()
     {
+        currentLevel = GameObject.FindWithTag("Level");
+        if (currentLevel == null && levelPrefab != null)
+        {
+            currentLevel = Instantiate(levelPrefab, Vector3.zero, Quaternion.identity);
+            currentLevel.tag = "Level";
+        }
+
         planObjects = GameObject.FindGameObjectsWithTag("Plan");
         StartCoroutine(StageStartDelay());
     }
 
-    // 스테이지 시작 전 대기
     private IEnumerator StageStartDelay()
     {
         float timer = startDelay;
         while (timer > 0f)
         {
             if (countdownText != null)
-                countdownText.text = "시작까지: " + Mathf.Ceil(timer).ToString();
-
+                countdownText.text = "시작까지: " + Mathf.Ceil(timer);
             yield return null;
             timer -= Time.deltaTime;
         }
 
-        if (countdownText != null)
-            countdownText.text = "";
-
+        if (countdownText != null) countdownText.text = "";
         StartWave();
     }
 
-    void StartWave()
+    public void StartWave()
     {
         currentWave++;
         aliveMonsters.Clear();
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         Vector3 playerPos = playerObj != null ? playerObj.transform.position : Vector3.zero;
-        float minSpawnDistance = 5f; // 플레이어와 최소 거리
+
+        float minSpawnDistance = 5f;
 
         for (int i = 0; i < monstersPerWave; i++)
         {
@@ -65,23 +83,21 @@ public class StageManager : MonoBehaviour
 
             Bounds bounds = renderer.bounds;
             Vector3 randomPos;
-
             int safetyCount = 0;
             do
             {
                 randomPos = new Vector3(
-                    Random.Range(bounds.min.x, bounds.max.x),
-                    bounds.max.y,
-                    Random.Range(bounds.min.z, bounds.max.z)
-                );
-
+     Random.Range(bounds.min.x + margin, bounds.max.x - margin),
+     bounds.max.y,
+     Random.Range(bounds.min.z + margin, bounds.max.z - margin)
+ );
                 safetyCount++;
-                if (safetyCount > 30) break; // 무한루프 방지
+                if (safetyCount > 30) break;
             }
             while (Vector3.Distance(randomPos, playerPos) < minSpawnDistance);
 
             GameObject prefab = monsterPrefabs[Random.Range(0, monsterPrefabs.Length)];
-            GameObject monsterObj = Instantiate(prefab, randomPos, prefab.transform.rotation);   // 프리팹의 회전값으로 생성
+            GameObject monsterObj = Instantiate(prefab, randomPos, prefab.transform.rotation);
             EnemyBase monster = monsterObj.GetComponent<EnemyBase>();
 
             if (monster != null)
@@ -98,34 +114,164 @@ public class StageManager : MonoBehaviour
         if (aliveMonsters.Count == 0)
         {
             Debug.Log($"웨이브 {currentWave} 완료!");
-            StartCoroutine(NextWaveDelay());
+
+            if (currentWave >= maxWaveCount)
+                StartCoroutine(OpenNextMap());
+            else
+                StartCoroutine(NextWaveDelay());
         }
     }
 
-    // 웨이브 종료 후 다음 웨이브 전 대기
     private IEnumerator NextWaveDelay()
     {
         float timer = nextWaveDelay;
         while (timer > 0f)
         {
             if (countdownText != null)
-                countdownText.text = "다음 웨이브까지: " + Mathf.Ceil(timer).ToString();
-
+                countdownText.text = "다음 웨이브까지: " + Mathf.Ceil(timer);
             yield return null;
             timer -= Time.deltaTime;
         }
 
-        if (countdownText != null)
-            countdownText.text = "";
-
+        if (countdownText != null) countdownText.text = "";
         StartWave();
     }
 
-    private void Update()
+    private IEnumerator OpenNextMap()
     {
-        if (Input.GetKeyDown(KeyCode.G))   // 테스트용
+        currentLevelRepeat++;
+
+        // 마지막 반복 → 로비 씬으로 이동
+        if (currentLevelRepeat >= maxLevelRepeat)
         {
-            StartWave();
+            float timer = endSceneDelay; // 예: 3초
+            while (timer > 0f)
+            {
+                if (countdownText != null)
+                    countdownText.text = $"로비 씬으로 돌아갑니다: {Mathf.Ceil(timer)}초전!";
+                yield return null;
+                timer -= Time.deltaTime;
+            }
+
+            if (countdownText != null)
+                countdownText.text = "";
+
+            UnityEngine.SceneManagement.SceneManager.LoadScene(endSceneName);
+            yield break;
         }
+
+        // 마지막 반복이 아닌 경우
+        if (countdownText != null)
+            countdownText.text = "통로가 열립니다...";
+        yield return new WaitForSeconds(1f);
+
+        Transform wallsParent = currentLevel.transform.Find("Walls");
+        if (wallsParent == null)
+        {
+            Debug.LogError("Walls 오브젝트를 찾을 수 없습니다.");
+            yield break;
+        }
+
+        List<Transform> wallList = new List<Transform>();
+        foreach (Transform child in wallsParent)
+            if (child.name.StartsWith("Wall")) wallList.Add(child);
+
+        if (wallList.Count == 0) yield break;
+
+        Transform chosenWall = wallList[Random.Range(0, wallList.Count)];
+
+        Transform floor = chosenWall.Find("Floor");
+        if (floor != null)
+        {
+            Renderer floorRenderer = floor.GetComponent<Renderer>();
+            if (floorRenderer != null)
+            {
+                floorRenderer.enabled = true;                
+                Material mat = floorRenderer.material;
+                mat.color = Color.yellow;                   
+            }
+        }
+
+        BoxCollider wallCollider = chosenWall.GetComponent<BoxCollider>();
+        if (wallCollider == null)
+            wallCollider = chosenWall.gameObject.AddComponent<BoxCollider>();
+        wallCollider.isTrigger = true;
+
+        NextStageTrigger triggerScript = chosenWall.gameObject.AddComponent<NextStageTrigger>();
+        triggerScript.Setup(this, levelPrefab);
     }
+
+    public void LoadNextLevel(Vector3 entryDirection)
+    {
+        GameObject[] splats = GameObject.FindGameObjectsWithTag("Splat");
+        foreach (GameObject splat in splats)
+            Destroy(splat);
+
+
+        Vector3 spawnPos = Vector3.zero;
+        if (currentLevel != null)
+        {
+            currentLevel.SetActive(false);
+            spawnPos = currentLevel.transform.position;
+        }
+
+        GameObject newLevel = Instantiate(levelPrefab, spawnPos, Quaternion.identity);
+        newLevel.SetActive(true);
+        newLevel.tag = "Level";
+        currentLevel = newLevel;
+
+        planObjects = GameObject.FindGameObjectsWithTag("Plan");
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            Transform wallsParent = currentLevel.transform.Find("Walls");
+            if (wallsParent != null)
+            {
+                Transform spawnWall = null;
+
+                foreach (Transform child in wallsParent)
+                {
+                    string lowerName = child.name.ToLower();
+                    if (entryDirection == Vector3.right && lowerName.Contains("left")) spawnWall = child;
+                    else if (entryDirection == Vector3.left && lowerName.Contains("right")) spawnWall = child;
+                    else if (entryDirection == Vector3.forward && (lowerName.Contains("back") || lowerName.Contains("bottom"))) spawnWall = child;
+                    else if (entryDirection == Vector3.back && (lowerName.Contains("front") || lowerName.Contains("top"))) spawnWall = child;
+                }
+                if (spawnWall != null)
+                {
+                    Renderer wallRenderer = spawnWall.GetComponent<Renderer>();
+                    spawnPos = spawnWall.position;
+
+                    if (wallRenderer != null)
+                    {
+                        Vector3 offsetDir = entryDirection.normalized;
+
+                        if (entryDirection == Vector3.forward || entryDirection == Vector3.back) // top/bottom
+                        {
+                            spawnPos.y = spawnWall.position.y - 0.5f; 
+                            spawnPos.x += offsetDir.x * 2f;
+                            spawnPos.z += offsetDir.z * 2f;
+                        }
+                        else
+                        {
+                            spawnPos += offsetDir * 2f;
+                            spawnPos.y = currentLevel.transform.position.y + 0.5f;
+                        }
+                    }
+
+                    player.transform.position = spawnPos;
+                }
+            }
+        }
+        if (player != null)
+        {
+            PlayerStatus ps = player.GetComponent<PlayerStatus>();
+            if (ps != null)
+                ps.isRooted = false; 
+        }
+        currentWave = 0;
+        StartCoroutine(StageStartDelay());
+    }
+
 }

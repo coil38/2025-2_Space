@@ -294,11 +294,12 @@ public class Boss : EnemyBase
             audioSource.PlayOneShot(hitSounds[rand]);
         }
 
-        StartCoroutine(HitFlash());
+        StartHitFlash();
 
         if (scrapExplosionPrefab != null && bodyCenter != null)
         {
-            Instantiate(scrapExplosionPrefab, bodyCenter.position, Quaternion.identity);
+            GameObject scrap = Instantiate(scrapExplosionPrefab, bodyCenter.position, Quaternion.identity);
+            Destroy(scrap, 0.5f); // 1초 후 삭제
         }
 
         // 사망 처리

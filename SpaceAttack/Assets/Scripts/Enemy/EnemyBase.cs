@@ -29,7 +29,7 @@ public abstract class EnemyBase : MonoBehaviour
     public bool isDead { get; protected set; }
     protected bool isHit;
     private float baseScaleX;
-
+    private Coroutine hitFlashCoroutine;
     protected Vector3 _currentPos;
     protected Vector3 attackDirection;
     protected LayerMask playerLayer;
@@ -213,7 +213,7 @@ public abstract class EnemyBase : MonoBehaviour
             monsterHPUI.ReduceHP(maxHP, hp);
 
         // 몸 빨갛게 깜빡이기
-        StartCoroutine(HitFlash());
+        StartHitFlash();
 
         // 사망 체크
         if (hp <= 0 && !isDead)
@@ -262,27 +262,30 @@ public abstract class EnemyBase : MonoBehaviour
     }
 
     //맞는 피격 이펙트
-    public IEnumerator HitFlash()
+    public void StartHitFlash()
+    {
+        if (hitFlashCoroutine != null)
+            StopCoroutine(hitFlashCoroutine);
+
+        hitFlashCoroutine = StartCoroutine(_HitFlashRoutine());
+    }
+
+    private IEnumerator _HitFlashRoutine()
     {
         List<Color> originalColors = new List<Color>();
         foreach (var r in renderers)
-        {
-            if (r is SkinnedMeshRenderer smr)
-                originalColors.Add(smr.material.color);
-            else
-                originalColors.Add(r.material.color);
-        }
+            originalColors.Add(r.material.color);
 
-        for (int i = 0; i < renderers.Count; i++)
-            renderers[i].material.color = hitColor;
+        foreach (var r in renderers)
+            r.material.color = hitColor;
 
         yield return new WaitForSeconds(hitFlashDuration);
 
         for (int i = 0; i < renderers.Count; i++)
             renderers[i].material.color = originalColors[i];
+
+        hitFlashCoroutine = null;
     }
-
-
     protected void Flip(float moveX)
     {
         if (visualTransform == null) return;
