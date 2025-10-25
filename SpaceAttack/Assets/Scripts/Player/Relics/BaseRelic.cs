@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum RelicType
+{
+    NormalRelic,
+    PurifiedRelic,
+    SourceRelic
+}
+
 public class BaseRelic : MonoBehaviour
 {
     public int relicId {  get; private set; }

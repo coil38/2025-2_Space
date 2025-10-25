@@ -8,6 +8,8 @@ public class RelicSO : ScriptableObject
     public int relicID;
     public string relicName;
     public int darkMaterialCount;
+    public RelicType relicType;
+    public int[] cannotEquipRelicId;
     public int[] relicEffects;
     public string relicDivision;
     public string description;
