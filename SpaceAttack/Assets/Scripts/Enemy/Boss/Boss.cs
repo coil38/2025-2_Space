@@ -86,7 +86,10 @@ public class Boss : EnemyBase
         canAttackTimer = canAttackCooldown;
         jumpAttackTimer = jumpAttackCooldown;
         summonMinionTimer = summonMinionCooldown;
+
+        StartCoroutine(FindPlayerRoutine());
     }
+
 
 
     void Update()
@@ -125,6 +128,23 @@ public class Boss : EnemyBase
         if (currentPhase == 1) Phase1Pattern();
         else if (currentPhase == 2) Phase2Pattern();
         else Phase3Pattern();
+    }
+
+    private IEnumerator FindPlayerRoutine()
+    {
+        while (player == null)
+        {
+            GameObject foundPlayer = GameObject.FindGameObjectWithTag("Player");
+
+            if (foundPlayer != null)
+            {
+                player = foundPlayer.transform;
+                yield break;
+            }
+
+            // 못 찾으면 0.5초 대기 후 재시도
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 
     //페이지 컨트롤러
@@ -504,8 +524,10 @@ public class Boss : EnemyBase
 
         for (int i = 0; i < minionCount; i++)
         {
+
+
             GameObject randomMinion = minionPrefabs[Random.Range(0, minionPrefabs.Length)];
-            GameObject minion = Instantiate(randomMinion, mouthPoint.position, Quaternion.identity);
+            GameObject minion = Instantiate(randomMinion, mouthPoint.position, mouthPoint.rotation);
 
             summonedMinions.Add(minion);
 
