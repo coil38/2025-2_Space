@@ -23,6 +23,7 @@ public class StageManager : MonoBehaviour
     private List<EnemyBase> aliveMonsters = new List<EnemyBase>();
     private GameObject[] planObjects;
     float margin = 3.5f;
+    private bool playerDeathHandled = false;
 
     [Header("웨이브 설정")]
     public int monstersPerWave = 3;
@@ -48,6 +49,25 @@ public class StageManager : MonoBehaviour
 
         planObjects = GameObject.FindGameObjectsWithTag("Plan");
         StartCoroutine(StageStartDelay());
+    }
+
+    private void Update()
+    {
+        if (!playerDeathHandled && PlayerStatus.Instance != null && PlayerStatus.Instance.isDead)
+        {
+            playerDeathHandled = true;
+            StartCoroutine(ReturnToChipsetScene());
+        }
+    }
+
+    private IEnumerator ReturnToChipsetScene()
+    {
+        if (countdownText != null)
+            countdownText.text = "플레이어가 사망했습니다... 칩셋 화면으로 돌아갑니다.";
+
+        yield return new WaitForSeconds(3f); // 연출용 대기 시간 (3초)
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene("ChipsetSelectScene");
     }
 
     private IEnumerator StageStartDelay()
