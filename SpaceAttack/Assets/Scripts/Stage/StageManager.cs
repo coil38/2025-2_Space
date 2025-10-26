@@ -141,7 +141,7 @@ public class StageManager : MonoBehaviour
     {
         currentLevelRepeat++;
 
-        // 마지막 반복 → 로비 씬으로 이동
+        // 마지막 반복 →다른 씬으로 이동
         if (currentLevelRepeat >= maxLevelRepeat)
         {
             float timer = endSceneDelay; // 예: 3초
