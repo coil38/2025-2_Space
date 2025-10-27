@@ -3421,15 +3421,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e34dc826f8c1cc84a915db331d1bc91a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_speed: 5
-  m_DashDistance: 4
   itemDetectDistance: 1.8
-  missRate: 0
   m_Particle: {fileID: 3018890615901290244}
   d_Particle: {fileID: 1974738761314846879}
   isInvincibility: 0
   isStuned: 0
-  isDashing: 0
   isDead: 0
   isBeingEaten: 0
 --- !u!114 &5201279837191845421
@@ -3444,7 +3440,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3cee9434754bb4479280b17e39792a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelDatabase: {fileID: 11400000, guid: 503734204ca2dae4296e1c272c3d5fc5, type: 2}
 --- !u!114 &611787108419266853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22142,6 +22137,7 @@ GameObject:
   - component: {fileID: 349245432540972156}
   - component: {fileID: 1550615182865164421}
   - component: {fileID: 1651444592597254276}
+  - component: {fileID: 5496596705942894798}
   m_Layer: 0
   m_Name: System
   m_TagString: Untagged
@@ -22190,6 +22186,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textPrefab: {fileID: 4963179730834503219, guid: 52c98c907d200014ab0fc7e254d42169,
     type: 3}
+--- !u!114 &5496596705942894798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8288743783441741942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3b46ee4164502941ae0fcee0f436c2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8365034813736623304
 GameObject:
   m_ObjectHideFlags: 0

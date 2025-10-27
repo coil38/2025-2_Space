@@ -28,8 +28,6 @@ public class PlayerMovementAnimationController : MonoBehaviour
     private MoveDirection currentDirection;
     private PlayerStatus playerStatus;
 
-    private bool isAttacking;   //공격여부 내부 변수
-    private bool isRestingAni;  //방향이동 재설정용 변수
     [HideInInspector] public Animator attackAnimator;
 
     void Start()
@@ -39,22 +37,6 @@ public class PlayerMovementAnimationController : MonoBehaviour
         sideMoveAnimator = SideMoveObj.GetComponent<Animator>();
 
         playerStatus = GetComponent<PlayerStatus>();
-    }
-
-    void Update()
-    {
-        if (PlayerEndParamBehaviour.isEndAttack)  //모든 칩셋의 공격 이름 BaseAttack으로 통일 ( 항상 반복 )
-        {
-            PlayerEndParamBehaviour.isEndAttack = false;
-
-            if (isAttacking)   //공격 중일 때만 종료처리
-            {
-                isAttacking = false;
-
-                //ResetAnimationObj();
-                //SideMoveObj.SetActive(true);  //방향설정
-            }
-        }
     }
 
     public void UpdateMoveDirection(float horizontal, float Vertical) //검사순서 --> 위,아래 --> 사이드 (이유: 위아래 애니메이션을 더 잘만들어서 )
@@ -86,36 +68,39 @@ public class PlayerMovementAnimationController : MonoBehaviour
             }
         }
 
-        if (isAttacking) return; //현재 공격중일 경우, 리턴처리
-
+        //if (isAttacking || PlayerMoveAniCondition.IsAnimating()) return; //현재 공격중일 경우, 리턴처리
+        if (PlayerMoveAniCondition.IsAnimating()) return; //현재 공격중일 경우, 리턴처리
+        //Animator anim = null;
+        //switch (currentDirection)
+        //{
+        //    case MoveDirection.Front: anim = frontMoveAnimator; break;
+        //    case MoveDirection.Back: anim = backMoveAnimator; break;
+        //    case MoveDirection.Side: anim = sideMoveAnimator; break;
+        //}
+        //AnimatorStateInfo state = anim.GetCurrentAnimatorStateInfo(0);
+        //if (state.IsName("PlayerAniMoveState"))
+        //{
+        //    LogUtil.Log("플레이어 체킹 상태");
+        //}
+        //else if (state.IsName("DINO_Move"))
+        //{
+        //    LogUtil.Log("플레이어 이동 상태");
+        //}
+        //LogUtil.Log($"경과 시간: {state.normalizedTime}");
         if (currentDirection != moveDirection)
         {
-            Animator anim = null;
-            switch(currentDirection)
-            {
-                case MoveDirection.Front: anim = frontMoveAnimator; break;
-                case MoveDirection.Back: anim = backMoveAnimator; break;
-                case MoveDirection.Side: anim = sideMoveAnimator; break;
-            }
-            AnimatorStateInfo state = anim.GetCurrentAnimatorStateInfo(0);
-            if (state.IsName("DINO_Dash"))
-            {
-                LogUtil.Log("대쉬 중...");
-            }
-            LogUtil.Log($"경과 시간: {state.normalizedTime}");
             SetDirection(); //방향이 바뀌었을 경우, 애니메이션오브젝트 활성화 여부 결정
         }
-        else if (PlayerEndParamBehaviour.isResetingAni)
+        else if (PlayerMoveAniCondition.IsResetAni())
         {
             SetDirection();
-            PlayerEndParamBehaviour.isResetingAni = false;
+            //LogUtil.Log("자자자자자자자자자자ㅏㄱㄱㄱㄱㄱㄱㄱㄱ");
         }
-
 
         currentDirection = moveDirection;  //최신 방향 갱신
     }
 
-    public void SetDirection()
+    private void SetDirection()
     {
         ResetAnimationObj();
         switch (moveDirection)
@@ -143,6 +128,7 @@ public class PlayerMovementAnimationController : MonoBehaviour
                 break;
 
             case "Dash":
+                PlayerMoveAniCondition.StartAni();
                 if (moveDirection == MoveDirection.Front)
                 {
                     frontMoveAnimator.SetFloat("DashSpeed", Mathf.Clamp(2f / dashDuration, 0.5f, 5f));
@@ -163,7 +149,7 @@ public class PlayerMovementAnimationController : MonoBehaviour
                 break;
 
             case "Hit":
-                isAttacking = false;  //공격도 초기화 처리
+                PlayerMoveAniCondition.StartAni();
                 moveDirection = MoveDirection.Front;
                 SetDirection();
                 frontMoveAnimator.SetFloat("HitSpeed", Mathf.Clamp(0.667f / PlayerTimeSystem.m_stunTime - 0.05f, 0.6f, 5f));
@@ -171,12 +157,17 @@ public class PlayerMovementAnimationController : MonoBehaviour
                 break;
 
             case "Dead":
-                isAttacking = false;  //공격도 초기화 처리
                 moveDirection = MoveDirection.Front;
                 SetDirection();
                 frontMoveAnimator.SetTrigger("Dead");
                 break;
         }
+    }
+
+    public void ResetAni()     //속박상태 해제에 사용
+    {
+        moveDirection = MoveDirection.Front;
+        SetDirection();
     }
 
     public void SetAnimator(Animator animator, string chipsetName, bool isAdding)  //공격본에 애니메이터 설정
@@ -208,7 +199,7 @@ public class PlayerMovementAnimationController : MonoBehaviour
 
     public void OnAttackObj(PlayerAniInfo _aniInfo)   //공격할시, 실행됨 (이벤트 체인)
     {
-        isAttacking = true;  //공격활성화 처리
+        PlayerMoveAniCondition.StartAni();
         ResetAnimationObj();
         AttackObj.SetActive(true);
     }
@@ -223,7 +214,7 @@ public class PlayerMovementAnimationController : MonoBehaviour
 
     public void ResetAttackAnimation()
     {
-        isAttacking = false;
+        PlayerMoveAniCondition.EndAni();
     }
 
     private void ResetWeaponObj()

@@ -58,7 +58,7 @@ public class WeaponSword : WeaponType
 
             ChipsetSoundManager.PlayPlayerAttackSound();                  //사운드 재생
             
-            PlayerAniInfo aniInfo = new PlayerAniInfo("isAttacking", AniType.Trrigger, 1.33f / attackTime);  //공격 애니메이션 실행
+            PlayerAniInfo aniInfo = new PlayerAniInfo("isAttacking", AniType.Trrigger, 1f / attackTime);  //공격 애니메이션 실행
             PlayAniMation(aniInfo);
 
             PlayerTimeSystem.w_BaseAttackTimer.Start();                   //공격 타이머 시작

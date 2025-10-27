@@ -116,7 +116,7 @@ public class PlayerStatus : MonoBehaviour
             GetComponent<PlayerMovement>().enabled = true;   //플레이어 입력관련 스크립트
 
             PlayerMovementAnimationController temp = GetComponent<PlayerMovementAnimationController>();
-            temp.SetDirection();           //현재에 맞는 이미지 활성화
+            temp.ResetAni();                          //애니메이션 초기화
 
             if (!isDead)
             {
