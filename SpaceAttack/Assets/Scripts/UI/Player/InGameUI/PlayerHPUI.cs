@@ -129,6 +129,8 @@ public class PlayerHPUI : MonoBehaviour
             else if (heartCount <= 0 && halfHeartExist)
             {
                 HpSlots[i].GetChild(1).gameObject.SetActive(true);   //절반 체력을 활성화 시킨다
+                halfHeartExist = false;
+                heartCount--;
                 continue;
             }
 
@@ -160,6 +162,8 @@ public class PlayerHPUI : MonoBehaviour
             else if (shildCount <= 0 && halfShildExist)
             {
                 ShildSlots[i].GetChild(1).gameObject.SetActive(true);   //절반 체력을 활성화 시킨다
+                halfShildExist = false;
+                shildCount--;
                 continue;
             }
 

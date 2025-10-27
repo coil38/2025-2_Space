@@ -78,6 +78,8 @@ public class SaveManager : MonoBehaviour
             Vector3 defualtPos = new Vector3(0f, 0.092f, -0.3f);   //플레이어 위치초기화
             playerInventory.transform.position = defualtPos;
 
+            if (SoundManager.instance != null)
+                SoundManager.instance.StopPlayedAllSound();        //모든 사운드 정지
             DataManager.instance.InitializePlayerStatus();         //플레이어 데이터 초기화
             playerInventory.InitialInventoryDatas();               //유물리스트 삭제 및 암흑물질량 초기화 및 칩셋제거
             if (PlayerUIManager.instance != null) 
@@ -87,15 +89,6 @@ public class SaveManager : MonoBehaviour
             PlayerCore.Level = 0;                                  //레벨 초기화
             PlayerCore.DarkMaterialCount = 0;                      //경험치양 초기화
             PlayerCore.GetDarkMatter(0, true);                     //UI초기화
-
-                                                                   //플레이어 스텟 초기화
-            //PlayerStatus.m_hp = 10;                                //체력
-            //PlayerStatus.m_maxhp = 10;                             //최대 체력
-            //PlayerStatus.m_speed = 5f;                             //이동 속도
-            //PlayerStatus.criticalChanceRate = 0.05f;               //치명타 확률
-            //PlayerStatus.criticalRate = 0.5f;                      //치명타 피해
-            //PlayerStatus.missRate = 0.01f;                         //회피율
-            //PlayerStatus.normalDamage = 5;                         //기본공격력
         }
     }
 

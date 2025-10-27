@@ -105,6 +105,10 @@ public class DataManager : MonoBehaviour
         PlayerStatus.losedHp = 0;                                    //잃어버린 체력
         PlayerStatus.shild_hp = 0;                                   //방어막 하트
         PlayerStatus.maxDarkMaterialCount = 100;                     //최대암흑물질량
+        PlayerStatus.Instance.isDead = false;                        //사망 여부 초기화
+
+        PlayerStatus.Instance.GetComponent<Rigidbody>().useGravity = true;
+        PlayerStatus.Instance.GetComponent<Collider>().enabled = true;
 
         PlayerTimeSystem.c_DashTime = c_DashTime;                    //대시 쿨타임
         PlayerTimeSystem.m_DashTime = m_DashTime;                    //대시 시간
