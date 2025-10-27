@@ -65,9 +65,16 @@ public class StageManager : MonoBehaviour
         if (countdownText != null)
             countdownText.text = "플레이어가 사망했습니다... 칩셋 화면으로 돌아갑니다.";
 
-        yield return new WaitForSeconds(3f); // 연출용 대기 시간 (3초)
+        yield return new WaitForSeconds(5f); // 연출용 대기 시간 (3초)
+        if (FadeManager.Instance != null)
+            yield return FadeManager.Instance.StartCoroutine("Fade", 1f);
 
         UnityEngine.SceneManagement.SceneManager.LoadScene("ChipsetSelectScene");
+
+         if (FadeManager.Instance != null)
+            yield return FadeManager.Instance.StartCoroutine("Fade", 0f);
+       
+        SaveManager.instance.PlayerReset();
     }
 
     private IEnumerator StageStartDelay()
@@ -168,7 +175,7 @@ public class StageManager : MonoBehaviour
             while (timer > 0f)
             {
                 if (countdownText != null)
-                    countdownText.text = $"로비 씬으로 돌아갑니다: {Mathf.Ceil(timer)}초전!";
+                    countdownText.text = $"보스 출현 : {Mathf.Ceil(timer)}초전!";
                 yield return null;
                 timer -= Time.deltaTime;
             }
