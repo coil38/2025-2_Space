@@ -51,7 +51,7 @@ public class SaveManager : MonoBehaviour
 
     public void StartNewSaveFile(string fileName)  //새 파일 생성용 함수
     {
-        string sceneName = GameSceneManager.GetSceneNameByType(SceneType.LobbyScene);
+        string sceneName = GameSceneManager.GetSceneNameByType(SceneType.ChipsetSelectScene);
         SceneLoadManager.instance.LoadScene(sceneName);
         InitializePlayerDatas();
 
@@ -59,6 +59,11 @@ public class SaveManager : MonoBehaviour
         SaveData data = new SaveData();
         data.SetDatas(new Vector3(0f, 0.092f, -0.3f), sceneName, 0, 0);
         SaveSystem.Save(currentFileName, data);  //저장 새 파일 생성
+    }
+
+    public void PlayerReset()             //플레이어 사망 후, 초기화 함수
+    {
+        StartNewSaveFile(currentFileName);
     }
 
     public void InitializePlayerDatas()  //게임 시작 전의 값으로 초기화
