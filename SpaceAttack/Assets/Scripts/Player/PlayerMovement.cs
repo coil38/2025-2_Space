@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (playerState.isDead || Time.timeScale == 0) return;
 
-        if (!playerState.isDashing && !PlayerTimeSystem.stunTimer.IsRunning())  //대쉬 혹은 스턴 상태에서 이동 안됨
+        if (!PlayerTimeSystem.deshTimer.IsRunning() && !PlayerTimeSystem.stunTimer.IsRunning())  //대쉬 혹은 스턴 상태에서 이동 안됨
         {
             isAttacking = false;
             isUsingSkill = false;

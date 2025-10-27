@@ -86,7 +86,7 @@ public class CharacterMovement : MonoBehaviour
 
         dashDis = PlayerStatus.m_DashDistance;
 
-        movementAniController.PlayAnimation("Dash", 0, 0, PlayerTimeSystem.m_DashTime + 0.5f); //대쉬 애니메이션 재생
+        movementAniController.PlayAnimation("Dash", 0, 0, PlayerTimeSystem.m_DashTime); //대쉬 애니메이션 재생
 
         if (Physics.Raycast(transform.position, currentDir, out RaycastHit hit, dashDis, wallLayer))   //벽이 있을 경우의 예외처리(이동거리, 이동시간)
         {

@@ -30,7 +30,6 @@ public class PlayerStatus : MonoBehaviour
 
     [HideInInspector] public bool isInvincibility = false;
     [HideInInspector] public bool isStuned = false;
-    [HideInInspector] public bool isDashing = false;
     [HideInInspector] public bool isDead = false;
                       public bool isBeingEaten = false;  //먹히는 중인가?
 

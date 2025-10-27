@@ -88,7 +88,23 @@ public class PlayerMovementAnimationController : MonoBehaviour
 
         if (isAttacking) return; //현재 공격중일 경우, 리턴처리
 
-        if (currentDirection != moveDirection) SetDirection(); //방향이 바뀌었을 경우, 애니메이션오브젝트 활성화 여부 결정
+        if (currentDirection != moveDirection)
+        {
+            Animator anim = null;
+            switch(currentDirection)
+            {
+                case MoveDirection.Front: anim = frontMoveAnimator; break;
+                case MoveDirection.Back: anim = backMoveAnimator; break;
+                case MoveDirection.Side: anim = sideMoveAnimator; break;
+            }
+            AnimatorStateInfo state = anim.GetCurrentAnimatorStateInfo(0);
+            if (state.IsName("DINO_Dash"))
+            {
+                LogUtil.Log("대쉬 중...");
+            }
+            LogUtil.Log($"경과 시간: {state.normalizedTime}");
+            SetDirection(); //방향이 바뀌었을 경우, 애니메이션오브젝트 활성화 여부 결정
+        }
         else if (PlayerEndParamBehaviour.isResetingAni)
         {
             SetDirection();
