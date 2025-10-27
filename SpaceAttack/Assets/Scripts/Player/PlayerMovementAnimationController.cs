@@ -166,6 +166,7 @@ public class PlayerMovementAnimationController : MonoBehaviour
 
     public void ResetAni()     //속박상태 해제에 사용
     {
+        PlayerMoveAniCondition.EndAni();
         moveDirection = MoveDirection.Front;
         SetDirection();
     }

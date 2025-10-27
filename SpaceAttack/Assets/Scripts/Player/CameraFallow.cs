@@ -50,7 +50,12 @@ public class CameraFallow : MonoBehaviour
     {
         if (target == null)
         {
-            //LogUtil.Log("대상이 존재하지 않다");
+            LogUtil.Log("대상이 존재하지 않다");
+            if (!isInitialing)
+            {
+                StartCoroutine(FindTargetAndInitialize());
+                isInitialing = true;
+            }
             return;
         }
         else
@@ -90,14 +95,7 @@ public class CameraFallow : MonoBehaviour
         transform.rotation = Quaternion.Euler(cameraRot);
         transform.position = target.position + cameraDir.normalized * cameraDis;
 
-        isInitialing = false;  //초기 설정 중 비활성화
-    }
-    public void ResetToTargetOffset()
-    {
-        if (target == null) return;
-
-        cameraDir = transform.position - target.position; 
-        cameraRot = transform.rotation.eulerAngles;       
+        if(Target != null) isInitialing = false;  //초기 설정 중 비활성화
     }
 
     public void LockCamera(bool state)

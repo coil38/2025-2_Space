@@ -52,17 +52,19 @@ public class SaveManager : MonoBehaviour
     public void StartNewSaveFile(string fileName)  //새 파일 생성용 함수
     {
         string sceneName = GameSceneManager.GetSceneNameByType(SceneType.ChipsetSelectScene);
-        SceneLoadManager.instance.LoadScene(sceneName);
         InitializePlayerDatas();
 
         currentFileName = fileName;
         SaveData data = new SaveData();
         data.SetDatas(new Vector3(0f, 0.092f, -0.3f), sceneName, 0, 0);
         SaveSystem.Save(currentFileName, data);  //저장 새 파일 생성
+
+        SceneLoadManager.instance.LoadScene(sceneName);
     }
 
     public void PlayerReset()             //플레이어 사망 후, 초기화 함수
     {
+        LogUtil.Log($"플레이어 사망, 새로하기 파일 이름: {currentFileName}");
         StartNewSaveFile(currentFileName);
     }
 
@@ -78,6 +80,8 @@ public class SaveManager : MonoBehaviour
 
             DataManager.instance.InitializePlayerStatus();         //플레이어 데이터 초기화
             playerInventory.InitialInventoryDatas();               //유물리스트 삭제 및 암흑물질량 초기화 및 칩셋제거
+            if (PlayerUIManager.instance != null) 
+                PlayerUIManager.instance.ResetHpUI();              //체력UI 갱신
 
             //플레이어 대쉬 쿨타임 초기화
             PlayerCore.Level = 0;                                  //레벨 초기화
@@ -85,13 +89,13 @@ public class SaveManager : MonoBehaviour
             PlayerCore.GetDarkMatter(0, true);                     //UI초기화
 
                                                                    //플레이어 스텟 초기화
-            PlayerStatus.m_hp = 10;                                //체력
-            PlayerStatus.m_maxhp = 10;                             //최대 체력
-            PlayerStatus.m_speed = 5f;                             //이동 속도
-            PlayerStatus.criticalChanceRate = 0.05f;               //치명타 확률
-            PlayerStatus.criticalRate = 0.5f;                      //치명타 피해
-            PlayerStatus.missRate = 0.01f;                         //회피율
-            PlayerStatus.normalDamage = 5;                         //기본공격력
+            //PlayerStatus.m_hp = 10;                                //체력
+            //PlayerStatus.m_maxhp = 10;                             //최대 체력
+            //PlayerStatus.m_speed = 5f;                             //이동 속도
+            //PlayerStatus.criticalChanceRate = 0.05f;               //치명타 확률
+            //PlayerStatus.criticalRate = 0.5f;                      //치명타 피해
+            //PlayerStatus.missRate = 0.01f;                         //회피율
+            //PlayerStatus.normalDamage = 5;                         //기본공격력
         }
     }
 

@@ -21,14 +21,11 @@ public class BossStageManager : MonoBehaviour
         if (FadeManager.Instance != null)
             yield return FadeManager.Instance.StartCoroutine("Fade", 1f);
 
-        UnityEngine.SceneManagement.SceneManager.LoadScene("ChipsetSelectScene");
+        SaveManager.instance.PlayerReset();
 
         if (FadeManager.Instance != null)
             yield return FadeManager.Instance.StartCoroutine("Fade", 0f);
-
-        SaveManager.instance.PlayerReset();
     }
-
 
     // Start is called before the first frame update
     void Start()

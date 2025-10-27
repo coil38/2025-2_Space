@@ -17,12 +17,12 @@ public class PlayerStatus : MonoBehaviour
     public static float criticalChanceRate = 0.05f;  //치명타 확률
     public static float criticalRate = 0.5f;         //치명타 피해
     public static float missRate = 0.01f;            //회피율
-    public static float normalDamage = 10;           //기본공격력
+    public static float normalDamage = 6;            //기본공격력
     public static float hitRate = 1f;                //피격배율
     public static bool cannotHealing = false;        //회복불가
     public static bool maxHpFixing = false;          //최대체력고정
     public static int losedHp = 0;                   //최대체력 변경후, 잃어버린 체력
-    public static int shild_hp = 5;                  //방어막 체력
+    public static int shild_hp = 0;                  //방어막 체력
     public static int maxDarkMaterialCount = 100;    //암흑물질 최대수치
 
     public ParticleSystem m_Particle;
@@ -275,7 +275,6 @@ public class PlayerStatus : MonoBehaviour
                 movemetAniController.PlayAnimation("Dead");   //사망 애니메이션 재생
             }
             //플레이어 사망 연출 시작
-
             LogUtil.Log("플레이어 사망");
         }
     }

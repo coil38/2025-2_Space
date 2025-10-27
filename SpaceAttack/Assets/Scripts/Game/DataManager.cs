@@ -17,12 +17,13 @@ public class DataManager : MonoBehaviour
     //플레이어 초기 상태 데이터
     private int m_hp = 10;                    //체력
     private int m_maxhp = 10;                 //최대 체력
+    public  int shild_hp = 0;                 //방어막 체력
     private float m_speed = 5f;               //이동 속도
     private float m_DashDistance = 3.2f;      //대쉬 거리
     private float criticalChanceRate = 0.05f; //치명타 확률
     private float criticalRate = 0.5f;        //치명타 피해
     private float missRate = 0.01f;           //회피율
-    private float normalDamage = 50;          //기본공격력
+    private float normalDamage = 6;           //기본공격력
     private float m_DashTime = 0.2f;          //대쉬 시간
     private float c_DashTime = 3f;            //대쉬 쿨타임
     private float m_stunTime = 0.3f;          //스턴 시간
@@ -32,6 +33,7 @@ public class DataManager : MonoBehaviour
 
     public int i_hp { get { return m_hp; } }
     public int i_maxhp { get { return m_maxhp; } }
+    public int i_shildHp { get { return shild_hp; } }
     public float i_speed { get { return m_speed; } }
     public float i_DashDistance { get { return m_DashDistance; } }
     public float i_criticalChanceRate { get { return criticalChanceRate; } }
@@ -90,6 +92,7 @@ public class DataManager : MonoBehaviour
     {
         PlayerStatus.m_hp = m_hp;                                    //체력
         PlayerStatus.m_maxhp = m_maxhp;                              //최대 체력
+        PlayerStatus.shild_hp = shild_hp;                            //실드
         PlayerStatus.m_speed = m_speed;                              //이동 속도
         PlayerStatus.m_DashDistance = m_DashDistance;                //대쉬 거리
         PlayerStatus.criticalChanceRate = criticalChanceRate;        //치명타 확률

@@ -69,12 +69,10 @@ public class StageManager : MonoBehaviour
         if (FadeManager.Instance != null)
             yield return FadeManager.Instance.StartCoroutine("Fade", 1f);
 
-        UnityEngine.SceneManagement.SceneManager.LoadScene("ChipsetSelectScene");
-
-         if (FadeManager.Instance != null)
-            yield return FadeManager.Instance.StartCoroutine("Fade", 0f);
-       
         SaveManager.instance.PlayerReset();
+
+        if (FadeManager.Instance != null)
+            yield return FadeManager.Instance.StartCoroutine("Fade", 0f);
     }
 
     private IEnumerator StageStartDelay()
