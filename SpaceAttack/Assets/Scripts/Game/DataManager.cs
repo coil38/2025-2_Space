@@ -109,6 +109,7 @@ public class DataManager : MonoBehaviour
 
         PlayerStatus.Instance.GetComponent<Rigidbody>().useGravity = true;
         PlayerStatus.Instance.GetComponent<Collider>().enabled = true;
+        FindAnyObjectByType<PlayerMovementAnimationController>().EndDeadAndRestart();  //사망 애니메이션 초기화
 
         PlayerTimeSystem.c_DashTime = c_DashTime;                    //대시 쿨타임
         PlayerTimeSystem.m_DashTime = m_DashTime;                    //대시 시간

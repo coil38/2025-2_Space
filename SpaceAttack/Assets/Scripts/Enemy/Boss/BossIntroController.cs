@@ -9,7 +9,6 @@ public class BossIntroController : MonoBehaviour
     public Transform bossCameraPoint;    // 줌인 시 카메라 위치
     public float zoomDuration = 2f;      // 줌인 시간
     public float holdTime = 2f;          // 보스 보여주는 시간
-    public AudioClip bossMusic;          // 보스전 BGM
 
     private Camera mainCam;
     private bool introPlayed = false;
@@ -58,8 +57,8 @@ public class BossIntroController : MonoBehaviour
 
         yield return new WaitForSeconds(holdTime);
 
-        if (AudioManager.instance != null && bossMusic != null)
-            AudioManager.instance.PlayBGM(bossMusic, 0.8f);
+        BGMManager.PlayMiddleBossFildSound();
+        BGMManager.PlayMiddleBossSound();
 
         Transform player = PlayerStatus.Instance?.transform;
         if (player != null && camFollow != null)

@@ -10,7 +10,8 @@ public enum SceneType
     StartGameScene,
     LobbyScene,
     ChipsetSelectScene,
-    BattleScene
+    BattleScene,
+    MiddleBossScene
 }
 
 public class GameSceneManager : MonoBehaviour
@@ -78,6 +79,10 @@ public class GameSceneManager : MonoBehaviour
             case "BattleScene":
                 LogUtil.Log("전투씬");
                 return SceneType.BattleScene;
+
+            case "MiddleBossScene":
+                LogUtil.Log("중간 보스 씬");
+                return SceneType.MiddleBossScene;
         }
         LogUtil.LogWarning("알맞은 씬을 찾을 수 없습니다.");
         return SceneType.None;
@@ -91,6 +96,7 @@ public class GameSceneManager : MonoBehaviour
             case SceneType.LobbyScene: return "LobbyScene";
             case SceneType.ChipsetSelectScene: return "ChipsetSelectScene";
             case SceneType.BattleScene: return "BattleScene";
+            case SceneType.MiddleBossScene: return "MiddleBossScene";
         }
         return "";
     }

@@ -63,8 +63,13 @@ public class PlayerStatus : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject);
+            if (Instance != this)
+            {
+                LogUtil.Log("파괴됨.");
+                Destroy(gameObject);
+            }
         }
+
 
         labelStyle = new GUIStyle();
         labelStyle.fontSize = 25;
@@ -75,6 +80,11 @@ public class PlayerStatus : MonoBehaviour
         m_FacingRight = true;
         rb = GetComponent<Rigidbody>();
         movemetAniController = GetComponent<PlayerMovementAnimationController>();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this) LogUtil.Log("플레이어 파괴");
     }
 
     public void InitializeEvent()  //이벤트 체인 함수
@@ -339,30 +349,30 @@ public class PlayerStatus : MonoBehaviour
         }
     }
 
-    InventoryManager inventory;
-    private void OnGUI()
-    {
-        GUILayout.BeginArea(new Rect(10, 350, 800, 1650));
+    //InventoryManager inventory;
+    //private void OnGUI()
+    //{
+    //    GUILayout.BeginArea(new Rect(10, 350, 800, 1650));
 
-        GUILayout.Label("===플레이어 스텟===", labelStyle);
-        GUILayout.Label($"체력: {m_hp}, 최대 체력: {m_maxhp}, 쉴드 체력: {shild_hp}", labelStyle);
-        GUILayout.Label($"이동속도: {m_speed}, 기본 이동 속도: {DataManager.instance.i_speed}", labelStyle);
-        GUILayout.Label($"치명타 피해률: {criticalRate}, 치명타 확률: {criticalChanceRate}", labelStyle);
-        GUILayout.Label($"회피률: {missRate} , 기본공격력: {normalDamage}", labelStyle);
-        GUILayout.Label($"레벨: {PlayerCore.Level} , 경험치: {PlayerCore.DarkMaterialCount}, 피격배율: {hitRate}", labelStyle);
-        GUILayout.Label($"오염된 프로세스 드랍률: {RewardSystem.RelicDropRate}", labelStyle);
+    //    GUILayout.Label("===플레이어 스텟===", labelStyle);
+    //    GUILayout.Label($"체력: {m_hp}, 최대 체력: {m_maxhp}, 쉴드 체력: {shild_hp}", labelStyle);
+    //    GUILayout.Label($"이동속도: {m_speed}, 기본 이동 속도: {DataManager.instance.i_speed}", labelStyle);
+    //    GUILayout.Label($"치명타 피해률: {criticalRate}, 치명타 확률: {criticalChanceRate}", labelStyle);
+    //    GUILayout.Label($"회피률: {missRate} , 기본공격력: {normalDamage}", labelStyle);
+    //    GUILayout.Label($"레벨: {PlayerCore.Level} , 경험치: {PlayerCore.DarkMaterialCount}, 피격배율: {hitRate}", labelStyle);
+    //    GUILayout.Label($"오염된 프로세스 드랍률: {RewardSystem.RelicDropRate}", labelStyle);
 
-        GUILayout.Space(50);
+    //    GUILayout.Space(50);
 
-        if (inventory == null)
-            inventory = FindObjectOfType<InventoryManager>();
+    //    if (inventory == null)
+    //        inventory = FindObjectOfType<InventoryManager>();
 
-        GUILayout.Label($"보유중인 유물 개수: {inventory._relics.Length}", labelStyle);
-        foreach (var relic in inventory._relics)
-        {
-            GUILayout.Label($"{relic.relicID}:{relic.relicName}", labelStyle);
-        }
+    //    GUILayout.Label($"보유중인 유물 개수: {inventory._relics.Length}", labelStyle);
+    //    foreach (var relic in inventory._relics)
+    //    {
+    //        GUILayout.Label($"{relic.relicID}:{relic.relicName}", labelStyle);
+    //    }
 
-        GUILayout.EndArea();
-    }
+    //    GUILayout.EndArea();
+    //}
 }

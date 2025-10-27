@@ -17,6 +17,16 @@ public class BGMManager : MonoBehaviour
         GameSceneManager.sceneTypeChanged -= PlayBGMSound;    //씬 타입 변경 이벤트 구독 헤제
     }
 
+    public static void PlayMiddleBossSound()
+    {
+        if (SoundManager.instance != null) SoundManager.instance.PlayBGMOrUISound(1011, SoundType.BGM);
+    }
+
+    public static void PlayMiddleBossFildSound()
+    {
+        if (SoundManager.instance != null) SoundManager.instance.PlayBGMOrUISound(1007, SoundType.BGM);
+    }
+
     private void PlayBGMSound(SceneType sceneType)
     {
         //AudioSource source = GetComponent<AudioSource>();
@@ -32,17 +42,29 @@ public class BGMManager : MonoBehaviour
                 //시작화면 브금 재생
                 break;
             case SceneType.LobbyScene:
+                //SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
                 //SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
                 break;
 
             case SceneType.ChipsetSelectScene:
                 if (SoundManager.instance != null)
+                {
+                    SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
                     SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
+                }
                 break;
 
             case SceneType.BattleScene:
                 if (SoundManager.instance != null)
+                {
+                    SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
                     SoundManager.instance.PlayBGMOrUISound(1001, SoundType.BGM);
+                }
+                break;
+
+            case SceneType.MiddleBossScene:
+                if (SoundManager.instance != null)
+                    SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
                 break;
         }
     }

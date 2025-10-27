@@ -104,8 +104,10 @@ public class WeaponSword : WeaponType
     {
         if (PlayerTimeSystem.stunTimer.IsRunning()) return;  //플레이어 피격받는 중일 경우, 공격취소 처리 (예외처리)
 
-        if (targets.TryDequeue(out var target))
+        foreach(var target in targets)
             chipset.Attack(target, damageRate, attackDirection, addedCritChanceRate, addedCritRate, ChipAttackType.Weapon);
+
+        targets.Clear();
     }
 
     private void OnDrawGizmos()

@@ -14,7 +14,7 @@ public class SoundManager : MonoBehaviour
     Dictionary<int, SoundInfo> UISFXRegistry = new Dictionary<int, SoundInfo>();
 
     List<SoundInfo> playedSound = new List<SoundInfo>();  //현재 재생중인 사운드들
-    SoundInfo playedBGM;                                  //현재 재생중인 브금
+    List<SoundInfo> playedBGMs = new List<SoundInfo>();   //현재 재생중인 브금들
 
     private List<SoundInfo> RegisterTemp = new List<SoundInfo>();    //사운드 등록용
 
@@ -187,13 +187,7 @@ public class SoundManager : MonoBehaviour
         {
             if (BGMRegistry.TryGetValue(soundID, out SoundInfo sound))
             {
-                if (playedBGM != null)
-                {
-                    //LogUtil.Log("재생취소");
-                    StopBGMOrUISound(playedBGM.soundID, SoundType.BGM);  //이미 재생중이던 브금 재생종료
-                }
-                //LogUtil.Log("재생");
-                playedBGM = sound;
+                playedBGMs.Add(sound);
                 playedSound.Add(sound);
                 sound.audioSource.Play();
             }
@@ -228,6 +222,16 @@ public class SoundManager : MonoBehaviour
                 sound.audioSource.Stop();
             }
         }
+    }
+
+    public void StopAllPlayedBGM()
+    {
+        foreach (var bgm in playedBGMs)
+        {
+            if(bgm.audioSource !=  null)  
+                bgm.audioSource?.Stop();
+        }
+        playedBGMs.Clear();
     }
 
     public void StopPlayedAllSound()  //현재 재생중인 모든 사운드 종료

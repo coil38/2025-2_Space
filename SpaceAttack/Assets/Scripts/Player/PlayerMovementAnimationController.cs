@@ -128,20 +128,21 @@ public class PlayerMovementAnimationController : MonoBehaviour
                 break;
 
             case "Dash":
+                if (PlayerMoveAniCondition.IsAnimating()) return; //현재 공격중일 경우, 리턴처리
                 PlayerMoveAniCondition.StartAni();
                 if (moveDirection == MoveDirection.Front)
                 {
-                    frontMoveAnimator.SetFloat("DashSpeed", Mathf.Clamp(2f / dashDuration, 0.5f, 5f));
+                    frontMoveAnimator.SetFloat("DashSpeed", Mathf.Clamp(2f / dashDuration - 0.05f, 0.5f, 20f));
                     frontMoveAnimator.SetTrigger("Dash");
                 }
                 else if (moveDirection == MoveDirection.Back)
                 {
-                    backMoveAnimator.SetFloat("DashSpeed", Mathf.Clamp(2f / dashDuration, 0.5f, 5f));
+                    backMoveAnimator.SetFloat("DashSpeed", Mathf.Clamp(2f / dashDuration - 0.05f, 0.5f, 20f));
                     backMoveAnimator.SetTrigger("Dash");
                 }
                 else if (moveDirection == MoveDirection.Side)
                 {
-                    sideMoveAnimator.SetFloat("DashSpeed", Mathf.Clamp(1.66f / dashDuration, 0.5f, 5f));   //1.66은 대쉬 애니메이션 Length | 0.3초동안 실행되게 설정
+                    sideMoveAnimator.SetFloat("DashSpeed", Mathf.Clamp(1.66f / dashDuration - 0.05f, 0.5f, 20f));   //1.66은 대쉬 애니메이션 Length | 0.3초동안 실행되게 설정
                     sideMoveAnimator.SetTrigger("Dash");
 
                     //Debug.Log(1.66f / dashDuration / 20));
@@ -152,7 +153,7 @@ public class PlayerMovementAnimationController : MonoBehaviour
                 PlayerMoveAniCondition.StartAni();
                 moveDirection = MoveDirection.Front;
                 SetDirection();
-                frontMoveAnimator.SetFloat("HitSpeed", Mathf.Clamp(0.667f / PlayerTimeSystem.m_stunTime - 0.05f, 0.6f, 5f));
+                frontMoveAnimator.SetFloat("HitSpeed", Mathf.Clamp(0.667f / PlayerTimeSystem.m_stunTime - 0.05f, 0.6f, 20f));
                 frontMoveAnimator.SetTrigger("Hit");
                 break;
 
@@ -162,6 +163,13 @@ public class PlayerMovementAnimationController : MonoBehaviour
                 frontMoveAnimator.SetTrigger("Dead");
                 break;
         }
+    }
+
+    public void EndDeadAndRestart()
+    {
+        moveDirection = MoveDirection.Front;
+        SetDirection();
+        frontMoveAnimator.SetTrigger("IsReStart");
     }
 
     public void ResetAni()     //속박상태 해제에 사용
@@ -200,6 +208,7 @@ public class PlayerMovementAnimationController : MonoBehaviour
 
     public void OnAttackObj(PlayerAniInfo _aniInfo)   //공격할시, 실행됨 (이벤트 체인)
     {
+        if (PlayerMoveAniCondition.IsAnimating()) return; //현재 공격중일 경우, 리턴처리
         PlayerMoveAniCondition.StartAni();
         ResetAnimationObj();
         AttackObj.SetActive(true);

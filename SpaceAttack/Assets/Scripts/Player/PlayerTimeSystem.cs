@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class PlayerTimeSystem : MonoBehaviour
@@ -14,7 +13,6 @@ public class PlayerTimeSystem : MonoBehaviour
     public static Timer stunTimer;                       //피격 이후 스턴(무적)시간
     public static Timer invincibilityTimer;              //대쉬 이후 무적시간
     public static Timer deshTimer;                       //대쉬 시간
-    public static Timer w_dashTimer;                     //대쉬 대기 시간
     public static Timer c_dashTimer;                     //대쉬 쿨타임
 
     //무기별 공격 대기
