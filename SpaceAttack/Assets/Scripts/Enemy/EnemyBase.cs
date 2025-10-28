@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 [RequireComponent(typeof(Rigidbody))]
 
 
@@ -98,6 +99,8 @@ public abstract class EnemyBase : MonoBehaviour
             playerStatus = playerObj.GetComponent<PlayerStatus>();
         else
             Debug.LogError("[EnemyBase] Player object with tag 'Player' not found!");
+
+        
 
         if (monsterHPUI == null)
             Debug.LogError("monsterHPUI가 할당되지 않았습니다.");
@@ -198,6 +201,9 @@ public abstract class EnemyBase : MonoBehaviour
             Vector3 spawnPos = transform.position + randomOffset;
             Instantiate(heartPrefab, spawnPos, heartPrefab.transform.rotation);
         }
+
+        RewardSystem.DropRewards(RewardType.MonsterDrop, transform.position);
+        DropEXPSystem.DropEXP();
     }
 
     public virtual void ApplyDamage(AttackInfo attackInfo)
@@ -226,9 +232,6 @@ public abstract class EnemyBase : MonoBehaviour
                 col.enabled = false;
 
             OnDeathAction?.Invoke(this);
-
-            int exp = UnityEngine.Random.Range(3, 7);
-            PlayerCore.GetDarkMatter(exp);
 
             OnDeath();
 

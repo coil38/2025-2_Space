@@ -325,7 +325,6 @@ MonoBehaviour:
   bossCameraPoint: {fileID: 792080034}
   zoomDuration: 3
   holdTime: 3
-  bossMusic: {fileID: 8300000, guid: b625c863591bfbc42808fe4b696310b8, type: 3}
 --- !u!1001 &299062257
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1841,7 +1840,7 @@ PrefabInstance:
     - target: {fileID: 4931429256905232148, guid: 865fa5f96187e9c4f849a87518a020e9,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6331722134292677721, guid: 865fa5f96187e9c4f849a87518a020e9,
         type: 3}

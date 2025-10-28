@@ -35,8 +35,20 @@ public class BossIntroController : MonoBehaviour
             savedCameraRot = camFollow.cameraRot;
         }
 
+        Transform player = null;
+
         if (PlayerStatus.Instance != null)
+        {
             PlayerStatus.Instance.isRooted = true;
+            player = PlayerStatus.Instance.transform;
+
+            if (player != null)
+            {
+                // 보스 왼쪽에 배치
+                Vector3 leftSpawnPos = boss.position + Vector3.left * 8.5f;
+                player.position = leftSpawnPos;
+            }
+        }
 
         Boss bossScript = boss.GetComponent<Boss>();
         if (bossScript != null)
@@ -60,11 +72,9 @@ public class BossIntroController : MonoBehaviour
         BGMManager.PlayMiddleBossFildSound();
         BGMManager.PlayMiddleBossSound();
 
-        Transform player = PlayerStatus.Instance?.transform;
         if (player != null && camFollow != null)
         {
             t = 0f;
-
             Vector3 targetPos = player.position + camFollow.cameraDir.normalized * camFollow.cameraDis;
             Quaternion targetRot = Quaternion.Euler(camFollow.cameraRot);
 
@@ -72,7 +82,6 @@ public class BossIntroController : MonoBehaviour
             {
                 t += Time.deltaTime;
                 float lerp = t / zoomDuration;
-
                 mainCam.transform.position = Vector3.Lerp(bossCameraPoint.position, targetPos, lerp);
                 mainCam.transform.rotation = Quaternion.Slerp(bossCameraPoint.rotation, targetRot, lerp);
                 yield return null;
