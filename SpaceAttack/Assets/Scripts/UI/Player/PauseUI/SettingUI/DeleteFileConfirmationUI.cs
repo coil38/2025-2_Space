@@ -17,10 +17,10 @@ public class DeleteFileConfirmationUI : ConfirmationUIStrategy
 
     public override void Execute()
     {
-        _leftButtonText.text = "Delete";
-        _midleButtonText.text = "Delete & Start";
-        _rightButtonText.text = "Cancel";
-        _contentText.text = "Are you sure you want to delete this save file? This action is irreversible.";
+        _leftButtonText.text = "삭제";
+        _midleButtonText.text = "삭제 후 시작";
+        _rightButtonText.text = "취소";
+        _contentText.text = "해당 저장파일을 삭제하시겠습니까? 이 작업은 되돌릴수 없습니다.";
         //각각의 버튼들 Sprite추가
         confirmationUI.gameObject.SetActive(true);
 
@@ -34,7 +34,7 @@ public class DeleteFileConfirmationUI : ConfirmationUIStrategy
                 startGameUI.DeleteFile();
             }
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
-
+            UISoundManager.PlayeButtonClickSound();
         });
 
         _midleButton.onClick.AddListener(() =>
@@ -49,13 +49,14 @@ public class DeleteFileConfirmationUI : ConfirmationUIStrategy
                 startGameUI.PlayeNewGame();
             }
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
-
+            UISoundManager.PlayeButtonClickSound();
         });
 
         _rightButton.onClick.AddListener(() =>
         {
             LogUtil.Log("파일 삭제 취소 동작");
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
+            UISoundManager.PlayeButtonClickSound();
         });
     }
 }

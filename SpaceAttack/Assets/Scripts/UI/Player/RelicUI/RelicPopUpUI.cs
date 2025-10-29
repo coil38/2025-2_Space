@@ -37,37 +37,38 @@ public class RelicPopUpUI : MonoBehaviour
             relicIconImage.sprite = relicSO.iconSprite;                         //유물 이미지 할당
 
             //유물 능력 설명 할당
-            List<string> temp = new List<string>();
-            string[] words;
+            relicDescription.text = relicSO.description;
+            //List<string> temp = new List<string>();
+            //string[] words;
 
-            foreach (var effectId in relicSO.relicEffects)
-            {
-                string des = database.relicEffectDatabase.GetRelicEffect(effectId).relicEffectDiscription;
-                words = des.Replace(".", string.Empty).Split(' ');
-                string sentence = "";
-                RelicInfo relicInfo = GetRelicInfo(effectId, relicSO);
+            //foreach (var effectId in relicSO.relicEffects)
+            //{
+            //    string des = database.relicEffectDatabase.GetRelicEffect(effectId).relicEffectDiscription;
+            //    words = des.Replace(".", string.Empty).Split(' ');
+            //    string sentence = "";
+            //    RelicInfo relicInfo = GetRelicInfo(effectId, relicSO);
 
-                for (int i = 0; i < words.Length; i++)
-                {
-                    if (words[i] == "n")
-                    {
-                        words[i] = relicInfo.n.ToString();
-                    }
-                    else if (words[i] == "n%")
-                    {
-                        words[i] = relicInfo.n.ToString() + "%";
-                    }
-                    else if (words[i] == "z")
-                    {
-                        words[i] = relicInfo.z.ToString();
-                    }
-                    //LogUtil.Log(words[i]);
-                    sentence += " " + words[i];
-                }
-                temp.Add(sentence);
-            }
+            //    for (int i = 0; i < words.Length; i++)
+            //    {
+            //        if (words[i] == "n")
+            //        {
+            //            words[i] = relicInfo.n.ToString();
+            //        }
+            //        else if (words[i] == "n%")
+            //        {
+            //            words[i] = relicInfo.n.ToString() + "%";
+            //        }
+            //        else if (words[i] == "z")
+            //        {
+            //            words[i] = relicInfo.z.ToString();
+            //        }
+            //        //LogUtil.Log(words[i]);
+            //        sentence += " " + words[i];
+            //    }
+            //    temp.Add(sentence);
+            //}
 
-            relicDescription.text = string.Join("\t", temp);
+            //relicDescription.text = string.Join("\t", temp);
         }
         else
         {

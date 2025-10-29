@@ -16,9 +16,9 @@ public class SaveConfirmationUI : ConfirmationUIStrategy
     [SerializeField] private SettingUIManager settingUIManager;
     public override void Execute()
     {
-        _leftButtonText.text = "Save";
-        _midleButtonText.text = "Cancel";
-        _contentText.text = "Do you want to save your changes?";
+        _leftButtonText.text = "저장";
+        _midleButtonText.text = "취소";
+        _contentText.text = "변경 사항을 저장하시겠습니까?";
         //각각의 버튼들 Sprite추가
         _rightButton.gameObject.SetActive(false);
         confirmationUI.gameObject.SetActive(true);
@@ -32,12 +32,14 @@ public class SaveConfirmationUI : ConfirmationUIStrategy
                 settingUIManager.SaveSetting();  //저장
             }
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
+            UISoundManager.PlayeButtonClickSound();
         });
 
         _midleButton.onClick.AddListener(() =>
         {
             LogUtil.Log("취소 버튼 동작");
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
+            UISoundManager.PlayeButtonClickSound();
         });
     }
 }

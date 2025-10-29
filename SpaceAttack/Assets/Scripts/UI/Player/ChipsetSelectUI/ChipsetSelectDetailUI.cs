@@ -167,7 +167,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
     {
         if (equipedChipset != currentChipset)
         {
-            equipChipsetText.text = "Equip";
+            equipChipsetText.text = "장착";
             equipChipsetButton.onClick.AddListener(EquipChipset); //장착 버튼 구독 처리
 
             //버튼 하이라이트 작동방지 켜기 (버튼 인터렉션 활성화)
@@ -181,7 +181,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
         }
         else
         {
-            equipChipsetText.text = "Equiped";
+            equipChipsetText.text = "장착 중";
             equipChipsetButton.onClick.RemoveAllListeners();  //장착 버튼 구독 해제
 
             //버튼 하이라이트 작동방지 끄기 (버튼 인터렉션 비활성화) - 일부로 쓰지 않음. 버튼이 알아서 처리해줌

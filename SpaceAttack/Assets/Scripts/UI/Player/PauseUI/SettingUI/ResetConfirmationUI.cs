@@ -16,9 +16,9 @@ public class ResetConfirmationUI : ConfirmationUIStrategy
     [SerializeField] private SettingUIManager settingUIManager;
     public override void Execute()
     {
-        _leftButtonText.text = "Reset";
-        _midleButtonText.text = "Cancel";
-        _contentText.text = "Do you want to reset all settings to their defaults? This action is irreversible";
+        _leftButtonText.text = "초기화";
+        _midleButtonText.text = "취소";
+        _contentText.text = "모든 설정을 기본값으로 되돌리시겠습니까? 이 작업은 되돌릴 수 없습니다.";
         //각각의 버튼들 Sprite추가
         _rightButton.gameObject.SetActive(false);
         confirmationUI.gameObject.SetActive(true);
@@ -32,12 +32,14 @@ public class ResetConfirmationUI : ConfirmationUIStrategy
                 settingUIManager.ResetSetting();   //설정 초기화
             }
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
+            UISoundManager.PlayeButtonClickSound();
         });
 
         _midleButton.onClick.AddListener(() =>
         {
             LogUtil.Log("취소 버튼 동작");
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
+            UISoundManager.PlayeButtonClickSound();
         });
     }
 }

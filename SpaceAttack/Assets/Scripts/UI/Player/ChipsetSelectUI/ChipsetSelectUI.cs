@@ -95,7 +95,7 @@ public class ChipsetSelectUI : MonoBehaviour
                 buttons[index].onClick.AddListener(() =>
                 {
                     buttons[index].GetComponent<HighLingthingButtonUI>().isCanInteracting = false;
-                    feedBackText.text = "This Chipset is unLocked";
+                    feedBackText.text = "아직 해금되지 않은 칩셋입니다.";
                     feedBackText.DOFade(0f, 2f).SetUpdate(true).OnComplete(() =>
                     {
                         feedBackText.text = string.Empty;

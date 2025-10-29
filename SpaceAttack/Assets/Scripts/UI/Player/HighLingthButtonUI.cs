@@ -6,6 +6,9 @@ using DG.Tweening;
 
 public class HighLingthingButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    [SerializeField] private bool isPauseHightLight = false;
+    [SerializeField] private RectTransform pauseHightLightTrans;
+
     private RectTransform rectTransform;
     private Vector3 defualtSize;
 
@@ -41,7 +44,15 @@ public class HighLingthingButtonUI : MonoBehaviour, IPointerEnterHandler, IPoint
     {
         if (!_dontUsehighLingth)
         {
-            rectTransform.DOScale(new Vector3(1.1f, 1.1f, 1.1f), 0.3f).SetUpdate(true);
+            if (isPauseHightLight && pauseHightLightTrans != null)
+            {
+                pauseHightLightTrans.gameObject.SetActive(true);
+                pauseHightLightTrans.position = transform.position;
+            }
+            else
+            {
+                rectTransform.DOScale(new Vector3(1.1f, 1.1f, 1.1f), 0.3f).SetUpdate(true);
+            }
         }
     }
 
@@ -49,7 +60,12 @@ public class HighLingthingButtonUI : MonoBehaviour, IPointerEnterHandler, IPoint
     {
         if (!_dontUsehighLingth)
         {
-            rectTransform.DOScale(new Vector3(1f, 1f, 1f), 0.3f).SetUpdate(true);
+            if (isPauseHightLight && pauseHightLightTrans != null)
+                pauseHightLightTrans.gameObject.SetActive(false);
+            else
+            {
+                rectTransform.DOScale(new Vector3(1f, 1f, 1f), 0.3f).SetUpdate(true);
+            }
         }
     }
 }

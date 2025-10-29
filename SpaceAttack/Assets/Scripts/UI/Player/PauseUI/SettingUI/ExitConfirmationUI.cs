@@ -17,10 +17,10 @@ public class ExitConfirmationUI : ConfirmationUIStrategy
 
     public override void Execute()
     {
-        _leftButtonText.text = "Save & Exit";
-        _midleButtonText.text = "Exit";
-        _rightButtonText.text = "Cancel";
-        _contentText.text = "Your changes have not been saved. Would you like to exit?";
+        _leftButtonText.text = "저장 후 나가기";
+        _midleButtonText.text = "그냥 나가기";
+        _rightButtonText.text = "취소";
+        _contentText.text = "변경 사항이 저장되지 않았습니다. 나가시겠습니까?";
         //각각의 버튼들 Sprite추가
         confirmationUI.gameObject.SetActive(true);
 
@@ -33,7 +33,7 @@ public class ExitConfirmationUI : ConfirmationUIStrategy
                 settingUIManager.gameObject.SetActive(false);   //나가기 기능
             }
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
-
+            UISoundManager.PlayeButtonClickSound();
         });
 
         _midleButton.onClick.AddListener(() =>
@@ -45,13 +45,14 @@ public class ExitConfirmationUI : ConfirmationUIStrategy
                 settingUIManager.gameObject.SetActive(false);   //나가기 기능
             }
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
-
+            UISoundManager.PlayeButtonClickSound();
         });
 
         _rightButton.onClick.AddListener(() =>
         {
             LogUtil.Log("취소 동작");
             if (confirmationUI != null) confirmationUI.gameObject.SetActive(false);
+            UISoundManager.PlayeButtonClickSound();
         });
     }
 
