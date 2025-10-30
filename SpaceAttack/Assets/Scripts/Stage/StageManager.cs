@@ -17,7 +17,6 @@ public class StageManager : MonoBehaviour
     private int currentLevelRepeat = 0; // 현재 레벨 반복 카운트
 
     [Header("게임 종료 씬")]
-    public string endSceneName = "ChipsetSelectScene";
     public float endSceneDelay = 3f;  // 마지막 후 대기 시간
 
     private List<EnemyBase> aliveMonsters = new List<EnemyBase>();
@@ -166,28 +165,20 @@ public class StageManager : MonoBehaviour
     {
         currentLevelRepeat++;
 
-        // 마지막 반복 →다른 씬으로 이동
-        if (currentLevelRepeat >= maxLevelRepeat)
+        bool isBoss = false;
+        if (currentLevelRepeat >= maxLevelRepeat)        // 마지막 반복
         {
-            float timer = endSceneDelay; // 예: 3초
-            while (timer > 0f)
-            {
-                if (countdownText != null)
-                    countdownText.text = $"보스 출현 : {Mathf.Ceil(timer)}초전!";
-                yield return null;
-                timer -= Time.deltaTime;
-            }
-
+            isBoss = true;
             if (countdownText != null)
-                countdownText.text = "";
-
-            UnityEngine.SceneManagement.SceneManager.LoadScene(endSceneName);
-            yield break;
+                countdownText.text = "보스방 통로가 열립니다...";
+        }
+        else                                             // 마지막 반복이 아닌 경우
+        {
+            isBoss = false;
+            if (countdownText != null)
+                countdownText.text = "통로가 열립니다...";
         }
 
-        // 마지막 반복이 아닌 경우
-        if (countdownText != null)
-            countdownText.text = "통로가 열립니다...";
         yield return new WaitForSeconds(1f);
 
         Transform wallsParent = currentLevel.transform.Find("Walls");
@@ -223,7 +214,13 @@ public class StageManager : MonoBehaviour
         wallCollider.isTrigger = true;
 
         NextStageTrigger triggerScript = chosenWall.gameObject.AddComponent<NextStageTrigger>();
-        triggerScript.Setup(this, levelPrefab);
+        triggerScript.Setup(this, levelPrefab, isBoss);
+    }
+
+    public void LoadBossRome()    //보스방으로 이동
+    {
+        if (PlayerStatus.Instance != null) PlayerStatus.Instance.isRooted = false;
+        FadeManager.Instance.LoadScene(GameSceneManager.GetSceneNameByType(SceneType.MiddleBossScene));
     }
 
     public void LoadNextLevel(Vector3 entryDirection)

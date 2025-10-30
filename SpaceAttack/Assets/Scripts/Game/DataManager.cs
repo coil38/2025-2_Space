@@ -17,7 +17,7 @@ public class DataManager : MonoBehaviour
     //플레이어 초기 상태 데이터
     private int m_hp = 10;                    //체력
     private int m_maxhp = 10;                 //최대 체력
-    public  int shild_hp = 0;                 //방어막 체력
+    private int shild_hp = 0;                 //방어막 체력
     private float m_speed = 5f;               //이동 속도
     private float m_DashDistance = 3.2f;      //대쉬 거리
     private float criticalChanceRate = 0.05f; //치명타 확률

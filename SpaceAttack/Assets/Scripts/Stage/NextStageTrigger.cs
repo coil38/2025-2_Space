@@ -7,11 +7,13 @@ public class NextStageTrigger : MonoBehaviour
     private StageManager stageManager;
     private GameObject levelPrefab;
     private bool triggered = false;
+    private bool isBoss = false;
 
-    public void Setup(StageManager stageManager, GameObject prefab)
+    public void Setup(StageManager stageManager, GameObject prefab, bool isBoss)
     {
         this.stageManager = stageManager;
         this.levelPrefab = prefab;
+        this.isBoss = isBoss;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -22,9 +24,8 @@ public class NextStageTrigger : MonoBehaviour
         triggered = true;
 
         // 플레이어 Root 상태 ON (속박)
-        PlayerStatus playerStatus = other.GetComponent<PlayerStatus>();
-        if (playerStatus != null)
-            playerStatus.isRooted = true;
+        if(PlayerStatus.Instance != null)
+            PlayerStatus.Instance.isRooted = true;
 
         // 플레이어와 벽 위치를 기반으로 진입 방향 계산
         Vector3 toPlayer = other.transform.position - transform.position;
@@ -32,10 +33,10 @@ public class NextStageTrigger : MonoBehaviour
         float localZ = Vector3.Dot(toPlayer, transform.forward); // 앞뒤
         Vector3 entryDirection = new Vector3(localX, 0f, localZ).normalized;
 
-        StartCoroutine(FadeAndLoadNextLevel(entryDirection, playerStatus));
+        StartCoroutine(FadeAndLoadNextLevel(entryDirection));
     }
 
-    private IEnumerator FadeAndLoadNextLevel(Vector3 entryDirection, PlayerStatus playerStatus)
+    private IEnumerator FadeAndLoadNextLevel(Vector3 entryDirection)
     {
         if (FadeManager.Instance != null)
             yield return FadeManager.Instance.StartCoroutine("Fade", 1f);
@@ -50,12 +51,16 @@ public class NextStageTrigger : MonoBehaviour
         else if (wallName.Contains("top") || wallName.Contains("forward")) fixedEntryDir = Vector3.forward;
         else if (wallName.Contains("bottom") || wallName.Contains("back")) fixedEntryDir = Vector3.back;
 
-        stageManager.LoadNextLevel(fixedEntryDir);
+        if (!isBoss)
+        {
+            stageManager.LoadNextLevel(fixedEntryDir);
 
-        if (FadeManager.Instance != null)
-            yield return FadeManager.Instance.StartCoroutine("Fade", 0f);
+            if (FadeManager.Instance != null)
+                yield return FadeManager.Instance.StartCoroutine("Fade", 0f);
 
-        if (playerStatus != null)
-            playerStatus.isRooted = false;
+            if (PlayerStatus.Instance != null)
+                PlayerStatus.Instance.isRooted = false;
+        }
+        else stageManager.LoadBossRome();
     }
 }

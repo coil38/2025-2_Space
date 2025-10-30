@@ -17,7 +17,7 @@ public class SaveManager : MonoBehaviour
 
     private InventoryManager playerInventory;
 
-    private string[] blockedScenes = {"StartUIScene", "LoadingScene", "CutScene" };
+    private string[] blockedScenes = {"StartUIScene", "LoadingScene", "MiddleBossScene" };
     private bool isOneTime; //처음 한번만 적용
 
     public void SaveFile(string filename)  //생성된 파일 저장용 함수

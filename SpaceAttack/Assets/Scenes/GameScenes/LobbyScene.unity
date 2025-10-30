@@ -3512,6 +3512,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6582071780638075255, guid: 42c3731f693abb249b9229ffa82672ff,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7010182797187863703, guid: 42c3731f693abb249b9229ffa82672ff,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -3542,6 +3547,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7043891559665083966, guid: 42c3731f693abb249b9229ffa82672ff,
+        type: 3}
+      propertyPath: relicDatabase
+      value: 
+      objectReference: {fileID: 11400000, guid: 1b45c49dde0325947b76f74ac75d26b5,
+        type: 2}
+    - target: {fileID: 7043891559665083966, guid: 42c3731f693abb249b9229ffa82672ff,
+        type: 3}
+      propertyPath: chipcompDatabase
+      value: 
+      objectReference: {fileID: 11400000, guid: a217638537a80f240943adf8d87a82bf,
+        type: 2}
     - target: {fileID: 7340445711183707974, guid: 42c3731f693abb249b9229ffa82672ff,
         type: 3}
       propertyPath: m_LocalPosition.x
