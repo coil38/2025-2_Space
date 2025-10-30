@@ -56,6 +56,10 @@ public class GameSceneManager : MonoBehaviour
             Time.timeScale = 0f;                              //일시정지
             LogUtil.Log("시작씬 일시정지!!!!!!!!!!!!!!!!!!!!!!");
         }
+        else if (sceneType == SceneType.BattleScene || sceneType == SceneType.MiddleBossScene)
+        {
+            UIESCSystem.ChangeUIType(UIType.None);    //자동UI타입으로 변경
+        }
 
         currentScene = sceneType;
     }

@@ -7,17 +7,6 @@ public class CameraFallow : MonoBehaviour
     public static CameraFallow instance;
 
     public float FollowSpeed = 2.0f;
-    public Transform Target
-    {
-        get { return target; }
-        set 
-        {
-            target = value;
-            //Debug.Log($"대상이 활당됨!!, 대상이름: {value.gameObject.name}");
-        }
-    }
-    [HideInInspector]
-    public Transform target;
 
     public Vector3 cameraDir;       //방향 백터(카메라)
     public Vector3 cameraRot;
@@ -27,6 +16,7 @@ public class CameraFallow : MonoBehaviour
     public float shakeAmount = 0.1f;
     public float decreaseFactor = 1.0f;
 
+    private Transform target;
     private bool isInitialing;  //초기 중인지 여부 판단
 
     private void Awake()
@@ -34,6 +24,7 @@ public class CameraFallow : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            StartCoroutine(FindTargetAndInitialize());
             DontDestroyOnLoad(this.gameObject);
         }
         else
@@ -41,26 +32,13 @@ public class CameraFallow : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    void OnEnable()
-    {
-        StartCoroutine(FindTargetAndInitialize());
-    }
 
     void Update()
     {
         if (target == null)
         {
             LogUtil.Log("대상이 존재하지 않다");
-            if (!isInitialing)
-            {
-                StartCoroutine(FindTargetAndInitialize());
-                isInitialing = true;
-            }
             return;
-        }
-        else
-        {
-            //LogUtil.Log("대상이 존재한다");
         }
 
         if (isInitialing)
@@ -68,6 +46,7 @@ public class CameraFallow : MonoBehaviour
             LogUtil.Log("카메라 초기설정 중...");
             return;
         }
+
         if (isLocked || target == null || isInitialing) return;
 
         Vector3 newPosition = target.position + cameraDir.normalized * cameraDis;
@@ -90,12 +69,12 @@ public class CameraFallow : MonoBehaviour
         isInitialing = true;  //초기 설정 중 활성화
 
         yield return new WaitUntil(() => PlayerStatus.Instance != null);
-        Target = PlayerStatus.Instance.transform;
+        target = PlayerStatus.Instance.transform;
 
         transform.rotation = Quaternion.Euler(cameraRot);
         transform.position = target.position + cameraDir.normalized * cameraDis;
 
-        if(Target != null) isInitialing = false;  //초기 설정 중 비활성화
+        if(target != null) isInitialing = false;  //초기 설정 중 비활성화
     }
 
     public void LockCamera(bool state)

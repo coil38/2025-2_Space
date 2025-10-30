@@ -16,6 +16,8 @@ public class PlayerInventorySlot : MonoBehaviour, IPointerClickHandler
     {
         Image[] images = gameObject.GetComponentsInChildren<Image>();
         image = Array.Find(images, i => i.gameObject != this.gameObject);
+
+        if(image != null) ChangeColorA(0);
     }
 
     public void AddItemImage(RelicSO relic, int relicInstanceId)
@@ -25,7 +27,7 @@ public class PlayerInventorySlot : MonoBehaviour, IPointerClickHandler
         Sprite sprite = relic.iconSprite;
         itemImage = sprite;
         image.sprite = sprite;
-        ChangeColorA();
+        ChangeColorA(1);
 
         //LogUtil.Log($"{relic.relicName}획득");
     }
@@ -36,16 +38,11 @@ public class PlayerInventorySlot : MonoBehaviour, IPointerClickHandler
         relic = null;
         relicInstanceId = -1;
         image.sprite = null;
-        ChangeColorA();
+        ChangeColorA(0);
     }
 
-    private void ChangeColorA()
+    private void ChangeColorA(float value)
     {
-        int value = 0;
-
-        if (image.color.a == 0) value = 1;
-        else value = 0;
-
         Color color = image.color;
         color.a = value;
         image.color = color;

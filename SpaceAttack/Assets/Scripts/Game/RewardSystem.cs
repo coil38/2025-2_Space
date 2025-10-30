@@ -19,17 +19,17 @@ public class RewardSystem : MonoBehaviour
     [SerializeField] private GameObject _halfHeartPrf;
     private static GameObject halfHeartPrf;
 
-    public static float defualtDropRate = 0.05f;
-    public static float defualtItemDropRate = 0.05f;
+    public static float defualtDropRate = 0.00f;
+    public static float defualtItemDropRate = 0.00f;
 
-    public static float RelicDropRate = 0.05f; //0.05f;
-    public static float itemDropRate = 0.05f;
+    public static float RelicDropRate = 0.00f; //0.05f;
+    public static float itemDropRate = 0.00f;
 
     private static InventoryManager inventoryManager;  //플레이어 인벤토리
 
     private static RewardData[] rewardDatas = new RewardData[]
     {
-        new RewardData(RewardType.MonsterDrop, 0.01f, 0f, 0f, 0.2f),
+        new RewardData(RewardType.MonsterDrop, 0.00f, 0f, 0f, 0.6f),
         new RewardData(RewardType.RewardBox, 0.3f, 0f, 0.01f, 0.5f),
         new RewardData(RewardType.HiddenBox, 0.9f, 0f, 0.2f, 0.9f),
         new RewardData(RewardType.SupplyBox, 0.8f, 0f, 0.3f, 0.9f),

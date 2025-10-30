@@ -9,6 +9,7 @@ public enum UIType
     StartSceneUI,     //시작화면UI
     PauseUI,          //일시정지UI
     SelectChipsetUI,  //칩셋선택UI
+    SelectStageUI,    //스테이지 선택UI
     None,             //잘모를 때, 쓰는 타입(자동으로 알맞은 타입으로 바꿔줌)
 }
 

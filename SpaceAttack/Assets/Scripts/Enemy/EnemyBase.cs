@@ -189,19 +189,6 @@ public abstract class EnemyBase : MonoBehaviour
     //죽음
     protected virtual void OnDeath()
     {
-        float dropChance = 0.2f; // 20% 확률
-        if (heartPrefab != null && UnityEngine.Random.value < dropChance)
-        {
-            Vector3 randomOffset = new Vector3(
-                UnityEngine.Random.Range(-dropRadius, dropRadius),
-                0.5f,
-                UnityEngine.Random.Range(-dropRadius, dropRadius)
-            );
-
-            Vector3 spawnPos = transform.position + randomOffset;
-            Instantiate(heartPrefab, spawnPos, heartPrefab.transform.rotation);
-        }
-
         RewardSystem.DropRewards(RewardType.MonsterDrop, transform.position);
         DropEXPSystem.DropEXP();
     }

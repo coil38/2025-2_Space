@@ -22,7 +22,7 @@ public class ChipsetSelectUI : MonoBehaviour
     private Image[] iconImages;
     private Button[] buttons;
     private GameObject[] equipedTexts;
-
+    public bool isEquiping { get; private set; }   //장착여부 체크 불값
     private void OnEnable()
     {
         UISoundManager.PlayeOnAndOffPanelSound(); //패널열기혹은 닫기 사운드 재생
@@ -122,5 +122,7 @@ public class ChipsetSelectUI : MonoBehaviour
         foreach (var text in equipedTexts)
             text.SetActive(false);
         equipedTexts[index].SetActive(true);
+
+        isEquiping = true;   //장착완료로 변경
     }
 }
