@@ -1026,7 +1026,7 @@ Transform:
   m_GameObject: {fileID: 238367109}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.62730014, w: 0.77877766}
-  m_LocalPosition: {x: 0.51323795, y: 6.7447505, z: 0}
+  m_LocalPosition: {x: 0.51323795, y: 6.74475, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4816,12 +4816,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1147425754}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1834604796 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3951366780136536685, guid: fa52809bd1cbaf74faddc386d153ed6b,
+    type: 3}
+  m_PrefabInstance: {fileID: 6457141971737737776}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1834604797 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 140907115864527026, guid: fa52809bd1cbaf74faddc386d153ed6b,
     type: 3}
   m_PrefabInstance: {fileID: 6457141971737737776}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &1834604798
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1834604796}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a53f1453c4a5df54abb9d0ebb4079032, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1842019716
 GameObject:
   m_ObjectHideFlags: 0
@@ -6445,7 +6472,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1293956501}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3951366780136536685, guid: fa52809bd1cbaf74faddc386d153ed6b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1834604798}
   m_SourcePrefab: {fileID: 100100000, guid: fa52809bd1cbaf74faddc386d153ed6b, type: 3}
 --- !u!1001 &8968512176265132995
 PrefabInstance:
