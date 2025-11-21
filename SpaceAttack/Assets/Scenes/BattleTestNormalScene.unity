@@ -2053,7 +2053,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c0883b5392d7924497014c80306482e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 3
 --- !u!65 &620109150
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2774,7 +2773,7 @@ PrefabInstance:
     - target: {fileID: 4931429256905232148, guid: 865fa5f96187e9c4f849a87518a020e9,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6331722134292677721, guid: 865fa5f96187e9c4f849a87518a020e9,
         type: 3}
@@ -4591,8 +4590,8 @@ MonoBehaviour:
   escapeSpeed: 4
   escapeMinDistance: 30
   attackReadyTime: 3
-  dashSpeed: 15
-  dashDuration: 0.4
+  dashSpeed: 25
+  dashDuration: 0.48
   attackCooldown: 5
 --- !u!65 &2053118151
 BoxCollider:

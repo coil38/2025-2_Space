@@ -209,7 +209,7 @@ public class Minipollution : EnemyBase
 
         canDetectPlayer = false;
 
-        float escapeTimer = 3f; 
+        float escapeTimer = 4f; 
         while (escapeTimer > 0)
         {
             escapeTimer -= Time.deltaTime;
@@ -222,6 +222,10 @@ public class Minipollution : EnemyBase
         {
             SwitchState(State.Chase);
         }
+        else
+        {
+            SwitchState(State.Patrol);
+        }
     }
 
     private void EscapeMove()
@@ -229,6 +233,8 @@ public class Minipollution : EnemyBase
         if (!attackTarget) return;
 
         Vector3 opposite = (transform.position - attackTarget.position).normalized;
+        Flip(opposite.x);
+
         rb.MovePosition(transform.position + opposite * escapeSpeed * Time.fixedDeltaTime);
     }
 
@@ -237,10 +243,22 @@ public class Minipollution : EnemyBase
     {
         currentState = newState;
 
-        if (newState == State.Patrol || newState == State.Chase || newState == State.Escape)
+        if (newState == State.Patrol || newState == State.Chase)
+        {
             animator.SetBool("isWalking", true);
-        else
+            animator.SetBool("isRunning", false);
+        }
+
+        else if (newState == State.Escape)
+        {
             animator.SetBool("isWalking", false);
+            animator.SetBool("isRunning", true);
+        }
+        else
+        {
+            animator.SetBool("isWalking", false);
+            animator.SetBool("isRunning", false);
+        }
     }
 
     public void OnDashStartEvent()
@@ -269,7 +287,6 @@ public class Minipollution : EnemyBase
                         };
 
                         player.ApplyDamage(info);
-                        Debug.Log("Dash Damage Given");
 
                         canDamagePlayer = false;   
                     }
@@ -283,6 +300,20 @@ public class Minipollution : EnemyBase
     public void OnDashEndEvent()
     {
         canDamagePlayer = false;
+    }
+
+    protected override bool CanPlayHitAnimation()
+    {
+        return !(currentState == State.AttackReady ||
+                 currentState == State.Dash);
+    }
+
+    public override void ApplyDamage(AttackInfo attackInfo)
+    {
+        if (currentState == State.AttackReady || currentState == State.Dash)
+            return;
+
+        base.ApplyDamage(attackInfo);
     }
 
 }

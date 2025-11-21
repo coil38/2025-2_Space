@@ -234,11 +234,15 @@ public abstract class EnemyBase : MonoBehaviour
 
             Destroy(gameObject, 1f);
         }
-        else if (hp > 0) 
+        else if (hp > 0)
         {
             rb.velocity = Vector3.zero;
             rb.AddForce(attackInfo.attackDirection * 0.5f, ForceMode.Impulse);
-            StartCoroutine(HitProcess());
+
+            if (CanPlayHitAnimation())
+            {
+                StartCoroutine(HitProcess());
+            }
         }
     }
     protected virtual IEnumerator HitProcess()
@@ -252,7 +256,7 @@ public abstract class EnemyBase : MonoBehaviour
     }
 
     //맞는 피격 이펙트
-    public void StartHitFlash()
+    protected virtual void StartHitFlash()
     {
         if (hitFlashCoroutine != null)
             StopCoroutine(hitFlashCoroutine);
@@ -298,5 +302,10 @@ public abstract class EnemyBase : MonoBehaviour
                                                      visualTransform.localScale.z);
             isFacingRight = true;
         }
+    }
+
+    protected virtual bool CanPlayHitAnimation()
+    {
+        return true;
     }
 }
