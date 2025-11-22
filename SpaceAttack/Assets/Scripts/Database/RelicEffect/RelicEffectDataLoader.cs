@@ -55,13 +55,6 @@ public class RelicEffectDataLoader : EditorWindow
                 RelicEffectDatabaseSO database = ScriptableObject.CreateInstance<RelicEffectDatabaseSO>();
                 database.relicEffects = createdRelicEffects;
 
-                //유물 효과 데이터 베이스 값 할당
-                RelicDatabaseSO relicDatabase = AssetDatabase.LoadAssetAtPath<RelicDatabaseSO>(relicDatabasePath);
-                relicDatabase.relicEffectDatabase = database;
-                EditorUtility.SetDirty(relicDatabase);
-                if (relicDatabase.relicEffectDatabase == null)
-                    LogUtil.LogError("RelicEffectDatabase 할당에 실패했습니다.");
-
                 AssetDatabase.CreateAsset(database, $"{outputFolder}/RelicEffectDatabase.asset");
                 EditorUtility.SetDirty(database);
             }

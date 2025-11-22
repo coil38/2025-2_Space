@@ -18,18 +18,18 @@ public class RelicEffectManager : MonoBehaviour
             {109,  typeof(MaxHeart)}, {110, typeof(BloodPower) }, {111, typeof(GlassCannon)},
             {112,  typeof(SkillDamageBosst)}, {113, typeof(LifeToSkillPower)}, {114, typeof(SkillCoolincrease)},
             {115,  typeof(Damageincrease)}, {117, typeof(GambleHit)}, {118, typeof(MoveSpeedDecrease)},
-            {119,  typeof(LastReserve)}, {120, typeof(FailSafe)}, {121, typeof(OverloadBackflow)},
+            {121, typeof(OverloadBackflow)},
             {122, typeof(BaseAttackDecrease) }, {123, typeof(CritChanceDecrease)}, {124, typeof(AttackSpeedDecrease)},
             {125, typeof(SkillDamageDecrease) }, {126, typeof(CritDamageDecrease)}, {127, typeof(MaxHeartDecrease)},
             {128,  typeof(InvincibleTimeAfterHitDecrease)}, {129, typeof(DamageFromEliteBossPercent)},
             {130,  typeof(DashDistanceDecrease)}, {131, typeof(ItemDropChanceDecrease)}, {132, typeof(ExpGainDecrease)},
             {133,  typeof(BaseAttackSpeedOnHit)}, {134, typeof(AttackSpeedOnKill)}, {135, typeof(SkillDamageNextAttack)},
             {136, typeof(CritDamageAttackPowerOnCrit) }, {137, typeof(MaxHeartShieldOnStart)}, {138, typeof(ShieldIfNoHit)},
-            {139, typeof(IgnoreEliteBossDamageChance) }, {140, typeof(DashDistanceincrease)}, {141, typeof(DashDistanceDamage)},
-            {142,  typeof(MoveSpeedDashBoost)}, {143, typeof(SkillCooldownSlowWave)}, {144, typeof(ItemDropBonusReward) },
+            {139, typeof(IgnoreEliteBossDamageChance) }, {140, typeof(DashDistanceincrease)},
+            {142,  typeof(MoveSpeedDashBoost)}, {144, typeof(ItemDropBonusReward) },
             {145,  typeof(ExpGainincrease)}, {146, typeof(CorruptionOnLevelup)}, {147, typeof(OverLoadCore)},
-            {148, typeof(Execute) }, {149, typeof(NoHitShieldHeart)}, {150, typeof(Resurrection)}, {151, typeof(AutoCleanse)},
-            {152, typeof(CounterCore) }, {153, typeof(DebuffImmunity)}, {154, typeof(RelicDropRateBoost)}, {155, typeof(CorruptionIncrease)}
+            {148, typeof(Execute) }, {149, typeof(NoHitShieldHeart)}, {150, typeof(Resurrection)},
+            {154, typeof(RelicDropRateBoost)}, {155, typeof(CorruptionIncrease)}
         };
     }
 
@@ -343,95 +343,6 @@ public class RelicEffectManager : MonoBehaviour
             base.Excute(isEquip, info);
             if (isEquip) PlayerStatus.m_speed -= DataManager.instance.i_speed * info.n;
             else PlayerStatus.m_speed += DataManager.instance.i_speed * info.n;
-        }
-    }
-    private class LastReserve : RelicEffectType               //119 - 최대 하트가 n칸으로 고정되지만, z초마다 보호막 하트 y개를 얻습니다 (최대 w칸 중첩)
-    {
-        private int lastReserveCumCount = 0;
-        private int losedHp = 0;
-        private int changedMaxHp = 0;
-        private bool isAdd;
-        private int addedShild = 0;
-        public override void Excute(bool isEquip, RelicInfo info)
-        {
-            base.Excute(isEquip, info);
-            if (isEquip)
-            {
-                changedMaxHp = Mathf.Abs((int)info.n - PlayerStatus.m_maxhp);
-                isAdd = info.n > PlayerStatus.m_maxhp;
-                PlayerStatus.ChangeMaxHp(isAdd, changedMaxHp);
-                if (!isAdd) losedHp = PlayerStatus.losedHp;
-                PlayerStatus.maxHpFixing = true;
-
-                TimerEvent.Add(info.z, OnLastReserve);
-            }
-            else
-            {
-                PlayerStatus.maxHpFixing = false;
-                PlayerStatus.ChangeMaxHp(!isAdd, changedMaxHp);
-                PlayerStatus.RecoverLosedHp(losedHp);
-                PlayerStatus.ChangeShildHp(false, addedShild);
-
-                TimerEvent.Remove(OnLastReserve);
-            }
-        }
-        private void OnLastReserve()
-        {
-            PlayerStatus.ChangeShildHp(true, (int)(relicInfo.y * 2));
-            addedShild += (int)(relicInfo.y * 2);
-            lastReserveCumCount++;
-            if (lastReserveCumCount < relicInfo.w)
-                TimerEvent.Add(relicInfo.z, OnLastReserve);
-        }
-    }
-
-    private class FailSafe : RelicEffectType               //120 - 하트가 n칸일 때 공격 속도와 이동 속도가 z% y분간 증가하지만, 그 상태에서는 체력 회복이 불가능해집니다. (스테이지 당 w번)
-    {
-        private int failSafeCumCount = 0;
-        private bool isRunning;
-        public override void Excute(bool isEquip, RelicInfo info)
-        {
-            base.Excute(isEquip, info);
-            if(isEquip)
-            {
-                OnFailSafe(0);
-                RelicEvent.playerLoseHpEvent += OnFailSafe;
-                RelicEvent.startStageEvent += InitialFailSafe;
-            }
-            else
-            {
-                RelicEvent.playerLoseHpEvent -= OnFailSafe;
-                RelicEvent.startStageEvent -= InitialFailSafe;
-                TimerEvent.Remove(OffFailSafe);
-                if(isRunning) OffFailSafe();
-            }
-        }
-        private void OnFailSafe(int amount)
-        {
-            if (failSafeCumCount >= relicInfo.w) return;
-
-            if (isRunning) return;
-            if (PlayerStatus.m_hp / 2 + (PlayerStatus.m_hp % 2 == 1 ? 1 : 0) <= relicInfo.n)
-            {
-                PlayerStatus.cannotHealing = true;
-                EventManager.playerEvent.SetAttackTimeRate(true, relicInfo.z);
-                PlayerStatus.m_speed += DataManager.instance.i_speed * relicInfo.z;
-                TimerEvent.Add(relicInfo.y * 60, OffFailSafe);
-
-                isRunning = true;
-                failSafeCumCount++;
-            }
-        }
-        private void InitialFailSafe()
-        {
-            failSafeCumCount = 0;
-        }
-        private void OffFailSafe()
-        {
-            EventManager.playerEvent.SetAttackTimeRate(false, relicInfo.z);
-            PlayerStatus.m_speed -= DataManager.instance.i_speed * relicInfo.z;
-            PlayerStatus.cannotHealing = false;
-            isRunning = false;
         }
     }
     private class OverloadBackflow : RelicEffectType               //121 - 최대 하트가 n칸으로 고정 되는 대신 하트 잃을 때 마다 z% 확률로 하트 y칸을 회복한다.
@@ -810,14 +721,6 @@ public class RelicEffectManager : MonoBehaviour
             else PlayerStatus.m_DashDistance -= DataManager.instance.i_DashDistance * info.n;
         }
     }
-    private class DashDistanceDamage : RelicEffectType                //141 - 대시 중 통과하는 적에게 기본 공격력의 n% 피해를 줍니다.
-    {
-        public override void Excute(bool isEquip, RelicInfo info)
-        {
-            base.Excute(isEquip, info);
-            //////////////////보류!!!!!!!!!!!!!!!!!!!!111
-        }
-    }
     private class MoveSpeedDashBoost : RelicEffectType               //142 - 대시 사용 후 n초간 이동 속도가 추가로 z% 증가합니다.
     {
         bool isAdded;
@@ -844,14 +747,7 @@ public class RelicEffectManager : MonoBehaviour
             PlayerStatus.m_speed -= DataManager.instance.i_speed * relicInfo.z;
         }
     }
-    private class SkillCooldownSlowWave : RelicEffectType               //143 - 스킬 사용 시 주변에 일반/엘리트 몬스터를 느리게 하는 냉기 파동이 방출됩니다.
-    {
-        public override void Excute(bool isEquip, RelicInfo info)
-        {
-            base.Excute(isEquip, info);
-            //////////////////보류!!!!!!!!!!!!!!!!!!!!111
-        }
-    }
+
     private class ItemDropBonusReward : RelicEffectType               //144 - 적 처치 시 아이템 획득 확률이 n% 증가하고 z% 확률로 추가 보상을 획득합니다.
     {
         public override void Excute(bool isEquip, RelicInfo info)
@@ -984,48 +880,6 @@ public class RelicEffectManager : MonoBehaviour
             PlayerStatus.AddHp((int)(relicInfo.n * 2));
             PlayerTimeSystem.SetAndStartInvincibilityTimer(relicInfo.z);
             resurrectionCount++;
-        }
-    }
-    private class AutoCleanse : RelicEffectType               //151 - 하트를 잃을때 마다 n%확률로 부여된 해로운 효과 z개를 제거합니다.
-    {
-        public override void Excute(bool isEquip, RelicInfo info)
-        {
-            base.Excute(isEquip, info);
-            if (isEquip) RelicEvent.playerLoseHpEvent += OnAutoCleanseInfo;
-            else RelicEvent.playerLoseHpEvent -= OnAutoCleanseInfo;
-        }
-        private void OnAutoCleanseInfo(int damage)
-        {
-            float randomValue = UnityEngine.Random.value;
-            if (randomValue <= relicInfo.n)
-            {
-                //해로운 효과 삭제
-            }
-        }
-    }
-    private class CounterCore : RelicEffectType               //152 - 하트를 읽을때 마다 n% 확률로 zm범위의 몬스터들을 경직 시킵니다. (보스 몬스터에게는 적용되지 않음)
-    {
-        public override void Excute(bool isEquip, RelicInfo info)
-        {
-            base.Excute(isEquip, info);
-            if (isEquip) RelicEvent.playerLoseHpEvent += OnCounterCore;
-            else RelicEvent.playerLoseHpEvent -= OnCounterCore;
-        }
-        private void OnCounterCore(int damage)
-        {
-            float randomValue = UnityEngine.Random.value;
-            if (randomValue <= relicInfo.n)
-            {
-                // zm범위의 몬스터들을 경직 시킵니다
-            }
-        }
-    }
-    private class DebuffImmunity : RelicEffectType               //153 - 구속을 제외한 모든 디버프에 면역 상태가 됩니다.
-    {
-        public override void Excute(bool isEquip, RelicInfo info)
-        {
-            base.Excute(isEquip, info);
-            //보류~~
         }
     }
     private class RelicDropRateBoost : RelicEffectType               //154 - 오염된 프로세스 드랍 확률이 n% 증가합니다.
