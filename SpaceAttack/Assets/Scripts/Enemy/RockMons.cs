@@ -29,7 +29,26 @@ public class RockMons : EnemyBase
 
     private void Update()
     {
-        if (isDead || isHit || isAttacking) return;
+        if (isDead)
+        {
+            rb.velocity = Vector3.zero;
+            return;
+        }
+
+        if (isHit)
+        {
+            isAttacking = false;
+            rb.velocity = Vector3.zero;
+            return;
+        }
+
+        if (isAttacking && attackTarget != null)
+        {
+            float dirX = (attackTarget.position - transform.position).x;
+            Flip(dirX);
+        }
+
+        if (isAttacking) return;  
 
         if (!isChasing)
         {
@@ -48,6 +67,7 @@ public class RockMons : EnemyBase
     {
         if (isDead || isHit || isAttacking || !canDetectPlayer)
         {
+            rb.velocity = Vector3.zero;
             SetIsWalking(false);
             return;
         }
@@ -121,6 +141,7 @@ public class RockMons : EnemyBase
 
     private void TryAttack()
     {
+        if (isHit) return;
         if (Time.time - lastAttackTime < attackCooldown || isAttacking) return;
 
         isAttacking = true;
@@ -132,7 +153,7 @@ public class RockMons : EnemyBase
     public void OnAttackHit()
     {
         if (attackTarget == null) return;
-        if (Vector3.Distance(transform.position, attackTarget.position) > attackRange + 0.5f) return;
+        if (Vector3.Distance(transform.position, attackTarget.position) > attackRange + 1.5f) return;
 
         PlayerStatus player = attackTarget.GetComponent<PlayerStatus>();
         if (player != null)
@@ -154,7 +175,18 @@ public class RockMons : EnemyBase
 
     private IEnumerator AttackPauseRoutine()
     {
-        yield return new WaitForSeconds(0.7f);
+        float t = 0f;
+        while (t < 0.7f)
+        {
+            if (isHit)
+            {
+                isAttacking = false;
+                yield break;
+            }
+            t += Time.deltaTime;
+            yield return null;
+        }
+
         isAttacking = false;
     }
 
@@ -175,4 +207,6 @@ public class RockMons : EnemyBase
         SetIsWalking(true);
         Flip(move.x);
     }
+
+
 }

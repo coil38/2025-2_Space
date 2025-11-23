@@ -536,6 +536,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5922768728930035040}
+  - component: {fileID: 4328301794430993700}
   m_Layer: 0
   m_Name: Level
   m_TagString: Level
@@ -573,6 +574,35 @@ Transform:
   - {fileID: 3683232085640025832}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4328301794430993700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1277746962645462372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1791f0dc7ec34a44bb823b0a25a78351, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterType: 0
+  normalPool:
+    monsters:
+    - {fileID: 8722641677778133939, guid: 9541107c5822f594286f8457abebf1d4, type: 3}
+    - {fileID: 2734756403907539940, guid: 8bd49b84790621e4faf0852478202dc0, type: 3}
+    - {fileID: 2040890849726229375, guid: bf2597b6dd1c15e4398a00628aee49a0, type: 3}
+    - {fileID: 3210841994201302233, guid: d050b10c2f1f7bb49999ccd2284bded5, type: 3}
+    weight: 1
+  elitePool:
+    monsters:
+    - {fileID: 7913238944243158354, guid: b8de3c22214365141b0fa780aa0290df, type: 3}
+    weight: 1
+  specificMonsters:
+  - {fileID: 3210841994201302233, guid: d050b10c2f1f7bb49999ccd2284bded5, type: 3}
+  normalTypeChance: 0.1
+  eliteTypeChance: 0.8
+  specificTypeChance: 0.1
 --- !u!1 &1323054262716736338
 GameObject:
   m_ObjectHideFlags: 0

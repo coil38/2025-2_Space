@@ -6,8 +6,6 @@ using UnityEngine.UI; // UI Text 사용
 
 public class StageManager : MonoBehaviour
 {
-    [Header("스테이지 몬스터 프리팹")]
-    public GameObject[] monsterPrefabs;
 
     [Header("UI")]
     public Text countdownText;
@@ -46,6 +44,10 @@ public class StageManager : MonoBehaviour
             currentLevel.tag = "Level";
         }
 
+        LevelConfig conf = currentLevel.GetComponent<LevelConfig>();
+        if (conf != null)
+            conf.ApplyRandomConfig();
+
         planObjects = GameObject.FindGameObjectsWithTag("Plan");
         StartCoroutine(StageStartDelay());
     }
@@ -64,7 +66,7 @@ public class StageManager : MonoBehaviour
         if (countdownText != null)
             countdownText.text = "플레이어가 사망했습니다... 칩셋 화면으로 돌아갑니다.";
 
-        yield return new WaitForSeconds(5f); // 연출용 대기 시간 (3초)
+        yield return new WaitForSeconds(5f); 
         if (FadeManager.Instance != null)
             yield return FadeManager.Instance.StartCoroutine("Fade", 1f);
 
@@ -99,7 +101,20 @@ public class StageManager : MonoBehaviour
 
         float minSpawnDistance = 5f;
 
-        for (int i = 0; i < monstersPerWave; i++)
+        LevelConfig config = currentLevel.GetComponent<LevelConfig>();
+        if (config == null)
+        {
+            Debug.LogError("현재 레벨에 LevelConfig가 없습니다!");
+            return;
+        }
+
+        int spawnCount = monstersPerWave;
+        if (config.monsterType == LevelMonsterType.EliteOnly)
+        {
+            spawnCount = 1;
+        }
+
+        for (int i = 0; i < spawnCount; i++)
         {
             GameObject plan = planObjects[Random.Range(0, planObjects.Length)];
             Renderer renderer = plan.GetComponent<Renderer>();
@@ -108,19 +123,26 @@ public class StageManager : MonoBehaviour
             Bounds bounds = renderer.bounds;
             Vector3 randomPos;
             int safetyCount = 0;
+
             do
             {
                 randomPos = new Vector3(
-     Random.Range(bounds.min.x + margin, bounds.max.x - margin),
-     bounds.max.y,
-     Random.Range(bounds.min.z + margin, bounds.max.z - margin)
- );
+                    Random.Range(bounds.min.x + margin, bounds.max.x - margin),
+                    bounds.max.y,
+                    Random.Range(bounds.min.z + margin, bounds.max.z - margin)
+                );
                 safetyCount++;
                 if (safetyCount > 30) break;
             }
             while (Vector3.Distance(randomPos, playerPos) < minSpawnDistance);
 
-            GameObject prefab = monsterPrefabs[Random.Range(0, monsterPrefabs.Length)];
+            GameObject prefab = config.GetRandomMonster();
+            if (prefab == null)
+            {
+                Debug.LogWarning("LevelConfig에서 몬스터를 가져오지 못함!");
+                continue;
+            }
+
             GameObject monsterObj = Instantiate(prefab, randomPos, prefab.transform.rotation);
             EnemyBase monster = monsterObj.GetComponent<EnemyBase>();
 
@@ -238,6 +260,13 @@ public class StageManager : MonoBehaviour
         }
 
         GameObject newLevel = Instantiate(levelPrefab, spawnPos, Quaternion.identity);
+
+        LevelConfig config = newLevel.GetComponent<LevelConfig>();
+        if (config != null)
+        {
+            config.ApplyRandomConfig(); 
+        }
+
         newLevel.SetActive(true);
         newLevel.tag = "Level";
         currentLevel = newLevel;

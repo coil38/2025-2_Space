@@ -310,7 +310,7 @@ public class Minipollution : EnemyBase
 
     public override void ApplyDamage(AttackInfo attackInfo)
     {
-        if (currentState == State.AttackReady || currentState == State.Dash)
+        if (currentState == State.Dash) // Dash만 무적
             return;
 
         base.ApplyDamage(attackInfo);
