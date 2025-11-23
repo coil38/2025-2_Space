@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 499ab98b1b04b414db376bfe0db8836e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 15
+  hp: 100
   attackDistance: 2
   detectAngle: 155
   damage: 1
@@ -220,7 +220,7 @@ MonoBehaviour:
   attackLayer:
     serializedVersion: 2
     m_Bits: 128
-  hitInvincibleTime: 0
+  hitInvincibleTime: 0.7
   deathMarkPrefab: {fileID: 3373934178109677858, guid: c1caaa46b3d509e4ab3f20c75343c5df,
     type: 3}
   footPosition: {fileID: 3480780954487764402}
@@ -234,7 +234,7 @@ MonoBehaviour:
   hitFlashDuration: 0.2
   canDetectPlayer: 1
   patrolSpeed: 1.5
-  chaseSpeed: 3.5
+  chaseSpeed: 2.5
   patrolChangeTime: 3
   attackRange: 2
   attackCooldown: 3
