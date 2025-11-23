@@ -108,6 +108,8 @@ public class StageManager : MonoBehaviour
             return;
         }
 
+        config.ApplyRandomConfig();
+
         int spawnCount = monstersPerWave;
         if (config.monsterType == LevelMonsterType.EliteOnly)
         {
