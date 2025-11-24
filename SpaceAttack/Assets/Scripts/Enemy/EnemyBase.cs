@@ -50,7 +50,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     [Header("죽음 시 드롭 아이템")]
     [SerializeField] private GameObject heartPrefab;      // 드롭할 하트 프리팹
-    [SerializeField] private float dropRadius = 1.5f;     // 몬스터 주변 랜덤 드롭 반경
+
 
     [Header("공통 사운드")]
     [SerializeField] protected AudioSource audioSource;

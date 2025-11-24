@@ -13,7 +13,7 @@ public class ShoeMonster : EnemyBase
     [SerializeField] private float bulletSpeed = 8f;
     [SerializeField] private float fireInterval = 2f;   // 공격 쿨타임
     [SerializeField] private float burstDelay = 0.12f; // 3발 사이 간격   
-    [SerializeField] private float dashWindUp = 0.05f;  
+
 
 
     [SerializeField] private float attackAnimSpeed = 1.5f;  // 공격 시 애니메이션 속도

@@ -13,7 +13,7 @@ public class Minipollution : EnemyBase
     [SerializeField] private float patrolChangeTime = 3f;
     private float patrolTimer;
     [SerializeField] private float escapeSpeed = 6f;
-    [SerializeField] private float escapeMinDistance = 12f;
+
 
     [Header("공격 관련")]
     [SerializeField] private float attackReadyTime = 3f;

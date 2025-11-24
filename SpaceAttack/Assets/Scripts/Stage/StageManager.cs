@@ -22,9 +22,11 @@ public class StageManager : MonoBehaviour
     float margin = 3.5f;
     private bool playerDeathHandled = false;
 
-    [Header("웨이브 설정")]
+    [HideInInspector]
     public int monstersPerWave = 3;
+    [HideInInspector]
     private int currentWave = 0;
+    [HideInInspector]
     public int maxWaveCount = 2;
 
     [Header("레벨 설정")]
@@ -35,8 +37,14 @@ public class StageManager : MonoBehaviour
     public float startDelay = 3f;
     public float nextWaveDelay = 6f;
 
+    public int stageNumber;
+    private float enemyHpMultiplier = 1f;
     private void Start()
     {
+        stageNumber = StageGameData.SelectedStage;
+
+        ApplyStageDifficulty(stageNumber);
+
         currentLevel = GameObject.FindWithTag("Level");
         if (currentLevel == null && levelPrefab != null)
         {
@@ -61,6 +69,10 @@ public class StageManager : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        stageNumber = StageGameData.SelectedStage;
+    }
     private IEnumerator ReturnToChipsetScene()
     {
         if (countdownText != null)
@@ -150,6 +162,8 @@ public class StageManager : MonoBehaviour
 
             if (monster != null)
             {
+                monster.hp *= enemyHpMultiplier;
+
                 aliveMonsters.Add(monster);
                 monster.OnDeathAction += OnMonsterDeath;
             }
@@ -159,49 +173,104 @@ public class StageManager : MonoBehaviour
     private void OnMonsterDeath(EnemyBase deadMonster)
     {
         aliveMonsters.Remove(deadMonster);
+
         if (aliveMonsters.Count == 0)
         {
             Debug.Log($"웨이브 {currentWave} 완료!");
 
             if (currentWave >= maxWaveCount)
-                StartCoroutine(OpenNextMap());
+            {
+                StartCoroutine(OpenRewardRoom());
+            }
             else
-                StartCoroutine(NextWaveDelay());
+            {
+                StartCoroutine(OpenNextMap());
+            }
         }
     }
 
-    private IEnumerator NextWaveDelay()
+    private IEnumerator OpenRewardRoom()
     {
-        float timer = nextWaveDelay;
+        currentLevelRepeat++;
+
+        if (countdownText != null)
+            countdownText.text = "보상 방이 열립니다...";
+
+        yield return new WaitForSeconds(1f);
+
+        Transform wallsParent = currentLevel.transform.Find("Walls");
+        if (wallsParent == null)
+        {
+            Debug.LogError("Walls 오브젝트를 찾을 수 없습니다.");
+            yield break;
+        }
+
+        // 보상 방용 wall 선택
+        List<Transform> wallList = new List<Transform>();
+        foreach (Transform child in wallsParent)
+            if (child.name.StartsWith("Wall")) wallList.Add(child);
+
+        if (wallList.Count == 0) yield break;
+
+        Transform chosenWall = wallList[Random.Range(0, wallList.Count)];
+
+        // 바닥 보이게 처리
+        Transform floor = chosenWall.Find("Floor");
+        if (floor != null)
+        {
+            Renderer floorRenderer = floor.GetComponent<Renderer>();
+            if (floorRenderer != null)
+            {
+                floorRenderer.enabled = true;
+                Material mat = floorRenderer.material;
+                mat.color = Color.green; // 보상 방 색상
+            }
+        }
+
+        BoxCollider wallCollider = chosenWall.GetComponent<BoxCollider>();
+        if (wallCollider == null)
+            wallCollider = chosenWall.gameObject.AddComponent<BoxCollider>();
+        wallCollider.isTrigger = true;
+
+        NextStageTrigger triggerScript = chosenWall.gameObject.AddComponent<NextStageTrigger>();
+        triggerScript.SetupRewardRoom(this, levelPrefab); 
+    }
+
+    public void StartRewardCountdown(float delay = 20f)
+    {
+        StartCoroutine(RewardCountdownCoroutine(delay));
+    }
+
+    public IEnumerator RewardCountdownCoroutine(float delay)
+    {
+        float timer = delay;
         while (timer > 0f)
         {
             if (countdownText != null)
-                countdownText.text = "다음 웨이브까지: " + Mathf.Ceil(timer);
+                countdownText.text = $"보상 방! {Mathf.Ceil(timer)}초 뒤 칩셋씬으로 이동합니다...";
             yield return null;
             timer -= Time.deltaTime;
         }
 
-        if (countdownText != null) countdownText.text = "";
-        StartWave();
+        OnStageClear();
+    }
+
+    public void OnStageClear()
+    {
+        StageProgress.Instance.UnlockNextStage();
+
+        if (PlayerStatus.Instance != null)
+            PlayerStatus.Instance.isRooted = false;
+
+        FadeManager.Instance.LoadScene("ChipsetSelectScene");
     }
 
     private IEnumerator OpenNextMap()
     {
         currentLevelRepeat++;
 
-        bool isBoss = false;
-        if (currentLevelRepeat >= maxLevelRepeat)        // 마지막 반복
-        {
-            isBoss = true;
-            if (countdownText != null)
-                countdownText.text = "보스방 통로가 열립니다...";
-        }
-        else                                             // 마지막 반복이 아닌 경우
-        {
-            isBoss = false;
-            if (countdownText != null)
-                countdownText.text = "통로가 열립니다...";
-        }
+        if (countdownText != null)
+            countdownText.text = "통로가 열립니다...";
 
         yield return new WaitForSeconds(1f);
 
@@ -226,9 +295,9 @@ public class StageManager : MonoBehaviour
             Renderer floorRenderer = floor.GetComponent<Renderer>();
             if (floorRenderer != null)
             {
-                floorRenderer.enabled = true;                
+                floorRenderer.enabled = true;
                 Material mat = floorRenderer.material;
-                mat.color = Color.yellow;                   
+                mat.color = Color.yellow;
             }
         }
 
@@ -238,21 +307,20 @@ public class StageManager : MonoBehaviour
         wallCollider.isTrigger = true;
 
         NextStageTrigger triggerScript = chosenWall.gameObject.AddComponent<NextStageTrigger>();
-        triggerScript.Setup(this, levelPrefab, isBoss);
+        triggerScript.Setup(this, levelPrefab);
     }
 
-    public void LoadBossRome()    //보스방으로 이동
+    public void LoadBossRome()    
     {
         if (PlayerStatus.Instance != null) PlayerStatus.Instance.isRooted = false;
         FadeManager.Instance.LoadScene(GameSceneManager.GetSceneNameByType(SceneType.MiddleBossScene));
     }
 
-    public void LoadNextLevel(Vector3 entryDirection)
+    public void LoadNextLevel(Vector3 entryDirection, bool spawnMonsters = true, bool isRewardRoom = false)
     {
         GameObject[] splats = GameObject.FindGameObjectsWithTag("Splat");
         foreach (GameObject splat in splats)
             Destroy(splat);
-
 
         Vector3 spawnPos = Vector3.zero;
         if (currentLevel != null)
@@ -266,8 +334,10 @@ public class StageManager : MonoBehaviour
         LevelConfig config = newLevel.GetComponent<LevelConfig>();
         if (config != null)
         {
-            config.ApplyRandomConfig(); 
+            config.ApplyRandomConfig();
         }
+
+
 
         newLevel.SetActive(true);
         newLevel.tag = "Level";
@@ -300,9 +370,9 @@ public class StageManager : MonoBehaviour
                     {
                         Vector3 offsetDir = entryDirection.normalized;
 
-                        if (entryDirection == Vector3.forward || entryDirection == Vector3.back) // top/bottom
+                        if (entryDirection == Vector3.forward || entryDirection == Vector3.back)
                         {
-                            spawnPos.y = spawnWall.position.y - 0.5f; 
+                            spawnPos.y = spawnWall.position.y - 0.5f;
                             spawnPos.x += offsetDir.x * 2f;
                             spawnPos.z += offsetDir.z * 2f;
                         }
@@ -317,14 +387,57 @@ public class StageManager : MonoBehaviour
                 }
             }
         }
+
         if (player != null)
         {
             PlayerStatus ps = player.GetComponent<PlayerStatus>();
             if (ps != null)
-                ps.isRooted = false; 
+                ps.isRooted = false;
         }
-        currentWave = 0;
-        StartCoroutine(StageStartDelay());
-    }
 
+        if (!isRewardRoom && spawnMonsters)
+        {
+            StartCoroutine(StageStartDelay());
+        }
+
+        if (isRewardRoom)
+        {
+            StartRewardCountdown(20f); 
+        }
+    }
+    private void ApplyStageDifficulty(int stage)
+    {
+        switch (stage)
+        {
+            case 1:
+                monstersPerWave = 2;
+                maxWaveCount = 2;
+                enemyHpMultiplier = 1.0f;
+                break;
+
+            case 2:
+                monstersPerWave = 3;
+                maxWaveCount = 3;
+                enemyHpMultiplier = 1.2f;
+                break;
+
+            case 3:
+                monstersPerWave = 3;
+                maxWaveCount = 3;
+                enemyHpMultiplier = 1.4f;
+                break;
+
+            case 4:
+                monstersPerWave = 4;
+                maxWaveCount = 4;
+                enemyHpMultiplier = 1.6f;
+                break;
+
+            case 5:
+                monstersPerWave = 4;
+                maxWaveCount = 4;
+                enemyHpMultiplier = 2.0f;
+                break;
+        }
+    }
 }
