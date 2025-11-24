@@ -74,15 +74,18 @@ public class CharacterMovement : MonoBehaviour
         {
             isMoving = true;
             playerState.m_Particle.Play();   //이동하기 시작하면 파티클 재생
+            PlayerSoundManager.PlayPlayerMoveSound();
         }
         else if(dir.magnitude < 0.1f && isMoving)
         {
             isMoving = false;
             playerState.m_Particle.Stop();       //이동이 멈추면 파티클 종료
+            PlayerSoundManager.StopPlayerMoveSound();
         }
 
         movementAniController.UpdateMoveDirection(horizontal, vertical);  //애니메이션 이동방향 갱신
         movementAniController.PlayAnimation("Move", horizontal, vertical); //이동 애니메이션 재생
+
 
         rb.MovePosition(rb.position + dir * PlayerStatus.m_speed * Time.deltaTime);   //플레이어 이동
     }
@@ -93,7 +96,7 @@ public class CharacterMovement : MonoBehaviour
         playerState.m_Particle.Stop();    //이동이 멈추면 파티클 종료
         playerState.d_Particle.Play();    //대쉬할 경우, 파티클 재생
 
-        PlayerSoundManager.PlayPlayerMoveSound();
+        PlayerSoundManager.StopPlayerMoveSound();
         PlayerSoundManager.PlayPlayerDashSound();
 
         dashDis = PlayerStatus.m_DashDistance;

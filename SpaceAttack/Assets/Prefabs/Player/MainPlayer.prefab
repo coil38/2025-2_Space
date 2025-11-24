@@ -605,7 +605,6 @@ GameObject:
   - component: {fileID: 1382548778515589275}
   - component: {fileID: 2712182263900089252}
   - component: {fileID: 8278956499384606666}
-  - component: {fileID: 3601433915198962816}
   - component: {fileID: 6452602076439040319}
   m_Layer: 0
   m_Name: DINO_Side
@@ -699,18 +698,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3601433915198962816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 281427822945841400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72d943417c8e8264eb7752f98c40002f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6452602076439040319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1466,7 +1453,6 @@ GameObject:
   - component: {fileID: 1922958558087093408}
   - component: {fileID: 6302529564400373038}
   - component: {fileID: 5030024063878363940}
-  - component: {fileID: 906284085511186963}
   - component: {fileID: 4279839884103491133}
   m_Layer: 0
   m_Name: DINO Back
@@ -1556,18 +1542,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &906284085511186963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 749745202584831171}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72d943417c8e8264eb7752f98c40002f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4279839884103491133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15574,7 +15548,6 @@ GameObject:
   - component: {fileID: 5759563881884412707}
   - component: {fileID: 8534047162128186045}
   - component: {fileID: 7367842753842004156}
-  - component: {fileID: 4135538699049629258}
   - component: {fileID: 2360300588265140889}
   m_Layer: 0
   m_Name: DINO_Front
@@ -15662,18 +15635,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4135538699049629258
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6856181781140910912}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72d943417c8e8264eb7752f98c40002f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2360300588265140889
 MonoBehaviour:
   m_ObjectHideFlags: 0

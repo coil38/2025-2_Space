@@ -60,6 +60,9 @@ public class InitializationOrderer : MonoBehaviour
 
             yield break;
         }
+
+        //LogUtil.Log("작동한다");
+
         //DataManager과 EventManager의 싱글톤이 존재할때, 넘어감
         yield return new WaitUntil(() =>
         {
@@ -71,6 +74,8 @@ public class InitializationOrderer : MonoBehaviour
         playerStatus.InitializeEvent();  //EventManger -> f_CorrectionValueEven 체인처리
         playerCore.InitializeEvent();    //EventManger -> f_CorrectionValueEvent, DataManger -> Level 관리, PlayerUIManager 인스턴스
         soundManager.Initialize();       //DataManager -> soundDatabase 받기
+
+        //LogUtil.Log("넘어간다~");
 
         yield return new WaitUntil(() => SoundManager.instance != null && SoundManager.instance.endInitialize);  //SoundManager인스턴스 존재 할 시, 넘어감
         bgmManager.Initialized();        //SoundManager에서 BGM등록
