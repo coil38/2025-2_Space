@@ -93,7 +93,7 @@ public class StageSelectUI : MonoBehaviour
             return;
 
         HideUI(); 
-        StartCoroutine(C_LoadScene("BattleTestScene"));
+        StartCoroutine(C_LoadScene("MiddleBossScene"));
     }
 
     public void CloseUI()
