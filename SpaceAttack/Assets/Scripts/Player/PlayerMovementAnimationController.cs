@@ -25,7 +25,7 @@ public class PlayerMovementAnimationController : MonoBehaviour
     private Animator sideMoveAnimator;
 
     private MoveDirection moveDirection;
-    private MoveDirection currentDirection;
+    public MoveDirection currentDirection { get; private set; }
     private PlayerStatus playerStatus;
 
     [HideInInspector] public Animator attackAnimator;

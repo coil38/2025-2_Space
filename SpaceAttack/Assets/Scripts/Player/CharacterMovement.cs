@@ -52,10 +52,22 @@ public class CharacterMovement : MonoBehaviour
 
         Vector3 dir = new Vector3(horizontal, 0, vertical).normalized;
 
-        if (dir != Vector3.zero) currentDir = dir.normalized;  //현재 방향값이 0이 아닐 때만 전달
+        if (dir.magnitude > 0.1f) currentDir = dir.normalized;  //현재 방향값이 0이 아닐 때만 전달
         else
         {
-            Invoke("ChangeCurrentDir", 0.1f);  //0.1초 실행
+            switch(movementAniController.currentDirection)
+            {
+                case MoveDirection.Front:
+                    currentDir = - Vector3.forward;
+                break;
+                case MoveDirection.Back:
+                    currentDir = Vector3.forward;
+                break;
+                case MoveDirection.Side:
+                    if (playerState.m_FacingRight) currentDir = - Vector3.right;
+                    else currentDir = Vector3.right;
+                break;
+            }
         }
 
         if (dir.magnitude > 0.1f && !isMoving)
@@ -99,13 +111,9 @@ public class CharacterMovement : MonoBehaviour
         PlayerTimeSystem.c_dashTimer.Start();   //대쉬 쿨타임 시작
         PlayerTimeSystem.deshTimer.Start();     //대쉬 타이머 시작  (0.2 초 동안)
 
-        SetDashInfo();     //대쉬 위치 설정
-        if(dashDis > 0) startDash = true;  //대쉬 시작
-    }
-    private void SetDashInfo()
-    {
         currentPos = transform.position;
-        targetPos = currentPos + currentDir.normalized * dashDis;
+        targetPos = currentPos + currentDir.normalized * dashDis;     //대쉬 위치 설정
+        if (dashDis > 0) startDash = true;  //대쉬 시작
     }
     private void PlayerDash()
     {
@@ -119,11 +127,6 @@ public class CharacterMovement : MonoBehaviour
 
         if (timer <= 0.1f || PlayerStatus.Instance.isStuned) 
             startDash = false;
-    }
-
-    private void ChangeCurrentDir()
-    {
-        currentDir = - Vector3.forward;
     }
 
     public void CheckItem()
