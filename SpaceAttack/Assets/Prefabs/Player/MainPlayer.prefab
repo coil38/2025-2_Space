@@ -606,13 +606,14 @@ GameObject:
   - component: {fileID: 2712182263900089252}
   - component: {fileID: 8278956499384606666}
   - component: {fileID: 3601433915198962816}
+  - component: {fileID: 6452602076439040319}
   m_Layer: 0
   m_Name: DINO_Side
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1382548778515589275
 Transform:
   m_ObjectHideFlags: 0
@@ -708,6 +709,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72d943417c8e8264eb7752f98c40002f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6452602076439040319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 281427822945841400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20e820b96ca99ea469ca7f70a59c323a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &296115242516684392
@@ -1454,13 +1467,14 @@ GameObject:
   - component: {fileID: 6302529564400373038}
   - component: {fileID: 5030024063878363940}
   - component: {fileID: 906284085511186963}
+  - component: {fileID: 4279839884103491133}
   m_Layer: 0
   m_Name: DINO Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1922958558087093408
 Transform:
   m_ObjectHideFlags: 0
@@ -1552,6 +1566,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72d943417c8e8264eb7752f98c40002f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4279839884103491133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749745202584831171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20e820b96ca99ea469ca7f70a59c323a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &873326933109268676
@@ -3488,10 +3514,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46ad47bf013b18549ae1f6e9692d9a53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FrontMoveObj: {fileID: 6856181781140910912}
-  BackMoveObj: {fileID: 749745202584831171}
-  SideMoveObj: {fileID: 281427822945841400}
-  AttackObj: {fileID: 7753633444257901583}
+  FrontMoveRenderer: {fileID: 2360300588265140889}
+  BackMoveRenderer: {fileID: 4279839884103491133}
+  SideMoveRenderer: {fileID: 6452602076439040319}
+  AttackMoveRenderer: {fileID: 2356337486394060328}
   SwordObj: {fileID: 3656650786040272049}
   attackAnimator: {fileID: 0}
 --- !u!114 &3103535544589566334
@@ -15549,6 +15575,7 @@ GameObject:
   - component: {fileID: 8534047162128186045}
   - component: {fileID: 7367842753842004156}
   - component: {fileID: 4135538699049629258}
+  - component: {fileID: 2360300588265140889}
   m_Layer: 0
   m_Name: DINO_Front
   m_TagString: Untagged
@@ -15645,6 +15672,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72d943417c8e8264eb7752f98c40002f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2360300588265140889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6856181781140910912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20e820b96ca99ea469ca7f70a59c323a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6872419022993667887
@@ -21586,13 +21625,14 @@ GameObject:
   - component: {fileID: 8886280865846391916}
   - component: {fileID: 6911873671508125727}
   - component: {fileID: 621661343679307088}
+  - component: {fileID: 2356337486394060328}
   m_Layer: 0
   m_Name: DINO_oblique
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8886280865846391916
 Transform:
   m_ObjectHideFlags: 0
@@ -21681,6 +21721,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2356337486394060328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7753633444257901583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20e820b96ca99ea469ca7f70a59c323a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7777163304372923990
 GameObject:
   m_ObjectHideFlags: 0

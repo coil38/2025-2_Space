@@ -12,10 +12,10 @@ public enum MoveDirection
 public class PlayerMovementAnimationController : MonoBehaviour
 {
     [Header("애니메이션 오브젝트들")]
-    public GameObject FrontMoveObj;
-    public GameObject BackMoveObj;
-    public GameObject SideMoveObj;
-    public GameObject AttackObj;
+    public PlayerAniRenderer FrontMoveRenderer;
+    public PlayerAniRenderer BackMoveRenderer;
+    public PlayerAniRenderer SideMoveRenderer;
+    public PlayerAniRenderer AttackMoveRenderer;
 
     [Header("무기 오브젝트들")]
     public GameObject SwordObj;
@@ -32,9 +32,9 @@ public class PlayerMovementAnimationController : MonoBehaviour
 
     void Start()
     {
-        frontMoveAnimator = FrontMoveObj.GetComponent<Animator>();
-        backMoveAnimator = BackMoveObj.GetComponent<Animator>();
-        sideMoveAnimator = SideMoveObj.GetComponent<Animator>();
+        frontMoveAnimator = FrontMoveRenderer.GetComponent<Animator>();
+        backMoveAnimator = BackMoveRenderer.GetComponent<Animator>();
+        sideMoveAnimator = SideMoveRenderer.GetComponent<Animator>();
 
         playerStatus = GetComponent<PlayerStatus>();
     }
@@ -106,13 +106,13 @@ public class PlayerMovementAnimationController : MonoBehaviour
         switch (moveDirection)
         {
             case MoveDirection.Front:
-                FrontMoveObj.SetActive(true);
+                FrontMoveRenderer.ChangeRenderersAlapha(1);
                 break;
             case MoveDirection.Back:
-                BackMoveObj.SetActive(true);
+                BackMoveRenderer.ChangeRenderersAlapha(1);
                 break;
             case MoveDirection.Side:
-                SideMoveObj.SetActive(true);
+                SideMoveRenderer.ChangeRenderersAlapha(1);
                 break;
         }
     }
@@ -128,8 +128,6 @@ public class PlayerMovementAnimationController : MonoBehaviour
                 break;
 
             case "Dash":
-                if (PlayerMoveAniCondition.IsAnimating()) return; //현재 공격중일 경우, 리턴처리
-                PlayerMoveAniCondition.StartAni();
                 if (moveDirection == MoveDirection.Front)
                 {
                     frontMoveAnimator.SetFloat("DashSpeed", Mathf.Clamp(2f / dashDuration - 0.05f, 0.5f, 20f));
@@ -150,7 +148,6 @@ public class PlayerMovementAnimationController : MonoBehaviour
                 break;
 
             case "Hit":
-                PlayerMoveAniCondition.StartAni();
                 moveDirection = MoveDirection.Front;
                 SetDirection();
                 frontMoveAnimator.SetFloat("HitSpeed", Mathf.Clamp(0.667f / PlayerTimeSystem.m_stunTime - 0.05f, 0.6f, 20f));
@@ -183,8 +180,8 @@ public class PlayerMovementAnimationController : MonoBehaviour
     {
         if (isAdding)
         {
-            AttackObj.GetComponent<Animator>().runtimeAnimatorController = animator.runtimeAnimatorController;
-            attackAnimator = AttackObj.GetComponent<Animator>();
+            AttackMoveRenderer.GetComponent<Animator>().runtimeAnimatorController = animator.runtimeAnimatorController;
+            attackAnimator = AttackMoveRenderer.GetComponent<Animator>();
 
             ResetWeaponObj();
             switch (chipsetName)
@@ -199,7 +196,7 @@ public class PlayerMovementAnimationController : MonoBehaviour
         }
         else
         {
-            AttackObj.GetComponent<Animator>().runtimeAnimatorController = null;
+            AttackMoveRenderer.GetComponent<Animator>().runtimeAnimatorController = null;
             attackAnimator = null;
 
             ResetWeaponObj();  //무기 초기화
@@ -211,15 +208,15 @@ public class PlayerMovementAnimationController : MonoBehaviour
         if (PlayerMoveAniCondition.IsAnimating()) return; //현재 공격중일 경우, 리턴처리
         PlayerMoveAniCondition.StartAni();
         ResetAnimationObj();
-        AttackObj.SetActive(true);
+        AttackMoveRenderer.ChangeRenderersAlapha(1);
     }
 
     public void ResetAnimationObj()    // 애니메이션 오브젝트들 초기화함수
     {
-        FrontMoveObj.SetActive(false);
-        SideMoveObj.SetActive(false);
-        BackMoveObj.SetActive(false);
-        AttackObj.SetActive(false);
+        FrontMoveRenderer.ChangeRenderersAlapha(0);
+        SideMoveRenderer.ChangeRenderersAlapha(0);
+        BackMoveRenderer.ChangeRenderersAlapha(0);
+        AttackMoveRenderer.ChangeRenderersAlapha(0);
     }
 
     public void ResetAttackAnimation()

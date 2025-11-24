@@ -5,17 +5,14 @@ using UnityEngine;
 public class PlayerMoveAniCondition : MonoBehaviour
 {
     private static bool isAnimating = false;
-    private static bool isResetingAni = false;
     public static void EndAni()
     {
         isAnimating = false;
-        isResetingAni = true;
     }
 
     public static void StartAni()
     {
         isAnimating = true;
-        isResetingAni = false;
     }
 
     public static bool IsAnimating()
@@ -25,11 +22,10 @@ public class PlayerMoveAniCondition : MonoBehaviour
 
     public static bool IsResetAni()
     {
-        if (isResetingAni)
+        if (!isAnimating)
         {
-            isResetingAni = false;
             return true;
         }
-        return isResetingAni;
+        return false;
     }
 }
