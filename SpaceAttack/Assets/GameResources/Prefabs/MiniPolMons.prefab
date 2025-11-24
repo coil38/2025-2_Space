@@ -538,7 +538,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7913238944243158354}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.42261827, y: 0, z: 0, w: 0.9063079}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
@@ -547,7 +547,7 @@ Transform:
   - {fileID: 8509012609185759523}
   - {fileID: 4935279685817856260}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 50, y: 0, z: 0}
 --- !u!95 &3379696344994747256
 Animator:
   serializedVersion: 5
@@ -646,7 +646,6 @@ MonoBehaviour:
   footPosition: {fileID: 8509012609185759523}
   heartPrefab: {fileID: 319665496327438999, guid: f9e94d050e55d0e46b507ac3cecb93a9,
     type: 3}
-  dropRadius: 1.5
   audioSource: {fileID: 2338239050827412202}
   hitSound: {fileID: 8300000, guid: 60cf4d2e3c8635c4e861cdef5357c32f, type: 3}
   monsterHPUI: {fileID: 4200900765171468872}
@@ -657,7 +656,6 @@ MonoBehaviour:
   chaseSpeed: 3
   patrolChangeTime: 3
   escapeSpeed: 4
-  escapeMinDistance: 30
   attackReadyTime: 3
   dashSpeed: 25
   dashDuration: 0.48

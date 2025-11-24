@@ -66,6 +66,14 @@ public class BGMManager : MonoBehaviour
                 if (SoundManager.instance != null)
                     SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
                 break;
+
+            case SceneType.BattleTestNormalScene:
+                if (SoundManager.instance != null)
+                {
+                    SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
+                    SoundManager.instance.PlayBGMOrUISound(1001, SoundType.BGM);
+                }
+                break;
         }
     }
 }

@@ -28,7 +28,7 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
 
     public override void CheckUse(Vector3 currentPos)
     {
-        //if (!canUse) return; //해금여부에 따른 스킬 사용 여부
+        if (!isUnLocked) return;                                      //해금여부에 따른 스킬 사용 여부
 
         _currentPos = currentPos;
 

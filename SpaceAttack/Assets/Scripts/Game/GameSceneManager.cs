@@ -11,7 +11,9 @@ public enum SceneType
     LobbyScene,
     ChipsetSelectScene,
     BattleScene,
-    MiddleBossScene
+    MiddleBossScene,
+
+    BattleTestNormalScene   //테스트용
 }
 
 public class GameSceneManager : MonoBehaviour
@@ -87,6 +89,10 @@ public class GameSceneManager : MonoBehaviour
             case "MiddleBossScene":
                 LogUtil.Log("중간 보스 씬");
                 return SceneType.MiddleBossScene;
+
+            case "BattleTestNormalScene":
+                LogUtil.Log("배틀 테스트 씬");
+                return SceneType.BattleTestNormalScene;
         }
         LogUtil.LogWarning("알맞은 씬을 찾을 수 없습니다.");
         return SceneType.None;
