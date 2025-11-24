@@ -271,6 +271,11 @@ public class SoundManager : MonoBehaviour
 
     public void StopSound(GameObject obj, string soundName)   //등록된 대상만 사용가능 및 사운드이름이 정확해야함
     {
+        if (obj == null)
+        {
+            Debug.LogError($"{soundName}를 사용하기 위한 오브젝트가 존재하지 않습니다.");
+            return;
+        }
         if (audioRegistry.ContainsKey(obj))
         {
             SoundInfo[] sounds = audioRegistry[obj];

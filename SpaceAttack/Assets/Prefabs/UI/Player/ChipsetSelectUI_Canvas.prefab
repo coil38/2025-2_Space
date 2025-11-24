@@ -28,7 +28,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 222159695838792004}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -38,7 +38,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 40}
+  m_AnchoredPosition: {x: 0, y: 140.65579}
   m_SizeDelta: {x: 211, y: 45}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &8441588051645187858
@@ -69,8 +69,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 482117150, guid: 5b78607bedb2bbb45a0ca06e9bf03ec1, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.8113208, g: 0.45158416, b: 0.45158416, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -135,6 +135,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPauseHightLight: 0
+  pauseHightLightTrans: {fileID: 0}
 --- !u!114 &9125423428461328557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -388,18 +390,18 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6231506593146893248}
-  - {fileID: 12569577658491655}
-  - {fileID: 5871683127288378646}
-  - {fileID: 3783880739914579275}
-  - {fileID: 1720234342113001174}
   - {fileID: 4232872640146982847}
+  - {fileID: 1720234342113001174}
+  - {fileID: 3783880739914579275}
+  - {fileID: 5871683127288378646}
+  - {fileID: 12569577658491655}
+  - {fileID: 6231506593146893248}
   m_Father: {fileID: 7427827802744723484}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 26.0082}
-  m_SizeDelta: {x: 0, y: 477.9835}
+  m_SizeDelta: {x: -187.89087, y: 477.9835}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7679723386349995986
 CanvasRenderer:
@@ -658,7 +660,12 @@ MonoBehaviour:
   chipsetLayoutObject: {fileID: 601328085275362901}
   chipsetDetailPanel: {fileID: 7642183341326328896}
   feedBackText: {fileID: 8459525724824403007}
-  lockedIcon: {fileID: 21300000, guid: 3d4c52589e4f2c7468f676c25412d7a6, type: 3}
+  lockedSlotIcon: {fileID: -1512476353, guid: 5b78607bedb2bbb45a0ca06e9bf03ec1, type: 3}
+  unlockedSlotIcon: {fileID: -17955839, guid: 5b78607bedb2bbb45a0ca06e9bf03ec1, type: 3}
+  hightLingthingSlotIcon: {fileID: -1321935867, guid: 5b78607bedb2bbb45a0ca06e9bf03ec1,
+    type: 3}
+  warriorIcon: {fileID: -802832973, guid: 5b78607bedb2bbb45a0ca06e9bf03ec1, type: 3}
+  archerIcon: {fileID: -405983397, guid: 5b78607bedb2bbb45a0ca06e9bf03ec1, type: 3}
   selectButton: {fileID: 915124672281034073}
 --- !u!1 &1444498787250572407
 GameObject:
@@ -963,7 +970,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -60}
+  m_AnchoredPosition: {x: 0, y: -160.65576}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1887293062247075405
@@ -1333,6 +1340,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPauseHightLight: 0
+  pauseHightLightTrans: {fileID: 0}
 --- !u!114 &1765933199103947240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1371,7 +1380,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2932279498576717307}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1929,16 +1938,16 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8779325592587102218}
-  - {fileID: 2569858920793547494}
-  - {fileID: 2266286185870686408}
   - {fileID: 3532428787751069599}
+  - {fileID: 2266286185870686408}
+  - {fileID: 2569858920793547494}
+  - {fileID: 8779325592587102218}
   m_Father: {fileID: 8459911834750285410}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 700, y: 750}
+  m_SizeDelta: {x: 887.8908, y: 951.3116}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2449765122205856107
 CanvasRenderer:
@@ -1968,7 +1977,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 1055714588, guid: 5b78607bedb2bbb45a0ca06e9bf03ec1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3394,6 +3403,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPauseHightLight: 0
+  pauseHightLightTrans: {fileID: 0}
 --- !u!114 &2040707938586402489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3892,17 +3903,17 @@ PrefabInstance:
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
@@ -3992,7 +4003,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -4029,6 +4040,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPauseHightLight: 0
+  pauseHightLightTrans: {fileID: 0}
 --- !u!114 &169606021508889528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4129,17 +4142,17 @@ PrefabInstance:
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
@@ -4235,7 +4248,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -4272,6 +4285,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPauseHightLight: 0
+  pauseHightLightTrans: {fileID: 0}
 --- !u!114 &8538865728950374512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4366,17 +4381,17 @@ PrefabInstance:
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
@@ -4454,7 +4469,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -4491,6 +4506,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPauseHightLight: 0
+  pauseHightLightTrans: {fileID: 0}
 --- !u!114 &5773214765896377401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4603,17 +4620,17 @@ PrefabInstance:
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
@@ -4697,7 +4714,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -4734,6 +4751,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPauseHightLight: 0
+  pauseHightLightTrans: {fileID: 0}
 --- !u!114 &5200439222497784891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5022,17 +5041,17 @@ PrefabInstance:
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
@@ -5110,7 +5129,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -5147,6 +5166,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPauseHightLight: 0
+  pauseHightLightTrans: {fileID: 0}
 --- !u!114 &1303137394894071084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5259,17 +5280,17 @@ PrefabInstance:
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8626146948334311213, guid: 6f0552bb99aaf574e93d714e766fa5fe,
         type: 3}
@@ -5353,7 +5374,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -5390,6 +5411,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96b3a8b65ba8046b8959ca58d89c14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPauseHightLight: 0
+  pauseHightLightTrans: {fileID: 0}
 --- !u!114 &6967582289290244701
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class HighLingthingButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {

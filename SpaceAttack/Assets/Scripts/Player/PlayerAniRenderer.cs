@@ -9,10 +9,6 @@ public class PlayerAniRenderer : MonoBehaviour
     void Start()
     {
         spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-        foreach (SpriteRenderer renderer in spriteRenderers)
-        {
-            Debug.Log($"{gameObject.name}의 renderer 저장");
-        }
     }
 
     public void ChangeRenderersAlapha(float a)

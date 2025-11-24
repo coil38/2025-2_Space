@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using System.ComponentModel;
 
 public class ChipsetSelectUI : MonoBehaviour
 {
@@ -16,7 +17,11 @@ public class ChipsetSelectUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI feedBackText;
 
     [Header("기타")]
-    [SerializeField] private Sprite lockedIcon; //잠금 아이콘
+    [SerializeField] private Sprite lockedSlotIcon;
+    [SerializeField] private Sprite unlockedSlotIcon;
+    [SerializeField] private Sprite hightLingthingSlotIcon;
+    [SerializeField] private Sprite warriorIcon;
+    [SerializeField] private Sprite archerIcon;
     [SerializeField] private Button selectButton;  //선택 버튼
 
     private Image[] iconImages;
@@ -27,7 +32,7 @@ public class ChipsetSelectUI : MonoBehaviour
     {
         UISoundManager.PlayeOnAndOffPanelSound(); //패널열기혹은 닫기 사운드 재생
 
-        if (chipsetDatabase == null || chipsetLayoutObject == null || lockedIcon == null)  //없을 경우, 반환처리
+        if (chipsetDatabase == null || chipsetLayoutObject == null)  //없을 경우, 반환처리
             return;
 
         if (chipsetDatabase == null) chipsetDetailPanel.chipsetDatabase = chipsetDatabase;
@@ -63,12 +68,30 @@ public class ChipsetSelectUI : MonoBehaviour
 
             if (chipsetCount > 0)
             {
-                string key = chipsetDatabase.chipsets[i].chipsetKey;
-                iconImages[i].sprite = chipsetDatabase.chipsets[i].iconSprite;  //칩셋 스프라이트 할당
+                //iconImages[i].sprite = chipsetDatabase.chipsets[i].iconSprite;  //칩셋 스프라이트 할당
+                switch (chipsetDatabase.chipsets[i].chipsetName)
+                {
+                    case "Warrior":
+                        iconImages[i].sprite = warriorIcon; break;
+                    case "Archer":
+                        iconImages[i].sprite = archerIcon; break;
+                }
+
+                buttons[i].GetComponent<Image>().sprite = unlockedSlotIcon;     //해금된 칩셋슬롯 적용
+                if (buttons[i].transition == Selectable.Transition.SpriteSwap)
+                {
+                    SpriteState spriteState = buttons[i].spriteState;
+                    spriteState.highlightedSprite = hightLingthingSlotIcon;
+                    spriteState.pressedSprite = hightLingthingSlotIcon;
+                    buttons[i].spriteState = spriteState;
+                }
             }
             else
             {
-                iconImages[i].sprite = lockedIcon;  //잠금 아이콘 할당
+                buttons[i].GetComponent<Image>().sprite = lockedSlotIcon;     //해금된 칩셋슬롯 적용
+                Color color = iconImages[i].color;
+                color.a = 0;
+                iconImages[i].color = color;
             }
 
             chipsetCount--;

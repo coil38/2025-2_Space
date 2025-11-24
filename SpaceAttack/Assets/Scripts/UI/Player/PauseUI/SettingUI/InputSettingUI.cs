@@ -14,6 +14,9 @@ public class InputSettingUI : MonoBehaviour
     [SerializeField] private bool isUsingAxis;                   //입력이 Axis를 사용 여부
     [SerializeField] private bool isPositive;                    //그 입력이 긍정값인지 여부
 
+    [Header("비주얼용")]
+    [SerializeField] private GameObject focusingImage;          //집중이미지
+
     private TMP_InputField inputField;
     private bool isInputting;
     void Start()
@@ -49,6 +52,9 @@ public class InputSettingUI : MonoBehaviour
     {
         if (inputField.isFocused && !isInputting)  //입력준비중이고 아무 키나 눌렀을 때, 실행
         {
+            focusingImage.SetActive(true);
+            focusingImage.transform.position = transform.position;
+
             settingUIManager.currentInputSetting = this;  //입력준비 중일 때, 최근 인스턴스로 본인을 갱신
             RebindKey();  //변경후, 입력
             //Debug.Log(gameObject.name + "이 작동한다.");
@@ -56,6 +62,8 @@ public class InputSettingUI : MonoBehaviour
 
         if (settingUIManager.currentInputSetting != this && isInputting)        //최근 인스턴스가 본인 아닐 경우(변경대상이 본인이 아닐 경우)
         {
+            focusingImage.SetActive(false);
+
             isInputting = false;
             //inputField.text = "";
             //Debug.Log($"{gameObject.name} 인스턴스는 변경 대상이 빠뀜.");
@@ -77,10 +85,10 @@ public class InputSettingUI : MonoBehaviour
         isInputting = true;
         settingUIManager.rebindingOperation?.Cancel();   //이미 op가 존재할 경우, 해당 op 초기화
 
-        if (settingUIManager.currentInputSetting == this)  //입력 대기 중, 텍스트 설정
-        {
-            preMeshProUGUI.text = "ReadyToSet";
-        }
+        //if (settingUIManager.currentInputSetting == this)  //입력 대기 중, 텍스트 설정
+        //{
+        //    preMeshProUGUI.text = "ReadyToSet";
+        //}
 
         settingUIManager.rebindingOperation = action.PerformInteractiveRebinding(targetIndex)
               .WithControlsExcluding("Mouse")    // 원하면 마우스 제외 등 필터
