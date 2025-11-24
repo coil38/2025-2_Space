@@ -51,6 +51,7 @@ public class NextStageTrigger : MonoBehaviour
         {
             StartCoroutine(FadeAndLoadNextLevel(other));
         }
+
     }
 
     private IEnumerator FadeAndLoadRewardRoom(Vector3 entryDirection)
@@ -70,6 +71,12 @@ public class NextStageTrigger : MonoBehaviour
         if (PlayerStatus.Instance != null)
             PlayerStatus.Instance.isRooted = false;
 
+    }
+    public void SetupForNextStage(StageManager stageManager, GameObject prefab)
+    {
+        this.stageManager = stageManager;
+        this.levelPrefab = prefab;
+        this.isRewardRoom = false; // 다음 스테이지 선택용
     }
 
     private IEnumerator FadeAndLoadNextLevel(Collider player)

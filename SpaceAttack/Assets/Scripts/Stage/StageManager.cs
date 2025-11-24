@@ -247,12 +247,24 @@ public class StageManager : MonoBehaviour
         while (timer > 0f)
         {
             if (countdownText != null)
-                countdownText.text = $"보상 방! {Mathf.Ceil(timer)}초 뒤 칩셋씬으로 이동합니다...";
+                countdownText.text = $"보상 방! {Mathf.Ceil(timer)}초 뒤 다음 스테이지를 선택하세요...";
             yield return null;
             timer -= Time.deltaTime;
         }
 
-        OnStageClear();
+        if (PlayerStatus.Instance != null)
+            PlayerStatus.Instance.isRooted = false;
+
+        StageProgress.Instance.UnlockNextStage();
+
+        if (StageSelectUI.Instance != null)
+        {
+            StageSelectUI.Instance.UpdateButtons(); 
+            StageSelectUI.Instance.ShowUI();       
+        }
+
+        if (countdownText != null)
+            countdownText.text = "";
     }
 
     public void OnStageClear()
