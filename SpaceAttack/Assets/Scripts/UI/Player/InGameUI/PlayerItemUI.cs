@@ -18,6 +18,15 @@ public class PlayerItemUI : MonoBehaviour
         {
             PlayerInventorySlot[] temps = GetComponentsInChildren<PlayerInventorySlot>();
             slots = new List<PlayerInventorySlot>(temps);
+
+            if (temps.Length < minSlotCount)
+            {
+                for (int i = 0; i < minSlotCount - temps.Length; i++)
+                {
+                    GameObject obj = Instantiate(slotPrf, gameObject.transform);     //슬롯 추가 생성
+                    slots.Add(obj.GetComponent<PlayerInventorySlot>());
+                }
+            }
         }
     }
     public void AddItem(RelicSO relicSO, int relicInstanceId)  //아이템 장착
@@ -41,24 +50,24 @@ public class PlayerItemUI : MonoBehaviour
     
     public void RemoveItem(RelicSO relicSO, int relicInstanceId)              //아이템 장착 해제
     {
-        Sprite relicIcon = relicSO.iconSprite;
-        int targetIndex = 0;
-
-        targetIndex = relicInstanceIds.IndexOf(relicInstanceId);
-        slots[targetIndex].RemoveItem();
+        int targetIndex = relicInstanceIds.IndexOf(relicInstanceId);
         relicInstanceIds.RemoveAt(targetIndex);
 
-        for (int i = targetIndex; i < currentIndex - 1; i++)
+        if (currentIndex >= minSlotCount)
         {
-            RelicSO relic = slots[i + 1].relic;
-            slots[i].AddItemImage(relic, slots[i + 1].relicInstanceId);
-            slots[i + 1].RemoveItem();
+            Destroy(slots[targetIndex].gameObject);
+            slots.RemoveAt(targetIndex);
         }
-
-        if(currentIndex >= minSlotCount)
+        else
         {
-            Destroy(slots[currentIndex].gameObject);
-            slots.RemoveAt(currentIndex);
+            slots[targetIndex].RemoveItem();
+
+            for (int i = targetIndex; i < currentIndex - 1; i++)
+            {
+                RelicSO relic = slots[i + 1].relic;
+                slots[i].AddItemImage(relic, slots[i + 1].relicInstanceId);
+                slots[i + 1].RemoveItem();
+            }
         }
         currentIndex--;
     }
