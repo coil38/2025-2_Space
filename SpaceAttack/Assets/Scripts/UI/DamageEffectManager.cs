@@ -84,7 +84,7 @@ public class DamageEffectManager : MonoBehaviour
     {
         Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
 
-        string text = $"DamageX2";
+        string text = $"더블공격";
         Color color = Color.cyan;
 
         ShowDamageText(position, text, color);
@@ -93,12 +93,12 @@ public class DamageEffectManager : MonoBehaviour
     {
         Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
 
-        string text = $"WeaknessAnalyzer X {count}";
+        string text = $"약점분석 중첩 X {count}";
         Color color = Color.cyan;
 
         if (!isOn)
         {
-            text = $"WeaknessAnalyzerOneDown";
+            text = $"약점분석 중첩감소";
             color = Color.red;
         }
 
@@ -109,11 +109,11 @@ public class DamageEffectManager : MonoBehaviour
     {
         Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
 
-        string text = "AttackSpeedUp";
+        string text = "공격속도 증가";
         Color color = Color.cyan;
         if (!isOn)
         {
-            text = "AttackSpeedDown";
+            text = "공격속도 감소";
             color = Color.red;
         }
         ShowDamageText(position, text, color);
@@ -123,10 +123,10 @@ public class DamageEffectManager : MonoBehaviour
         Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
 
         Color color = Color.cyan;
-        string text = "AttackValueUp";
+        string text = "공격데미지 증가";
         if (!isOn)
         {
-            text = "AttackValueDown";
+            text = "공격데미지 감소";
             color = Color.red;
         }
         ShowDamageText(position, text, color);
@@ -137,10 +137,10 @@ public class DamageEffectManager : MonoBehaviour
         Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
 
         Color color = Color.cyan;
-        string text = "GetShild";
+        string text = "쉴드 획득";
         if (!isOn)
         {
-            text = "LoseShild";
+            text = "쉴드 제거";
             color = Color.red;
         }
         ShowDamageText(position, text, color);
@@ -151,10 +151,10 @@ public class DamageEffectManager : MonoBehaviour
         Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
 
         Color color = Color.cyan;
-        string text = "SpeedUp";
+        string text = "공격속도 증가";
         if (!isOn)
         {
-            text = "SpeedDown";
+            text = "공격속도 감소";
             color = Color.red;
         }
         ShowDamageText(position, text, color);
@@ -165,7 +165,7 @@ public class DamageEffectManager : MonoBehaviour
         Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
 
         Color color = Color.yellow;
-        string text = "Resurrection";
+        string text = "부활";
         ShowDamageText(position, text, color);
     }
     public void ShowHeal(Vector3 position, int amount)
@@ -179,6 +179,35 @@ public class DamageEffectManager : MonoBehaviour
     {
         Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
 
-        ShowDamageText(position, "Miss", Color.gray);
+        ShowDamageText(position, "회피성공", Color.gray);
+    }
+
+    private Queue<string> effects = new Queue<string>();
+    private Coroutine currentCor;
+    public void ShowLevelUpCorrection(string text)
+    {
+        effects .Enqueue(text);
+
+        if (currentCor == null)
+        {
+            currentCor = StartCoroutine(ShowLevelUp());
+        }
+    }
+
+    public IEnumerator ShowLevelUp()
+    {
+        float genTime = 0.6f;
+
+        while (effects.Count > 0)
+        {
+            string text = effects.Dequeue();
+
+            Vector3 position = PlayerStatus.Instance.gameObject.transform.position + PlayerStatus.Instance.gameObject.transform.up * 0.5f;
+            Color color = Color.cyan;
+            ShowDamageText(position, text, color);
+
+            yield return new WaitForSeconds(genTime);
+        }
+        currentCor = null;
     }
 }

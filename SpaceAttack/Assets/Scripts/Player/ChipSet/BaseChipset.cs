@@ -20,9 +20,6 @@ public class BaseChipset : ChipSetType
 
     public override void SetCorrectionValue(object obj, PlayerEvent e)  //레벨업용 보정치 데이터 저장 함수
     {
-        if (e.correctablility)  //공격력 보정치 주입
-            r_dataModifiers.s_attackRate += e.damageCorrection;
-
         if (e.unlockability)  //스킬 해금
         {
             int unlockNum = e.skillNumber;
@@ -31,8 +28,7 @@ public class BaseChipset : ChipSetType
                 if (skill.unLockedNumber == unlockNum)  //해금
                     skill.isUnLocked = true;
             }
-
-            //UI스킬 해금 연출
+            DamageEffectManager.instance.ShowLevelUpCorrection($"{unlockNum}번째, 스킬 해금"); //UI스킬 해금 연출
         }
     }
 

@@ -9,13 +9,13 @@ public class LevelSO : ScriptableObject
     public int maxEX;
     public float damageCorrection;
     public int heartCorrection;
-    public float speedCorrection;
+    public float darkMatCountCorrection;
     public int unlockedSkill;
     public bool unlockability;
     public bool correctability;
 
     public override string ToString()
     {
-        return $"[{levelKey}] 레벨: ({level}) 최대경험치: {maxEX}, 보정치: {damageCorrection}, {heartCorrection}, {speedCorrection}, 해금대상: {unlockedSkill}";
+        return $"[{levelKey}] 레벨: ({level}) 최대경험치: {maxEX}, 보정치: {damageCorrection}, {heartCorrection}, {darkMatCountCorrection}, 해금대상: {unlockedSkill}";
     }
 }

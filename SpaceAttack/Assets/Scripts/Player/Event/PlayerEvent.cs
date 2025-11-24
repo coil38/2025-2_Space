@@ -69,7 +69,7 @@ public class PlayerEvent
     public bool correctablility;
     public float damageCorrection;
     public int heartCorrection;
-    public float speedCorrection;
+    public float darkMatCountCorrection;
     public bool unlockability;
     public int skillNumber;
 
@@ -78,7 +78,7 @@ public class PlayerEvent
         correctablility = false;
         damageCorrection = 0;
         heartCorrection = 0;
-        speedCorrection = 0;
+        darkMatCountCorrection = 0;
         unlockability = false;
         skillNumber = 0;
 
@@ -94,7 +94,7 @@ public class PlayerEvent
                 correctablility = levelSO.correctability;
                 damageCorrection = levelSO.damageCorrection;
                 heartCorrection = levelSO.heartCorrection;
-                speedCorrection = levelSO.speedCorrection;
+                darkMatCountCorrection = levelSO.darkMatCountCorrection;
             }
 
             if (levelSO.unlockability)  //스킬 해금

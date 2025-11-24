@@ -41,7 +41,7 @@ public class LevelDataLoader : EditorWindow
                 levelSO.maxEX = levelData.maxEX;
                 levelSO.damageCorrection = levelData.damageCorrection.HasValue ? levelData.damageCorrection.Value : 0;
                 levelSO.heartCorrection = levelData.heartCorrection.HasValue ? levelData.heartCorrection.Value : 0;
-                levelSO.speedCorrection = levelData.speedCorrection.HasValue ? levelData.speedCorrection.Value : 0;
+                levelSO.darkMatCountCorrection = levelData.darkMaterialCorrection.HasValue ? levelData.darkMaterialCorrection.Value : 0;
                 levelSO.unlockedSkill = levelData.unlockedSkill.HasValue ? levelData.unlockedSkill.Value : 0;
                 levelSO.unlockability = levelData.unlockedSkill.HasValue ? true : false;
                 levelSO.correctability = levelData.damageCorrection.HasValue ? true : false;

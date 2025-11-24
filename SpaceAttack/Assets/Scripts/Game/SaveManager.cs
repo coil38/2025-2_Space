@@ -117,7 +117,10 @@ public class SaveManager : MonoBehaviour
         }
 
         PlayerCore.Level = data.playerLevel;                             //플레이어 레벨 설정
-        PlayerCore.DarkMaterialCount = data.playerDarkMatCount;          //플레이어 암흑물질 설정
+        for (int level = 1; level <= PlayerCore.Level; level++)
+        {
+            EventManager.playerEvent.FindCorectionValue(level);          //모든 레벨업 보정 재적용
+        }
         PlayerCore.GetDarkMatter(0, true);                               //UI초기화
 
         SceneLoadManager.instance.LoadScene(data.sceneName);  //씬으로 이동

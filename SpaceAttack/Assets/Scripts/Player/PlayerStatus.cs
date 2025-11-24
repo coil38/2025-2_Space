@@ -338,9 +338,23 @@ public class PlayerStatus : MonoBehaviour
         if (e.correctablility)  //플레이어 스텟 보정치 주입
         {
             //LogUtil.Log("플레이어 스텟 상승");
-            m_maxhp += e.heartCorrection;
-            m_speed += DataManager.instance.i_speed * e.speedCorrection;
-            //LogUtil.Log($"{e.heartCorrection}, {e.speedCorrection} / 100");
+            if (e.heartCorrection > 0)
+            {
+                m_maxhp += e.heartCorrection;
+                DamageEffectManager.instance.ShowLevelUpCorrection("최대 체력증가");
+            }
+            if (e.damageCorrection > 0)
+            {
+                normalDamage += e.damageCorrection;
+                DamageEffectManager.instance.ShowLevelUpCorrection("기본 공격력 증가");
+            }
+            if (e.darkMatCountCorrection > 0)
+            {
+                ChangeMaxDarkMatCount(true, (int)e.darkMatCountCorrection);
+                DamageEffectManager.instance.ShowLevelUpCorrection("암흑물질 최대치 증가");
+            }
+
+            //LogUtil.Log($"체력 증가: {e.heartCorrection}, 데미지 증가: {e.damageCorrection}, 최대 암흑물질 증가: {e.darkMatCountCorrection}");
 
             if (PlayerUIManager.instance != null)
                 PlayerUIManager.instance.ResetHpUI(); //체력 초기화

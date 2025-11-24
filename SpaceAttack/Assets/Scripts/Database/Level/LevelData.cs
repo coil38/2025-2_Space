@@ -11,6 +11,6 @@ public class LevelData
     public int maxEX;
     public float? damageCorrection;
     public int? heartCorrection;
-    public float? speedCorrection;
+    public float? darkMaterialCorrection;
     public int? unlockedSkill;
 }
