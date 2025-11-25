@@ -117,8 +117,8 @@ public class PlayerStatus : MonoBehaviour
             temp.ResetAnimationObj();        //모든 이미지 비활성화
             temp.ResetAttackAnimation();     //현재 공격 초기화
 
-          //  GetComponent<Rigidbody>().useGravity = false;  //피격방지
-           // GetComponent<Collider>().enabled = false;
+            GetComponent<Rigidbody>().useGravity = false;  //피격방지
+            GetComponent<Collider>().enabled = false;
         }
         else           //상태이상 취소
         {
@@ -130,9 +130,30 @@ public class PlayerStatus : MonoBehaviour
 
             if (!isDead)
             {
-               // GetComponent<Rigidbody>().useGravity = true;
-               // GetComponent<Collider>().enabled = true;
+                GetComponent<Rigidbody>().useGravity = true;
+                GetComponent<Collider>().enabled = true;
             }
+        }
+    }
+
+    public void UIRoot(bool uiRooted)
+    {
+        if (isRooted)  //상태이상 실행
+        {
+            GetComponent<PlayerAttack>().enabled = false;
+            GetComponent<PlayerMovement>().enabled = false;   //플레이어 입력관련 스크립트
+
+            PlayerMovementAnimationController temp = GetComponent<PlayerMovementAnimationController>();
+            temp.ResetAnimationObj();        //모든 이미지 비활성화
+            temp.ResetAttackAnimation();     //현재 공격 초기화
+        }
+        else           //상태이상 취소
+        {
+            GetComponent<PlayerAttack>().enabled = true;
+            GetComponent<PlayerMovement>().enabled = true;   //플레이어 입력관련 스크립트
+
+            PlayerMovementAnimationController temp = GetComponent<PlayerMovementAnimationController>();
+            temp.ResetAni();                          //애니메이션 초기화
         }
     }
 

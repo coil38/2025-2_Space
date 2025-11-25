@@ -112,7 +112,7 @@ public class StageSelectUI : MonoBehaviour
         gameObject.SetActive(true);
 
         if (PlayerStatus.Instance != null)
-            PlayerStatus.Instance.isRooted = true;
+            PlayerStatus.Instance.UIRoot(true);
 
         UpdateButtons();
         UIESCSystem.ChangeUIType(UIType.SelectStageUI);
@@ -122,7 +122,7 @@ public class StageSelectUI : MonoBehaviour
     {
         gameObject.SetActive(false);
         if (PlayerStatus.Instance != null)
-            PlayerStatus.Instance.isRooted = false;
+            PlayerStatus.Instance.UIRoot(false);
     }
 
 }

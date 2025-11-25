@@ -39,6 +39,8 @@ public class StageManager : MonoBehaviour
 
     public int stageNumber;
     private float enemyHpMultiplier = 1f;
+    [Header("보상 상자")]
+    public GameObject rewardChestPrefab;
     private void Start()
     {
         stageNumber = StageGameData.SelectedStage;
@@ -236,7 +238,7 @@ public class StageManager : MonoBehaviour
         triggerScript.SetupRewardRoom(this, levelPrefab); 
     }
 
-    public void StartRewardCountdown(float delay = 20f)
+    public void StartRewardCountdown(float delay = 10f)
     {
         StartCoroutine(RewardCountdownCoroutine(delay));
     }
@@ -414,7 +416,15 @@ public class StageManager : MonoBehaviour
 
         if (isRewardRoom)
         {
-            StartRewardCountdown(20f); 
+            if (rewardChestPrefab != null)
+            {
+                Vector3 levelCenter = newLevel.transform.position;
+                spawnPos = levelCenter + Vector3.up * 1f;        
+
+                Instantiate(rewardChestPrefab, spawnPos, rewardChestPrefab.transform.rotation);
+            }
+
+            StartRewardCountdown(10f);
         }
     }
     private void ApplyStageDifficulty(int stage)
@@ -428,26 +438,26 @@ public class StageManager : MonoBehaviour
                 break;
 
             case 2:
-                monstersPerWave = 3;
-                maxWaveCount = 3;
+                monstersPerWave = 2;
+                maxWaveCount = 2;
                 enemyHpMultiplier = 1.2f;
                 break;
 
             case 3:
-                monstersPerWave = 3;
-                maxWaveCount = 3;
+                monstersPerWave = 2;
+                maxWaveCount = 2;
                 enemyHpMultiplier = 1.4f;
                 break;
 
             case 4:
-                monstersPerWave = 4;
-                maxWaveCount = 4;
+                monstersPerWave = 2;
+                maxWaveCount = 2;
                 enemyHpMultiplier = 1.6f;
                 break;
 
             case 5:
-                monstersPerWave = 4;
-                maxWaveCount = 4;
+                monstersPerWave = 2;
+                maxWaveCount = 2;
                 enemyHpMultiplier = 2.0f;
                 break;
         }
