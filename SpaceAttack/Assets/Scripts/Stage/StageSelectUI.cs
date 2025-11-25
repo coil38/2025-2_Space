@@ -17,6 +17,9 @@ public class StageSelectUI : MonoBehaviour
     [Header("보스 버튼")]
     public Button bossButton; // 보스 버튼
 
+    [Header("UI패널")]
+    public GameObject UIPanel;
+
 
     private void Awake()
     {
@@ -105,11 +108,11 @@ public class StageSelectUI : MonoBehaviour
 
         yield return null;
 
-        HideUI(); 
+        HideUI();
     }
     public void ShowUI()
     {
-        gameObject.SetActive(true);
+        UIPanel.SetActive(true);
 
         if (PlayerStatus.Instance != null)
             PlayerStatus.Instance.UIRoot(true);
@@ -120,7 +123,7 @@ public class StageSelectUI : MonoBehaviour
 
     public void HideUI()
     {
-        gameObject.SetActive(false);
+        UIPanel.SetActive(false);
         if (PlayerStatus.Instance != null)
             PlayerStatus.Instance.UIRoot(false);
     }

@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class WeaponSword : WeaponType
 {
+    [SerializeField] ParticleSystem attackEffect;     //공격 이팩트
+    [SerializeField] GameObject[] hitEffectObj;       //피격 이팩트 오브젝트
+    private bool currentFlip = false;
+
     //검사용 변수들
     private float detectAngle = 155f;
 
@@ -44,6 +49,13 @@ public class WeaponSword : WeaponType
             attackMoveTimer.Start();
             targetPos = _currentPos + attackDirection * moveDistance;
         }
+
+        if (attackEffect != null)
+        {
+            attackEffect.transform.position = transform.position + attackDirection * 0.35f;   //이펙트 위치, 회전값 갱신
+            Quaternion quaternion = Quaternion.LookRotation(attackDirection);
+            attackEffect.transform.rotation = quaternion;
+        }
     }
 
     public override void CheckUse(Vector3 currentPos)
@@ -72,6 +84,7 @@ public class WeaponSword : WeaponType
 
             attackDirection = (mousePos - _currentPos).normalized * attackDistance;   //플레이어 기준 마우스 방향 얻기
 
+
             CheckUse2();
         }
         else
@@ -98,6 +111,14 @@ public class WeaponSword : WeaponType
             }
         }
         if(enemyCols.Length > 0) Invoke("Use", readyAttackTime);
+
+        if (attackEffect != null)
+        {
+            foreach (var obj in hitEffectObj)
+                obj.SetActive(isDetected);
+
+            attackEffect.Play();
+        }
     }
 
     public override void Use()
