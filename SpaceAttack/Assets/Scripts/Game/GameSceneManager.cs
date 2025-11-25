@@ -46,8 +46,7 @@ public class GameSceneManager : MonoBehaviour
 
         SceneType sceneType = GetSceneType(scene);            //씬 타입 변경 (씬이동시)
 
-        if (sceneType != currentScene)                        //씬 타입 바뀌었을 경우, 씬 변경 이벤트 실행
-            sceneTypeChanged?.Invoke(sceneType);
+        sceneTypeChanged?.Invoke(sceneType);
 
         if (currentScene == SceneType.StartGameScene && currentScene != sceneType)  //시작씬에서 다른 씬으로 이동할 경우
         {

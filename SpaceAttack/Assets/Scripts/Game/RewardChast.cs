@@ -19,4 +19,9 @@ public class RewardChast : MonoBehaviour
             isOneTime = true;
         }
     }
+
+    public void ChangeRewardType(RewardType type)     //보상 타입 변경함수
+    {
+        this.type = type;
+    }
 }
