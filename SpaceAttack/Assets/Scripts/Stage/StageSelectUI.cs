@@ -30,17 +30,17 @@ public class StageSelectUI : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+    }
 
-        // 화면 가리지 않도록 UI 숨김
-        foreach (Transform child in transform)
-        {
-            child.gameObject.SetActive(false);
-        }
+    private void Start()
+    {
+        HideUI(); 
     }
     private void OnEnable()
-    {
+{
+    if (gameObject.activeInHierarchy)
         UpdateButtons();
-    }
+}
 
     public void UpdateButtons()
     {
@@ -66,7 +66,6 @@ public class StageSelectUI : MonoBehaviour
                 img.color = unlocked ? unlockedColor : lockedColor;
         }
 
-        // 보스 버튼 안전 처리
         if (bossButton != null)
         {
             bool bossUnlocked = StageProgress.Instance.unlockedStage >= 5;
@@ -80,25 +79,21 @@ public class StageSelectUI : MonoBehaviour
     public void SelectStage(int stageNumber)
     {
         StageGameData.SelectedStage = stageNumber;
-
-        HideUI();
-
         StartCoroutine(C_LoadScene("BattleTestNormalScene"));
-
     }
+
 
     public void SelectBoss()
     {
         if (StageProgress.Instance.unlockedStage < 5)
             return;
 
-        HideUI(); 
         StartCoroutine(C_LoadScene("MiddleBossScene"));
     }
 
     public void CloseUI()
     {
-        gameObject.SetActive(false);
+        HideUI(); 
     }
 
     private IEnumerator C_LoadScene(string sceneName)
@@ -108,28 +103,24 @@ public class StageSelectUI : MonoBehaviour
 
         FadeManager.Instance.LoadScene(sceneName);
 
-        yield return null; 
-        HideUI();
+        yield return null;
+
+        HideUI(); 
     }
     public void ShowUI()
     {
+        gameObject.SetActive(true);
+
         if (PlayerStatus.Instance != null)
             PlayerStatus.Instance.isRooted = true;
-        foreach (Transform child in transform)
-        {
-            child.gameObject.SetActive(true);
-        }
 
+        UpdateButtons();
         UIESCSystem.ChangeUIType(UIType.SelectStageUI);
     }
 
     public void HideUI()
     {
-        foreach (Transform child in transform)
-        {
-            child.gameObject.SetActive(false);
-
-        }
+        gameObject.SetActive(false);
         if (PlayerStatus.Instance != null)
             PlayerStatus.Instance.isRooted = false;
     }
