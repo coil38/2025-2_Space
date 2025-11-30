@@ -42,6 +42,16 @@ public class Timer
         }
     }
 
+    public void ChangeDuration(float _duration)
+    {
+        if (isRunning) return;   //타이머가 실행중일 경우, 처리 안됨
+
+        duration = _duration;
+        remainingTimer = _duration;
+        isRunning = false;
+        isEndTimer = false;
+    }
+
     public bool IsRunning()            //현재 실행 여부확인
     {
         return isRunning;

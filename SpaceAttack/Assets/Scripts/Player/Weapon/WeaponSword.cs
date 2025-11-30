@@ -52,6 +52,8 @@ public class WeaponSword : WeaponType
 
         if (attackEffect != null)
         {
+            if (attackDirection == Vector3.zero) return;
+
             attackEffect.transform.position = transform.position + attackDirection * 0.35f;   //이펙트 위치, 회전값 갱신
             Quaternion quaternion = Quaternion.LookRotation(attackDirection);
             attackEffect.transform.rotation = quaternion;

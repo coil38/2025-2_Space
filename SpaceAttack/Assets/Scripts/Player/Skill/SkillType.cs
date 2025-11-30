@@ -70,6 +70,8 @@ public abstract class SkillType : MonoBehaviour
     protected Vector3 detectSize;        //감지범위
     private ChipsetComponentSO chipCompSO;  //칩셋구성SO
     private float _projectileMoveTime;
+
+    private VisualAttackRange visualAttackRange;  //바닥 공격범위
     protected float projectileMoveTime     //발사체 이동시간
     {
         set
@@ -145,5 +147,16 @@ public abstract class SkillType : MonoBehaviour
         mousePos.y = currentPos.y;
 
         return (mousePos - _currentPos).normalized;   //플레이어 기준 마우스 방향 얻기
+    }
+
+    protected void OnVisualAttackRange(Vector3 genPos, float distance, float width, Vector3 dir, float lifeTime)
+    {
+        if (visualAttackRange == null)
+        {
+            GameObject obj = Instantiate(DataManager.instance.VisualAttackRange);
+            visualAttackRange = obj.GetComponent<VisualAttackRange>();
+        }
+
+        visualAttackRange.OnAttackRange(genPos, distance, width, dir, lifeTime);
     }
 }

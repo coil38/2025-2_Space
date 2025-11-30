@@ -27,7 +27,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
     public override void CheckUse(Vector3 currentPos)
     {
-        if (!isUnLocked) return;                                      //해금여부에 따른 스킬 사용 여부
+        //if (!isUnLocked) return;                                      //해금여부에 따른 스킬 사용 여부
 
         if (PlayerInputController.skill1Action.triggered)           //플레이어 입력감지
         {
@@ -88,6 +88,8 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * _attackDistance;
+
+        OnVisualAttackRange(_currentPos, _attackDistance, attackWidth, attackDirection, _attackTime);
 
         isAttackMoving = true;
 

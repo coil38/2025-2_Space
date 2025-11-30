@@ -13,6 +13,7 @@ public class DataManager : MonoBehaviour
 
     [SerializeField] private GameObject relicObject;         //유물 프리팹
     [SerializeField] private GameObject[] chipsetPrfs;       //칩셋 프리팹
+    [SerializeField] private GameObject visualAttackRange;   //시각화 공격 범위
 
     //플레이어 초기 상태 데이터
     private int m_hp = 10;                    //체력
@@ -45,6 +46,10 @@ public class DataManager : MonoBehaviour
     public float i_m_stunTime { get { return m_stunTime; } }
     public float i_hitRate { get { return hitRate; } }
 
+    public GameObject VisualAttackRange
+    {
+        get { return visualAttackRange; }
+    }
     public GameObject _relicObject
     {
         get { return relicObject; }

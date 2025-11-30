@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니메이션 후, 실행) O | 공격시간 O | 플레이어 대기시간(쿨타임) O
 {
+    [SerializeField] private SkillEffect skillEffect;
+
     private Vector3 f_DetectPos;     //기즈모 그리는 용
     private Vector3 f_DetectSize;
     private Quaternion detectRot;
@@ -28,7 +30,7 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
 
     public override void CheckUse(Vector3 currentPos)
     {
-        if (!isUnLocked) return;                                      //해금여부에 따른 스킬 사용 여부
+        //if (!isUnLocked) return;                                      //해금여부에 따른 스킬 사용 여부
 
         _currentPos = currentPos;
 
@@ -90,12 +92,16 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * _attackDistance;
 
+        skillEffect.OnSkillEffect(_currentPos, attackDirection);
+        OnVisualAttackRange(_currentPos, _attackDistance, attackWidth, attackDirection, _attackTime);
+
         while (true)
         {
             float timer = p_MoveTimer.GetRemainingTime() / _attackTime;
             Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
 
             detectPos = movePos;
+            skillEffect.UpdateSkillEffect(movePos);
             Collider[] cols = Physics.OverlapBox(detectPos, detectSize, detectRot, enemyLayer);   //감지 범위 내 적 감지
 
             foreach (Collider col in cols)
@@ -111,6 +117,7 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
             yield return waitForFixedUpdate;
         }
 
+        skillEffect.EndSkillEffect();
         targets.Clear();
     }
 

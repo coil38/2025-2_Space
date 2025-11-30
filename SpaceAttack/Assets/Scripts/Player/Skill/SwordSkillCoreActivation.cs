@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애니메이션 후, 실행) O | 공격시간 X | 플레이어 대기시간(쿨타임) O
 {
-    //private float speedUpValue = 1.3f;
-    //private float damageValue = 1.3f;               //임시
-    //private float criticalValue = 1.3f;
+    [SerializeField] private ParticleSystem TriggerEffect;
+    [SerializeField] private ParticleSystem AuraEffect;
 
-    private bool isUsingBuff;
+    float skilldamageRate = 1.6f;
+    float criticalRate = 1.8f;
+    float speedRate = 1.5f;
+    float lifeTime = 6f;
+
     public override void OnEnable()
     {
         unLockedNumber = 3;
@@ -19,22 +22,11 @@ public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애�
     public override void UpdateInfo()
     {
         base.UpdateInfo();
-
-        if (isUsingBuff)
-        {
-            isUsingBuff = false;
-
-            Debug.Log("버프사용 종료");
-
-            //플레이어 속도 초기화
-            //플레이어 공격력 초기화
-            //플레이어 치명타 초기화
-        }
     }
 
     public override void CheckUse(Vector3 currentPos)
     {
-        if (!isUnLocked) return;                                      //해금여부에 따른 스킬 사용 여부
+        //if (!isUnLocked) return;                                      //해금여부에 따른 스킬 사용 여부
 
         if (PlayerInputController.skill3Action.triggered)
         {
@@ -52,12 +44,25 @@ public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애�
 
     public override void Use()
     {
-        Debug.Log("버프사용 시작");
+        Debug.Log("버프적용");
 
-        isUsingBuff = true;
-        //플레이어 속도 증가
-        //플레이어 공격력 증가
-        //플레이어 치명타 증가
+        TriggerEffect.Play();
+        AuraEffect.Play();
 
+        PlayerStatus.normalDamage *= skilldamageRate;           //플레이어 공격력 증가
+        PlayerStatus.criticalRate *= criticalRate;              //플레이어 치명타 피해 증가
+        PlayerStatus.m_speed *= speedRate;                      //플레이어 속도 증가
+
+        TimerEvent.Add(lifeTime, OffSkillBuff);                 //버트 종료 타이머 이벤트 넣기
+    }
+
+    private void OffSkillBuff()
+    {
+        Debug.Log("버프풀림");
+        AuraEffect.Stop();
+
+        PlayerStatus.normalDamage /= skilldamageRate;           //플레이어 공격력 초기화
+        PlayerStatus.criticalRate /= criticalRate;              //플레이어 치몇타 피해 초기화
+        PlayerStatus.m_speed /= speedRate;                      //플레이어 속도 증가
     }
 }
