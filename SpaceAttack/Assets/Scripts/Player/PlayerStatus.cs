@@ -138,22 +138,16 @@ public class PlayerStatus : MonoBehaviour
 
     public void UIRoot(bool uiRooted)
     {
-        if (isRooted)  //상태이상 실행
+        // ❌ isRooted 체크로 UI까지 제한하던 코드 제거
+        if (uiRooted)
         {
             GetComponent<PlayerAttack>().enabled = false;
-            GetComponent<PlayerMovement>().enabled = false;   //플레이어 입력관련 스크립트
-
-            PlayerMovementAnimationController temp = GetComponent<PlayerMovementAnimationController>();
-            temp.ResetAnimationObj();        //모든 이미지 비활성화
-            temp.ResetAttackAnimation();     //현재 공격 초기화
+            GetComponent<PlayerMovement>().enabled = false;
         }
-        else           //상태이상 취소
+        else
         {
             GetComponent<PlayerAttack>().enabled = true;
-            GetComponent<PlayerMovement>().enabled = true;   //플레이어 입력관련 스크립트
-
-            PlayerMovementAnimationController temp = GetComponent<PlayerMovementAnimationController>();
-            temp.ResetAni();                          //애니메이션 초기화
+            GetComponent<PlayerMovement>().enabled = true;
         }
     }
 
