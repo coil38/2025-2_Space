@@ -22,7 +22,7 @@ public class LobbyTeleport : MonoBehaviour
     {
         if (!other.CompareTag("Player") || !isOneTime) return;
 
-        if (chipsetSelectUI != null && !chipsetSelectUI.isEquiping) return;
+        //if (chipsetSelectUI != null && !chipsetSelectUI.isEquiping) return;
 
         // Inspector에서 참조한 UI가 null인지 체크
         if (stageSelectUI != null)
