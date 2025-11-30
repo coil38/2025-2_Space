@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class StageSelectUI : MonoBehaviour
 {
-    public static StageSelectUI Instance;
+    public static StageSelectUI Instance { get; private set; }
 
     [Header("버튼 목록 (1~5)")]
     public Button[] stageButtons; 
@@ -20,24 +20,17 @@ public class StageSelectUI : MonoBehaviour
     [Header("UI패널")]
     public GameObject UIPanel;
 
-
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+
         }
         else
         {
             Destroy(gameObject);
-            return;
         }
-    }
-
-    private void Start()
-    {
-        HideUI(); 
     }
     private void OnEnable()
 {
@@ -112,13 +105,29 @@ public class StageSelectUI : MonoBehaviour
     }
     public void ShowUI()
     {
+        Transform root = UIPanel.transform;
+        while (root.parent != null)
+            root = root.parent;
+
+        Debug.LogWarning($"[ShowUI] Before activation — Root active? {root.gameObject.activeSelf}");
+
+        root.gameObject.SetActive(true);
         UIPanel.SetActive(true);
 
-        if (PlayerStatus.Instance != null)
-            PlayerStatus.Instance.UIRoot(true);
+        Debug.LogWarning($"[ShowUI] After activation — Root active? {root.gameObject.activeSelf}");
 
-        UpdateButtons();
-        UIESCSystem.ChangeUIType(UIType.SelectStageUI);
+        StartCoroutine(FixUIActivation());
+    }
+
+    private IEnumerator FixUIActivation()
+    {
+        yield return null;   // 다른 코드들이 UI를 다시 끄고 난 후 한 프레임 뒤 실행
+        Transform root = UIPanel.transform;
+        while (root.parent != null)
+            root = root.parent;
+        root.gameObject.SetActive(true);
+        UIPanel.SetActive(true);
+        Debug.LogWarning("[FixUI] Parent forced active after all player status callbacks");
     }
 
     public void HideUI()

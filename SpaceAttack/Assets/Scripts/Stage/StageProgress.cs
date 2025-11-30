@@ -14,6 +14,7 @@ public class StageProgress : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);  
             LoadProgress();
         }
         else

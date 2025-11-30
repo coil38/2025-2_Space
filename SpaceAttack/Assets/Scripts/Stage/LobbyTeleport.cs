@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,25 +9,34 @@ public class LobbyTeleport : MonoBehaviour
     private bool isOneTime = true;
     private ChipsetSelectUI chipsetSelectUI;
 
+    [Header("스테이지 선택 UI")]
+    public StageSelectUI stageSelectUI;
+
     private void Awake()
     {
-        if (chipsetSelectUI == null)
-            chipsetSelectUI = FindObjectOfType<ChipsetSelectUI>(true);
+        chipsetSelectUI = FindObjectOfType<ChipsetSelectUI>(true);
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (StageSelectUI.Instance != null)
-            StageSelectUI.Instance.ShowUI();
-        else
-            Debug.LogError("StageSelectUI.Instance가 null입니다!");
         if (!other.CompareTag("Player") || !isOneTime) return;
-        if (chipsetSelectUI != null && !chipsetSelectUI.isEquiping) return;
 
-        StageSelectUI.Instance?.ShowUI(); // 안전하게 활성화
+        //if (chipsetSelectUI != null && !chipsetSelectUI.isEquiping) return;
+
+        // Inspector에서 참조한 UI가 null인지 체크
+        if (stageSelectUI != null)
+        {
+            stageSelectUI.ShowUI();
+        }
+        else
+        {
+            Debug.LogError("StageSelectUI가 Inspector에서 연결되지 않았습니다!");
+        }
 
         PlayerStatus.Instance.isRooted = true;
         isOneTime = false;
     }
 }
+
 

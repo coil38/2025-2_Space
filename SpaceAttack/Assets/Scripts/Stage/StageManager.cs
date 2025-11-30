@@ -41,6 +41,12 @@ public class StageManager : MonoBehaviour
     private float enemyHpMultiplier = 1f;
     [Header("보상 상자")]
     public GameObject rewardChestPrefab;
+
+    [Header("스테이지 텔레포트 프리팹")]
+    public GameObject stageTeleportPrefab;
+
+    [Header("보상방 텔레포트")]
+    public GameObject rewardTeleport;
     private void Start()
     {
         stageNumber = StageGameData.SelectedStage;
@@ -249,7 +255,7 @@ public class StageManager : MonoBehaviour
         while (timer > 0f)
         {
             if (countdownText != null)
-                countdownText.text = $"보상 방! {Mathf.Ceil(timer)}초 뒤 다음 스테이지를 선택하세요...";
+                countdownText.text = $"보상 방! {Mathf.Ceil(timer)}초 뒤 텔레포트 생성";
             yield return null;
             timer -= Time.deltaTime;
         }
@@ -259,16 +265,13 @@ public class StageManager : MonoBehaviour
 
         StageProgress.Instance.UnlockNextStage();
 
-        if (StageSelectUI.Instance != null)
-        {
-            StageSelectUI.Instance.UpdateButtons(); 
-            StageSelectUI.Instance.ShowUI();       
-        }
+        if (rewardTeleport != null)
+            rewardTeleport.SetActive(true); 
 
         if (countdownText != null)
             countdownText.text = "";
     }
-
+   
     public void OnStageClear()
     {
         StageProgress.Instance.UnlockNextStage();
