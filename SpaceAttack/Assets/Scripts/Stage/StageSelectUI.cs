@@ -8,11 +8,14 @@ public class StageSelectUI : MonoBehaviour
     public static StageSelectUI Instance { get; private set; }
 
     [Header("버튼 목록 (1~5)")]
-    public Button[] stageButtons; 
+    public Button[] stageButtons;
 
     [Header("색상 설정")]
-    public Color unlockedColor = Color.green;
+    public Color clearedColor = Color.green;  // 클리어됨
+    public Color availableColor = Color.white;
     public Color lockedColor = Color.red;
+
+    public int clearedStage = 0;
 
     [Header("보스 버튼")]
     public Button bossButton; // 보스 버튼
@@ -46,29 +49,36 @@ public class StageSelectUI : MonoBehaviour
             return;
         }
 
-        if (stageButtons == null || stageButtons.Length == 0)
-            return;
-
         for (int i = 0; i < stageButtons.Length; i++)
         {
             if (stageButtons[i] == null) continue;
 
             int stageNumber = i + 1;
-            bool unlocked = StageProgress.Instance.IsStageUnlocked(stageNumber);
-
-            stageButtons[i].interactable = unlocked;
             Image img = stageButtons[i].GetComponent<Image>();
-            if (img != null)
-                img.color = unlocked ? unlockedColor : lockedColor;
+            bool unlocked = stageNumber <= StageProgress.Instance.unlockedStage + 1;
+            stageButtons[i].interactable = unlocked;
+
+            if (stageNumber <= StageProgress.Instance.clearedStage)
+            {
+                img.color = clearedColor;                
+            }
+            else if (stageNumber == StageProgress.Instance.clearedStage + 1)
+            {
+                img.color = availableColor;           
+            }
+            else
+            {
+                img.color = lockedColor;                
+            }
         }
 
         if (bossButton != null)
         {
-            bool bossUnlocked = StageProgress.Instance.unlockedStage >= 5;
-            bossButton.interactable = bossUnlocked;
+            bool available = StageProgress.Instance.clearedStage >= 6;
+            bossButton.interactable = available;
+
             Image bossImg = bossButton.GetComponent<Image>();
-            if (bossImg != null)
-                bossImg.color = bossUnlocked ? unlockedColor : lockedColor;
+            bossImg.color = available ? clearedColor : lockedColor;
         }
     }
 
@@ -81,7 +91,7 @@ public class StageSelectUI : MonoBehaviour
 
     public void SelectBoss()
     {
-        if (StageProgress.Instance.unlockedStage < 5)
+        if (StageProgress.Instance.unlockedStage < 6)
             return;
 
         StartCoroutine(C_LoadScene("MiddleBossScene"));
@@ -121,7 +131,7 @@ public class StageSelectUI : MonoBehaviour
 
     private IEnumerator FixUIActivation()
     {
-        yield return null;   // 다른 코드들이 UI를 다시 끄고 난 후 한 프레임 뒤 실행
+        yield return null;   
         Transform root = UIPanel.transform;
         while (root.parent != null)
             root = root.parent;
