@@ -5,7 +5,7 @@ using UnityEngine;
 public class DarkArea : MonoBehaviour
 {
     public float duration = 5f;
-    public int damage = 1;
+    public float damage = 1;
 
     private void Start()
     {

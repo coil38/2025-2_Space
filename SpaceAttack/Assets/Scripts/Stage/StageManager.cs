@@ -47,6 +47,8 @@ public class StageManager : MonoBehaviour
 
     [Header("보상방 텔레포트")]
     public GameObject rewardTeleport;
+
+    private bool nextStageOpened = false;
     private void Start()
     {
         stageNumber = StageGameData.SelectedStage;
@@ -113,6 +115,7 @@ public class StageManager : MonoBehaviour
 
     public void StartWave()
     {
+        nextStageOpened = false;
         currentWave++;
         aliveMonsters.Clear();
 
@@ -182,18 +185,14 @@ public class StageManager : MonoBehaviour
     {
         aliveMonsters.Remove(deadMonster);
 
-        if (aliveMonsters.Count == 0)
+        if (aliveMonsters.Count == 0 && !nextStageOpened)
         {
-            Debug.Log($"웨이브 {currentWave} 완료!");
+            nextStageOpened = true; 
 
             if (currentWave >= maxWaveCount)
-            {
                 StartCoroutine(OpenRewardRoom());
-            }
             else
-            {
                 StartCoroutine(OpenNextMap());
-            }
         }
     }
 
@@ -263,25 +262,25 @@ public class StageManager : MonoBehaviour
         if (PlayerStatus.Instance != null)
             PlayerStatus.Instance.isRooted = false;
 
-        StageProgress.Instance.UnlockNextStage();
+        StageProgress.Instance.ClearStage(StageGameData.SelectedStage);
 
         if (rewardTeleport != null)
-            rewardTeleport.SetActive(true); 
+            rewardTeleport.SetActive(true);
 
         if (countdownText != null)
             countdownText.text = "";
     }
-   
+
+
     public void OnStageClear()
     {
-        StageProgress.Instance.UnlockNextStage();
+        StageProgress.Instance.ClearStage(StageGameData.SelectedStage);
 
         if (PlayerStatus.Instance != null)
             PlayerStatus.Instance.isRooted = false;
 
         FadeManager.Instance.LoadScene("ChipsetSelectScene");
     }
-
     private IEnumerator OpenNextMap()
     {
         currentLevelRepeat++;
