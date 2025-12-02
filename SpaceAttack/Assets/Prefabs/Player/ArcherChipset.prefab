@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 7242070246604160945}
   - component: {fileID: 832499573849115994}
   - component: {fileID: 8257766772164688757}
-  - component: {fileID: 5945549905136212788}
-  - component: {fileID: 8356826236097632758}
+  - component: {fileID: 4518247405134246601}
+  - component: {fileID: -1541507150879056392}
   - component: {fileID: 3473518394226331226}
   - component: {fileID: 4624599164704607658}
   - component: {fileID: 3891868057657209322}
@@ -129,9 +129,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon: {fileID: 832499573849115994}
   skills:
+  - {fileID: -1541507150879056392}
   - {fileID: 8257766772164688757}
-  - {fileID: 5945549905136212788}
-  - {fileID: 8356826236097632758}
+  - {fileID: 4518247405134246601}
   chipSetName: Archer
   description: This is so So Good
   iconImage: {fileID: 0}
@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f553a4250b4b61a4aae014502dfa6145, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5945549905136212788
+--- !u!114 &4518247405134246601
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -172,10 +172,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8374057566211413966}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b6b50d2b7361fc419659e21ac49fa1f, type: 3}
+  m_Script: {fileID: 11500000, guid: 82dffc0afe4f58b479bcca1a064bc8fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8356826236097632758
+  arrowPrf: {fileID: 6564896603841592285, guid: 1754a35e77569d34bbff9189351235bd,
+    type: 3}
+  guidedArrowPrf: {fileID: 6564896603841592285, guid: 8595e3c227a894a4e801e0e5a9ffdc52,
+    type: 3}
+--- !u!114 &-1541507150879056392
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -184,9 +188,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8374057566211413966}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e439ecfe9ec6a0e49a239ca1d5607223, type: 3}
+  m_Script: {fileID: 11500000, guid: 5c8a02e2c72f18147b06b0a1cb7c60d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arrowPrf: {fileID: 6564896603841592285, guid: 1754a35e77569d34bbff9189351235bd,
+    type: 3}
 --- !u!114 &3473518394226331226
 MonoBehaviour:
   m_ObjectHideFlags: 0

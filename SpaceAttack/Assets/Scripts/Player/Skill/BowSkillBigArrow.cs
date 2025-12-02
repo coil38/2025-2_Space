@@ -1,27 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO.Pipes;
 using UnityEngine;
 
 public class BowSkillBigArrow : SkillType
 {
     private WaitForFixedUpdate waitForFixedUpdate;
 
-    private Vector3 f_DetectPos;     //기즈모 그리는 용
-    private Vector3 f_DetectSize;
     private Quaternion detectRot;
-
     private Vector3 detectPos;
 
     private List<GameObject> targets = new List<GameObject>();
-
-    private bool isPlayGizoms;
 
     public override void OnEnable()
     {
         attackWidth = 2.5f;
         waitForFixedUpdate = new WaitForFixedUpdate();
 
-        chipsetCompID = 108;
+        chipsetCompID = 110;
         base.OnEnable();
     }
 
@@ -31,7 +27,7 @@ public class BowSkillBigArrow : SkillType
     {
         _currentPos = currentPos;
 
-        if (PlayerInputController.skill1Action.triggered)
+        if (PlayerInputController.skill3Action.triggered)
         {
             if (PlayerTimeSystem.w_SkillTimer != null)
                 if (PlayerTimeSystem.w_SkillTimer.IsRunning()) return;
@@ -39,14 +35,8 @@ public class BowSkillBigArrow : SkillType
             if (coolTimer.IsRunning()) return;                      //쿨타임 체크
 
             isAttacking = true;                                     //플레이어 입력감지
-            lineRenderer.enabled = true;
 
             PlayerTimeSystem.SetChipTimer(0.2f, ChipAttackType.Skill);
-            PlayerTimeSystem.w_SkillTimer.Start();                 //다음 공격 전 대기 체크 시작
-        }
-        
-        if (isAttacking)
-        {
             PlayerTimeSystem.w_SkillTimer.Start();                 //다음 공격 전 대기 체크 시작
 
             attackDirection = GetAttackDirection(currentPos);
@@ -64,48 +54,34 @@ public class BowSkillBigArrow : SkillType
                 }
             }
 
-            Vector3 startPos = _currentPos;
-            Vector3 targetPos = _currentPos + attackDirection * _attackDistance;
+            //공격 사운드 재생
+            //공격 애니메이션 재생
+            coolTimer.Start();         //쿨타임 시작
 
-            //라인랜더러 설정----------------------------------------------------------------------------------------------------------------------------------
-            lineRenderer.positionCount = 2;
-            lineRenderer.startWidth = attackWidth;
-            lineRenderer.SetPosition(0, startPos);
-            lineRenderer.SetPosition(1, targetPos);
-
-            if (Input.GetMouseButtonDown(0))  //공격 감지 및 공격
-            {
-                //공격 사운드 재생
-                //공격 애니메이션 재생
-                coolTimer.Start();         //쿨타임 시작
-
-                projectileMoveTime = _attackTime;
-                Use();
-
-                isAttacking = false;
-                //라인랜더러값 초기화
-                lineRenderer.enabled = false;
-            }
+            projectileMoveTime = _attackTime;
+            Use();
+        }
+        else
+        {
+            isAttacking = false;
         }
     }
 
     public override void Use()
     {
-        isPlayGizoms = true;    //테스트용_범위 기즈모 활성화
-
         p_MoveTimer.Start();
         StartCoroutine(C_Attack(_attackDistance, _attackTime));
     }
 
     private IEnumerator C_Attack(float _attackDistance, float _attackTime)
     {
-        f_DetectPos = _currentPos + (attackDirection * (_attackDistance / 2));
-        f_DetectSize = new Vector3(_attackDistance / 1.5f, 1f, attackWidth / 2);
         detectRot = Quaternion.LookRotation(attackDirection, Vector2.up) * Quaternion.Euler(0, 90f, 0);
         detectSize = new Vector3(0.2f, 1f, attackWidth / 2);
 
         Vector3 startPos = _currentPos;
         Vector3 targetPos = _currentPos + attackDirection * (_attackDistance - 0.2f);
+
+        OnVisualAttackRange(startPos, _attackDistance, attackWidth, attackDirection, _attackTime);
 
         while (true)
         {
@@ -127,29 +103,7 @@ public class BowSkillBigArrow : SkillType
 
             yield return waitForFixedUpdate;
         }
-        isPlayGizoms = false;
 
         targets.Clear();
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (isPlayGizoms)
-        {
-            Vector3 temp = attackDirection;
-            if (temp.magnitude < 0.1) temp = Vector3.forward;
-            Quaternion _detectRot = Quaternion.LookRotation(temp, Vector2.up);
-            _detectRot *= Quaternion.Euler(0, 90f, 0);
-
-            Gizmos.matrix = Matrix4x4.TRS(f_DetectPos, _detectRot, Vector3.one);
-
-            Gizmos.color = Color.white;
-            Gizmos.DrawWireCube(Vector3.zero, f_DetectSize);
-
-
-            Gizmos.matrix = Matrix4x4.TRS(detectPos, _detectRot, Vector3.one);
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(Vector3.zero, detectSize);
-        }
     }
 }

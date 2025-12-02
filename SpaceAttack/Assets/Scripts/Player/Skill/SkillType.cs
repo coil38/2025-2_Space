@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public abstract class SkillType : MonoBehaviour
 {
@@ -71,7 +73,8 @@ public abstract class SkillType : MonoBehaviour
     private ChipsetComponentSO chipCompSO;  //칩셋구성SO
     private float _projectileMoveTime;
 
-    private VisualAttackRange visualAttackRange;  //바닥 공격범위
+    private VisualAttackRange visualAttackRange;   //바닥 공격범위
+    private VisualAttackRange[] visualAttackRanges;  //바닥 공격범위
     protected float projectileMoveTime     //발사체 이동시간
     {
         set
@@ -124,6 +127,8 @@ public abstract class SkillType : MonoBehaviour
             attackTime = chipCompSO.attackTime[0];
             attackDistance = chipCompSO.attackRange[0];
         }
+
+        //LogUtil.Log($"기술 이름: {chipCompSO.chipsetCpname}, 공격비율: {damageRate}, 쿨타임: {coolTime}, 추가 치확: {addedCritChanceRate}, 추가 치피: {addedCritRate}, 공격시간: {attackTime}, 공격 거리: {attackDistance}");
     }
 
     public virtual void UpdateInfo()
@@ -158,5 +163,22 @@ public abstract class SkillType : MonoBehaviour
         }
 
         visualAttackRange.OnAttackRange(genPos, distance, width, dir, lifeTime);
+    }
+
+    protected void OnVisualAttackRanges(Vector3[] genPos, float distance, float width, Vector3[] dir, float lifeTime)
+    {
+        if (visualAttackRanges == null || visualAttackRanges.Length < dir.Length)
+        {
+            visualAttackRanges = new VisualAttackRange[dir.Length];
+
+            for (int i = 0; i < visualAttackRanges.Length; i++)
+            {
+                GameObject obj = Instantiate(DataManager.instance.VisualAttackRange);
+                visualAttackRanges[i] = obj.GetComponent<VisualAttackRange>();
+            }
+        }
+
+        for(int i = 0; i < dir.Length; i++)
+            visualAttackRanges[i].OnAttackRange(genPos[i], distance, width, dir[i], lifeTime);
     }
 }

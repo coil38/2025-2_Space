@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 830262352442624239}
   - component: {fileID: 8033679937744304647}
   - component: {fileID: 8953676528773867133}
-  - component: {fileID: 5901633396808658146}
+  - component: {fileID: 5505998447341351048}
   m_Layer: 0
-  m_Name: Arrow
+  m_Name: GuidedArrow
   m_TagString: Arrow
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -134,7 +134,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 0
---- !u!114 &5901633396808658146
+--- !u!114 &5505998447341351048
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,6 +143,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 6564896603841592285}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84bca1af8b063e34abd75ef10c1eb212, type: 3}
+  m_Script: {fileID: 11500000, guid: f07a0d0b50e232b4fbc13028de078f8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

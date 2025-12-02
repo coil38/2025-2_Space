@@ -1,50 +1,55 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
-public class WeaponArrow : MonoBehaviour
+public class WeaponGuidedArrow : MonoBehaviour
 {
     private Rigidbody rb;
     private ChipSetType chipset;      //칩셋
     private ChipAttackType chipsetAttackType;
+    private GameObject target;
+    private GameObject beforeHittedTarget;
 
-
-    private Vector3 startPos;         //시작위치
     private Vector3 attackDirection;  //이동 방향
-    private float moveDistance;       //최대 이동 거리
+    //private float moveDistance;       //최대 이동 거리
     private float damageRate;         //데미지 비율
     private float addedCritChanceRate;
     private float addedCritRate;
 
-    private Action<GameObject> hitEvent;
+    private bool startTracking = false;       //추적 시작
+    private float trackingSpeed;              //추적 속도
 
     void OnEnable()
     {
         rb = GetComponent<Rigidbody>();
-        startPos = transform.position;
     }
 
     void Update()
     {
-        float dis = Vector3.Distance(transform.position, startPos);
-        if (dis > moveDistance) Destroy(gameObject);
-    }
-    public void SetEvent(Action<GameObject> action)
-    {
-        hitEvent += action;
+        if (!startTracking || target == null) return;
+
+        Vector3 moveDir = (target.transform.position - transform.position).normalized;
+        Quaternion quaternion = Quaternion.LookRotation(moveDir, Vector3.up);
+        Debug.Log($"이동 방향: {moveDir}, 타겟 위치: {target.transform.position}");
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, quaternion, 10f * Time.deltaTime);
+        transform.position += moveDir * trackingSpeed * Time.deltaTime;
     }
 
-    public void Fire(Vector3 dir, float speed, float damageRate, float dis, float addedCriChanceRate, float addedCriRate, ChipSetType chipset, ChipAttackType chipsetAttackType)  //이동 위치, 이동방향, 이동 속도, 공격력
+    public void Fire(Vector3 dir, float speed, float damageRate, float dis, float addedCriChanceRate, float addedCriRate, ChipSetType chipset, ChipAttackType chipsetAttackType, 
+        GameObject target, GameObject beforeHittedTarget)  //이동 위치, 이동방향, 이동 속도, 공격력
     {
         if (rb == null)
             rb = gameObject.GetComponent<Rigidbody>();
 
-        rb.AddForce(dir * speed, ForceMode.Impulse);
+        startTracking = true;
+
         attackDirection = dir;
-        moveDistance = dis;
+        trackingSpeed = speed;
         this.chipset = chipset;
         this.chipsetAttackType = chipsetAttackType;
+        this.target = target;
+        this.beforeHittedTarget = beforeHittedTarget;
         this.damageRate = damageRate;
         this.addedCritRate = addedCriRate;
         this.addedCritChanceRate = addedCriChanceRate;
@@ -52,29 +57,23 @@ public class WeaponArrow : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //LogUtil.Log($"충돌대상: {other.gameObject.tag}");
+        if (other.gameObject == beforeHittedTarget) return;   //전에 피격한 대상일 경우, 반환처리
 
         if (other.gameObject.layer == LayerMask.NameToLayer("Enemy") || other.gameObject.layer == LayerMask.NameToLayer("Boss"))
         {
             chipset.Attack(other.gameObject, damageRate, attackDirection, addedCritChanceRate, addedCritRate, chipsetAttackType);
-            HitAndDestroy(other.gameObject);
+            Destroy(gameObject);
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("DestructableObject"))
         {
             AttackInfo info = new AttackInfo(PlayerStatus.normalDamage * damageRate, attackDirection, 1, gameObject);
             other.SendMessage("ApplyDamage", info);
-            HitAndDestroy(other.gameObject);
+            Destroy(gameObject);
         }
         else if (!other.gameObject.CompareTag("Arrow") && !other.gameObject.CompareTag("Player"))
         {
             LogUtil.Log("파괴파괴 " + other.gameObject.tag);
-            HitAndDestroy(other.gameObject);
+            Destroy(gameObject);
         }
-    }
-
-    private void HitAndDestroy(GameObject hittedObj)
-    {
-        hitEvent?.Invoke(hittedObj);
-        Destroy(gameObject);
     }
 }

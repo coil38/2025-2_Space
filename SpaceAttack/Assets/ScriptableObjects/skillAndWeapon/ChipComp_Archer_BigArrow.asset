@@ -10,24 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c493b9d51bd30244b9f2b7f29d763e9, type: 3}
-  m_Name: ChipComp_Archer_BigArrow
+  m_Name: ChipsetComponent_Archer_BigArrow
   m_EditorClassIdentifier: 
-  chipsetCompID: 108
+  chipsetCompID: 110
   chipsetCpname: Archer_BigArrow
-  componentType: 2
+  componentType: 4
   iconSprite: {fileID: 21300000, guid: 8ddf79353916b1e4da8c93af9c091cab, type: 3}
   description: "\uAC15\uD654\uB41C \uD654\uC0B4\uC744 \uC7A5\uC804\uD574 \uB2E8\uB2E8\uD55C
     \uBAA9\uD45C\uB97C \uBA85\uC911\uC2DC\uD0A8\uB2E4. \uAC15\uD55C \uD55C \uBC1C\uC774
     \uBAA8\uB4E0 \uC18C\uC74C\uC744 \uC7A0\uC7AC\uC6B4\uB2E4."
   damageRate:
-  - 1
+  - 2
   coolTime:
-  - 5
+  - 20
   addedCritRate:
-  - 0.1
-  addedCritChanceRate:
   - 0.2
+  addedCritChanceRate:
+  - 0.3
   attackTime:
-  - 1
+  - 0.45
   attackRange:
   - 8

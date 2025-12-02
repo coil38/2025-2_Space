@@ -20,8 +20,8 @@ public class WeaponBow : WeaponType
 
         if (Input.GetMouseButtonDown(0))  //플레이어 입력감지
         {
-            if(PlayerTimeSystem.w_SkillTimer != null)
-                if (PlayerTimeSystem.w_SkillTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
+            if(PlayerTimeSystem.w_BaseAttackTimer != null)
+                if (PlayerTimeSystem.w_BaseAttackTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
 
             isAttacking = true;
 
@@ -63,6 +63,6 @@ public class WeaponBow : WeaponType
         }
 
         GameObject arrow = Instantiate(arrowPrf, startPos, quaternion);
-        arrow.GetComponent<WeaponArrow>().Fire(attackDirection, 15f, damageRate, attackDistance, addedCritChanceRate, addedCritRate, chipset);
+        arrow.GetComponent<WeaponArrow>().Fire(attackDirection, 15f, damageRate, attackDistance, addedCritChanceRate, addedCritRate, chipset, ChipAttackType.Weapon);
     }
 }
