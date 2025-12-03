@@ -55,6 +55,14 @@ public class Boss : EnemyBase
     public AudioClip dieSound;
 
 
+    [Header("근접 공격 설정")]
+    public float closeDamageRange = 2.5f;   // 범위
+    public float closeDamage = 20f;         // 데미지
+    public float closeDamageCooldown = 1.0f; // 쿨타임(연속 데미지 방지)
+
+    private float closeDamageTimer = 0f;
+
+
     //변수 선언들
     public Transform player;
     float margin = 1f;
@@ -95,6 +103,9 @@ public class Boss : EnemyBase
     void Update()
     {
         if (isDead) return;
+        closeDamageTimer -= Time.deltaTime;
+        CheckCloseDamage();
+
 
         // 쿨타임 감소
         bossAttackTimer -= Time.deltaTime;
@@ -129,7 +140,27 @@ public class Boss : EnemyBase
         else if (currentPhase == 2) Phase2Pattern();
         else Phase3Pattern();
     }
+    private void CheckCloseDamage()
+    {
+        if (player == null) return;
+        if (closeDamageTimer > 0f) return; 
 
+        float dist = Vector3.Distance(transform.position, player.position);
+
+        if (dist <= closeDamageRange)
+        {
+            Vector3 dir = (player.position - transform.position).normalized;
+
+            AttackInfo info = new AttackInfo();
+            info.damage = closeDamage;
+            info.attackDirection = dir;        
+            info.attacker = this.gameObject;   
+
+            PlayerStatus.Instance.ApplyDamage(info);
+
+            closeDamageTimer = closeDamageCooldown;
+        }
+    }   
     private IEnumerator FindPlayerRoutine()
     {
         while (player == null)
@@ -306,21 +337,16 @@ public class Boss : EnemyBase
         if (isDead) return;
 
         hp -= attackInfo.damage;
-        hitCount++;
 
-        if (hitCount % 2 == 0 && audioSource != null && hitSounds != null && hitSounds.Length > 0)
+        // Hit 사운드
+        if (hitSounds != null && hitSounds.Length > 0 && audioSource != null)
         {
             int rand = Random.Range(0, hitSounds.Length);
             audioSource.PlayOneShot(hitSounds[rand]);
         }
 
+        // 몸 빨갛게 깜빡이기
         StartHitFlash();
-
-        if (scrapExplosionPrefab != null && bodyCenter != null)
-        {
-            GameObject scrap = Instantiate(scrapExplosionPrefab, bodyCenter.position, Quaternion.identity);
-            Destroy(scrap, 0.5f); // 1초 후 삭제
-        }
 
         // 사망 처리
         if (hp <= 0 && !isDead)
@@ -328,13 +354,19 @@ public class Boss : EnemyBase
             isDead = true;
             OnDeathAction?.Invoke(this);
             OnDeath();
-            
             rb.velocity = Vector3.zero;
 
             if (deathMarkPrefab != null && footPosition != null)
                 Instantiate(deathMarkPrefab, footPosition.position, Quaternion.identity);
 
             Destroy(gameObject, 3f);
+            return;
+        }
+
+        // Hit 애니메이션은 스킬 중이 아닐 때만 실행
+        if (!isUsingSkill && CanPlayHitAnimation())
+        {
+            StartCoroutine(HitProcess());
         }
     }
 
@@ -423,8 +455,7 @@ public class Boss : EnemyBase
         Vector3 size = planArea.localScale;
         Vector3 center = planArea.position;
 
-        // 빨간 장판 생성
-        GameObject red = Instantiate(redZonePrefab, center + Vector3.up * spawnHeight, Quaternion.Euler(90, 0, 0));
+        GameObject red = Instantiate(redZonePrefab, center, Quaternion.Euler(90, 0, 0));
         red.transform.localScale = new Vector3(size.x, size.y, size.z);
 
         DamageZone dz = red.GetComponent<DamageZone>();
@@ -443,7 +474,7 @@ public class Boss : EnemyBase
                 float halfSafe = safeZoneScale / 2f;
                 float randX = Random.Range(-size.x / 2f + halfSafe, size.x / 2f - halfSafe);
                 float randY = Random.Range(-size.y / 2f + halfSafe, size.y / 2f - halfSafe);
-                Vector3 safePos = new Vector3(center.x + randX, center.y + spawnHeight + 0.05f, center.z + randY);
+                Vector3 safePos = new Vector3(center.x + randX, center.y + 0.01f, center.z + randY);
 
                 if (Vector3.Distance(safePos, transform.position) < bossSafeRadius)
                     continue;
@@ -710,4 +741,9 @@ public class Boss : EnemyBase
         }
     }
 
+
+    public void OnSkillEnd()
+    {
+        isUsingSkill = false;
+    }
 }

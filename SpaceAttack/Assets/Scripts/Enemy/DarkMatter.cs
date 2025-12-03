@@ -34,7 +34,7 @@ public class DarkMatter : MonoBehaviour
 
                 if (Physics.Raycast(targetPos + Vector3.up * 2f, Vector3.down, out RaycastHit hit, 5f, LayerMask.GetMask("Plan")))
                 {
-                    spawnPos.y = hit.point.y + 0.01f; // 바닥에서 0.05 위로 띄움
+                    spawnPos.y = hit.point.y + 0.01f; 
                 }
 
                 Instantiate(areaEffectPrefab, spawnPos, areaEffectPrefab.transform.rotation);

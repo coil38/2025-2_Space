@@ -33,6 +33,7 @@ public class PlayerStatus : MonoBehaviour
     [HideInInspector] public bool isDead = false;
                       public bool isBeingEaten = false;  //먹히는 중인가?
 
+
     private bool _isRooted;
     public bool isRooted       //상태 이상: 속박
     {
@@ -309,34 +310,34 @@ public class PlayerStatus : MonoBehaviour
         int damage = (int)info.damage;
         Vector3 dir = info.attackDirection;
 
-        EventManager.relicEvent.OnPlayerHitEventStart(damage, info.attacker);    //플레이어 피격 이벤트 실행
+        EventManager.relicEvent.OnPlayerHitEventStart(damage, info.attacker);
 
         float randomValue = UnityEngine.Random.value;
-        if (randomValue <= missRate)            //회피성공
-        {
-            if (DamageEffectManager.instance != null)
-                DamageEffectManager.instance.ShowMiss();
+        if (randomValue <= missRate) damage = 0;
 
-            damage = 0;
-        }
-
-        float mass = 1f;
-        float attackForce = mass * 100f;
-        ReduceHp(damage);     //플레이어 체력 감소
+        ReduceHp(damage);
 
         if (!isDead)
         {
             PlayerSoundManager.PlayPlayerHitSound();
-            if (!isRooted)
+
+            if (info.attacker != null && info.attacker.layer == LayerMask.NameToLayer("Enemy"))
             {
-                PlayerTimeSystem.stunTimer.Start();   //스턴 타이머 시작
-                movemetAniController.PlayAnimation("Hit");  //피격 애니메이션 ( 속박상태가 아닐 경우 )
+                rb.AddForce(dir * 3f, ForceMode.Impulse);  
+                movemetAniController.PlayAnimation("Hit"); 
+
             }
-            LogUtil.Log($"플레이어 피격, 현재 체력: {m_hp}");
-            rb.AddForce(dir * attackForce);                 //넉백
+            else
+            {
+                if (!isRooted)
+                {
+                    PlayerTimeSystem.stunTimer.Start();
+                    movemetAniController.PlayAnimation("Hit");
+                }
+            }
         }
 
-        EventManager.relicEvent.OnPlayerHitEventEnd(); //피격 종료 이벤트 실행
+        EventManager.relicEvent.OnPlayerHitEventEnd();
         isDamageProcessing = false;
     }
 

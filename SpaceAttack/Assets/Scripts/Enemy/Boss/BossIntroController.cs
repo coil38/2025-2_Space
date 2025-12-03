@@ -44,8 +44,10 @@ public class BossIntroController : MonoBehaviour
 
             if (player != null)
             {
-                // 보스 왼쪽에 배치
                 Vector3 leftSpawnPos = boss.position + Vector3.left * 8.5f;
+
+                leftSpawnPos.y = 1f;
+
                 player.position = leftSpawnPos;
             }
         }

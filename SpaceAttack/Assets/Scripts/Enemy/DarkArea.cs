@@ -6,27 +6,44 @@ public class DarkArea : MonoBehaviour
 {
     public float duration = 5f;
     public float damage = 1;
+    public float damageInterval = 0.5f; 
+
+    [SerializeField] private Vector3 areaSize = new Vector3(1f, 1f, 1f);
+    [SerializeField] private LayerMask playerLayer;
 
     private void Start()
     {
+        StartCoroutine(DamageLoop());
         Destroy(gameObject, duration);
     }
 
-    private void OnTriggerStay(Collider other)
+    private IEnumerator DamageLoop()
     {
-        if (other.CompareTag("Player"))
+        while (true)
         {
-            PlayerStatus player = other.GetComponent<PlayerStatus>();
-            if (player != null)
+            Collider[] hits = Physics.OverlapBox(transform.position, areaSize / 2f, Quaternion.identity, playerLayer);
+            foreach (var hit in hits)
             {
-                AttackInfo info = new AttackInfo
+                PlayerStatus player = hit.GetComponent<PlayerStatus>();
+                if (player != null)
                 {
-                    damage = damage,
-                    attackDirection = Vector3.zero,
-                    attacker = null
-                };
-                player.ApplyDamage(info);
+                    AttackInfo info = new AttackInfo
+                    {
+                        damage = damage,
+                        attackDirection = Vector3.zero,
+                        attacker = null
+                    };
+                    player.ApplyDamage(info);
+                }
             }
+
+            yield return new WaitForSeconds(damageInterval);
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(transform.position, areaSize);
     }
 }
