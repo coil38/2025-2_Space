@@ -15,7 +15,11 @@ public class StumpMons : EnemyBase
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject darkMatterPrefab;
 
- 
+    [Header("그루터기 사운드 설정")]
+    [SerializeField] private AudioSource sfxSource;   
+    [SerializeField] private AudioClip chargeClip;
+    [SerializeField] private AudioClip fireClip;
+
     private bool isAttacking = false;
     private float lastAttackTime = -Mathf.Infinity;
 
@@ -26,6 +30,7 @@ public class StumpMons : EnemyBase
     {
         base.Start();
         animator = GetComponentInChildren<Animator>();
+
     }
 
     private void Update()
@@ -124,5 +129,16 @@ public class StumpMons : EnemyBase
 
         isAttacking = false;
         currentState = State.Idle;   
+    }
+    public void OnChargeSound()
+    {
+        if (sfxSource != null && chargeClip != null)
+            sfxSource.PlayOneShot(chargeClip);
+    }
+
+    public void OnFireSound()
+    {
+        if (sfxSource != null && fireClip != null)
+            sfxSource.PlayOneShot(fireClip);
     }
 }

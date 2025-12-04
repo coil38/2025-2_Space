@@ -21,6 +21,19 @@ public class Minipollution : EnemyBase
     [SerializeField] private float dashDuration = 0.4f;
     [SerializeField] private float attackCooldown = 5f;
 
+    [Header("사운드 설정")]
+    [SerializeField] private AudioSource loopSource;   
+    [SerializeField] private AudioSource sfxSource;
+
+    [SerializeField] private AudioClip walkClip;          // 걷기 (loop)
+    [SerializeField] private AudioClip[] runClips;        // 달리기 4개 (랜덤 반복)
+    [SerializeField] private AudioClip readyClip;         // 공격 준비 소리
+    [SerializeField] private AudioClip dashClip;          // 대쉬 소리
+    [SerializeField] private AudioClip dieClip;           // 죽는 소리
+
+    private Coroutine runLoopRoutine;
+    // -----------------------------------------------
+
     private bool isAttacking = false;
     private float lastAttackTime = -Mathf.Infinity;
     private bool canDamagePlayer = false;
@@ -146,10 +159,13 @@ public class Minipollution : EnemyBase
         {
             rb.velocity = Vector3.zero;
             animator.SetBool("isWalking", false);
+            StopWalk();
             return;
         }
 
         animator.SetBool("isWalking", true);
+        PlayWalk();
+
         rb.MovePosition(rb.position + dir.normalized * speed * Time.fixedDeltaTime);
         Flip(dir.x);
     }
@@ -161,21 +177,20 @@ public class Minipollution : EnemyBase
         isAttacking = true;
         rb.velocity = Vector3.zero;
 
+        PlayReady();
         animator.SetTrigger("AttackReady");
         SwitchState(State.AttackReady);
 
         float timer = attackReadyTime;
         while (timer > 0 && attackTarget != null && !isDead)
         {
-            AttackReadyRotate(); 
+            AttackReadyRotate();
             timer -= Time.deltaTime;
             yield return null;
         }
 
         if (attackTarget != null)
-        {
             dashDirection = (attackTarget.position - transform.position).normalized;
-        }
 
         StartCoroutine(DashRoutine());
     }
@@ -192,6 +207,7 @@ public class Minipollution : EnemyBase
 
     private IEnumerator DashRoutine()
     {
+        PlayDash();
         animator.SetTrigger("Dash");
         SwitchState(State.Dash);
 
@@ -208,8 +224,8 @@ public class Minipollution : EnemyBase
         SwitchState(State.Escape);
 
         canDetectPlayer = false;
+        float escapeTimer = 4f;
 
-        float escapeTimer = 4f; 
         while (escapeTimer > 0)
         {
             escapeTimer -= Time.deltaTime;
@@ -219,13 +235,9 @@ public class Minipollution : EnemyBase
         canDetectPlayer = true;
 
         if (attackTarget != null)
-        {
             SwitchState(State.Chase);
-        }
         else
-        {
             SwitchState(State.Patrol);
-        }
     }
 
     private void EscapeMove()
@@ -241,6 +253,12 @@ public class Minipollution : EnemyBase
 
     private void SwitchState(State newState)
     {
+        if (newState != State.Escape)
+            StopRunLoop();
+
+        if (newState != State.Patrol && newState != State.Chase)
+            StopWalk();
+
         currentState = newState;
 
         if (newState == State.Patrol || newState == State.Chase)
@@ -248,11 +266,11 @@ public class Minipollution : EnemyBase
             animator.SetBool("isWalking", true);
             animator.SetBool("isRunning", false);
         }
-
         else if (newState == State.Escape)
         {
             animator.SetBool("isWalking", false);
             animator.SetBool("isRunning", true);
+            StartRunLoop();
         }
         else
         {
@@ -260,7 +278,6 @@ public class Minipollution : EnemyBase
             animator.SetBool("isRunning", false);
         }
     }
-
     public void OnDashStartEvent()
     {
         canDamagePlayer = true;
@@ -314,6 +331,68 @@ public class Minipollution : EnemyBase
             return;
 
         base.ApplyDamage(attackInfo);
+    }
+
+    private void PlayWalk()
+    {
+        if (loopSource.isPlaying && loopSource.clip == walkClip)
+            return;
+
+        loopSource.clip = walkClip;
+        loopSource.loop = true;
+        loopSource.Play();
+    }
+
+    private void StopWalk()
+    {
+        if (loopSource.clip == walkClip)
+            loopSource.Stop();
+    }
+
+    private void StartRunLoop()
+    {
+        if (runLoopRoutine != null)
+            StopCoroutine(runLoopRoutine);
+
+        runLoopRoutine = StartCoroutine(RunLoopRoutine());
+    }
+
+    private IEnumerator RunLoopRoutine()
+    {
+        while (currentState == State.Escape)
+        {
+            if (runClips.Length > 0)
+                sfxSource.PlayOneShot(runClips[Random.Range(0, runClips.Length)]);
+
+            yield return new WaitForSeconds(Random.Range(0.25f, 0.35f));
+        }
+    }
+
+    private void StopRunLoop()
+    {
+        if (runLoopRoutine != null)
+        {
+            StopCoroutine(runLoopRoutine);
+            runLoopRoutine = null;
+        }
+    }
+
+    private void PlayReady()
+    {
+        if (readyClip != null)
+            sfxSource.PlayOneShot(readyClip);
+    }
+
+    private void PlayDash()
+    {
+        if (dashClip != null)
+            sfxSource.PlayOneShot(dashClip);
+    }
+
+    public void OnDieSound()
+    {
+        if (dieClip != null)
+            sfxSource.PlayOneShot(dieClip);
     }
 
 }

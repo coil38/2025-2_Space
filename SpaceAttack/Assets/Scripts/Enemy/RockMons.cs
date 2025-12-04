@@ -13,6 +13,12 @@ public class RockMons : EnemyBase
     [SerializeField] private float attackRange = 2f;
     [SerializeField] private float attackCooldown = 1.5f;
 
+    [Header("돌전사 사운드 설정")]
+    [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioClip moveClip;
+    [SerializeField] private AudioClip attackClip;
+    [SerializeField] private AudioClip dieClip;
+
     private float patrolTimer;
     private bool isChasing;
     private bool isAttacking = false;
@@ -87,6 +93,21 @@ public class RockMons : EnemyBase
         if (animator.GetBool("isWalking") != walking)
         {
             animator.SetBool("isWalking", walking);
+
+            if (walking)
+            {
+                if (!sfxSource.isPlaying)
+                {
+                    sfxSource.clip = moveClip;
+                    sfxSource.loop = true;
+                    sfxSource.Play();
+                }
+            }
+            else
+            {
+                if (sfxSource.clip == moveClip)
+                    sfxSource.Stop();
+            }
         }
     }
 
@@ -152,6 +173,9 @@ public class RockMons : EnemyBase
 
     public void OnAttackHit()
     {
+        if (sfxSource != null && attackClip != null)
+            sfxSource.PlayOneShot(attackClip);
+
         if (attackTarget == null) return;
         if (Vector3.Distance(transform.position, attackTarget.position) > attackRange + 1.5f) return;
 
@@ -208,5 +232,9 @@ public class RockMons : EnemyBase
         Flip(move.x);
     }
 
-
+    public void PlayDieSound()
+    {
+        if (sfxSource != null && dieClip != null)
+            sfxSource.PlayOneShot(dieClip);
+    }
 }

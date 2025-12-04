@@ -64,6 +64,9 @@ public abstract class EnemyBase : MonoBehaviour
     public Color hitColor = Color.red;       // 맞았을 때 색
     public float hitFlashDuration = 0.2f;   // 색이 돌아오는 시
 
+    [Header("죽음 설정")]
+    [SerializeField] private float deathDuration = 2f; 
+
     private List<Renderer> renderers = new List<Renderer>();
 
     protected PlayerStatus playerStatus;
@@ -73,6 +76,8 @@ public abstract class EnemyBase : MonoBehaviour
     protected Transform attackTarget;
 
     public Action<EnemyBase> OnDeathAction; // 몬스터 죽을 때 이벤트
+
+    public float DeathDuration => deathDuration;
 
     [HideInInspector]
     public bool canDetectPlayer = true;
@@ -232,7 +237,7 @@ public abstract class EnemyBase : MonoBehaviour
                 Instantiate(deathMarkPrefab, spawnPos, Quaternion.identity);
             }
 
-            Destroy(gameObject, 1f);
+            Destroy(gameObject, deathDuration);
         }
         else if (hp > 0)
         {
