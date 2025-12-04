@@ -2064,7 +2064,7 @@ RectTransform:
   m_Father: {fileID: 8862058005300809189}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2396,7 +2396,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7145575692969879371
 Transform:
   m_ObjectHideFlags: 0
@@ -2525,6 +2525,7 @@ MonoBehaviour:
   monsterHPUI: {fileID: 3498628328372902993}
   hitColor: {r: 1, g: 0.3726415, b: 0.3726415, a: 1}
   hitFlashDuration: 0.2
+  deathDuration: 2
   canDetectPlayer: 1
   patrolSpeed: 1.5
   chaseSpeed: 3
@@ -2534,6 +2535,9 @@ MonoBehaviour:
   firePoint: {fileID: 258388665158074325}
   darkMatterPrefab: {fileID: 6777746582487540868, guid: 48dc8028d89f1414392fd5d5f4598079,
     type: 3}
+  sfxSource: {fileID: 5513670401327930329}
+  chargeClip: {fileID: 8300000, guid: 608f2b618cefa6345896b802f9d6d428, type: 3}
+  fireClip: {fileID: 8300000, guid: 4ac9201d7db69934d91eac03aeef2667, type: 3}
 --- !u!82 &5513670401327930329
 AudioSource:
   m_ObjectHideFlags: 0

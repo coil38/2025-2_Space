@@ -43,6 +43,8 @@ public class StageSelectUI : MonoBehaviour
 
     public void UpdateButtons()
     {
+
+
         if (StageProgress.Instance == null)
         {
             Debug.LogError("StageProgress.Instance가 null입니다!");
@@ -55,8 +57,12 @@ public class StageSelectUI : MonoBehaviour
 
             int stageNumber = i + 1;
             Image img = stageButtons[i].GetComponent<Image>();
-            bool unlocked = stageNumber <= StageProgress.Instance.unlockedStage + 1;
+            bool unlocked = stageNumber <= StageProgress.Instance.unlockedStage;
             stageButtons[i].interactable = unlocked;
+
+            var effect = stageButtons[i].GetComponent<StageSelectButtonEffect>();
+            if (effect != null)
+                effect.enabled = unlocked;
 
             if (stageNumber <= StageProgress.Instance.clearedStage)
             {
@@ -70,6 +76,7 @@ public class StageSelectUI : MonoBehaviour
             {
                 img.color = lockedColor;                
             }
+
         }
 
         if (bossButton != null)
@@ -79,13 +86,23 @@ public class StageSelectUI : MonoBehaviour
 
             Image bossImg = bossButton.GetComponent<Image>();
             bossImg.color = available ? clearedColor : lockedColor;
+
+            var effect = bossButton.GetComponent<StageSelectButtonEffect>();
+            if (effect != null)
+                effect.enabled = available;
         }
     }
 
     public void SelectStage(int stageNumber)
     {
+        StartCoroutine(SelectStageRoutine(stageNumber));
+    }
+
+    private IEnumerator SelectStageRoutine(int stageNumber)
+    {
+        yield return new WaitForSeconds(0.6f); 
         StageGameData.SelectedStage = stageNumber;
-        StartCoroutine(C_LoadScene("BattleTestNormalScene"));
+        yield return C_LoadScene("BattleTestNormalScene");
     }
 
 
