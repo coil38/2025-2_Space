@@ -109,7 +109,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2186953420401111432
 Transform:
   m_ObjectHideFlags: 0
@@ -195,8 +195,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 12.233654, y: 16.16574, z: 1.8818737}
+  m_Center: {x: -0.75547695, y: 9.576897, z: -0.44091293}
 --- !u!114 &8445409625668523153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,12 +231,17 @@ MonoBehaviour:
   monsterHPUI: {fileID: 8257110088166595308}
   hitColor: {r: 0.990566, g: 0.4625756, b: 0.4625756, a: 1}
   hitFlashDuration: 0.2
+  deathDuration: 2
   canDetectPlayer: 1
   patrolSpeed: 1.5
   chaseSpeed: 2.5
   patrolChangeTime: 3
   attackRange: 2
   attackCooldown: 3
+  sfxSource: {fileID: 6335804460835379650}
+  moveClip: {fileID: 8300000, guid: d544a69461de7ad47a9aca9748491c0b, type: 3}
+  attackClip: {fileID: 8300000, guid: cc54a6eaf8181754a8affb3801c427f0, type: 3}
+  dieClip: {fileID: 8300000, guid: 905597040e56e6745bfdd8eca7f70179, type: 3}
 --- !u!82 &6335804460835379650
 AudioSource:
   m_ObjectHideFlags: 0
@@ -711,7 +716,7 @@ RectTransform:
   m_Father: {fileID: 8446612733443480094}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
