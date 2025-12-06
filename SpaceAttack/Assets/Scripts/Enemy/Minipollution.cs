@@ -155,6 +155,24 @@ public class Minipollution : EnemyBase
         Vector3 dir = targetPos - rb.position;
         dir.y = 0;
 
+        if (IsWallAhead(dir.normalized))
+        {
+            if (currentState == State.Patrol)
+            {
+                ChooseNewPatrolPoint();
+                return;
+            }
+
+            if (currentState == State.Chase)
+            {
+                Vector3 right = transform.right;
+                if (IsWallAhead(right))
+                    right = -right;
+
+                rb.MovePosition(rb.position + right * speed * 0.7f * Time.fixedDeltaTime);
+                return;
+            }
+        }
         if (dir.magnitude < 0.1f)
         {
             rb.velocity = Vector3.zero;
@@ -167,9 +185,9 @@ public class Minipollution : EnemyBase
         PlayWalk();
 
         rb.MovePosition(rb.position + dir.normalized * speed * Time.fixedDeltaTime);
+
         Flip(dir.x);
     }
-
     // ------- Attack Ready ---------
 
     private IEnumerator AttackReadyRoutine()
@@ -245,8 +263,15 @@ public class Minipollution : EnemyBase
         if (!attackTarget) return;
 
         Vector3 opposite = (transform.position - attackTarget.position).normalized;
-        Flip(opposite.x);
 
+        if (IsWallAhead(opposite))
+        {
+            opposite = transform.right;  
+            if (IsWallAhead(opposite))
+                opposite = -transform.right;
+        }
+
+        Flip(opposite.x);
         rb.MovePosition(transform.position + opposite * escapeSpeed * Time.fixedDeltaTime);
     }
 

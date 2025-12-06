@@ -65,7 +65,11 @@ public abstract class EnemyBase : MonoBehaviour
     public float hitFlashDuration = 0.2f;   // 색이 돌아오는 시
 
     [Header("죽음 설정")]
-    [SerializeField] private float deathDuration = 2f; 
+    [SerializeField] private float deathDuration = 2f;
+
+    [Header("벽 반대방향 설정")]
+    [SerializeField] protected float wallCheckDistance = 0.7f;
+    [SerializeField] protected LayerMask wallLayer;
 
     private List<Renderer> renderers = new List<Renderer>();
 
@@ -312,5 +316,11 @@ public abstract class EnemyBase : MonoBehaviour
     protected virtual bool CanPlayHitAnimation()
     {
         return true;
+    }
+
+    protected bool IsWallAhead(Vector3 dir)
+    {
+        Vector3 origin = transform.position + Vector3.up * 0.3f;
+        return Physics.Raycast(origin, dir, wallCheckDistance, wallLayer);
     }
 }
