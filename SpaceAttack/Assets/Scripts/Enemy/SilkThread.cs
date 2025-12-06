@@ -10,7 +10,7 @@ public class SilkThread : MonoBehaviour
     public float speed = 10f;
     public float lifeTime = 5f;
 
-    private bool isRed;  // ← 추가된 변수
+    private bool isRed; 
 
     public float maxHealth = 1f;
     private float currentHealth;
