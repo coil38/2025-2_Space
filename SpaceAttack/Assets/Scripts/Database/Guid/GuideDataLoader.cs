@@ -1,8 +1,10 @@
 # if UNITY_EDITOR
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -31,6 +33,7 @@ public class PageGuideData
 public class GuideDataLoader : EditorWindow
 {
     public static string outputFolder = "Assets/ScriptableObjects/Guide";
+    public static string gcOutputFolder = "Assets/ScriptableObjects/GuideCatecory";
 
     public static string guidejsonFilePath = "";
     public static string subjsonFilePath = "";
@@ -41,6 +44,10 @@ public class GuideDataLoader : EditorWindow
         if (!Directory.Exists(outputFolder))
         {
             Directory.CreateDirectory(outputFolder);
+        }
+        if (!Directory.Exists(gcOutputFolder))
+        {
+            Directory.CreateDirectory(gcOutputFolder);
         }
 
         string guidejsonText = File.ReadAllText(guidejsonFilePath);
@@ -55,6 +62,7 @@ public class GuideDataLoader : EditorWindow
             List<PageGuideData> pagelists = JsonConvert.DeserializeObject<List<PageGuideData>>(pagejsonText);
 
             List<GuideSO> createdGuids = new List<GuideSO>();
+            List<GuideCatecorySO> createdGuideCats = new List<GuideCatecorySO>();
 
             foreach (var page in pagelists)
             {
@@ -116,11 +124,56 @@ public class GuideDataLoader : EditorWindow
                 EditorUtility.SetDirty(guidSO);
             }
 
+            //가이드 카테고리 SO 생성
+            foreach (var guide in guidelists)
+            {
+                GuideCatecorySO gcSO = ScriptableObject.CreateInstance<GuideCatecorySO>();
+
+                gcSO.gcId = guide.guideID;
+                gcSO.gcName = guide.label;
+
+                string[] subIdstrings = guide.tabID.Split(",");
+
+                int[] subIds = new int[subIdstrings.Length];
+                string[] subNames = new string[subIdstrings.Length];
+
+                for (int i = 0; i < subIdstrings.Length; i++)
+                {
+                    if (int.TryParse(subIdstrings[i].Trim(), out int result))
+                    {
+                        subIds[i] = result;             //subId 갱신
+
+                        foreach (var sub in sublists)   //subName 찾아서 갱신
+                        {
+                            if (sub.subtabID == result)
+                            {
+                                subNames[i] = sub.label;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                gcSO.subIds = subIds;
+                gcSO.subNames = subNames;
+
+                //SO 저장
+                string assetPath = $"{gcOutputFolder}/GuideCat_{guide.label}.asset";
+                AssetDatabase.CreateAsset(gcSO, assetPath);
+
+                //에셋 이름 저장
+                gcSO.name = $"GuideCat_{guide.label}";
+                createdGuideCats.Add(gcSO);
+
+                EditorUtility.SetDirty(gcSO);
+            }
+
             //데이터 베이스 생성
-            if (createdGuids.Count > 0)
+            if (createdGuids.Count > 0 && createdGuideCats.Count > 0)
             {
                 GuideDatabaseSO database = ScriptableObject.CreateInstance<GuideDatabaseSO>();
-                database.guidList = createdGuids;
+                database.guideList = createdGuids;
+                database.gcList = createdGuideCats;
 
                 AssetDatabase.CreateAsset(database, $"{outputFolder}/GuideDatabase.asset");
                 EditorUtility.SetDirty(database);
