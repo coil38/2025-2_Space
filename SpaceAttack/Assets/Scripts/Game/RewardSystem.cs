@@ -10,8 +10,6 @@ public enum RewardType
     HiddenBox,            //히든 상자
     SupplyBox,            //보급 상자
     MiddleBossBox,        //중간 보스 상자
-    Purifier,             //정화기
-    Exchanger             //교환기
 }
 
 public class RewardSystem : MonoBehaviour
@@ -33,9 +31,7 @@ public class RewardSystem : MonoBehaviour
         new RewardData(RewardType.RewardBox, 1f, 0f, 0.01f, 0.8f),
         new RewardData(RewardType.HiddenBox, 1f, 0f, 0.6f, 0.9f),
         new RewardData(RewardType.SupplyBox, 1f, 0f, 0.7f, 0.9f),
-        new RewardData(RewardType.MiddleBossBox, 1f, 0f, 1f, 1f),
-        new RewardData(RewardType.Purifier, 0f, 1f, 0f, 0f),
-        new RewardData(RewardType.Exchanger, 1f, 0f, 0f, 0f)
+        new RewardData(RewardType.MiddleBossBox, 1f, 0f, 1f, 1f)
     };
 
     private void Awake()

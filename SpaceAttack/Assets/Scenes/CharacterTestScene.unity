@@ -4312,6 +4312,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChipsetSelectObject
       objectReference: {fileID: 0}
+    - target: {fileID: 5551856398453581792, guid: 865fa5f96187e9c4f849a87518a020e9,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5551856398453581792, guid: 865fa5f96187e9c4f849a87518a020e9,
+        type: 3}
+      propertyPath: m_DrawMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6331722134292677721, guid: 865fa5f96187e9c4f849a87518a020e9,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6331722134292677721, guid: 865fa5f96187e9c4f849a87518a020e9,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6331722134292677721, guid: 865fa5f96187e9c4f849a87518a020e9,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 6331722134292677721, guid: 865fa5f96187e9c4f849a87518a020e9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4325,7 +4350,7 @@ PrefabInstance:
     - target: {fileID: 6331722134292677721, guid: 865fa5f96187e9c4f849a87518a020e9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.707
+      value: 3.29
       objectReference: {fileID: 0}
     - target: {fileID: 6331722134292677721, guid: 865fa5f96187e9c4f849a87518a020e9,
         type: 3}
@@ -4361,6 +4386,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6331722134292677721, guid: 865fa5f96187e9c4f849a87518a020e9,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
