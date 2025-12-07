@@ -10,7 +10,7 @@ public class ExchangeMachine : MonoBehaviour
     [SerializeField] TextMeshPro rewardUI;
 
     const int maxUseCount = 5;
-    const float detectDistance = 1.5f;
+    const float detectDistance = 3f;
     int currentUseCount = 1;
     GameObject player;
 
@@ -87,6 +87,7 @@ public class ExchangeMachine : MonoBehaviour
         if (randomValue <= 0.7f)      //성공 : 투입된 유물을 소모하여 오염된 프로세스 1개 획득
         {
             rewardUI.text = "성공!";
+            UISoundManager.PlaySuccessExchange();     //교환 성공 사운드 재생
 
             RelicSO relic = GetRelicRandomly();
             DropRelic(relic, transform.position - transform.forward * 0.5f);
@@ -108,6 +109,7 @@ public class ExchangeMachine : MonoBehaviour
         else        //파괴 : 투입한 유물을 소모하여 아무것도 획득 불가
         {
             rewardUI.text = "실패";
+            UISoundManager.PlayFailExchange();     //교환 실패 사운드 재생
         }
 
         currentUseCount++;
@@ -125,6 +127,8 @@ public class ExchangeMachine : MonoBehaviour
 
     void DropRelic(RelicSO relic, Vector3 dropPos)
     {
+        UISoundManager.PlayDropItem();     //아이템 드랍 사운드
+
         GameObject temp = DataManager.instance._relicObject;
         GameObject relicObj = Instantiate(temp, dropPos, temp.transform.rotation);
 
