@@ -11,6 +11,7 @@ public class RelicSO : ScriptableObject
     public RelicType relicType;
     public int[] cannotEquipRelicId;
     public int[] relicEffects;
+    public int pair;
     public string relicDivision;
     public string description;
     public RelicInfo[] relicInfos;

@@ -40,6 +40,7 @@ public class RelicDataLoader : ScriptableObject
                 relicSO.darkMaterialCount = relic.darkMaterialCount;
                 relicSO.description = relic.description;
                 relicSO.relicDivision = relic.relicDivision;
+                relicSO.pair = relic.pair.HasValue ? relic.pair.Value : -1;
 
                 //유물 타입 설정
                 switch (relic.relicType)

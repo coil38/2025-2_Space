@@ -8,6 +8,7 @@ public class RelicData
     public string name;
     public int darkMaterialCount;
     public int relicType;
+    public int? pair;
     public string cannotEquipRelicId;
     public string relicDivision;
     public string relicEffects;
