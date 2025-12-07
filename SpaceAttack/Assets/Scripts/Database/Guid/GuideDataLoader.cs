@@ -4,12 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
-public class GuideData
+public class GuideData 
 {
+    //guideID	label	tabID
+
     public int guideID;
     public string label;
     public string tabID;
@@ -17,6 +18,8 @@ public class GuideData
 
 public class SubGuideData
 {
+    //subtabID	label	pageID
+
     public int subtabID;
     public string label;
     public string pageID;
@@ -24,6 +27,8 @@ public class SubGuideData
 
 public class PageGuideData
 {
+    //pageID	label	description	spritePath
+
     public int pageID;
     public string label;
     public string description;
@@ -109,7 +114,7 @@ public class GuideDataLoader : EditorWindow
                 {
                     guidSO.pageSprite = AssetDatabase.LoadAssetAtPath<Sprite>(page.spritePath);
 
-                    if(guidSO.pageSprite == null)
+                    if (guidSO.pageSprite == null)
                         LogUtil.LogWarning($"{page.label}의 {page.spritePath}위치에 이미지가 존재하지 않음");
                 }
 
