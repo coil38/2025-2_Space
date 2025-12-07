@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
-public class RelicDataLoader : ScriptableObject
+public class RelicDataLoader : EditorWindow
 {
     public static string outputFolder = "Assets/ScriptableObjects/Relic";
     private static string iconPath = "Assets/Materials/Icon/Relic/";

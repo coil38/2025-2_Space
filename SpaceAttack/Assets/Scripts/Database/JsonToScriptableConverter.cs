@@ -11,6 +11,10 @@ public class JsonToScriptableConverter : EditorWindow
     private bool createDatabase = true;  //데이터 베이스 생성 여부
     private JsonType jsonType = JsonType.BGM;           //Json타입
 
+    private string guidejsonFilePath = "";
+    private string subjsonFilePath = "";
+    private string pagejsonFilePath = "";
+
     //private System.Enum JsonType;
 
     [MenuItem("Tools/JSON to Scriptable Objects")]
@@ -44,6 +48,41 @@ public class JsonToScriptableConverter : EditorWindow
                 return;
             }
             SelectConverter();
+        }
+
+        GUILayout.Label("JSON to Scriptable Object Converter For Guide", EditorStyles.boldLabel);
+        EditorGUILayout.Space();
+
+        if (GUILayout.Button("Select Guide JSON File"))
+        {
+            guidejsonFilePath = EditorUtility.OpenFilePanel("Select Guid JSON File", "", "json");
+        }
+        EditorGUILayout.Space();
+        if (GUILayout.Button("Select SubGuide JSON File"))
+        {
+            subjsonFilePath = EditorUtility.OpenFilePanel("Select Guid JSON File", "", "json");
+        }
+        EditorGUILayout.Space();
+        if (GUILayout.Button("Select PageGuide JSON File"))
+        {
+            pagejsonFilePath = EditorUtility.OpenFilePanel("Select Guid JSON File", "", "json");
+        }
+
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+
+        if (GUILayout.Button("Convert to Guid Scriptable Objects"))
+        {
+            if (string.IsNullOrEmpty(guidejsonFilePath) || string.IsNullOrEmpty(subjsonFilePath) || string.IsNullOrEmpty(pagejsonFilePath))
+            {
+                EditorUtility.DisplayDialog("Error", "Please select a JSON file firest!", "OK");
+                return;
+            }
+
+            GuideDataLoader.guidejsonFilePath = guidejsonFilePath;
+            GuideDataLoader.subjsonFilePath = subjsonFilePath;
+            GuideDataLoader.pagejsonFilePath = pagejsonFilePath;
+            GuideDataLoader.ConvertJsonToScriptableObjects();
         }
     }
 
