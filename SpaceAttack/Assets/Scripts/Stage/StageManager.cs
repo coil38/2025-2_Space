@@ -49,6 +49,8 @@ public class StageManager : MonoBehaviour
     public GameObject rewardTeleport;
 
     private bool nextStageOpened = false;
+
+
     private void Start()
     {
         stageNumber = StageGameData.SelectedStage;
