@@ -51,6 +51,15 @@ public class PlayerInventorySlot : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         if (relic == null) return;
-        PlayerUIManager.instance.OnPlayerInventoryInfo(relic, relicInstanceId);
+
+        SlotClickType clickType = PlayerUIManager.instance.slotClickType;
+        if (clickType == SlotClickType.Item)
+        {
+            PlayerUIManager.instance.OnPlayerInventoryInfo(relic, relicInstanceId);
+        }
+        else if(clickType == SlotClickType.Exchanger)
+        {
+            PlayerUIManager.instance.ExchangeItem(relic, relicInstanceId);
+        }
     }
 }

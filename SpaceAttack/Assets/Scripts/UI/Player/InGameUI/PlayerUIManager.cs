@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,6 +22,8 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] Image skill3Image;
 
     private InventoryManager inventoryManager;
+
+    public SlotClickType slotClickType { get; private set; }
     private void Awake()
     {
         if (instance == null)
@@ -34,6 +35,8 @@ public class PlayerUIManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        slotClickType = SlotClickType.Item;
     }
     public void ResetHpUI()                                           //체력UI 초기화 함수
     {
@@ -104,5 +107,42 @@ public class PlayerUIManager : MonoBehaviour
     public void OnPlayerInventoryInfo(RelicSO relicSO, int relicInstanceId)          //플레이어 인벤토리정보UI 활성화
     {
         playerInventoryInfoUI.SetRelicInfoUI(relicSO, relicInstanceId);
+    }
+
+
+    public void ChangeSlotClickType(SlotClickType type)    //슬롯 클릭 타입 변경 함수
+    {
+        if(type != slotClickType)
+        {
+            slotClickType = type;
+        }
+    }
+
+    public void ExchangeItem(RelicSO relicSO, int relicInstanceId)  //선택한 아이템 정보를 전달과 동시에 인벤에서 삭제
+    {
+        Purifier purifier = FindObjectOfType<Purifier>();
+        ExchangeMachine exchanger = FindAnyObjectByType<ExchangeMachine>();
+
+        if (purifier != null)
+        {
+            if(purifier.CheckPair(relicSO))
+            {
+                purifier.targetRelicSO = relicSO;
+            }
+            else
+            {
+                LogUtil.Log("해당 패어의 정화유물을 찾을 수 없습니다.");
+                return;
+            }
+        }
+        else LogUtil.Log("정화기를 찾을 수가 없습니다.");
+
+        if (exchanger != null) exchanger.targetRelicSO = relicSO;
+        else LogUtil.Log("교환기를 찾을 수가 없습니다.");
+
+        if (inventoryManager == null)
+            inventoryManager = FindObjectOfType<InventoryManager>();
+        inventoryManager.RemoveRelic(relicSO, relicInstanceId);
+        playerItemUI.RemoveItem(relicSO, relicInstanceId);
     }
 }
