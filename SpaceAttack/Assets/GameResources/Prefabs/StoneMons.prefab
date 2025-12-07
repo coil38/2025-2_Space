@@ -109,7 +109,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2186953420401111432
 Transform:
   m_ObjectHideFlags: 0
@@ -232,6 +232,10 @@ MonoBehaviour:
   hitColor: {r: 0.990566, g: 0.4625756, b: 0.4625756, a: 1}
   hitFlashDuration: 0.2
   deathDuration: 2
+  wallCheckDistance: 0.7
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
   canDetectPlayer: 1
   patrolSpeed: 1.5
   chaseSpeed: 2.5
