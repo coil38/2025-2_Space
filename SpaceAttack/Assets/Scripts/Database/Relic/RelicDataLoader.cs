@@ -9,7 +9,7 @@ using UnityEngine;
 public class RelicDataLoader : EditorWindow
 {
     public static string outputFolder = "Assets/ScriptableObjects/Relic";
-    private static string iconPath = "Assets/Materials/Icon/Relic/";
+    //private static string iconPath = "Assets/Materials/Icon/Relic/";
     public static string jsonFilePath { get; set; }
     public static bool createDatabase { get; set; }
 
@@ -125,7 +125,7 @@ public class RelicDataLoader : EditorWindow
 
                 if (!string.IsNullOrEmpty(relic.iconPath))
                 {
-                    relicSO.iconSprite = AssetDatabase.LoadAssetAtPath<Sprite>(iconPath + relic.iconPath);
+                    relicSO.iconSprite = AssetDatabase.LoadAssetAtPath<Sprite>(relic.iconPath);
 
                     if (relicSO.iconSprite == null)
                         LogUtil.LogWarning($"{relic.name}이름의 {relic.iconPath}위치에 아이콘이 존재하지 않음");
