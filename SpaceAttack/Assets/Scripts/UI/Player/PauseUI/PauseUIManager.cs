@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 
 public class PauseUIManager : MonoBehaviour
@@ -12,21 +11,20 @@ public class PauseUIManager : MonoBehaviour
     [Header("UI버튼")]
     [SerializeField] private Button resumeButton;
     [SerializeField] private Button newGameButton;
-    [SerializeField] private Button achievementButton;
-    [SerializeField] private Button helpButton;
+    [SerializeField] private Button guideButton;
     [SerializeField] private Button exitButton;
     [SerializeField] private Button settingUIButton;
 
     [Header("UI창")]
     [SerializeField] private GameObject pauseUIPanel;
-    [SerializeField] private GameObject achievementUIPanel;
-    [SerializeField] private GameObject helpUIPanel;
+    [SerializeField] private GameObject guideUIPanel;
     [SerializeField] private GameObject settingUIPanel;
 
     [Header("블러효과")]
     [SerializeField] private Volume pauseVolume;
 
     private SettingUIManager settingUIManager;
+    private GuideUIManager guideUIManager;
 
     private void Awake()
     {
@@ -45,15 +43,13 @@ public class PauseUIManager : MonoBehaviour
         //버튼들 인터렉션 델리게이트 체인
         resumeButton.onClick.AddListener(ResumeGame);
         newGameButton.onClick.AddListener(PlayNewGame);
-        achievementButton.onClick.AddListener(OnAchievementPanel);
-        helpButton.onClick.AddListener(OnHelpPanel);
+        guideButton.onClick.AddListener(OnGuideUI);
         exitButton.onClick.AddListener(ExitGame);
         settingUIButton.onClick.AddListener(OnSettingPanel);
 
         pauseUIPanel.SetActive(false);
         settingUIPanel.SetActive(false);
-        achievementUIPanel.SetActive(false);
-        helpUIPanel.SetActive(false);
+        guideUIPanel.SetActive(false);
 
         UIESCSystem.SetPauseUI(OnPauseUI);     //일시정지 활성화_델리게이트 체인
 
@@ -89,9 +85,16 @@ public class PauseUIManager : MonoBehaviour
         LogUtil.Log("업적UI가 활성화되었습니다.");
     }
 
-    private void OnHelpPanel()
+    private void OnGuideUI()
     {
-        LogUtil.Log("도움말UI가 활성화되었습니다.");
+        LogUtil.Log("가이드UI가 활성화되었습니다.");
+        guideUIPanel.SetActive(true);
+        UISoundManager.PlayeOnAndOffPanelSound();  //패널열기 사운드 재생
+
+        if (guideUIManager == null)
+            guideUIManager = GetComponentInChildren<GuideUIManager>();
+
+        UIESCSystem.SetUIDepth(UIType.PauseUI, guideUIManager.OffGuideUI, guideUIPanel);
     }
 
     private void OnSettingPanel()

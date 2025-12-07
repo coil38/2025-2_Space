@@ -10,6 +10,7 @@ public class DataManager : MonoBehaviour
     [SerializeField] private LevelDatabaseSO levelDatabase;        //레벨 데이터 베이스
     [SerializeField] private RelicDatabaseSO relicDatabase;        //유물 데이터 베이스
     [SerializeField] private ChipsetComponentDatabaseSO chipcompDatabase;  //칩셋 컴포넌트 데이터 베이스
+    [SerializeField] private GuideDatabaseSO guidedatabase;        //가이드 데이터 베이스
 
     [SerializeField] private GameObject relicObject;         //유물 프리팹
     [SerializeField] private GameObject[] chipsetPrfs;       //칩셋 프리팹
@@ -79,6 +80,11 @@ public class DataManager : MonoBehaviour
     public ChipsetComponentDatabaseSO _chipCompDatabase
     {
         get { return chipcompDatabase; }
+    }
+
+    public GuideDatabaseSO _guideDatabase
+    {
+        get { return guidedatabase; }
     }
     void Awake()
     {
