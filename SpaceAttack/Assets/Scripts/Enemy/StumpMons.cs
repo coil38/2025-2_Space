@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class StumpMons : EnemyBase
 {
-    [Header("패트롤 설정")]
-    [SerializeField] private float patrolSpeed = 1.5f;
-    [SerializeField] private float chaseSpeed = 3f;
-    [SerializeField] private float patrolChangeTime = 3f;
-
     [Header("공격 설정")]
     [SerializeField] private float attackRadius = 6f;
     [SerializeField] private float attackCooldown = 2f;

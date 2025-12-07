@@ -24,12 +24,19 @@ public class OldDollMons : EnemyBase
     [SerializeField] private float attackCooldown = 3f;
     [SerializeField] private GameObject yarnPrefab;
     [SerializeField] private GameObject redYarnPrefab;
-    [SerializeField] private int yarnCount = 3;
+
 
     private float lastAttackTime = -999f;
     private float escapeTimer;
     private bool firstAttackDone = false;
 
+    [SerializeField] private AudioClip prepareClip;
+    [SerializeField] private AudioClip spawnClip;
+    [SerializeField] private float prepareSoundDuration = 1.5f;
+
+
+    private Vector3 escapeDir;       // 현재 유지할 방향
+    private float escapeLockTime = 0f;
     protected override void Start()
     {
         base.Start();
@@ -224,13 +231,21 @@ public class OldDollMons : EnemyBase
     public void OnSpawnYarn()
     {
         SpawnYarns();
+        StartCoroutine(SpawnSoundSequence()); 
     }
 
     public void OnAttackEnd()
     {
         EnterEscape();
     }
-
+    private IEnumerator SpawnSoundSequence()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            PlaySpawnSound();
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
     private void SpawnYarns()
     {
         if (attackTarget == null) return;
@@ -309,21 +324,37 @@ public class OldDollMons : EnemyBase
     {
         if (!attackTarget) return;
 
-        Vector3 dir = (transform.position - attackTarget.position).normalized;
-        dir.y = 0;
+        // 기본 방향 = 플레이어 반대 방향
+        Vector3 toPlayer = (transform.position - attackTarget.position).normalized;
+        toPlayer.y = 0;
 
-        if (IsFrontBlocked(dir))
-            dir = GetSideDirection(dir);
+        // 현재 방향을 유지하는 상태이면 방향 고정 시간 동안 수정 금지
+        if (escapeLockTime > 0)
+        {
+            escapeLockTime -= Time.fixedDeltaTime;
+        }
+        else
+        {
+            // 벽에 막혀 있을 때만 방향 변경
+            if (IsWallAhead(escapeDir == Vector3.zero ? toPlayer : escapeDir))
+            {
+                escapeDir = GetSideDirection(toPlayer);
+                escapeLockTime = 0.6f; // 더 넉넉히 유지
+            }
+            else
+            {
+                escapeDir = toPlayer;
+            }
+        }
 
-        rb.MovePosition(rb.position + dir * patrolSpeed * Time.fixedDeltaTime);
-
-        Flip(dir.x);
+        rb.MovePosition(rb.position + escapeDir * patrolSpeed * Time.fixedDeltaTime);
+        Flip(escapeDir.x);
     }
 
     private bool IsFrontBlocked(Vector3 dir)
     {
         Ray ray = new Ray(transform.position + Vector3.up * 0.5f, dir.normalized);
-        float checkDist = 1.0f;
+        float checkDist = 0.7f;
 
         return Physics.Raycast(ray, checkDist, LayerMask.GetMask("Wall", "DestructableObject"));
     }
@@ -337,5 +368,30 @@ public class OldDollMons : EnemyBase
         if (!IsFrontBlocked(right)) return right;
 
         return -dir;  
+    }
+
+
+    public void PlayPrepareSound()
+    {
+        if (prepareClip == null) return;
+
+        audioSource.clip = prepareClip;
+        audioSource.loop = false;
+        audioSource.Play();
+
+        CancelInvoke(nameof(StopPrepareSound));
+        Invoke(nameof(StopPrepareSound), prepareSoundDuration);
+    }
+
+    public void StopPrepareSound()
+    {
+        if (audioSource.isPlaying && audioSource.clip == prepareClip)
+            audioSource.Stop();
+    }
+
+    private void PlaySpawnSound()
+    {
+        if (spawnClip == null) return;
+        audioSource.PlayOneShot(spawnClip);
     }
 }

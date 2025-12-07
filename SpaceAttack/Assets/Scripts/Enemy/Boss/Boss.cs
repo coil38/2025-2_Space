@@ -69,7 +69,6 @@ public class Boss : EnemyBase
     private Animator anim;
     public Transform headTransform; // 보스 머리 위치
     private bool isLaunchingCans = false;
-    private int hitCount = 0;
     private Collider bossCollider;
     private List<GameObject> summonedMinions = new List<GameObject>();
     public int currentPhase = 1;

@@ -15,6 +15,8 @@ public class SilkThread : MonoBehaviour
     public float maxHealth = 1f;
     private float currentHealth;
 
+    [SerializeField] private AudioClip hitClip;     // 터질 때 소리
+  
     public void Init(Transform target, float damage, bool isRed, float speed)
     {
         this.target = target;
@@ -49,6 +51,9 @@ public class SilkThread : MonoBehaviour
 
         if (currentHealth <= 0f)
         {
+            if (hitClip != null)
+                AudioSource.PlayClipAtPoint(hitClip, transform.position);
+
             Destroy(gameObject);
         }
     }
@@ -63,6 +68,10 @@ public class SilkThread : MonoBehaviour
         if (p != null)
             p.ApplyDamage(info);
 
+        if (hitClip != null)
+            AudioSource.PlayClipAtPoint(hitClip, transform.position);
+
         Destroy(gameObject);
     }
+
 }
