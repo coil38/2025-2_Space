@@ -10,7 +10,7 @@ public class Purifier : MonoBehaviour
     [SerializeField] TextMeshPro rewardUI;
 
     const int maxUseCount = 3;
-    const float detectDistance = 1.5f;
+    const float detectDistance = 3f;
     int currentUseCount = 1;
     GameObject player;
 
@@ -86,6 +86,7 @@ public class Purifier : MonoBehaviour
             if (relicSO.relicID == _targetRelicSO.pair)
             {
                 rewardUI.text = "정화 성공";
+                UISoundManager.PlaySuccessExchange();     //정화 성공 사운드 재생
                 DropRelic(relicSO, transform.position - transform.forward * 0.5f);
             }
 
@@ -94,6 +95,7 @@ public class Purifier : MonoBehaviour
 
     void DropRelic(RelicSO relic, Vector3 dropPos)
     {
+        UISoundManager.PlayDropItem();     //아이템 드랍 사운드
         GameObject temp = DataManager.instance._relicObject;
         GameObject relicObj = Instantiate(temp, dropPos, temp.transform.rotation);
 
@@ -102,7 +104,11 @@ public class Purifier : MonoBehaviour
 
     public bool CheckPair(RelicSO relic)
     {
-        if(relic.pair == -1) rewardUI.text = "정화 대상 아이템X";
+        if (relic.pair == -1)
+        {
+            rewardUI.text = "정화 대상 아이템X";
+            UISoundManager.PlayFailExchange();     //정화 실패 사운드 재생
+        }
 
         return relic.pair != -1;
     }

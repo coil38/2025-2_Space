@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class UISoundManager : MonoBehaviour
 {
@@ -26,4 +25,32 @@ public class UISoundManager : MonoBehaviour
     { 
         SoundManager.instance.PlayBGMOrUISound(4002, SoundType.UI);
     }
+
+    //--------------------------------------------------------------------오브젝트(플레이어X, 몬스터X)-----------------------------------------------------------------------
+
+    public static void PlaySuccessExchange()     //교환 성공 사운드
+    {
+        SoundManager.instance.PlayBGMOrUISound(4006, SoundType.UI);
+    }
+
+    public static void PlayFailExchange()       //교환 실패 사운드
+    {
+        SoundManager.instance.PlayBGMOrUISound(4007, SoundType.UI);
+    }
+
+    public static void PlayDropItem()      //아이템 드랍 사운드
+    {
+        SoundManager.instance.PlayBGMOrUISound(4010, SoundType.UI);
+    }
+
+    public static void PlayOpenRewardChast()   //상자 열기 사운드
+    {
+        SoundManager.instance.PlayBGMOrUISound(4011, SoundType.UI);
+    }
+
+    public static void PlayDisableRewardChast()    //상자 사라지는 사운드
+    {
+        SoundManager.instance.PlayBGMOrUISound(4005, SoundType.UI);
+    }
+
 }

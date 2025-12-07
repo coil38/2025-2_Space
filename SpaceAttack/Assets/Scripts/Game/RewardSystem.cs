@@ -92,6 +92,8 @@ public class RewardSystem : MonoBehaviour
         }
         if (isExit) DropRelicObjRandomly(relicType, dropPos);    //대상이 존재할 경우 재실행
 
+        UISoundManager.PlayDropItem();            //아이템 드랍 사운드 재생
+
         GameObject temp = DataManager.instance._relicObject;
         GameObject relicObj = Instantiate(temp, dropPos, temp.transform.rotation);
 
