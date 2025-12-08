@@ -48,6 +48,19 @@ public class StageManager : MonoBehaviour
     [Header("보상방 텔레포트")]
     public GameObject rewardTeleport;
 
+    [Header("이벤트 방 확률")]
+    [Range(0f, 1f)]
+    public float eventRoomChance = 0.1f;
+
+    private bool exchangeRoomUsed = false; // 교환기방 한 번만
+    private bool purifierRoomUsed = false; // 정화기방 한 번만
+
+    [Header("이벤트 방 프리팹")]
+    public GameObject exchangePrefab;
+    public GameObject purifierPrefab;
+
+    private List<GameObject> spawnedEventObjects = new List<GameObject>();
+
     private bool nextStageOpened = false;
 
 
@@ -213,8 +226,6 @@ public class StageManager : MonoBehaviour
             Debug.LogError("Walls 오브젝트를 찾을 수 없습니다.");
             yield break;
         }
-
-        // 보상 방용 wall 선택
         List<Transform> wallList = new List<Transform>();
         foreach (Transform child in wallsParent)
             if (child.name.StartsWith("Wall")) wallList.Add(child);
@@ -336,6 +347,10 @@ public class StageManager : MonoBehaviour
 
     public void LoadNextLevel(Vector3 entryDirection, bool spawnMonsters = true, bool isRewardRoom = false)
     {
+        foreach (var obj in spawnedEventObjects)
+            if (obj != null) Destroy(obj);
+        spawnedEventObjects.Clear();
+
         GameObject[] splats = GameObject.FindGameObjectsWithTag("Splat");
         foreach (GameObject splat in splats)
             Destroy(splat);
@@ -346,6 +361,11 @@ public class StageManager : MonoBehaviour
             currentLevel.SetActive(false);
             spawnPos = currentLevel.transform.position;
         }
+        bool isExchangeRoom = false;
+        bool isEventRoom = false;
+
+        if (!isRewardRoom) 
+            isEventRoom = TryGetEventRoom(out isExchangeRoom);
 
         GameObject newLevel = Instantiate(levelPrefab, spawnPos, Quaternion.identity);
 
@@ -390,14 +410,14 @@ public class StageManager : MonoBehaviour
 
                         if (entryDirection == Vector3.forward || entryDirection == Vector3.back)
                         {
-                            spawnPos.y = spawnWall.position.y - 0.5f;
+                            spawnPos.y = currentLevel.transform.position.y + 0.8f;
                             spawnPos.x += offsetDir.x * 2f;
                             spawnPos.z += offsetDir.z * 2f;
                         }
                         else
                         {
                             spawnPos += offsetDir * 2f;
-                            spawnPos.y = currentLevel.transform.position.y + 0.5f;
+                            spawnPos.y = currentLevel.transform.position.y + 0.8f;
                         }
                     }
 
@@ -406,11 +426,38 @@ public class StageManager : MonoBehaviour
             }
         }
 
+
+
         if (player != null)
         {
             PlayerStatus ps = player.GetComponent<PlayerStatus>();
             if (ps != null)
                 ps.isRooted = false;
+        }
+
+        if (isEventRoom)
+        {
+            Debug.Log("이벤트 방 생성됨!");
+
+            spawnMonsters = false;
+
+            Vector3 center = newLevel.transform.position + Vector3.up * 0.5f;
+
+            if (isExchangeRoom)
+            {
+                GameObject obj = Instantiate(exchangePrefab, center, exchangePrefab.transform.rotation);
+                spawnedEventObjects.Add(obj);
+                exchangeRoomUsed = true;
+            }
+            else
+            {
+                GameObject obj = Instantiate(purifierPrefab, center, purifierPrefab.transform.rotation);
+                spawnedEventObjects.Add(obj);
+                purifierRoomUsed = true;
+            }
+
+            StartCoroutine(OpenNextMapImmediately());
+            return;
         }
 
         if (!isRewardRoom && spawnMonsters)
@@ -431,6 +478,65 @@ public class StageManager : MonoBehaviour
             StartRewardCountdown(10f);
         }
     }
+
+    private IEnumerator OpenNextMapImmediately()
+    {
+        yield return new WaitForSeconds(0.5f); 
+
+        if (countdownText != null)
+            countdownText.text = "이벤트 방! 통로가 열렸습니다.";
+
+        Transform wallsParent = currentLevel.transform.Find("Walls");
+        if (wallsParent == null) yield break;
+
+        List<Transform> wallList = new List<Transform>();
+        foreach (Transform child in wallsParent)
+            if (child.name.StartsWith("Wall")) wallList.Add(child);
+
+        if (wallList.Count == 0) yield break;
+
+        Transform chosenWall = wallList[Random.Range(0, wallList.Count)];
+
+        Transform floor = chosenWall.Find("Floor");
+        if (floor != null)
+        {
+            Renderer fr = floor.GetComponent<Renderer>();
+            if (fr != null)
+            {
+                fr.enabled = true;
+                fr.material.color = Color.cyan; 
+            }
+        }
+
+        BoxCollider col = chosenWall.GetComponent<BoxCollider>();
+        if (col == null)
+            col = chosenWall.gameObject.AddComponent<BoxCollider>();
+        col.isTrigger = true;
+
+        NextStageTrigger triggerScript = chosenWall.gameObject.AddComponent<NextStageTrigger>();
+        triggerScript.Setup(this, levelPrefab);
+    }
+
+
+    private bool TryGetEventRoom(out bool isExchangeRoom)
+    {
+        isExchangeRoom = false;
+
+        if (exchangeRoomUsed && purifierRoomUsed)
+            return false;
+
+        if (Random.value > eventRoomChance)
+            return false;
+
+        List<bool> possible = new List<bool>();
+
+        if (!exchangeRoomUsed) possible.Add(true);
+        if (!purifierRoomUsed) possible.Add(false);
+
+        isExchangeRoom = possible[Random.Range(0, possible.Count)];
+
+        return true;
+    }
     private void ApplyStageDifficulty(int stage)
     {
         switch (stage)
@@ -443,25 +549,25 @@ public class StageManager : MonoBehaviour
 
             case 2:
                 monstersPerWave = 2;
-                maxWaveCount = 2;
+                maxWaveCount = 3;
                 enemyHpMultiplier = 1.2f;
                 break;
 
             case 3:
-                monstersPerWave = 2;
-                maxWaveCount = 2;
+                monstersPerWave = 3;
+                maxWaveCount = 3;
                 enemyHpMultiplier = 1.4f;
                 break;
 
             case 4:
-                monstersPerWave = 2;
-                maxWaveCount = 2;
+                monstersPerWave = 3;
+                maxWaveCount = 4;
                 enemyHpMultiplier = 1.6f;
                 break;
 
             case 5:
-                monstersPerWave = 2;
-                maxWaveCount = 2;
+                monstersPerWave = 4;
+                maxWaveCount = 4;
                 enemyHpMultiplier = 2.0f;
                 break;
         }
