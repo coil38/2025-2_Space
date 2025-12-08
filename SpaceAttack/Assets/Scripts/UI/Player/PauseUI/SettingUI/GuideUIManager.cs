@@ -16,8 +16,7 @@ public class GuideUIManager : MonoBehaviour
     [SerializeField] Button exitButton;
 
     [Header("비주얼 변수")]
-    [SerializeField] Color normalColor;
-    [SerializeField] Color selectedColor;
+    [SerializeField] Image selectedImage;
 
     private int currentPage;
     private int currentSubId;
@@ -34,7 +33,9 @@ public class GuideUIManager : MonoBehaviour
             return;
         }
 
-        if(!isOneTime) Initialize();
+        selectedImage.gameObject.SetActive(false);
+
+        if (!isOneTime) Initialize();
     }
 
     private void Initialize()   //카테고리 버튼 이벤트 연결 ( 처음 초기화 때, 꺼져 있어야됨)
@@ -63,9 +64,7 @@ public class GuideUIManager : MonoBehaviour
 
                     UISoundManager.PlayeButtonClickSound();   //버튼 클릭 사운드 재생
 
-                    if (currentButton != null) currentButton.GetComponent<Image>().color = normalColor;
-                    subButtons[index2].GetComponent<Image>().color = selectedColor;
-                    currentButton = subButtons[index2];
+                    SetSelectedImage(subButtons[index2].transform.position.y);
 
                     pageNumberTextUI.text = $"{currentPage}/{currentMaxPage} 페이지";
                     pageTitleUI.text = pages[0].pageTitle;
@@ -116,5 +115,11 @@ public class GuideUIManager : MonoBehaviour
     {
         UISoundManager.PlayeOnAndOffPanelSound();  //패널닫기 사운드 재생
         gameObject.SetActive(false);
+    }
+
+    void SetSelectedImage(float y)
+    {
+        selectedImage.gameObject.SetActive(true);
+        selectedImage.transform.position = new Vector3(selectedImage.transform.position.x, y, 0f);
     }
 }
