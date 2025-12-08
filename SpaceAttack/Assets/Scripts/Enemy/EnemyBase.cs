@@ -81,6 +81,8 @@ public abstract class EnemyBase : MonoBehaviour
 
     public Action<EnemyBase> OnDeathAction; // 몬스터 죽을 때 이벤트
 
+    public bool isTutorialIdle = false;
+
     public float DeathDuration => deathDuration;
 
     [HideInInspector]

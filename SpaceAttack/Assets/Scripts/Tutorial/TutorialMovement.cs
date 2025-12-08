@@ -10,6 +10,10 @@ public class TutorialMovement : MonoBehaviour
     public float fadeDuration = 1f;
     private ChipsetSelectUI chipsetSelectUI;
 
+    public GameObject tutorialMonsterPrefab;
+    public Transform monsterSpawnPoint;
+
+    bool monsterSpawned = false;
 
     public GameObject chipsetObject;   
 
@@ -73,8 +77,47 @@ public class TutorialMovement : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.R)) rPressed = true;
 
                 if (qPressed && ePressed && rPressed)
-                    StartCoroutine(FadeOutAndNextStep(TutorialComplete)); 
+                    StartCoroutine(FadeOutAndNextStep(StartStep6)); 
                 break;
+
+            case 6:
+                chipsetObject.SetActive(true);
+
+                if (chipsetSelectUI != null && chipsetSelectUI.isEquiping)
+                {
+                    chipsetObject.SetActive(false);
+                    StartCoroutine(FadeOutAndNextStep(StartStep7));
+                }
+                break;
+
+            case 7: 
+                if (Input.GetMouseButtonDown(0)) StartCoroutine(FadeOutAndNextStep(StartStep8)); break;
+
+            case 8:
+                if (Input.GetKeyDown(KeyCode.Q)) qPressed = true;
+                if (Input.GetKeyDown(KeyCode.E)) ePressed = true;
+                if (Input.GetKeyDown(KeyCode.R)) rPressed = true;
+
+                if (qPressed && ePressed && rPressed)
+                    StartCoroutine(FadeOutAndNextStep(StartStep8_5));
+                break;
+
+
+            case 9:
+                chipsetObject.SetActive(true);
+
+                if (chipsetSelectUI != null && chipsetSelectUI.isEquiping)
+                {
+                    chipsetObject.SetActive(false);
+                    StartCoroutine(FadeOutAndNextStep(StartStep10));
+                }
+                break;
+
+            case 10:
+                break;
+             
+
+
         }
     }
 
@@ -93,7 +136,7 @@ public class TutorialMovement : MonoBehaviour
     void StartStep3()
     {
         step = 3;
-        SetPanel("F키를 눌러 무기를 선택하세요");
+        SetPanel("F키를 눌러 칼 무기를 선택하세요");
 
         chipsetObject.SetActive(true); 
     }
@@ -107,11 +150,80 @@ public class TutorialMovement : MonoBehaviour
     void StartStep5()
     {
         step = 5;
+        ResetSkillKeyFlags();
+        SetPanel("Q,E,R을 눌러 스킬을 사용해보세요");
+
+
+    }
+
+    void StartStep6()
+    {
+        step = 6;
+        chipsetSelectUI.ResetEquipState();   
+        SetPanel("F키를 눌러 활 무기를 선택하세요");
+
+        chipsetObject.SetActive(true);
+    }
+
+    void StartStep7()
+    {
+        step = 7;
+        ResetSkillKeyFlags();
+        SetPanel("마우스 왼쪽 클릭으로 공격하세요");
+    }
+
+    void StartStep8_5()
+    {
+        step = 750; 
+        SetPanel("모든 스킬은 레벨업으로 잠금 해제 해야 합니다!");
+
+        StartCoroutine(PauseAndNext(2.5f, StartStep9)); 
+    }
+
+    void StartStep8()
+    {
+        step = 8;
         SetPanel("Q,E,R을 눌러 스킬을 사용해보세요");
     }
+
+    void StartStep9()
+    {
+        step = 9;
+        chipsetSelectUI.ResetEquipState();   
+        SetPanel("원하는 무기를 고르세요");
+
+        chipsetObject.SetActive(true);
+    }
+
+    void StartStep10()
+    {
+        if (monsterSpawned) return; 
+        monsterSpawned = true;
+
+        step = 10;
+        SetPanel("앞에 적을 공격 해보세요!");
+
+        GameObject mob = Instantiate(tutorialMonsterPrefab, monsterSpawnPoint.position, Quaternion.identity);
+        TutorialMonster tm = mob.GetComponent<TutorialMonster>();
+
+        tm.onDead = () =>
+        {
+            TutorialComplete();
+        };
+    }
+
     void TutorialComplete()
     {
-        Debug.Log("튜토리얼 전체 종료!");
+        step = 999; 
+        SetPanel("튜토리얼 클리어! 10초 후 자동으로 이동합니다.");
+
+        StartCoroutine(GoNextSceneDelay());
+    }
+
+    IEnumerator GoNextSceneDelay()
+    {
+        yield return new WaitForSeconds(10f);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("ChipsetSelectScene");
     }
 
     void SetPanel(string text)
@@ -139,7 +251,6 @@ public class TutorialMovement : MonoBehaviour
         tutorialPanel.SetActive(true);
         yield return null;
 
-        // Fade in
         elapsed = 0;
         while (elapsed < fadeDuration)
         {
@@ -147,5 +258,18 @@ public class TutorialMovement : MonoBehaviour
             cg.alpha = Mathf.Lerp(0, 1, elapsed / fadeDuration);
             yield return null;
         }
+    }
+
+    void ResetSkillKeyFlags()
+    {
+        qPressed = false;
+        ePressed = false;
+        rPressed = false;
+    }
+
+    IEnumerator PauseAndNext(float delay, System.Action next)
+    {
+        yield return new WaitForSeconds(delay);
+        StartCoroutine(FadeOutAndNextStep(next));
     }
 }

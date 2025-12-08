@@ -148,4 +148,10 @@ public class ChipsetSelectUI : MonoBehaviour
 
         isEquiping = true;   //장착완료로 변경
     }
+
+
+    public void ResetEquipState()
+    {
+        isEquiping = false;
+    }
 }
