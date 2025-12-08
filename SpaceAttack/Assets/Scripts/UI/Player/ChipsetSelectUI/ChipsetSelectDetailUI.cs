@@ -91,7 +91,7 @@ public class ChipsetSelectDetailUI : MonoBehaviour
     private void SetChipsetDetail()  
     {
         chipsetTitle.text = currentChipset.chipsetName;  //칩셋 이름, 칩셋 스프라이트 이미지, 칩셋 설명 텍스트 할당
-        chipsetIcon.sprite = currentChipset.iconSprite;
+        chipsetIcon.sprite = chipsetDatabase.GetChipsetComponent(currentChipset.chipsetKey, ChipsetComponentType.WEAPON).iconSprite;
         chipsetDescription.text = currentChipset.description;
 
         Sprite iconTemp;
