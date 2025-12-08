@@ -3881,10 +3881,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2b73e65da9e6124db9233ef7e3f69ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterPrefabs:
-  - {fileID: 8722641677778133939, guid: 9541107c5822f594286f8457abebf1d4, type: 3}
-  - {fileID: 3210841994201302233, guid: d050b10c2f1f7bb49999ccd2284bded5, type: 3}
-  - {fileID: 2040890849726229375, guid: bf2597b6dd1c15e4398a00628aee49a0, type: 3}
   countdownText: {fileID: 1311555674}
   maxLevelRepeat: 4
   endSceneDelay: 3
@@ -3894,6 +3890,13 @@ MonoBehaviour:
   currentLevel: {fileID: 0}
   startDelay: 4
   nextWaveDelay: 8
+  stageNumber: 0
+  rewardChestPrefab: {fileID: 0}
+  stageTeleportPrefab: {fileID: 0}
+  rewardTeleport: {fileID: 0}
+  eventRoomChance: 0.1
+  exchangePrefab: {fileID: 0}
+  purifierPrefab: {fileID: 0}
 --- !u!4 &1872383989
 Transform:
   m_ObjectHideFlags: 0

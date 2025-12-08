@@ -351,9 +351,12 @@ public class Boss : EnemyBase
         if (hp <= 0 && !isDead)
         {
             isDead = true;
+
             OnDeathAction?.Invoke(this);
             OnDeath();
             rb.velocity = Vector3.zero;
+
+            FindObjectOfType<StageClearUI>().ShowClearMessage();
 
             if (deathMarkPrefab != null && footPosition != null)
                 Instantiate(deathMarkPrefab, footPosition.position, Quaternion.identity);
