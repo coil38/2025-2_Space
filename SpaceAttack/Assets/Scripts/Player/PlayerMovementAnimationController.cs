@@ -68,25 +68,8 @@ public class PlayerMovementAnimationController : MonoBehaviour
             }
         }
 
-        //if (isAttacking || PlayerMoveAniCondition.IsAnimating()) return; //현재 공격중일 경우, 리턴처리
         if (PlayerMoveAniCondition.IsAnimating()) return; //현재 공격중일 경우, 리턴처리
-        //Animator anim = null;
-        //switch (currentDirection)
-        //{
-        //    case MoveDirection.Front: anim = frontMoveAnimator; break;
-        //    case MoveDirection.Back: anim = backMoveAnimator; break;
-        //    case MoveDirection.Side: anim = sideMoveAnimator; break;
-        //}
-        //AnimatorStateInfo state = anim.GetCurrentAnimatorStateInfo(0);
-        //if (state.IsName("PlayerAniMoveState"))
-        //{
-        //    LogUtil.Log("플레이어 체킹 상태");
-        //}
-        //else if (state.IsName("DINO_Move"))
-        //{
-        //    LogUtil.Log("플레이어 이동 상태");
-        //}
-        //LogUtil.Log($"경과 시간: {state.normalizedTime}");
+
         if (currentDirection != moveDirection)
         {
             SetDirection(); //방향이 바뀌었을 경우, 애니메이션오브젝트 활성화 여부 결정
@@ -217,6 +200,12 @@ public class PlayerMovementAnimationController : MonoBehaviour
         SideMoveRenderer.ChangeRenderersAlapha(0);
         BackMoveRenderer.ChangeRenderersAlapha(0);
         AttackMoveRenderer.ChangeRenderersAlapha(0);
+
+        Vector3 initialPos = new Vector3(0, -1, 0);
+        FrontMoveRenderer.transform.localPosition = initialPos;
+        SideMoveRenderer.transform.localPosition = initialPos;
+        BackMoveRenderer.transform.localPosition = initialPos;
+        AttackMoveRenderer.transform.localPosition = initialPos;
     }
 
     public void ResetAttackAnimation()

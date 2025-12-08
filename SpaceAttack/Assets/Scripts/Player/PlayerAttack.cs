@@ -19,10 +19,6 @@ public class PlayerAttack : MonoBehaviour
         set { skillTypes = value; }
     }
 
-    //public SkillType[] skills;         //테스용
-    //public WeaponType weapon;
-    //public bool notUseTestMode;
-
     void Start()
     {
         playerState = GetComponent<PlayerStatus>();
@@ -32,8 +28,18 @@ public class PlayerAttack : MonoBehaviour
     {
         if(playerState.isDead || Time.timeScale == 0) return;   //사망시, 입력 안됨
 
-        CheckWeaponAttack();
+        UpdateSkillAndWeaponInfo();
+        CheckWeaponAttack();;
         CheckSkillAttack();
+    }
+
+    private void UpdateSkillAndWeaponInfo()
+    {
+        if (weaponType == null || skillTypes == null) return;
+
+        weaponType.UpdateInfo();
+        foreach (var skill in skillTypes)
+            skill.UpdateInfo();
     }
 
     private void CheckWeaponAttack()
@@ -60,8 +66,6 @@ public class PlayerAttack : MonoBehaviour
                 playerState.Flip();
             }
         }
-
-        weaponType.UpdateInfo();
 
         if (weaponType.isAttackMoving)  //무기이동 실행
             rb.MovePosition(weaponType.attackMovePos);
@@ -92,7 +96,6 @@ public class PlayerAttack : MonoBehaviour
                     playerState.Flip();
                 }
             }
-            skill.UpdateInfo();
 
             if (skill.isAttackMoving)  //무기이동 실행
                 rb.MovePosition(skill.attackMovePos);
