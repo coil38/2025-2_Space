@@ -33,7 +33,7 @@ public class VisualAttackRange : MonoBehaviour
         }
 
         spriteObject.transform.localScale = new Vector3(width, distance, 0.1f);     //크기 조정
-        spriteObject.transform.localPosition = new Vector3(0f, 0f, distance / 2f);  //위치 조정
+        spriteObject.transform.localPosition = new Vector3(0f, 0.5f, distance / 2f);  //위치 조정
         transform.rotation = Quaternion.LookRotation(dir, Vector3.up);              //방향 조정
         transform.position = new Vector3(genPos.x, transform.position.y, genPos.z); //위치 조정
 
