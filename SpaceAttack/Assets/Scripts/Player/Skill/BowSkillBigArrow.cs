@@ -17,6 +17,7 @@ public class BowSkillBigArrow : SkillType
 
     public override void OnEnable()
     {
+        unLockedNumber = 3;
         attackWidth = 2.5f;
         waitForFixedUpdate = new WaitForFixedUpdate();
 

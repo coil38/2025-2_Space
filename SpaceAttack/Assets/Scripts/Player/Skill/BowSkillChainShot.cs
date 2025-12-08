@@ -12,6 +12,7 @@ public class BowSkillChainShot : SkillType
 
     public override void OnEnable()
     {
+        unLockedNumber = 1;
         chipsetCompID = 108;
         base.OnEnable();
     }

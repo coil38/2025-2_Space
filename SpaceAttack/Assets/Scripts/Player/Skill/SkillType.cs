@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public abstract class SkillType : MonoBehaviour
 {
@@ -135,6 +132,8 @@ public abstract class SkillType : MonoBehaviour
     {
         coolTimer?.Update();
         p_MoveTimer?.Update();
+
+        PlayerTimeSystem.UpdateSkillCoolTimeRate(unLockedNumber, (coolTime - coolTimer.GetRemainingTime()) / coolTime);   //쿨타임 비율 갱신
     }
 
     protected void PlayAniMation(PlayerAniInfo info)

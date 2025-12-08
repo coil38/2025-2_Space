@@ -17,6 +17,7 @@ public class PlayerUIManager : MonoBehaviour
 
     [Header("칩셋 UI 이미지")]
     [SerializeField] Image chipsetImage;
+    [SerializeField] GameObject skillsLayout;
     [SerializeField] Image skill1Image;
     [SerializeField] Image skill2Image;
     [SerializeField] Image skill3Image;
@@ -55,12 +56,13 @@ public class PlayerUIManager : MonoBehaviour
 
     public void SetChipsetInfo(Sprite chipsetIcon, Sprite skill1Icon, Sprite skill2Icon, Sprite skill3Icon)       //스킬, 무기 이미지 설정 함수
     {
-        if (chipsetImage == null || skill1Image == null || skill2Image == null || skill3Image == null) return;
+        if (skillsLayout == null || skill1Image == null || skill2Image == null || skill3Image == null) return;
 
-        chipsetImage.sprite = chipsetIcon;
         skill1Image.sprite = skill1Icon;
         skill2Image.sprite = skill2Icon;
         skill3Image.sprite = skill3Icon;
+
+        skillsLayout.SetActive(true);
     }
 
     public void ChangeDarkMaterialUI(bool isAdd, float value)          //현재 암흑물질수치 변경 함수

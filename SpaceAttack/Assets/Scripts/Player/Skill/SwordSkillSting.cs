@@ -12,7 +12,6 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
     private WaitForFixedUpdate waitForFixedUpdate;
 
-    private const float aniSpeed = 2.5f;
 
     public override void OnEnable()
     {

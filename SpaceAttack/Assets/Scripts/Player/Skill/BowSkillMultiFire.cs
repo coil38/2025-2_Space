@@ -11,6 +11,7 @@ public class BowSkillMultiFire : SkillType
 
     public override void OnEnable()
     {
+        unLockedNumber = 2;
         chipsetCompID = 109;
         base.OnEnable();
     }

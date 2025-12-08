@@ -18,6 +18,10 @@ public class PlayerTimeSystem : MonoBehaviour
     //무기별 공격 대기
     public static Timer w_BaseAttackTimer;                  //공격 이후 대기시간
 
+    public static float skill1CoolTimeRate;              //스킬 1 쿨타임 비율 (0~1)
+    public static float skill2CoolTimeRate;              //스킬 2 쿨타임 비율 (0~1)       
+    public static float skill3CoolTimeRate;              //스킬 3 쿨타임 비율 (0~1)
+
     //스킬 대기
     public static Timer w_SkillTimer;
     private static Dictionary<float, Timer> skillTimers = new Dictionary<float, Timer>();
@@ -58,6 +62,19 @@ public class PlayerTimeSystem : MonoBehaviour
         m_invincibilityTime = time;
         invincibilityTimer = new Timer(time);
         invincibilityTimer.Start();
+    }
+
+    public static void UpdateSkillCoolTimeRate(int id, float rate)
+    {
+        switch (id)
+        {
+            case 1:
+                skill1CoolTimeRate = rate; break;
+            case 2:
+                skill2CoolTimeRate = rate; break;
+            case 3:
+                skill3CoolTimeRate = rate; break;
+        }
     }
 
     void Start()
