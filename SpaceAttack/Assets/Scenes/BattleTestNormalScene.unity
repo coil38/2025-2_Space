@@ -4269,7 +4269,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1851462542354676172
 Transform:
   m_ObjectHideFlags: 0
@@ -6539,6 +6539,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ReallyStage
+      objectReference: {fileID: 0}
+    - target: {fileID: 1560885561154262685, guid: 19fd3be6212128f4a98b48de0307de8c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 8172361646573160257, guid: 19fd3be6212128f4a98b48de0307de8c,
         type: 3}

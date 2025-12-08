@@ -19,7 +19,7 @@ public class StageManager : MonoBehaviour
 
     private List<EnemyBase> aliveMonsters = new List<EnemyBase>();
     private GameObject[] planObjects;
-    float margin = 3.5f;
+    float margin = 7f;
     private bool playerDeathHandled = false;
 
     [HideInInspector]
@@ -172,9 +172,13 @@ public class StageManager : MonoBehaviour
                     Random.Range(bounds.min.z + margin, bounds.max.z - margin)
                 );
                 safetyCount++;
+
+                if (Physics.CheckSphere(randomPos, 0.8f, LayerMask.GetMask("DestructableObject")))
+                    continue;
+
                 if (safetyCount > 30) break;
-            }
-            while (Vector3.Distance(randomPos, playerPos) < minSpawnDistance);
+
+            } while (Vector3.Distance(randomPos, playerPos) < minSpawnDistance);
 
             GameObject prefab = config.GetRandomMonster();
             if (prefab == null)
