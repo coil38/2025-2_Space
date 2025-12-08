@@ -12,6 +12,8 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
 
     private WaitForFixedUpdate waitForFixedUpdate;
 
+    private const float aniSpeed = 2.5f;
+
     public override void OnEnable()
     {
         unLockedNumber = 1;
@@ -41,9 +43,6 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
             _currentPos = currentPos;
             isAttacking = true;
 
-            //찌르기 사운드 재생
-            //공격 시전 애니메이션 실행
-
             PlayerTimeSystem.SetChipTimer(_attackTime, ChipAttackType.Skill);    //스킬 사용 타임 설정
             PlayerTimeSystem.w_SkillTimer.Start();                               //스킬 사용 시작
 
@@ -62,7 +61,11 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
             }
             projectileMoveTime = _attackTime;
 
-            Invoke("Use", readyAttackTime);                          //시전 애니메니션 시작 후, 시전시간동안 대기
+            //찌르기 사운드 재생
+            PlayerAniInfo aniInfo = new PlayerAniInfo("isSkill1", AniType.Trrigger, 1.3f / ((_attackTime + readyAttackTime) * 1.3f));  //공격 애니메이션 실행
+            PlayAniMation(aniInfo);
+
+            Invoke("Use", readyAttackTime);             //시전 애니메니션 시작 후, 시전시간동안 대기
         }
         else
         {

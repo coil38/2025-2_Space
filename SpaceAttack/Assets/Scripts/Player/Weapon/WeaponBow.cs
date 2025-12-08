@@ -25,8 +25,9 @@ public class WeaponBow : WeaponType
 
             isAttacking = true;
 
-            // 애니메이션 추가
             // 사운드 추가
+            PlayerAniInfo aniInfo = new PlayerAniInfo("isBowAttacking", AniType.Trrigger, 1f / 0.3f);  //공격 애니메이션 실행
+            PlayAniMation(aniInfo);
 
             PlayerTimeSystem.w_BaseAttackTimer.Start();                                 //공격 타이머 시작
 

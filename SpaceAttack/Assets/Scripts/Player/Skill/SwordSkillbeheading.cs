@@ -16,6 +16,8 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
 
     private WaitForFixedUpdate waitForFixedUpdate;
 
+    private const float aniSpeed = 2.5f;
+
     public override void OnEnable()
     {
         unLockedNumber = 2;
@@ -43,7 +45,8 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
 
             isAttacking = true;
             //참격 사운드 재생
-            //공격 애니메이션 실행
+            PlayerAniInfo aniInfo = new PlayerAniInfo("isSkill2", AniType.Trrigger, aniSpeed);  //공격 애니메이션 실행
+            PlayAniMation(aniInfo);
 
             coolTimer.Start();                                  //쿨타임 시작
 
@@ -65,7 +68,7 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
             }
 
             projectileMoveTime = _attackTime;
-            Invoke("Use", attackTime * 0.1f);
+            Invoke("Use", 1.2f / aniSpeed);
         }
         else
         {

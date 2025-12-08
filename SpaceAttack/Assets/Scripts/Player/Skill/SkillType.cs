@@ -29,7 +29,7 @@ public abstract class SkillType : MonoBehaviour
         {
             //LogUtil.Log($"공격시간은 : {value * 1.1f}");
             PlayerTimeSystem.SetChipTimer(value * 1.1f, ChipAttackType.Skill);
-            readyAttackTime = value * 0.5f;
+            readyAttackTime = value * 0.2f;
             m_attackTime = value;
 
             projectileMoveTime = value;

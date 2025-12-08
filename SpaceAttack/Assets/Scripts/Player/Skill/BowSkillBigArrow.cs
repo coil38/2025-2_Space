@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO.Pipes;
 using UnityEngine;
 
 public class BowSkillBigArrow : SkillType
 {
+    [SerializeField] GameObject bigArrowPrf;
+
     private WaitForFixedUpdate waitForFixedUpdate;
 
     private Quaternion detectRot;
     private Vector3 detectPos;
 
     private List<GameObject> targets = new List<GameObject>();
+
+    private GameObject bigArrow;
 
     public override void OnEnable()
     {
@@ -55,7 +58,9 @@ public class BowSkillBigArrow : SkillType
             }
 
             //공격 사운드 재생
-            //공격 애니메이션 재생
+            PlayerAniInfo aniInfo = new PlayerAniInfo("isBowAttacking", AniType.Trrigger, 1f / 0.3f);  //공격 애니메이션 실행
+            PlayAniMation(aniInfo);
+
             coolTimer.Start();         //쿨타임 시작
 
             projectileMoveTime = _attackTime;
@@ -89,6 +94,8 @@ public class BowSkillBigArrow : SkillType
             Vector3 movePos = Vector3.Lerp(startPos, targetPos, 1 - timer);
             detectPos = movePos;
 
+            BigArrow().transform.position = movePos;       //큰화살 이동 처리
+
             Collider[] cols = Physics.OverlapBox(detectPos, detectSize, detectRot, enemyLayer);   //감지 범위 내 적 감지
 
             foreach (Collider col in cols)
@@ -104,6 +111,18 @@ public class BowSkillBigArrow : SkillType
             yield return waitForFixedUpdate;
         }
 
+        BigArrow().SetActive(false);
         targets.Clear();
+    }
+
+    GameObject BigArrow()
+    {
+        if (bigArrow == null)
+            bigArrow = Instantiate(bigArrowPrf, _currentPos, bigArrowPrf.transform.rotation);
+
+        bigArrow.transform.rotation = Quaternion.LookRotation(attackDirection, Vector3.up);
+        bigArrow.SetActive(true);
+
+        return bigArrow;
     }
 }

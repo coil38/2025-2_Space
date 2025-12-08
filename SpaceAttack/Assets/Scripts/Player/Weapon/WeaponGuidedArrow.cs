@@ -32,7 +32,7 @@ public class WeaponGuidedArrow : MonoBehaviour
         Quaternion quaternion = Quaternion.LookRotation(moveDir, Vector3.up);
         Debug.Log($"이동 방향: {moveDir}, 타겟 위치: {target.transform.position}");
 
-        transform.rotation = Quaternion.Slerp(transform.rotation, quaternion, 10f * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, quaternion, 30f * Time.deltaTime);
         transform.position += moveDir * trackingSpeed * Time.deltaTime;
     }
 
