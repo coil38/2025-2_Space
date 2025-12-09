@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMoveAniCondition : MonoBehaviour
 {
     private static bool isAnimating = false;
+    private static bool isReset = false;
     public static void EndAni()
     {
         isAnimating = false;
+        isReset = true;
     }
 
     public static void StartAni()
@@ -22,8 +25,9 @@ public class PlayerMoveAniCondition : MonoBehaviour
 
     public static bool IsResetAni()
     {
-        if (!isAnimating)
+        if (isReset)
         {
+            isReset = false;
             return true;
         }
         return false;

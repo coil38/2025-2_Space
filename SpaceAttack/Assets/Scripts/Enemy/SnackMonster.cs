@@ -292,7 +292,7 @@ public class SnackMonster : EnemyBase
         if (playerStatusScript != null)
             playerStatusScript.isRooted = true;   //플레이어 속박처리
 
-        playerTransform.localPosition = Vector3.up * 0.5f;
+        playerTransform.localPosition = transform.position;
 
         float elapsed = 0f;
 
@@ -322,7 +322,7 @@ public class SnackMonster : EnemyBase
             playerStatusScript.isBeingEaten = false;
         }
 
-        Vector3 forwardOffset = (isFacingRight ? Vector3.right : Vector3.left) * 3f + Vector3.up * 1f;
+        Vector3 forwardOffset = (isFacingRight ? Vector3.right : Vector3.left) * 3f + Vector3.up * 0.1f;
         playerTransform.position = transform.position + forwardOffset;
 
         if (eatRangeVisualInstance != null)

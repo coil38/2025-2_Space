@@ -196,6 +196,8 @@ public class PlayerMovementAnimationController : MonoBehaviour
 
     public void ResetAnimationObj()    // 애니메이션 오브젝트들 초기화함수
     {
+        LogUtil.Log("작동한ㄴㄴㄴㄴ다ㅏㅏㅏ");
+
         FrontMoveRenderer.ChangeRenderersAlapha(0);
         SideMoveRenderer.ChangeRenderersAlapha(0);
         BackMoveRenderer.ChangeRenderersAlapha(0);

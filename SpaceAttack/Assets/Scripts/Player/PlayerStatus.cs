@@ -296,10 +296,7 @@ public class PlayerStatus : MonoBehaviour
 
             GetComponent<Rigidbody>().useGravity = false;  //피격방지
             GetComponent<Collider>().enabled = false;
-            if (!isRooted)
-            {
-                movemetAniController.PlayAnimation("Dead");   //사망 애니메이션 재생
-            }
+            movemetAniController.PlayAnimation("Dead");   //사망 애니메이션 재생
             PlayerSoundManager.PlayPlayerDeadSound();     //플레이어 사망 사운드 재생
             BGMManager.PlayGameOver();                    //게임 오버 사운드 재생
 
@@ -323,11 +320,13 @@ public class PlayerStatus : MonoBehaviour
         {
             PlayerSoundManager.PlayPlayerHitSound();
 
-            if (info.attacker != null && info.attacker.layer == LayerMask.NameToLayer("Enemy"))
+            if (info.attacker != null && info.attacker.CompareTag("SnackMonster"))
             {
-                rb.AddForce(dir * 3f, ForceMode.Impulse);  
-                movemetAniController.PlayAnimation("Hit"); 
-
+                if (!isRooted)
+                {
+                    //rb.AddForce(dir * 3f, ForceMode.Impulse);  
+                    movemetAniController.PlayAnimation("Hit");
+                }
             }
             else
             {
