@@ -595,7 +595,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 116
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!65 &5156401049645973045
 BoxCollider:
@@ -657,6 +657,7 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 0
+  isTutorialIdle: 0
   canDetectPlayer: 1
   patrolSpeed: 1.5
   chaseSpeed: 3
