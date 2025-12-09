@@ -350,7 +350,7 @@ GameObject:
   - component: {fileID: 4813388956784431499}
   m_Layer: 6
   m_Name: CanMons
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -434,10 +434,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 15
   attackDistance: 2
-  detectAngle: 155
   damage: 1
   attackDuration: 0.5
-  detectRadius: 6
+  detectRadius: 30
   animator: {fileID: 5121794632923753638}
   visualTransform: {fileID: 5589111309285847584}
   attackLayer:
@@ -449,12 +448,17 @@ MonoBehaviour:
   footPosition: {fileID: 3548688155986138897}
   heartPrefab: {fileID: 319665496327438999, guid: f9e94d050e55d0e46b507ac3cecb93a9,
     type: 3}
-  dropRadius: 1.5
   audioSource: {fileID: 4813388956784431499}
   hitSound: {fileID: 8300000, guid: 1bc8b9ac984a0ba4a9a33ca8c3a91097, type: 3}
   monsterHPUI: {fileID: 2614539350023895746}
   hitColor: {r: 1, g: 0.4198113, b: 0.4198113, a: 1}
   hitFlashDuration: 0.2
+  deathDuration: 2
+  wallCheckDistance: 0.7
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  isTutorialIdle: 0
   canDetectPlayer: 1
   hopForce: 2.5
   hopCooldown: 1.8
@@ -463,7 +467,6 @@ MonoBehaviour:
   bulletSpeed: 6
   fireInterval: 4
   burstDelay: 0.02
-  dashWindUp: 0.02
   attackAnimSpeed: 1.5
   landSound: {fileID: 8300000, guid: 2409c1481f1c8fb4995df396b30c0d06, type: 3}
   sfxSource: {fileID: 4813388956784431499}

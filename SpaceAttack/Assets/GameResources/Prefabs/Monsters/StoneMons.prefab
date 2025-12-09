@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 6335804460835379650}
   m_Layer: 6
   m_Name: StoneMons
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -209,12 +209,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 499ab98b1b04b414db376bfe0db8836e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 100
+  hp: 40
   attackDistance: 2
-  detectAngle: 155
   damage: 1
   attackDuration: 0.5
-  detectRadius: 5
+  detectRadius: 30
   animator: {fileID: 4102365781541535259}
   visualTransform: {fileID: 7579179954439368897}
   attackLayer:
@@ -236,6 +235,7 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 0
+  isTutorialIdle: 0
   canDetectPlayer: 1
   patrolSpeed: 1.5
   chaseSpeed: 2.5

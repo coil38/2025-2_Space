@@ -456,10 +456,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 10
   attackDistance: 2
-  detectAngle: 155
   damage: 1
   attackDuration: 0.5
-  detectRadius: 6
+  detectRadius: 30
   animator: {fileID: 8514316641876137413}
   visualTransform: {fileID: 6103996654777266663}
   attackLayer:
@@ -471,12 +470,17 @@ MonoBehaviour:
   footPosition: {fileID: 6308354814230972151}
   heartPrefab: {fileID: 319665496327438999, guid: f9e94d050e55d0e46b507ac3cecb93a9,
     type: 3}
-  dropRadius: 1.5
   audioSource: {fileID: 3861770354675353459}
   hitSound: {fileID: 8300000, guid: 1bc8b9ac984a0ba4a9a33ca8c3a91097, type: 3}
   monsterHPUI: {fileID: 2614539350023895746}
   hitColor: {r: 0.990566, g: 0.5186454, b: 0.5186454, a: 1}
   hitFlashDuration: 0.2
+  deathDuration: 2
+  wallCheckDistance: 0.7
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  isTutorialIdle: 0
   canDetectPlayer: 1
   patrolSpeed: 2
   chaseSpeed: 3.5

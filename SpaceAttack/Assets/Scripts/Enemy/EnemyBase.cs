@@ -13,13 +13,12 @@ public abstract class EnemyBase : MonoBehaviour
     [Header("공통 속성")]
     public float hp = 10f;
     public float attackDistance = 2f;
-    public float detectAngle = 155f;
     public int damage = 1;
     public float attackDuration = 0.5f;
 
     [Header("공통 탐지 설정")]
     [SerializeField]
-    private float detectRadius = 5f;  
+    private float detectRadius = 5f;
 
     protected Rigidbody rb;
     [SerializeField] protected Animator animator;
@@ -34,14 +33,14 @@ public abstract class EnemyBase : MonoBehaviour
     protected Vector3 _currentPos;
     protected Vector3 attackDirection;
     protected LayerMask playerLayer;
-   [SerializeField] protected LayerMask attackLayer;
+    [SerializeField] protected LayerMask attackLayer;
 
 
     [Header("공통 주변탐색 설정")]
     protected Vector3 patrolTarget;
-    
+
     [Header("공통 피격후 경직 시간")]
-    [SerializeField] protected float hitInvincibleTime = 0.4f;  
+    [SerializeField] protected float hitInvincibleTime = 0.4f;
     protected bool canBeHit = true;
 
     [Header("죽은 흔적 설정")]
@@ -58,7 +57,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     [Header("공통 체력 UI")]
     [SerializeField] protected MonsterHPUI monsterHPUI;
-    protected float maxHP = 10f;
+    public float maxHP { get; protected set; }
 
     [Header("피격 시 색 변경")]
     public Color hitColor = Color.red;       // 맞았을 때 색
@@ -287,7 +286,10 @@ public abstract class EnemyBase : MonoBehaviour
         yield return new WaitForSeconds(hitFlashDuration);
 
         for (int i = 0; i < renderers.Count; i++)
-            renderers[i].material.color = originalColors[i];
+        {
+            if (renderers[i] != null)
+                renderers[i].material.color = originalColors[i];
+        }
 
         hitFlashCoroutine = null;
     }

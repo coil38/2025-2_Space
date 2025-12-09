@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5205773287164248538}
   m_Layer: 6
   m_Name: OldDollMons
-  m_TagString: Enemy
+  m_TagString: Elite
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -102,10 +102,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 200
   attackDistance: 15
-  detectAngle: 360
   damage: 1
   attackDuration: 0.5
-  detectRadius: 25
+  detectRadius: 50
   animator: {fileID: 5282910957757161780}
   visualTransform: {fileID: 7584694601321932086}
   attackLayer:
