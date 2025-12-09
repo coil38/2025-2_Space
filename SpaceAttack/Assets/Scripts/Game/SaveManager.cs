@@ -93,6 +93,9 @@ public class SaveManager : MonoBehaviour
             PlayerCore.Level = 0;                                  //레벨 초기화
             PlayerCore.DarkMaterialCount = 0;                      //경험치양 초기화
 
+            if (StageProgress.Instance != null)
+                StageProgress.Instance.LoadProgress(1, 0);   //스테이지 데이터 초기화
+
             if (PlayerUIManager.instance != null)
             {
                 PlayerUIManager.instance.ResetHpUI();              //체력UI 초기화

@@ -37,6 +37,8 @@ public class PlayerMovementAnimationController : MonoBehaviour
         sideMoveAnimator = SideMoveRenderer.GetComponent<Animator>();
 
         playerStatus = GetComponent<PlayerStatus>();
+
+        SetDirection();
     }
 
     public void UpdateMoveDirection(float horizontal, float Vertical) //검사순서 --> 위,아래 --> 사이드 (이유: 위아래 애니메이션을 더 잘만들어서 )
@@ -196,7 +198,6 @@ public class PlayerMovementAnimationController : MonoBehaviour
 
     public void ResetAnimationObj()    // 애니메이션 오브젝트들 초기화함수
     {
-        LogUtil.Log("작동한ㄴㄴㄴㄴ다ㅏㅏㅏ");
 
         FrontMoveRenderer.ChangeRenderersAlapha(0);
         SideMoveRenderer.ChangeRenderersAlapha(0);

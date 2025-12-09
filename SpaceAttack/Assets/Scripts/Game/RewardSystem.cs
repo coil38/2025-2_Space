@@ -27,7 +27,7 @@ public class RewardSystem : MonoBehaviour
 
     private static RewardData[] rewardDatas = new RewardData[]
     {
-        new RewardData(RewardType.MonsterDrop, 0.15f, 0f, 0.01f, 0.6f),
+        new RewardData(RewardType.MonsterDrop, 0.12f, 0f, 0.01f, 0.4f),
         new RewardData(RewardType.RewardBox, 1f, 0f, 0.2f, 0.8f),
         new RewardData(RewardType.HiddenBox, 1f, 0f, 0.6f, 0.9f),
         new RewardData(RewardType.SupplyBox, 1f, 0f, 0.7f, 0.9f),

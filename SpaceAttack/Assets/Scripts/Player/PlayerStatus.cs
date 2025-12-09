@@ -13,7 +13,7 @@ public class PlayerStatus : MonoBehaviour
     public static int m_maxhp = 10;                  //최대 체력
     public static float m_speed = 5f;                //이동 속도
     public static float m_DashDistance = 2.56f;       //대쉬 거리
-    public float itemDetectDistance = 1.8f;          //아이템 감지거리
+    public float itemDetectDistance = 2.5f;          //아이템 감지거리
     public static float criticalChanceRate = 0.05f;  //치명타 확률
     public static float criticalRate = 0.5f;         //치명타 피해
     public static float missRate = 0.01f;            //회피율

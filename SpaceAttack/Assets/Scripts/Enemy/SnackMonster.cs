@@ -322,7 +322,7 @@ public class SnackMonster : EnemyBase
             playerStatusScript.isBeingEaten = false;
         }
 
-        Vector3 forwardOffset = (isFacingRight ? Vector3.right : Vector3.left) * 3f + Vector3.up * 0.1f;
+        Vector3 forwardOffset = (isFacingRight ? Vector3.right : Vector3.left) * 3f + Vector3.up * 1f;
         playerTransform.position = transform.position + forwardOffset;
 
         if (eatRangeVisualInstance != null)

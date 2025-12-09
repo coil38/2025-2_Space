@@ -200,11 +200,7 @@ public class CharacterMovement : MonoBehaviour
         if (selectedItem == null) return null;   //주변에 아이템이 없을 시, 반환처리
 
         BaseRelic relic = selectedItem.gameObject.GetComponent<BaseRelic>();
-        if (relic != null)
-        {
-            return relic;
-        }
-        return null;
+        return relic;
     }
 
     public void SetRelicFloatingText(bool onFloatingText, BaseRelic relic = null)

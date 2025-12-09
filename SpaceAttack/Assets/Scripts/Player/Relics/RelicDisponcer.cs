@@ -19,7 +19,7 @@ public class RelicDisponcer : MonoBehaviour
         RelicSO relic = DataManager.instance._RelicDatabase.GetRelicById(ids[index]);  //받은 유물중, 랜덤index의 유물 받기
 
         GameObject temp = DataManager.instance._relicObject;
-        GameObject relicObj = Instantiate(temp, transform.position + Vector3.up * 10, temp.transform.rotation);
+        GameObject relicObj = Instantiate(temp, transform.position + Vector3.up * 0.15f, temp.transform.rotation);
 
         relicObj.GetComponent<BaseRelic>().Initialize(relic.relicID, relic.relicName, relic.iconSprite); //생성한 유물 오브젝트에 유물정보 갱신
 

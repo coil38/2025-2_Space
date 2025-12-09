@@ -199,7 +199,9 @@ public abstract class EnemyBase : MonoBehaviour
     //죽음
     protected virtual void OnDeath()
     {
-        RewardSystem.DropRewards(RewardType.MonsterDrop, transform.position);
+        Vector3 dropPos = transform.position;
+        dropPos.y = 0.15f;
+        RewardSystem.DropRewards(RewardType.MonsterDrop, dropPos);
         DropEXPSystem.DropEXP();
     }
 

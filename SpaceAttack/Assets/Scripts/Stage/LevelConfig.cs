@@ -34,14 +34,21 @@ public class LevelConfig : MonoBehaviour
     private int monsterIndex;
     public void ApplyRandomConfig()
     {
+        if (StageProgress.Instance != null)
+        {
+            if (StageProgress.Instance.unlockedStage < 2)
+            {
+                monsterType = LevelMonsterType.NormalOnly;
+                return;
+            }
+        }
+
         float r = UnityEngine.Random.value;
 
         if (r <= normalTypeChance)
             monsterType = LevelMonsterType.NormalOnly;
-
         else if (r <= normalTypeChance + eliteTypeChance)
             monsterType = LevelMonsterType.EliteOnly;
-
         else
         {
             monsterType = LevelMonsterType.SpecificOnly;

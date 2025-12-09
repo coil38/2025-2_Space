@@ -33,10 +33,6 @@ public class BaseRelic : MonoBehaviour
             collider = gameObject.AddComponent<BoxCollider>();
         collider.isTrigger = true;
 
-        Rigidbody rigidbody = GetComponent<Rigidbody>();
-        if (rigidbody == null)
-            rigidbody = gameObject.AddComponent<Rigidbody>();
-
         RelicAnimationController relicAniCon = GetComponent<RelicAnimationController>();
         if (relicAniCon == null)
             relicAniCon = gameObject.AddComponent<RelicAnimationController>();

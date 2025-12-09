@@ -153,6 +153,9 @@ public class StageManager : MonoBehaviour
 
         int spawnCount = monstersPerWave;
 
+        if (config.monsterType == LevelMonsterType.EliteOnly)    //엘리트 1마리가 아닌 엘리트 포함 나머지 일반
+            spawnCount -= 2;
+
         for (int i = 0; i < spawnCount; i++)
         {
             GameObject plan = planObjects[Random.Range(0, planObjects.Length)];
