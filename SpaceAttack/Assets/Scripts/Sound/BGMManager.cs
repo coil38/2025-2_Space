@@ -31,7 +31,7 @@ public class BGMManager : MonoBehaviour
                 //SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
                 //시작화면 브금 재생
                 break;
-            case SceneType.LobbyScene:
+            case SceneType.TutorialScene:
                 //SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
                 //SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
                 break;
@@ -53,18 +53,6 @@ public class BGMManager : MonoBehaviour
                 break;
 
             case SceneType.MiddleBossScene:
-                if (SoundManager.instance != null)
-                    SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
-                break;
-
-            case SceneType.BattleTestNormalScene:
-                if (SoundManager.instance != null)
-                {
-                    SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
-                    SoundManager.instance.PlayBGMOrUISound(1001, SoundType.BGM);
-                }
-                break;
-            case SceneType.BattleTestScene:
                 if (SoundManager.instance != null)
                     SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
                 break;

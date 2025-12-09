@@ -58,7 +58,8 @@ public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애�
     private void OffSkillBuff()
     {
         Debug.Log("버프풀림");
-        AuraEffect.Stop();
+        if(AuraEffect != null)
+            AuraEffect.Stop();
 
         PlayerStatus.normalDamage /= skilldamageRate;           //플레이어 공격력 초기화
         PlayerStatus.criticalRate /= criticalRate;              //플레이어 치몇타 피해 초기화

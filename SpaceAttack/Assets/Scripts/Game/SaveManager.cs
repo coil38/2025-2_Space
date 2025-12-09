@@ -17,7 +17,7 @@ public class SaveManager : MonoBehaviour
 
     private InventoryManager playerInventory;
 
-    private string[] blockedScenes = {"StartUIScene", "LoadingScene", "MiddleBossScene" };
+    private string[] blockedScenes = {"StartUIScene", "LoadingScene", "BattleTestScene" };
     private bool isOneTime; //처음 한번만 적용
 
     public void SaveFile(string filename)  //생성된 파일 저장용 함수
@@ -51,7 +51,7 @@ public class SaveManager : MonoBehaviour
 
     public void StartNewSaveFile(string fileName)  //새 파일 생성용 함수
     {
-        string sceneName = GameSceneManager.GetSceneNameByType(SceneType.ChipsetSelectScene);
+        string sceneName = GameSceneManager.GetSceneNameByType(SceneType.TutorialScene);
         InitializePlayerDatas();
 
         currentFileName = fileName;

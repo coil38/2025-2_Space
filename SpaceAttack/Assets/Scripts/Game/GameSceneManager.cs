@@ -8,13 +8,10 @@ public enum SceneType
 {
     None,
     StartGameScene,
-    LobbyScene,
+    TutorialScene,
     ChipsetSelectScene,
     BattleScene,
-    MiddleBossScene,
-
-    BattleTestNormalScene,   //테스트용
-    BattleTestScene
+    MiddleBossScene
 }
 
 public class GameSceneManager : MonoBehaviour
@@ -74,28 +71,21 @@ public class GameSceneManager : MonoBehaviour
                 LogUtil.Log("게임시작씬");
                 return SceneType.StartGameScene;
 
-            case "LobbyScene":
-                LogUtil.Log("로비씬");
-                return SceneType.LobbyScene;
+            case "Tutorial":
+                LogUtil.Log("튜터리얼씬");
+                return SceneType.TutorialScene;
 
             case "ChipsetSelectScene":
                 LogUtil.Log("칩셋선택씬");
                 return SceneType.ChipsetSelectScene;
 
-            case "BattleScene":
+            case "BattleTestNormalScene":
                 LogUtil.Log("전투씬");
                 return SceneType.BattleScene;
 
-            case "MiddleBossScene":
+            case "BattleTestScene":
                 LogUtil.Log("중간 보스 씬");
                 return SceneType.MiddleBossScene;
-
-            case "BattleTestNormalScene":
-                LogUtil.Log("배틀 테스트 씬");
-                return SceneType.BattleTestNormalScene;
-            case "BattleTestScene":
-                LogUtil.Log("보스 테스트 씬");
-                return SceneType.BattleTestScene;
         }
         LogUtil.LogWarning("알맞은 씬을 찾을 수 없습니다.");
         return SceneType.None;
@@ -106,10 +96,10 @@ public class GameSceneManager : MonoBehaviour
         switch (type)
         {
             case SceneType.StartGameScene: return "StartUIScene";
-            case SceneType.LobbyScene: return "LobbyScene";
+            case SceneType.TutorialScene: return "Tutorial";
             case SceneType.ChipsetSelectScene: return "ChipsetSelectScene";
-            case SceneType.BattleScene: return "BattleScene";
-            case SceneType.MiddleBossScene: return "MiddleBossScene";
+            case SceneType.BattleScene: return "BattleTestNormalScene";
+            case SceneType.MiddleBossScene: return "BattleTestScene";
         }
         return "";
     }

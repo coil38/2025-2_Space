@@ -203,7 +203,7 @@ public class TutorialMovement : MonoBehaviour
         step = 10;
         SetPanel("앞에 적을 공격 해보세요!");
 
-        GameObject mob = Instantiate(tutorialMonsterPrefab, monsterSpawnPoint.position, Quaternion.identity);
+        GameObject mob = Instantiate(tutorialMonsterPrefab, monsterSpawnPoint.position, tutorialMonsterPrefab.transform.rotation);
         TutorialMonster tm = mob.GetComponent<TutorialMonster>();
 
         tm.onDead = () =>
