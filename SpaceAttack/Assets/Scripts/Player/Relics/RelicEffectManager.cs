@@ -748,12 +748,13 @@ public class RelicEffectManager : MonoBehaviour
         }
     }
 
-    private class ItemDropBonusReward : RelicEffectType               //144 - 적 처치 시 아이템 획득 확률이 n% 증가하고 z% 확률로 추가 보상을 획득합니다.
+    private class ItemDropBonusReward : RelicEffectType               //144 - 아이템 획득 확률이 n% 증가
     {
         public override void Excute(bool isEquip, RelicInfo info)
         {
             base.Excute(isEquip, info);
-            //////////////////보류!!!!!!!!!!!!!!!!!!!!111
+            if (isEquip) RewardSystem.itemDropRate += info.n;
+            else RewardSystem.itemDropRate -= info.n;
         }
     }
     private class ExpGainincrease : RelicEffectType               //145 - 획득하는 경험치가 n% 증가합니다.
@@ -823,7 +824,22 @@ public class RelicEffectManager : MonoBehaviour
         public override void Excute(bool isEquip, RelicInfo info)
         {
             base.Excute(isEquip, info);
-            //////////////////보류!!!!!!!!!!!!!!!!!!!!111
+            if (isEquip) AttackEventManager.OnAttackStarted += CheckAndKillEnemy;
+            else AttackEventManager.OnAttackStarted -= CheckAndKillEnemy;
+        }
+
+        private void CheckAndKillEnemy(AttackContext context)
+        {
+            if (context.target == null) return;
+            if (context.target.CompareTag("Enemy") || context.target.CompareTag("SnackMonster"))
+            {
+                EnemyBase enemy = context.target.GetComponent<EnemyBase>();
+                if (enemy != null)
+                {
+                    if ((enemy.hp / enemy.maxHP) <= relicInfo.n)
+                        context.IsExecution = true;
+                }
+            }
         }
     }
     private class NoHitShieldHeart : RelicEffectType               //149 - n초 동안 피격당하지 않으면, 추가 하트의 보호막이 z개 추가 됩니다. (최대 y개)

@@ -663,7 +663,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e54ad3ffa95795140982cb8995f08f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 30
+  hp: 50
   attackDistance: 1.4
   detectAngle: 155
   damage: 1
@@ -4805,17 +4805,17 @@ PrefabInstance:
     - target: {fileID: 8408279893472955054, guid: 9541107c5822f594286f8457abebf1d4,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8408279893472955054, guid: 9541107c5822f594286f8457abebf1d4,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8722641677778133939, guid: 9541107c5822f594286f8457abebf1d4,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4974,7 +4974,7 @@ PrefabInstance:
     - target: {fileID: 2315287451552853760, guid: fc581df67e39e484eb3e368acc892f56,
         type: 3}
       propertyPath: ids.Array.data[0]
-      value: 1034
+      value: 1063
       objectReference: {fileID: 0}
     - target: {fileID: 2315287451552853760, guid: fc581df67e39e484eb3e368acc892f56,
         type: 3}

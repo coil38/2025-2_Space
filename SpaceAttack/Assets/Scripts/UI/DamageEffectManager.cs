@@ -182,6 +182,11 @@ public class DamageEffectManager : MonoBehaviour
         ShowDamageText(position, "회피성공", Color.gray);
     }
 
+    public void ShowExecution(Vector3 position)
+    {
+        ShowDamageText(position, "처형", Color.red);
+    }
+
     private Queue<string> effects = new Queue<string>();
     private Coroutine currentCor;
     public void ShowLevelUpCorrection(string text)

@@ -14,10 +14,19 @@ public class AttackEventManager
 
         if (context.IsReattack)
             Attack(context);
+
+        if (context.IsExecution)
+            context.damageRate += 10000;
+
         Attack(context);
 
-        if (context.IsReattack) 
-            DamageEffectManager.instance.ShowDoubleAttack();
+        if (DamageEffectManager.instance != null)
+        {
+            if (context.IsReattack)
+                DamageEffectManager.instance.ShowDoubleAttack();
+            else if (context.IsExecution)
+                DamageEffectManager.instance.ShowExecution(context.target.transform.position + context.target.transform.up * 0.5f);
+        }
         Camera.main.GetComponent<CameraFallow>().CameraShack();                     //카메라 흔들림 연출
 
         OnAttackFinished?.Invoke(context);
@@ -53,7 +62,7 @@ public class AttackEventManager
         Vector3 effectPos = target.transform.position + target.transform.up * 0.5f;
         if (DamageEffectManager.instance != null)                                   //데미지 이펙트 적용
         {
-            if(!context.IsReattack)
+            if(!context.IsReattack && !context.IsExecution)
                 DamageEffectManager.instance.ShowDamage(effectPos, (int)criDamage, false, isCritical);
         }
 

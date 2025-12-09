@@ -18,6 +18,7 @@ public class AttackContext
     //-------------------유물용 변수------------------------
     public bool IsCritical { get; set; }
     public bool IsReattack { get; set; }
+    public bool IsExecution = false;
 
     public AttackContext(GameObject target, float damageRate, Vector3 attackDir, ChipAttackType type,float addedCritRate, float addedCriChanceRate, float a_rateSume, float d_rateSume, float w_d_rateSume, float s_d_rateSume)
     {
