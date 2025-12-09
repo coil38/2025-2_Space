@@ -11,7 +11,7 @@ public class StageManager : MonoBehaviour
     public Text countdownText;
 
     [Header("레벨 반복")]
-    public int maxLevelRepeat = 4;     // 한 레벨 반복 횟수
+    public int maxLevelRepeat = 1;     // 한 레벨 반복 횟수
     private int currentLevelRepeat = 0; // 현재 레벨 반복 카운트
 
     [Header("게임 종료 씬")]
@@ -63,6 +63,7 @@ public class StageManager : MonoBehaviour
 
     private bool nextStageOpened = false;
 
+    private bool beforeIsSaveZon = false;
 
     private void Start()
     {
@@ -101,7 +102,7 @@ public class StageManager : MonoBehaviour
     private IEnumerator ReturnToChipsetScene()
     {
         if (countdownText != null)
-            countdownText.text = "플레이어가 사망했습니다... 칩셋 화면으로 돌아갑니다.";
+            countdownText.text = "플레이어가 사망했습니다... 칩셋 선택씬으로 돌아갑니다.";
 
         yield return new WaitForSeconds(5f); 
         if (FadeManager.Instance != null)
@@ -443,6 +444,9 @@ public class StageManager : MonoBehaviour
         {
             Debug.Log("이벤트 방 생성됨!");
 
+            if (!beforeIsSaveZon) BGMManager.PlaySaveZone();
+            beforeIsSaveZon = true;
+
             spawnMonsters = false;
 
             Vector3 center = newLevel.transform.position + Vector3.up * 0.5f;
@@ -471,6 +475,9 @@ public class StageManager : MonoBehaviour
 
         if (isRewardRoom)
         {
+            if (!beforeIsSaveZon) BGMManager.PlaySaveZone();
+            beforeIsSaveZon = true;
+
             if (rewardChestPrefab != null)
             {
                 Vector3 levelCenter = newLevel.transform.position;
@@ -480,7 +487,11 @@ public class StageManager : MonoBehaviour
             }
 
             StartRewardCountdown(10f);
+            return;
         }
+
+        if (beforeIsSaveZon) BGMManager.PlayBattleSound();
+        beforeIsSaveZon = false;
     }
 
     private IEnumerator OpenNextMapImmediately()

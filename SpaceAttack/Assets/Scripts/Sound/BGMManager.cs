@@ -10,6 +10,8 @@ public class BGMManager : MonoBehaviour
         //모든 BGM구독처리
         SoundManager.instance.RegisterGameObjectBySoundType(gameObject, SoundType.BGM);
         PlayBGMSound(GameSceneManager.instance.currentScene);
+
+        //if (SoundManager.instance != null) PlayStartScene();
     }
 
     private void OnDisable()
@@ -26,14 +28,19 @@ public class BGMManager : MonoBehaviour
         switch (sceneType)
         {
             case SceneType.StartGameScene:
-                //if(SoundManager.instance != null) 
-                 SoundManager.instance.StopPlayedAllSound();  //모든 사운드 종료
-                //SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
-                //시작화면 브금 재생
+                if (SoundManager.instance != null)
+                {
+                    SoundManager.instance.StopPlayedAllSound();  //모든 사운드 종료
+                    PlayStartScene();
+                }
                 break;
+
             case SceneType.TutorialScene:
-                //SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
-                //SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
+                if (SoundManager.instance != null)
+                {
+                    SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
+                    PlayTutorial();
+                }
                 break;
 
             case SceneType.ChipsetSelectScene:
@@ -90,10 +97,10 @@ public class BGMManager : MonoBehaviour
 
     public static void PlayTutorial()     //튜토리얼
     {
-
+        if (SoundManager.instance != null) SoundManager.instance.PlayBGMOrUISound(1013, SoundType.BGM);
     }
     public static void PlayStartScene()     //시작화면
     {
-
+        if (SoundManager.instance != null) SoundManager.instance.PlayBGMOrUISound(1014, SoundType.BGM);
     }
 }
