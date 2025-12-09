@@ -1625,7 +1625,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &363341919
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3793,7 +3793,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   countdownText: {fileID: 1311555674}
-  maxLevelRepeat: 2
+  maxLevelRepeat: 1
   endSceneDelay: 3
   monstersPerWave: 3
   maxWaveCount: 3
@@ -3807,7 +3807,7 @@ MonoBehaviour:
     type: 3}
   stageTeleportPrefab: {fileID: 1830532034502690505}
   rewardTeleport: {fileID: 1830532034502690505}
-  eventRoomChance: 0.4
+  eventRoomChance: 0.2
   exchangePrefab: {fileID: 5114780495334812866, guid: 3df59a4f196c9ee47889b98a78eae161,
     type: 3}
   purifierPrefab: {fileID: 6031728646357752911, guid: 5e8686b79bae078489c39a165f114d77,
