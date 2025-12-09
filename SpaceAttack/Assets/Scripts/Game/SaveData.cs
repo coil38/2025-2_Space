@@ -14,7 +14,11 @@ public class SaveData
 
     public string sceneName;        //씬 이름
 
-    public void SetDatas(Vector3 playerPos, string sceneName, int playerLevel, int playerDarMatCount, int[] playerItems = null, string playerChipset = null)
+    //스테이지 관련 데이터
+    public int unlockedStage;   //해금 안됨 스테이지
+    public int clearedStage;    //클리어한 최대 스테이지
+
+    public void SetPlayerDatas(Vector3 playerPos, string sceneName, int playerLevel, int playerDarMatCount, int[] playerItems = null, string playerChipset = null)
     {
         this.playerPos = playerPos;
         this.sceneName = sceneName;
@@ -23,6 +27,12 @@ public class SaveData
 
         if (playerItems != null) this.playerItems = playerItems;
         if (playerChipset != null) this.playerChipsetName = playerChipset;
+    }
+
+    public void SetStageDates(int unlockedStage, int clearedStage)
+    {
+        this.unlockedStage = unlockedStage;
+        this.clearedStage = clearedStage;
     }
 }
 

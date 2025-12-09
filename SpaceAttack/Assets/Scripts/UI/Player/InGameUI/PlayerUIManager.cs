@@ -74,6 +74,10 @@ public class PlayerUIManager : MonoBehaviour
     {
         playerDarkMaterialUI.ResetDarkMaterialUI();
     }
+    public void ResetSkillUI()                                         //스킬UI 초기화
+    {
+        skillsLayout.SetActive(false);
+    }
     public void ChangeMaxDarkMaterial(int value)                       //최대 암흑물질수치 변경 함수
     {
         playerDarkMaterialUI.ChangeMaxDarkMaterial(value);

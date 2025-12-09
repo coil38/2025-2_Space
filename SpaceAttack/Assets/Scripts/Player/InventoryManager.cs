@@ -177,8 +177,8 @@ public class InventoryManager : MonoBehaviour
         relicInstanceId = 0;
 
         currentDarkMaterial = 0;
-        PlayerUIManager.instance.ResetDarkMaterialUI();
-        PlayerUIManager.instance.ClearPlayerItem();
+        PlayerUIManager.instance.ResetDarkMaterialUI();   //암흑 물질 UI 초기화
+        PlayerUIManager.instance.ClearPlayerItem();       //유물 인벤 UI 초기화
 
         if (_chipSet != null)
         {

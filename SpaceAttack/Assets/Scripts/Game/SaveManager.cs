@@ -67,8 +67,10 @@ public class SaveManager : MonoBehaviour
 
     public void PlayerReset()             //플레이어 사망 후, 초기화 함수
     {
-        LogUtil.Log($"플레이어 사망, 새로하기 파일 이름: {currentFileName}");
-        StartNewSaveFile(currentFileName);
+        LogUtil.Log($"플레이어 사망, 모든 요소 초기화 후, 다시 시작");
+        InitializePlayerDatas();
+        SceneLoadManager.instance.
+            LoadScene(GameSceneManager.GetSceneNameByType(SceneType.ChipsetSelectScene));
     }
 
     public void InitializePlayerDatas()  //게임 시작 전의 값으로 초기화
@@ -83,14 +85,19 @@ public class SaveManager : MonoBehaviour
 
             if (SoundManager.instance != null)
                 SoundManager.instance.StopPlayedAllSound();        //모든 사운드 정지
-            DataManager.instance.InitializePlayerStatus();         //플레이어 데이터 초기화
+
+            DataManager.instance.InitializePlayerStatus();         //플레이어 데이터 초기화(PlayerStatus)
             playerInventory.InitialInventoryDatas();               //유물리스트 삭제 및 암흑물질량 초기화 및 칩셋제거
-            if (PlayerUIManager.instance != null) 
-                PlayerUIManager.instance.ResetHpUI();              //체력UI 갱신
 
             //플레이어 대쉬 쿨타임 초기화
             PlayerCore.Level = 0;                                  //레벨 초기화
             PlayerCore.DarkMaterialCount = 0;                      //경험치양 초기화
+
+            if (PlayerUIManager.instance != null)
+            {
+                PlayerUIManager.instance.ResetHpUI();              //체력UI 초기화
+                PlayerUIManager.instance.ResetSkillUI();           //플레이어 스킬 UI 초기화
+            }
             PlayerCore.GetDarkMatter(0, true);                     //UI초기화
         }
     }
