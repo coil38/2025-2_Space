@@ -206,6 +206,11 @@ public class PlayerMovementAnimationController : MonoBehaviour
         SideMoveRenderer.transform.localPosition = initialPos;
         BackMoveRenderer.transform.localPosition = initialPos;
         AttackMoveRenderer.transform.localPosition = initialPos;
+
+        FrontMoveRenderer.transform.localRotation = Quaternion.identity;
+        SideMoveRenderer.transform.localRotation = Quaternion.identity;
+        BackMoveRenderer.transform.localRotation = Quaternion.identity;
+        AttackMoveRenderer.transform.localRotation = Quaternion.identity;
     }
 
     public void ResetAttackAnimation()

@@ -34,7 +34,7 @@ public class CharacterMovement : MonoBehaviour
         movementAniController = GetComponent<PlayerMovementAnimationController>();
         inventory = GetComponent<InventoryManager>();
 
-        wallLayer |= 1 << LayerMask.NameToLayer("Wall");
+        wallLayer |= 1 << LayerMask.NameToLayer("Wall") | (1 << LayerMask.NameToLayer("DestructableObject"));
         itemLayer |= 1 << LayerMask.NameToLayer("Item");
         interationLayer |= 1 << LayerMask.NameToLayer("InteractionObj");
     }
@@ -107,6 +107,12 @@ public class CharacterMovement : MonoBehaviour
         {
             dashDis = Vector3.Distance(hit.point, transform.position) - 0.55f;
             dashDis = Mathf.Max(dashDis, 0f);
+
+            LogUtil.Log($"벽 감지 완료, 감지 거리 : {dashDis}");
+        }
+        else
+        {
+            LogUtil.Log($"벽 안됨");
         }
 
         //LogUtil.Log(dashDis);
