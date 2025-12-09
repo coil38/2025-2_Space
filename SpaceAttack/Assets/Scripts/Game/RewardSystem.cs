@@ -20,7 +20,7 @@ public class RewardSystem : MonoBehaviour
     public static float defualtDropRate = 0.00f;
     public static float defualtItemDropRate = 0.00f;
 
-    public static float RelicDropRate = 0.00f; //0.05f;
+    public static float RelicDropRate = 0.00f;
     public static float itemDropRate = 0.00f;
 
     private static InventoryManager inventoryManager;  //플레이어 인벤토리

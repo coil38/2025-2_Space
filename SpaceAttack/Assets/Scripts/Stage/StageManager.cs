@@ -84,6 +84,8 @@ public class StageManager : MonoBehaviour
 
         planObjects = GameObject.FindGameObjectsWithTag("Plan");
         StartCoroutine(StageStartDelay());
+
+        EventManager.relicEvent.OnStartStageEvent();     //스테이지 시작 이벤트 실행
     }
 
     private void Update()
@@ -557,32 +559,32 @@ public class StageManager : MonoBehaviour
         switch (stage)
         {
             case 1:
-                monstersPerWave = 2;
-                maxWaveCount = 2;
+                monstersPerWave = 5;
+                maxWaveCount = 3;
                 enemyHpMultiplier = 1.0f;
                 break;
 
             case 2:
-                monstersPerWave = 2;
-                maxWaveCount = 3;
+                monstersPerWave = 8;
+                maxWaveCount = 4;
                 enemyHpMultiplier = 1.2f;
                 break;
 
             case 3:
-                monstersPerWave = 3;
-                maxWaveCount = 3;
+                monstersPerWave = 8;
+                maxWaveCount = 4;
                 enemyHpMultiplier = 1.4f;
                 break;
 
             case 4:
-                monstersPerWave = 3;
-                maxWaveCount = 4;
+                monstersPerWave = 12;
+                maxWaveCount = 5;
                 enemyHpMultiplier = 1.6f;
                 break;
 
             case 5:
-                monstersPerWave = 4;
-                maxWaveCount = 4;
+                monstersPerWave = 15;
+                maxWaveCount = 6;
                 enemyHpMultiplier = 2.0f;
                 break;
         }
