@@ -36,8 +36,8 @@ public class StartGameUI2 : MonoBehaviour
         }
         else
         {
-            SceneLoadManager.instance.
-                LoadScene(GameSceneManager.GetSceneNameByType(SceneType.ChipsetSelectScene));  //칩셋 선택씬으로 이동
+            if(SaveManager.instance != null)
+                SaveManager.instance.PlayerReset();  //칩셋 선택씬으로 이동
         }
     }
     private void OnSettingPanel()        //설정화면 활성화

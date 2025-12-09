@@ -72,11 +72,9 @@ public class PlayerMovement : MonoBehaviour
 
         if (characterMovement.isRelicNearByPlayer())
         {
-            LogUtil.Log("감지됨 111");
             BaseRelic currentRelic = characterMovement.GetRelic();
             if (currentRelic != null)
             {
-                LogUtil.Log("감지됨 222");
                 isOneTime = true;
             }
             else

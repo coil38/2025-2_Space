@@ -96,6 +96,8 @@ public class SaveManager : MonoBehaviour
             if (StageProgress.Instance != null)
                 StageProgress.Instance.LoadProgress(1, 0);   //스테이지 데이터 초기화
 
+            RelicEffectManager.Initialized();                //유물 효과 데이터 초기화
+
             if (PlayerUIManager.instance != null)
             {
                 PlayerUIManager.instance.ResetHpUI();              //체력UI 초기화

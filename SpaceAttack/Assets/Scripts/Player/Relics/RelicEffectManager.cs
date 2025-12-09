@@ -71,6 +71,11 @@ public class RelicEffectManager : MonoBehaviour
         if (!isEquip) relicEffects.Remove(relicInstanceId);            //장착해제일 경우, 기록 데이터 제거
     }
 
+    public static void Initialized()
+    {
+        relicEffects.Clear();
+    }
+
     //--------------------------------------------------------------각 유물 효과 내부 코드------------------------------------------------------------------
     private class AttackRateBoost : RelicEffectType                        //100 - 공격력 n% 상승.
     {
