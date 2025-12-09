@@ -11,8 +11,11 @@ public class StageClearUI : MonoBehaviour
 
     public void ShowClearMessage()
     {
-        clearMessageObj.SetActive(true);
-        clearMessageObj.GetComponent<Text>().text = "스테이지 선택 화면으로 돌아갑니다...";
+        if (clearMessageObj != null)
+        {
+            clearMessageObj.SetActive(true);
+            clearMessageObj.GetComponent<Text>().text = "칩셋 선택씬으로 돌아갑니다...";
+        }
 
         StartCoroutine(ReturnToStageSelect());
     }
@@ -20,6 +23,7 @@ public class StageClearUI : MonoBehaviour
     private IEnumerator ReturnToStageSelect()
     {
         yield return new WaitForSeconds(delayToReturn);
-        SceneManager.LoadScene("ChipsetSelectScene");
+        if(SaveManager.instance != null)
+            SaveManager.instance.PlayerReset();
     }
 }

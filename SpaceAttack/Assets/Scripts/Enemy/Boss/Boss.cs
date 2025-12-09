@@ -356,7 +356,10 @@ public class Boss : EnemyBase
             OnDeath();
             rb.velocity = Vector3.zero;
 
-            FindObjectOfType<StageClearUI>().ShowClearMessage();
+
+            StageClearUI UI = FindObjectOfType<StageClearUI>();
+            if (UI != null)
+                UI.ShowClearMessage();
 
             if (deathMarkPrefab != null && footPosition != null)
                 Instantiate(deathMarkPrefab, footPosition.position, Quaternion.identity);
