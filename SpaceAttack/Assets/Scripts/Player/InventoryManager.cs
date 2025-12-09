@@ -137,7 +137,7 @@ public class InventoryManager : MonoBehaviour
             if (relic.relicInfos == null)
                 LogUtil.LogError("RelicInfo인스턴스가 존재하지 않습니다.");
 
-            if (currentDarkMaterial + relic.darkMaterialCount <= 100)  //최대용량을 넘지 않을 경우
+            if (currentDarkMaterial + relic.darkMaterialCount <= PlayerStatus.maxDarkMaterialCount)  //최대용량을 넘지 않을 경우
             {
                 //LogUtil.Log($"{relic.relicName}_유물 획득, 현재 암흑게이지수치: {currentDarkMaterial}, 현재 보유중인 유물개수: {relics.Count}");
                 int relicInstanceID = AddRelic(relic);
@@ -156,7 +156,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    private float currentDarkMaterial;
+    private float currentDarkMaterial;   //플레이어 인벤토리 최대 용량
 
     public void SetSavedRelics(RelicSO[] relics)       //저장된 유물을 불러오는 함수 (저장 시스템용)
     {

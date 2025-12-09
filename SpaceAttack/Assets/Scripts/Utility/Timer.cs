@@ -6,21 +6,21 @@ using UnityEngine;
 public class Timer
 {
     private float duration;        //지속시간
-    private float remainingTimer;  //남은 시간
+    private float remainingTime;  //남은 시간
     private bool isRunning;        //진행 중 여부 확인
     private bool isEndTimer;       //타이머 종료 여부
 
     public Timer(float _duration)
     {
         duration = _duration;
-        remainingTimer = _duration;
+        remainingTime = 0;
         isRunning = false;
         isEndTimer = false;
     }
 
     public void Start()             //타이머 시작
     {
-        remainingTimer = duration;
+        remainingTime = duration;
         isRunning = true;
     }
 
@@ -28,11 +28,11 @@ public class Timer
     {
         if (isRunning)
         {
-            remainingTimer -= Time.deltaTime;
-            if (remainingTimer < 0)
+            remainingTime -= Time.deltaTime;
+            if (remainingTime < 0)
             {
                 isRunning = false;
-                remainingTimer = 0;
+                remainingTime = 0;
                 isEndTimer = true;   //타이머 종료 활성화
             }
         }
@@ -47,7 +47,7 @@ public class Timer
         if (isRunning) return;   //타이머가 실행중일 경우, 처리 안됨
 
         duration = _duration;
-        remainingTimer = _duration;
+        remainingTime = _duration;
         isRunning = false;
         isEndTimer = false;
     }
@@ -59,12 +59,12 @@ public class Timer
 
     public float GetRemainingTime()   //남은 시간확인
     {
-        return remainingTimer;
+        return remainingTime;
     }
 
     public void Reset()                 //초화 및 강제 종료함수
     {
-        remainingTimer = duration;
+        remainingTime = duration;
         isRunning = false;
     }
 
