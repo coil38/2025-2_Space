@@ -58,7 +58,7 @@ public class BowSkillBigArrow : SkillType
                 }
             }
 
-            //공격 사운드 재생
+            PlayerSoundManager.PlayBowSkill3();   //공격 사운드 재생
             PlayerAniInfo aniInfo = new PlayerAniInfo("isBowAttacking", AniType.Trrigger, 1f / 0.3f);  //공격 애니메이션 실행
             PlayAniMation(aniInfo);
 

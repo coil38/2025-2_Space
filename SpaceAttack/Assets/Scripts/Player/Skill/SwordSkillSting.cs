@@ -60,7 +60,7 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
             }
             projectileMoveTime = _attackTime;
 
-            //찌르기 사운드 재생
+            PlayerSoundManager.PlaySword1Dash();      //찌르기 사운드 재생
             PlayerAniInfo aniInfo = new PlayerAniInfo("isSkill1", AniType.Trrigger, 1.3f / ((_attackTime + readyAttackTime) * 1.3f));  //공격 애니메이션 실행
             PlayAniMation(aniInfo);
 
@@ -120,6 +120,9 @@ public class SwordSkillSting : SkillType     //시전시간(발사: 애니메이
                     if (col2.gameObject != null)
                         chipset.Attack(col2.gameObject, damageRate, attackDirection, addedCritChanceRate, addedCritRate, ChipAttackType.Skill);
                 }
+
+                PlayerSoundManager.PlaySwordSkillHit();      //검 피격 사운드 재생
+
                 isAttackMoving = false;
                 yield break;
 

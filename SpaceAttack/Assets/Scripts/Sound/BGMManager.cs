@@ -17,16 +17,6 @@ public class BGMManager : MonoBehaviour
         GameSceneManager.sceneTypeChanged -= PlayBGMSound;    //씬 타입 변경 이벤트 구독 헤제
     }
 
-    public static void PlayMiddleBossSound()
-    {
-        if (SoundManager.instance != null) SoundManager.instance.PlayBGMOrUISound(1011, SoundType.BGM);
-    }
-
-    public static void PlayMiddleBossFildSound()
-    {
-        if (SoundManager.instance != null) SoundManager.instance.PlayBGMOrUISound(1007, SoundType.BGM);
-    }
-
     private void PlayBGMSound(SceneType sceneType)
     {
         //AudioSource source = GetComponent<AudioSource>();
@@ -50,7 +40,7 @@ public class BGMManager : MonoBehaviour
                 if (SoundManager.instance != null)
                 {
                     SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
-                    SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
+                    PlayChipsetSelectSound();
                 }
                 break;
 
@@ -58,7 +48,7 @@ public class BGMManager : MonoBehaviour
                 if (SoundManager.instance != null)
                 {
                     SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
-                    SoundManager.instance.PlayBGMOrUISound(1001, SoundType.BGM);
+                    PlayBattleSound();
                 }
                 break;
 
@@ -79,5 +69,43 @@ public class BGMManager : MonoBehaviour
                     SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
                 break;
         }
+    }
+
+    public static void PlayMiddleBossSound()        //중간 보스1
+    {
+        if (SoundManager.instance != null) SoundManager.instance.PlayBGMOrUISound(1011, SoundType.BGM);
+    }
+
+    public static void PlayMiddleBossFildSound()     //중간 보스2
+    {
+        if (SoundManager.instance != null) SoundManager.instance.PlayBGMOrUISound(1007, SoundType.BGM);
+    }
+    public static void PlayBattleSound()           //전투 사운드
+    {
+        if (SoundManager.instance != null) SoundManager.instance.PlayBGMOrUISound(1001, SoundType.BGM);
+    }
+
+    public static void PlayChipsetSelectSound()     //칩셋 선택씬 배경
+    {
+        if (SoundManager.instance != null) SoundManager.instance.PlayBGMOrUISound(1004, SoundType.BGM);
+    }
+    public static void PlayGameOver()     //게임 오버 배경
+    {
+        if (SoundManager.instance != null) SoundManager.instance.PlayBGMOrUISound(1006, SoundType.BGM);
+    }
+
+    public static void PlaySaveZone()     //안전 구역 배경
+    {
+        SoundManager.instance.StopAllPlayedBGM();     //재생 중인 브금을 끔 (예외)
+        if (SoundManager.instance != null) SoundManager.instance.PlayBGMOrUISound(1012, SoundType.BGM);
+    }
+
+    public static void PlayTutorial()     //튜토리얼
+    {
+
+    }
+    public static void PlayStartScene()     //시작화면
+    {
+
     }
 }

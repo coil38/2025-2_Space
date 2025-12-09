@@ -18,7 +18,6 @@ GameObject:
   - component: {fileID: 9131843138702807753}
   - component: {fileID: 5587432419526965161}
   - component: {fileID: 3810752942071787923}
-  - component: {fileID: 8201235517080617666}
   m_Layer: 0
   m_Name: WarriorChipset
   m_TagString: Untagged
@@ -229,18 +228,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8201235517080617666
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8654506091529224949}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cd870fe4fe0b614198a81d3b279d15b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &4624931785113762485
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -804,6 +791,11 @@ PrefabInstance:
     - target: {fileID: 7101784791245674449, guid: c6d9751939a5ede4c88e3ce21ee3d1a5,
         type: 3}
       propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7101784791245674449, guid: c6d9751939a5ede4c88e3ce21ee3d1a5,
+        type: 3}
+      propertyPath: autoRandomSeed
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7101784791814968849, guid: c6d9751939a5ede4c88e3ce21ee3d1a5,

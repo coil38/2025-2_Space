@@ -25,7 +25,7 @@ public class WeaponBow : WeaponType
 
             isAttacking = true;
 
-            // 사운드 추가
+            PlayerSoundManager.PlayBowBaseAttack();    // 기본 공격 사운드
             PlayerAniInfo aniInfo = new PlayerAniInfo("isBowAttacking", AniType.Trrigger, 1f / 0.3f);  //공격 애니메이션 실행
             PlayAniMation(aniInfo);
 

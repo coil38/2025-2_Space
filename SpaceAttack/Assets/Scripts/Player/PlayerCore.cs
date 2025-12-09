@@ -61,6 +61,8 @@ public class PlayerCore : MonoBehaviour
             EventManager.playerEvent.LevelUp(Level + 1);  //다음 레벨의 최대 경험치량을 찾는 이벤트 실행
             EventManager.playerEvent.FindCorectionValue(Level + 1);  //레벨 보정 여부 판단 이벤트 실행
 
+            PlayerSoundManager.PlayPlayerLevelUP();    //레벨업 사운드 재생
+
             DarkMaterialCount = remainExpCount;
 
             Level++;  //레벨업

@@ -70,8 +70,8 @@ public class WeaponSword : WeaponType
 
             isAttacking = true;
 
-            ChipsetSoundManager.PlayPlayerAttackSound();                  //사운드 재생
-            
+            PlayerSoundManager.PlaySwordBaseAttack();                  //기본 공격 사운드 재생
+
             PlayerAniInfo aniInfo = new PlayerAniInfo("isAttacking", AniType.Trrigger, 1f / attackTime);  //공격 애니메이션 실행
             PlayAniMation(aniInfo);
 

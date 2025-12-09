@@ -300,7 +300,9 @@ public class PlayerStatus : MonoBehaviour
             {
                 movemetAniController.PlayAnimation("Dead");   //사망 애니메이션 재생
             }
-            //플레이어 사망 연출 시작
+            PlayerSoundManager.PlayPlayerDeadSound();     //플레이어 사망 사운드 재생
+            BGMManager.PlayGameOver();                    //게임 오버 사운드 재생
+
             LogUtil.Log("플레이어 사망");
         }
     }

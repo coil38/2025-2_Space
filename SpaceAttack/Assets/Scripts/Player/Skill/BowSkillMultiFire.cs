@@ -37,9 +37,9 @@ public class BowSkillMultiFire : SkillType
             isAttacking = true;
             coolTimer.Start();         //쿨타임 시작
 
+            PlayerSoundManager.PlayBowSkill2();   //스킬 사운드 재생
             PlayerAniInfo aniInfo = new PlayerAniInfo("isBowAttacking", AniType.Trrigger, 1f / 0.3f);  //공격 애니메이션 실행
             PlayAniMation(aniInfo);
-            // 사운드 추가
 
             PlayerTimeSystem.w_BaseAttackTimer.Start();                                 //공격 타이머 시작
 

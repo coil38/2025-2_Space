@@ -44,7 +44,8 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
             if (coolTimer.IsRunning()) return;                  //다음 공격 대기 체크 실행중, 리턴
 
             isAttacking = true;
-            //참격 사운드 재생
+
+            PlayerSoundManager.PlaySwordSkill2();       //참격 사운드 재생
             PlayerAniInfo aniInfo = new PlayerAniInfo("isSkill2", AniType.Trrigger, aniSpeed);  //공격 애니메이션 실행
             PlayAniMation(aniInfo);
 
@@ -111,6 +112,8 @@ public class SwordSkillbeheading : SkillType     //시전시간(발사: 애니�
             {
                 if (targets.Contains(col.gameObject)) continue;   //중복일 경우, 무시
                 else targets.Add(col.gameObject);                  //중복이 아닐 경우, 체크 대상에 추가
+
+                PlayerSoundManager.PlaySwordSkillHit();      //검 피격 사운드 재생
 
                 if (col.gameObject != null) chipset.Attack(col.gameObject, damageRate, attackDirection, addedCritChanceRate, addedCritRate, ChipAttackType.Skill);
             }

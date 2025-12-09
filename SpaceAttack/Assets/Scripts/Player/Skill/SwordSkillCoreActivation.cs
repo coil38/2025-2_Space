@@ -35,8 +35,7 @@ public class SwordSkillCoreActivation : SkillType   //시전시간(발사: 애�
 
             if (coolTimer.IsRunning()) return; //다음 공격 대기 체크 실행중, 리턴
 
-            //물약 마시는 사운드
-            //물약 마시는 애니메이션
+            PlayerSoundManager.PlaySwordSkill3();  //이펙트 사용 사운드
             coolTimer.Start();         //쿨타임 시작
             Use();                     //즉시 사용 처리
         }
