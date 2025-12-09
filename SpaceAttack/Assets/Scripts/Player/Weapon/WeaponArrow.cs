@@ -61,13 +61,12 @@ public class WeaponArrow : MonoBehaviour
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("DestructableObject"))
         {
-            AttackInfo info = new AttackInfo(PlayerStatus.normalDamage * damageRate, attackDirection, 1, gameObject);
-            other.SendMessage("ApplyDamage", info);
+            chipset.Attack(other.gameObject, damageRate, attackDirection, addedCritChanceRate, addedCritRate, chipsetAttackType);
             HitAndDestroy(other.gameObject);
         }
         else if (!other.gameObject.CompareTag("Arrow") && !other.gameObject.CompareTag("Player"))
         {
-            LogUtil.Log("파괴파괴 " + other.gameObject.tag);
+            //LogUtil.Log("파괴파괴 " + other.gameObject.tag);
             HitAndDestroy(other.gameObject);
         }
     }
