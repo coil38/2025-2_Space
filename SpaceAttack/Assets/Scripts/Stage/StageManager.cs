@@ -169,7 +169,7 @@ public class StageManager : MonoBehaviour
             {
                 randomPos = new Vector3(
                       Random.Range(bounds.min.x + margin, bounds.max.x - margin),
-                      plan.transform.position.y + 0.5f,
+                      plan.transform.position.y + 1.5f,
                       Random.Range(bounds.min.z + margin, bounds.max.z - margin)
                      );
                 safetyCount++;

@@ -34,12 +34,15 @@ public class SaveManager : MonoBehaviour
             for(int i = 0; i < playerInventory._relics.Length; i++)
                 relicIds[i] = playerInventory._relics[i].relicID;
 
-            data.SetDatas(playerInventory.transform.position, 
-                SceneManager.GetActiveScene().name, 
-                PlayerCore.Level, 
-                PlayerCore.DarkMaterialCount, 
-                relicIds.Length > 0 ? relicIds : null,
-                playerInventory.chipSet != null ? playerInventory.chipSet.chipSetName : null);
+            data.SetPlayerDatas(playerInventory.transform.position,     //플레이어 위치
+                SceneManager.GetActiveScene().name,               //현재 씬 이름
+                PlayerCore.Level,                                 //플레이어 레벨
+                PlayerCore.DarkMaterialCount,                     //플레이어 경험치량
+                relicIds.Length > 0 ? relicIds : null,            //유물Id들
+                playerInventory.chipSet != null ? playerInventory.chipSet.chipSetName : null);  //장착 중인 칩셋
+
+            if (StageProgress.Instance != null)
+                data.SetStageDates(StageProgress.Instance.unlockedStage, StageProgress.Instance.clearedStage);  //스테이지값 저장
         }
         else
         {
@@ -56,7 +59,7 @@ public class SaveManager : MonoBehaviour
 
         currentFileName = fileName;
         SaveData data = new SaveData();
-        data.SetDatas(new Vector3(0f, 0.092f, -0.3f), sceneName, 0, 0);
+        data.SetPlayerDatas(new Vector3(0f, 0.092f, -0.3f), sceneName, 0, 0);
         SaveSystem.Save(currentFileName, data);  //저장 새 파일 생성
 
         SceneLoadManager.instance.LoadScene(sceneName);
@@ -122,6 +125,9 @@ public class SaveManager : MonoBehaviour
             EventManager.playerEvent.FindCorectionValue(level);          //모든 레벨업 보정 재적용
         }
         PlayerCore.GetDarkMatter(0, true);                               //UI초기화
+
+        if (StageProgress.Instance != null)
+            StageProgress.Instance.LoadProgress(data.unlockedStage, data.clearedStage);   //스테이지 정보 로드
 
         SceneLoadManager.instance.LoadScene(data.sceneName);  //씬으로 이동
     }
@@ -195,7 +201,7 @@ public class SaveManager : MonoBehaviour
                 LogUtil.Log("현재는 자동저장을 할 수 없는 상태입니다.");
             }
 
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(10f);
         }
     }
 

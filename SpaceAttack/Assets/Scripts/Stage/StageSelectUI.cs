@@ -43,8 +43,6 @@ public class StageSelectUI : MonoBehaviour
 
     public void UpdateButtons()
     {
-
-
         if (StageProgress.Instance == null)
         {
             Debug.LogError("StageProgress.Instance가 null입니다!");
@@ -57,7 +55,7 @@ public class StageSelectUI : MonoBehaviour
 
             int stageNumber = i + 1;
             Image img = stageButtons[i].GetComponent<Image>();
-            bool unlocked = stageNumber <= StageProgress.Instance.unlockedStage;
+            bool unlocked = stageNumber == StageProgress.Instance.unlockedStage;  //현재 해금될 스테이지만 선택 가능
             stageButtons[i].interactable = unlocked;
 
             var effect = stageButtons[i].GetComponent<StageSelectButtonEffect>();
@@ -81,11 +79,11 @@ public class StageSelectUI : MonoBehaviour
 
         if (bossButton != null)
         {
-            bool available = StageProgress.Instance.clearedStage >= 6;
+            bool available = StageProgress.Instance.clearedStage >= 5;
             bossButton.interactable = available;
 
             Image bossImg = bossButton.GetComponent<Image>();
-            bossImg.color = available ? clearedColor : lockedColor;
+            bossImg.color = available ? availableColor : lockedColor;
 
             var effect = bossButton.GetComponent<StageSelectButtonEffect>();
             if (effect != null)
@@ -93,7 +91,7 @@ public class StageSelectUI : MonoBehaviour
         }
     }
 
-    public void SelectStage(int stageNumber)
+    public void SelectStage(int stageNumber)   //버튼 클릭을 해서 해당 스테이지 번호 이동 시키는 함수
     {
         StartCoroutine(SelectStageRoutine(stageNumber));
     }
@@ -111,7 +109,7 @@ public class StageSelectUI : MonoBehaviour
         if (StageProgress.Instance.unlockedStage < 6)
             return;
 
-        StartCoroutine(C_LoadScene("MiddleBossScene"));
+        StartCoroutine(C_LoadScene(GameSceneManager.GetSceneNameByType(SceneType.MiddleBossScene)));
     }
 
     public void CloseUI()

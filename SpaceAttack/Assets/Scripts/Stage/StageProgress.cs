@@ -18,7 +18,6 @@ public class StageProgress : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            LoadProgress();
         }
         else
         {
@@ -29,12 +28,11 @@ public class StageProgress : MonoBehaviour
     /// 스테이지를 클리어했을 때 호출
     /// </summary>
 
-    public void ClearStage(int stageNumber)
+    public void ClearStage(int stageNumber)    //unlockedStage, clearedStage 변수를 높여주는 함수
     {
         if (stageNumber > clearedStage)
         {
             clearedStage = stageNumber;
-            PlayerPrefs.SetInt("ClearedStage", clearedStage);
         }
 
         // 다음 스테이지 해금 처리 (해금은 cleared 기준)
@@ -42,10 +40,7 @@ public class StageProgress : MonoBehaviour
         {
             unlockedStage = stageNumber + 1;
             if (unlockedStage > 6) unlockedStage = 6;   
-            PlayerPrefs.SetInt("UnlockedStage", unlockedStage);
         }
-
-        PlayerPrefs.Save();
     }
 
     public bool IsStageUnlocked(int stage)
@@ -53,9 +48,9 @@ public class StageProgress : MonoBehaviour
         return stage <= unlockedStage;
     }
 
-    private void LoadProgress()
+    public void LoadProgress(int unlockedStage, int clearedStage)    //저장 시스템에서 로드
     {
-        unlockedStage = PlayerPrefs.GetInt("UnlockedStage", 1);
-        clearedStage = PlayerPrefs.GetInt("ClearedStage", 0);
+        this.unlockedStage = unlockedStage;
+        this.clearedStage = clearedStage;
     }
 }
