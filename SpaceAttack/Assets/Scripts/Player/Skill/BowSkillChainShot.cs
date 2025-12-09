@@ -91,7 +91,7 @@ public class BowSkillChainShot : SkillType
                 {
                     if (currentHittedTarget != col.gameObject)
                     {
-                        //LogUtil.Log("감지된 대상: " + col.gameObject.name);
+                        LogUtil.Log("감지된 대상: " + col.gameObject.name);
 
                         arrow = Instantiate(guidedArrowPrf, genPos, quaternion);
                         arrow.GetComponent<WeaponGuidedArrow>()

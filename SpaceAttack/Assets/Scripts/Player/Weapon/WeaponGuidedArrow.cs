@@ -69,10 +69,5 @@ public class WeaponGuidedArrow : MonoBehaviour
             chipset.Attack(other.gameObject, damageRate, attackDirection, addedCritChanceRate, addedCritRate, chipsetAttackType);
             Destroy(gameObject);
         }
-        else if (!other.gameObject.CompareTag("Arrow") && !other.gameObject.CompareTag("Player"))
-        {
-            LogUtil.Log("파괴파괴 " + other.gameObject.tag);
-            Destroy(gameObject);
-        }
     }
 }

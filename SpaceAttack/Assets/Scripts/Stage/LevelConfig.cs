@@ -31,6 +31,7 @@ public class LevelConfig : MonoBehaviour
     [Range(0f, 1f)] public float eliteTypeChance = 0.3f;
     [Range(0f, 1f)] public float specificTypeChance = 0.2f;
 
+    private int monsterIndex;
     public void ApplyRandomConfig()
     {
         float r = UnityEngine.Random.value;
@@ -42,7 +43,10 @@ public class LevelConfig : MonoBehaviour
             monsterType = LevelMonsterType.EliteOnly;
 
         else
+        {
             monsterType = LevelMonsterType.SpecificOnly;
+            monsterIndex = UnityEngine.Random.Range(0, specificMonsters.Length);
+        }
     }
 
     public GameObject GetRandomMonster()
@@ -56,7 +60,7 @@ public class LevelConfig : MonoBehaviour
                 return GetWeightedMonster(elitePool);
 
             case LevelMonsterType.SpecificOnly:
-                return specificMonsters[UnityEngine.Random.Range(0, specificMonsters.Length)];
+                return specificMonsters[monsterIndex];
         }
 
         return null;

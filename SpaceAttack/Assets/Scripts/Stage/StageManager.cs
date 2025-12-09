@@ -152,10 +152,6 @@ public class StageManager : MonoBehaviour
         config.ApplyRandomConfig();
 
         int spawnCount = monstersPerWave;
-        if (config.monsterType == LevelMonsterType.EliteOnly)
-        {
-            spawnCount = 1;
-        }
 
         for (int i = 0; i < spawnCount; i++)
         {
@@ -189,6 +185,9 @@ public class StageManager : MonoBehaviour
                 Debug.LogWarning("LevelConfig에서 몬스터를 가져오지 못함!");
                 continue;
             }
+
+            if (config.monsterType == LevelMonsterType.EliteOnly)    //엘리트 1마리가 아닌 엘리트 포함 나머지 일반
+                config.monsterType = LevelMonsterType.NormalOnly;
 
             GameObject monsterObj = Instantiate(prefab, randomPos, prefab.transform.rotation);
             EnemyBase monster = monsterObj.GetComponent<EnemyBase>();

@@ -46,11 +46,17 @@ public class RelicDataLoader : EditorWindow
                 switch (relic.relicType)
                 {
                     case 0:
-                        relicSO.relicType = RelicType.NormalRelic; break;
+                        relicSO.relicType = RelicType.NormalRelic;
+                        relicSO.relicDivision = "오염된 프로세스";
+                        break;
                     case 1:
-                        relicSO.relicType = RelicType.PurifiedRelic; break;
+                        relicSO.relicType = RelicType.PurifiedRelic;
+                        relicSO.relicDivision = "정화된 프로세스";
+                        break;
                     case 2:
-                        relicSO.relicType = RelicType.SourceRelic; break;
+                        relicSO.relicType = RelicType.SourceRelic;
+                        relicSO.relicDivision = "근원 프로세스";
+                        break;
                 }
                 //함께 장착 방지용 대상설정
                 if (!string.IsNullOrEmpty(relic.cannotEquipRelicId))

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 506033823949043503}
   - component: {fileID: 3945769978698736359}
   - component: {fileID: 8091015449930999622}
+  - component: {fileID: 426856453875587797}
   m_Layer: 6
   m_Name: Stump_liquid
   m_TagString: Untagged
@@ -74,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 6
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 84217e248d6cc6645acc2307439bf099, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -107,6 +108,18 @@ MonoBehaviour:
     m_Extent: {x: 0.6279151, y: 0.45835018, z: 0}
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
+--- !u!210 &426856453875587797
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 178056680342439000}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &444575101132551039
 GameObject:
   m_ObjectHideFlags: 0
@@ -213,6 +226,7 @@ GameObject:
   - component: {fileID: 8704603338466414084}
   - component: {fileID: 1650778302666278}
   - component: {fileID: 6463281692436323624}
+  - component: {fileID: 5991702971177592552}
   m_Layer: 6
   m_Name: Stump_liquid (1)
   m_TagString: Untagged
@@ -309,6 +323,18 @@ MonoBehaviour:
     m_Extent: {x: 0.6279151, y: 0.45835018, z: 0}
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
+--- !u!210 &5991702971177592552
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887460642283924980}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &1395048487902870309
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,6 +567,7 @@ GameObject:
   - component: {fileID: 1195358841078172696}
   - component: {fileID: 4344754924431566457}
   - component: {fileID: 3768178280093593139}
+  - component: {fileID: 3099555301875426808}
   m_Layer: 6
   m_Name: Stump_liquid (5)
   m_TagString: Untagged
@@ -637,6 +664,18 @@ MonoBehaviour:
     m_Extent: {x: 0.6279151, y: 0.45835018, z: 0}
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
+--- !u!210 &3099555301875426808
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1801202834738141333}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &2128397127066575536
 GameObject:
   m_ObjectHideFlags: 0
@@ -947,6 +986,7 @@ GameObject:
   - component: {fileID: 6451174095927383172}
   - component: {fileID: 1187018526666774750}
   - component: {fileID: 8630388836417283747}
+  - component: {fileID: 765694740903623381}
   m_Layer: 6
   m_Name: Stump_liquid (3)
   m_TagString: Untagged
@@ -1043,6 +1083,18 @@ MonoBehaviour:
     m_Extent: {x: 0.6279151, y: 0.45835018, z: 0}
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
+--- !u!210 &765694740903623381
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2726027211654639646}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &2743376087621000580
 GameObject:
   m_ObjectHideFlags: 0
@@ -1054,6 +1106,7 @@ GameObject:
   - component: {fileID: 9093327631861082228}
   - component: {fileID: 5658152068888899709}
   - component: {fileID: 7379706872243468732}
+  - component: {fileID: 4235199903066949280}
   m_Layer: 6
   m_Name: Stump_liquid (2)
   m_TagString: Untagged
@@ -1150,6 +1203,18 @@ MonoBehaviour:
     m_Extent: {x: 0.6279151, y: 0.45835018, z: 0}
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
+--- !u!210 &4235199903066949280
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2743376087621000580}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &2916867536609078704
 GameObject:
   m_ObjectHideFlags: 0
@@ -1341,6 +1406,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6163676680535736167}
+  - component: {fileID: 2892310317068010045}
   m_Layer: 6
   m_Name: Stump
   m_TagString: Untagged
@@ -1371,6 +1437,18 @@ Transform:
   - {fileID: 7402740669923170795}
   m_Father: {fileID: 1207864664810837532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &2892310317068010045
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3242109620070493008}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &3498665286871054895
 GameObject:
   m_ObjectHideFlags: 0
@@ -1634,6 +1712,7 @@ GameObject:
   - component: {fileID: 7700049621514965419}
   - component: {fileID: 6323028971540743697}
   - component: {fileID: 4896674864490553476}
+  - component: {fileID: 6097911552180029453}
   m_Layer: 6
   m_Name: Stump_liquid (4)
   m_TagString: Untagged
@@ -1730,6 +1809,18 @@ MonoBehaviour:
     m_Extent: {x: 0.6279151, y: 0.45835018, z: 0}
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
+--- !u!210 &6097911552180029453
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4398949309538090203}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &4475298509251270426
 GameObject:
   m_ObjectHideFlags: 0

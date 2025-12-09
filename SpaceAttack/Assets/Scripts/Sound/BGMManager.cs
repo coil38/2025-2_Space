@@ -52,11 +52,7 @@ public class BGMManager : MonoBehaviour
                 break;
 
             case SceneType.BattleScene:
-                if (SoundManager.instance != null)
-                {
-                    SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
-                    PlayBattleSound();
-                }
+                PlayBattleSound();
                 break;
 
             case SceneType.MiddleBossScene:
@@ -77,7 +73,11 @@ public class BGMManager : MonoBehaviour
     }
     public static void PlayBattleSound()           //전투 사운드
     {
-        if (SoundManager.instance != null) SoundManager.instance.PlayBGMOrUISound(1001, SoundType.BGM);
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.StopAllPlayedBGM();     //이전의 모든 브금 종료
+            SoundManager.instance.PlayBGMOrUISound(1001, SoundType.BGM);
+        }
     }
 
     public static void PlayChipsetSelectSound()     //칩셋 선택씬 배경
