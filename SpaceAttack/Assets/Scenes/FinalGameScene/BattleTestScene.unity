@@ -1731,8 +1731,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed77caff39fd50d45a9d4ac24d904bfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clearMessageObj: {fileID: 0}
-  delayToReturn: 3
+  clearMessageObj: {fileID: 1738557644}
+  delayToReturn: 10
 --- !u!1 &680319928
 GameObject:
   m_ObjectHideFlags: 0
@@ -2024,7 +2024,7 @@ PrefabInstance:
     - target: {fileID: 4931429256905232148, guid: 865fa5f96187e9c4f849a87518a020e9,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6331722134292677721, guid: 865fa5f96187e9c4f849a87518a020e9,
         type: 3}
@@ -4847,14 +4847,13 @@ GameObject:
   - component: {fileID: 1738557645}
   - component: {fileID: 1738557647}
   - component: {fileID: 1738557646}
-  - component: {fileID: 1738557648}
   m_Layer: 5
   m_Name: ClearText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1738557645
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4907,7 +4906,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 
 --- !u!222 &1738557647
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4916,20 +4915,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1738557644}
   m_CullTransparentMesh: 1
---- !u!114 &1738557648
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1738557644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed77caff39fd50d45a9d4ac24d904bfa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clearMessageObj: {fileID: 1738557644}
-  delayToReturn: 15
 --- !u!1 &1740447137
 GameObject:
   m_ObjectHideFlags: 0
@@ -5528,6 +5513,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4563641570911233375, guid: d46cb906d852341418a55a8f8c699fe8,
         type: 3}
+      propertyPath: hp
+      value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 4563641570911233375, guid: d46cb906d852341418a55a8f8c699fe8,
+        type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 1703026278}
@@ -5536,6 +5526,11 @@ PrefabInstance:
       propertyPath: planArea
       value: 
       objectReference: {fileID: 1747980217}
+    - target: {fileID: 4563641570911233375, guid: d46cb906d852341418a55a8f8c699fe8,
+        type: 3}
+      propertyPath: shootForce
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4563641570911233375, guid: d46cb906d852341418a55a8f8c699fe8,
         type: 3}
       propertyPath: coinRainCooldown

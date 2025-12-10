@@ -3483,7 +3483,7 @@ PrefabInstance:
     - target: {fileID: 4931429256905232148, guid: 865fa5f96187e9c4f849a87518a020e9,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6331722134292677721, guid: 865fa5f96187e9c4f849a87518a020e9,
         type: 3}
@@ -5476,7 +5476,7 @@ MonoBehaviour:
     type: 3}
   stageTeleportPrefab: {fileID: 1830532034502690505}
   rewardTeleport: {fileID: 1830532034502690505}
-  eventRoomChance: 0.15
+  eventRoomChance: 0.8
   exchangePrefab: {fileID: 5114780495334812866, guid: 3df59a4f196c9ee47889b98a78eae161,
     type: 3}
   purifierPrefab: {fileID: 6031728646357752911, guid: 5e8686b79bae078489c39a165f114d77,
@@ -8466,17 +8466,17 @@ PrefabInstance:
     - target: {fileID: 3563025043788522400, guid: 19fd3be6212128f4a98b48de0307de8c,
         type: 3}
       propertyPath: eliteTypeChance
-      value: 0.2
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 3563025043788522400, guid: 19fd3be6212128f4a98b48de0307de8c,
         type: 3}
       propertyPath: normalTypeChance
-      value: 0.6
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3563025043788522400, guid: 19fd3be6212128f4a98b48de0307de8c,
         type: 3}
       propertyPath: specificTypeChance
-      value: 0.2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 3563025043788522400, guid: 19fd3be6212128f4a98b48de0307de8c,
         type: 3}
