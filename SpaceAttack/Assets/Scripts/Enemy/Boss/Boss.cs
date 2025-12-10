@@ -61,7 +61,7 @@ public class Boss : EnemyBase
     public float closeDamageCooldown = 1.0f; // 쿨타임(연속 데미지 방지)
 
     private float closeDamageTimer = 0f;
-
+    [SerializeField] private Transform modelTransform;
 
     //변수 선언들
     public Transform player;
@@ -77,6 +77,7 @@ public class Boss : EnemyBase
     private bool isSpitting = false;
     public Transform bodyCenter;
     public GameObject scrapExplosionPrefab;
+    private bool isShaking = false;
     protected override void Start()
     {
         base.Start();
@@ -346,7 +347,7 @@ public class Boss : EnemyBase
 
         // 몸 빨갛게 깜빡이기
         StartHitFlash();
-
+        StartCoroutine(ShakeRoutine(0.6f, 0.5f));
         // 사망 처리
         if (hp <= 0 && !isDead)
         {
@@ -369,7 +370,7 @@ public class Boss : EnemyBase
         }
 
         // Hit 애니메이션은 스킬 중이 아닐 때만 실행
-        if (!isUsingSkill && CanPlayHitAnimation())
+        if (!isUsingSkill && !isTransitioningPhase && !anim.GetCurrentAnimatorStateInfo(0).IsTag("Skill"))
         {
             StartCoroutine(HitProcess());
         }
@@ -615,6 +616,28 @@ public class Boss : EnemyBase
         if (audioSource != null && dieSound != null)
             audioSource.PlayOneShot(dieSound);
         anim.SetTrigger("Dead");
+    }
+
+    private IEnumerator ShakeRoutine(float duration = 0.2f, float magnitude = 0.15f)
+    {
+        if (isShaking) yield break;
+        isShaking = true;
+
+        Vector3 originalPos = modelTransform.localPosition;
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float x = Random.Range(-1f, 1f) * magnitude;
+
+            modelTransform.localPosition = new Vector3(originalPos.x + x, originalPos.y, originalPos.z);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        modelTransform.localPosition = originalPos;
+        isShaking = false;
     }
     //콜리더 on/off
     public void DisableCollider()

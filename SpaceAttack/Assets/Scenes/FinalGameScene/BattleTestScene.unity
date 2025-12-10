@@ -1682,6 +1682,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 609326734}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &545235079 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1513290627407364440, guid: d46cb906d852341418a55a8f8c699fe8,
+    type: 3}
+  m_PrefabInstance: {fileID: 8700077002008719511}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &609326733
 GameObject:
   m_ObjectHideFlags: 0
@@ -2024,7 +2030,7 @@ PrefabInstance:
     - target: {fileID: 4931429256905232148, guid: 865fa5f96187e9c4f849a87518a020e9,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6331722134292677721, guid: 865fa5f96187e9c4f849a87518a020e9,
         type: 3}
@@ -5531,6 +5537,11 @@ PrefabInstance:
       propertyPath: shootForce
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 4563641570911233375, guid: d46cb906d852341418a55a8f8c699fe8,
+        type: 3}
+      propertyPath: modelTransform
+      value: 
+      objectReference: {fileID: 545235079}
     - target: {fileID: 4563641570911233375, guid: d46cb906d852341418a55a8f8c699fe8,
         type: 3}
       propertyPath: coinRainCooldown
