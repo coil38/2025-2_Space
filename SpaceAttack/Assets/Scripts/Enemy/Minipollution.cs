@@ -92,7 +92,7 @@ public class Minipollution : EnemyBase
                 break;
 
             case State.Dash:
-                rb.MovePosition(transform.position + dashDirection * dashSpeed * Time.fixedDeltaTime);
+                rb.velocity = dashDirection * dashSpeed;
                 break;
 
             case State.Escape:

@@ -76,7 +76,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 5000
   attackDistance: 2
-  detectAngle: 155
   damage: 1
   attackDuration: 0.5
   detectRadius: 20
@@ -90,12 +89,17 @@ MonoBehaviour:
     type: 3}
   footPosition: {fileID: 2505284142488023883}
   heartPrefab: {fileID: 0}
-  dropRadius: 1.5
   audioSource: {fileID: 1359300321773232480}
   hitSound: {fileID: 8300000, guid: 60cf4d2e3c8635c4e861cdef5357c32f, type: 3}
   monsterHPUI: {fileID: 0}
   hitColor: {r: 0.990566, g: 0.4906105, b: 0.4906105, a: 1}
   hitFlashDuration: 0.2
+  deathDuration: 2
+  wallCheckDistance: 0.7
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 6144
+  isTutorialIdle: 0
   canDetectPlayer: 1
   redZonePrefab: {fileID: 4967702133973236083, guid: d25f991d5830ef34ea05a0e22a612c96,
     type: 3}
@@ -125,10 +129,11 @@ MonoBehaviour:
   - {fileID: 8722641677778133939, guid: 9541107c5822f594286f8457abebf1d4, type: 3}
   - {fileID: 2040890849726229375, guid: bf2597b6dd1c15e4398a00628aee49a0, type: 3}
   - {fileID: 3210841994201302233, guid: d050b10c2f1f7bb49999ccd2284bded5, type: 3}
-  minionCount: 5
+  - {fileID: 2734756403907539940, guid: 8bd49b84790621e4faf0852478202dc0, type: 3}
+  minionCount: 4
   minDistanceBetweenMinions: 4
   mouthPoint: {fileID: 189558975230694813}
-  shootForce: 15
+  shootForce: 100
   upwardForce: 4
   spreadAngle: 70
   coinAttackSound: {fileID: 8300000, guid: a891d8d5a617d0d4b88e562a5d96f609, type: 3}
@@ -146,6 +151,9 @@ MonoBehaviour:
     type: 3}
   spitSound: {fileID: 8300000, guid: 6503e881c96a226419d5e7211cf9617c, type: 3}
   dieSound: {fileID: 8300000, guid: 1306f8bac2a88544f980efa35aacfa1e, type: 3}
+  closeDamageRange: 1
+  closeDamage: 1
+  closeDamageCooldown: 1
   player: {fileID: 0}
   headTransform: {fileID: 4751515084561946133}
   currentPhase: 1
@@ -353,7 +361,7 @@ Transform:
   m_GameObject: {fileID: 4348210464844953859}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.16, y: 1.24, z: 0}
+  m_LocalPosition: {x: 0.16, y: -2.45, z: -3.09}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1355,9 +1363,31 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2675031357418918845}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: d7973b62674aa474ab1413cbe7114a3b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4668029297161006381}
   m_SourcePrefab: {fileID: 4843985084834002234, guid: d7973b62674aa474ab1413cbe7114a3b,
     type: 3}
+--- !u!1 &416671038198257979 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8653719598885068355, guid: d7973b62674aa474ab1413cbe7114a3b,
+    type: 3}
+  m_PrefabInstance: {fileID: 157520183905138822}
+  m_PrefabAsset: {fileID: 0}
+--- !u!210 &4668029297161006381
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 416671038198257979}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!4 &1513290627407364440 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -7552582706839291426, guid: d7973b62674aa474ab1413cbe7114a3b,
