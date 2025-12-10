@@ -15,9 +15,14 @@ public class PlayerAniRenderer : MonoBehaviour
     {
         if (spriteRenderers == null || spriteRenderers.Length <= 0)
         {
+            spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+        }
+        if (spriteRenderers == null || spriteRenderers.Length <= 0)
+        {
             Debug.LogError($"{gameObject.name}에 스프라이트 랜더러 배열일 없음");
             return;
         }
+
         Color[] colors = new Color[spriteRenderers.Length];
 
         for(int i = 0; i < spriteRenderers.Length; i++)
