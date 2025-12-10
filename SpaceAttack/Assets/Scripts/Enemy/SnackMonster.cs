@@ -241,7 +241,7 @@ public class SnackMonster : EnemyBase
             eatRangeVisualInstance.SetActive(false);
 
             Vector3 visualOffset = (isFacingRight ? transform.right : -transform.right) * (eatRadius / 2);
-            visualOffset += Vector3.up * 0.1f;  
+            visualOffset += Vector3.up * 0.3f;  
             eatRangeVisualInstance.transform.position = transform.position + visualOffset;
 
             eatRangeVisualInstance.transform.localScale = new Vector3(eatRadius, 3.5f, eatRadius * 4f);

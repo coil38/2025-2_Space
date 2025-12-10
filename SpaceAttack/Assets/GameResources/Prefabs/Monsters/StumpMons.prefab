@@ -2361,42 +2361,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8b52aaae79c17c40a1e55010bc78686, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 15
+  hp: 20
   attackDistance: 2
   damage: 1
   attackDuration: 0.5
   detectRadius: 30
-  animator: {fileID: 5133131086859691684}
-  visualTransform: {fileID: 1207864664810837532}
+  animator: {fileID: 2139463777543656384, guid: 60f196c7ca2101d42aadc7b592c74b6a,
+    type: 3}
+  visualTransform: {fileID: 7145575692969879371, guid: 60f196c7ca2101d42aadc7b592c74b6a,
+    type: 3}
   attackLayer:
     serializedVersion: 2
     m_Bits: 128
   hitInvincibleTime: 0.4
   deathMarkPrefab: {fileID: 3373934178109677858, guid: c1caaa46b3d509e4ab3f20c75343c5df,
     type: 3}
-  footPosition: {fileID: 2910749690156997060}
+  footPosition: {fileID: 903006419930339753, guid: 60f196c7ca2101d42aadc7b592c74b6a,
+    type: 3}
   heartPrefab: {fileID: 319665496327438999, guid: f9e94d050e55d0e46b507ac3cecb93a9,
     type: 3}
-  audioSource: {fileID: 56457443024312822}
+  audioSource: {fileID: 5513670401327930329, guid: 60f196c7ca2101d42aadc7b592c74b6a,
+    type: 3}
   hitSound: {fileID: 8300000, guid: 60cf4d2e3c8635c4e861cdef5357c32f, type: 3}
-  monsterHPUI: {fileID: 7383234319856572438}
+  monsterHPUI: {fileID: 3498628328372902993, guid: 60f196c7ca2101d42aadc7b592c74b6a,
+    type: 3}
   hitColor: {r: 1, g: 0.3726415, b: 0.3726415, a: 1}
   hitFlashDuration: 0.2
-  deathDuration: 2
+  deathDuration: 2.4
   wallCheckDistance: 0.7
   wallLayer:
     serializedVersion: 2
     m_Bits: 6144
   isTutorialIdle: 0
   canDetectPlayer: 1
-  attackRadius: 5
-  attackCooldown: 4
-  firePoint: {fileID: 4145527812798942617}
+  attackRadius: 30
+  attackCooldown: 8
+  firePoint: {fileID: 258388665158074325, guid: 60f196c7ca2101d42aadc7b592c74b6a,
+    type: 3}
   darkMatterPrefab: {fileID: 6777746582487540868, guid: 48dc8028d89f1414392fd5d5f4598079,
     type: 3}
-  sfxSource: {fileID: 0}
-  chargeClip: {fileID: 0}
-  fireClip: {fileID: 0}
+  sfxSource: {fileID: 5513670401327930329, guid: 60f196c7ca2101d42aadc7b592c74b6a,
+    type: 3}
+  chargeClip: {fileID: 8300000, guid: 608f2b618cefa6345896b802f9d6d428, type: 3}
+  fireClip: {fileID: 8300000, guid: 4ac9201d7db69934d91eac03aeef2667, type: 3}
 --- !u!82 &56457443024312822
 AudioSource:
   m_ObjectHideFlags: 0

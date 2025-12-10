@@ -7,15 +7,16 @@ using UnityEngine.SceneManagement;
 public class LobbyTeleport : MonoBehaviour
 {
     private bool isOneTime = true;
-    private ChipsetSelectUI chipsetSelectUI;
+  //private ChipsetSelectUI chipsetSelectUI;
+    private ExSelectUi exselectui;
 
     [Header("스테이지 선택 UI")]
     public StageSelectUI stageSelectUI;
 
     private void Awake()
     {
-        chipsetSelectUI = FindObjectOfType<ChipsetSelectUI>(true);
-
+        //chipsetSelectUI = FindObjectOfType<ChipsetSelectUI>(true);
+        exselectui = FindObjectOfType<ExSelectUi>(true);
     }
 
     private void OnTriggerEnter(Collider other)
