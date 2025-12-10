@@ -17,6 +17,8 @@ public class GuideUIManager : MonoBehaviour
 
     [Header("비주얼 변수")]
     [SerializeField] Image selectedImage;
+    [SerializeField] Color normalButtonColor;
+    [SerializeField] Color highlightedColor = Color.white;
 
     private int currentPage;
     private int currentSubId;
@@ -63,6 +65,15 @@ public class GuideUIManager : MonoBehaviour
                     currentMaxPage = pages.Length;
 
                     UISoundManager.PlayeButtonClickSound();   //버튼 클릭 사운드 재생
+
+                    if (currentButton == null) 
+                        subButtons[index2].GetComponentInChildren<TextMeshProUGUI>().color = highlightedColor;    //버튼 텍스트 색상 변경 연출
+                    else
+                    {
+                        currentButton.GetComponentInChildren<TextMeshProUGUI>().color = normalButtonColor;
+                        subButtons[index2].GetComponentInChildren<TextMeshProUGUI>().color = highlightedColor;
+                    }
+                    currentButton = subButtons[index2];
 
                     SetSelectedImage(subButtons[index2].transform.position.y);
 

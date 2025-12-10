@@ -23,17 +23,22 @@ public class CanProjectile : MonoBehaviour
     {
         Vector3 dir = (target - transform.position).normalized;
         rb.useGravity = true;
-        rb.velocity = dir * 10f + Vector3.up * 5f; 
+        rb.velocity = dir * 4f + Vector3.up * 2.5f; 
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (hasCollided) return;
-        hasCollided = true;
-
+        // PLAN에서만 처리
         if (collision.gameObject.CompareTag("Plan"))
         {
-            transform.position = new Vector3(transform.position.x, collision.contacts[0].point.y, transform.position.z);
+            if (hasCollided) return;
+            hasCollided = true;
+
+            transform.position = new Vector3(
+                transform.position.x,
+                collision.contacts[0].point.y,
+                transform.position.z);
+
             rb.isKinematic = true;
 
             if (crossExplosionPrefab != null)
@@ -45,9 +50,19 @@ public class CanProjectile : MonoBehaviour
                 if (explosion != null)
                 {
                     explosion.damage = damage;
-                    explosion.originCan = this;  
+                    explosion.originCan = this;
                 }
             }
         }
+    }
+
+    public void InitRandomDirection(float force)
+    {
+        rb.useGravity = true;
+
+        float randY = Random.Range(0f, 360f);
+        Vector3 dir = Quaternion.Euler(0, randY, 0) * Vector3.forward;
+
+        rb.velocity = dir * force + Vector3.up * 3.5f;
     }
 }

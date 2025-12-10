@@ -6794,6 +6794,39 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3563025043788522400, guid: 19fd3be6212128f4a98b48de0307de8c,
+        type: 3}
+      propertyPath: eliteTypeChance
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3563025043788522400, guid: 19fd3be6212128f4a98b48de0307de8c,
+        type: 3}
+      propertyPath: normalTypeChance
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3563025043788522400, guid: 19fd3be6212128f4a98b48de0307de8c,
+        type: 3}
+      propertyPath: specificTypeChance
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3563025043788522400, guid: 19fd3be6212128f4a98b48de0307de8c,
+        type: 3}
+      propertyPath: specificMonsters.Array.data[3]
+      value: 
+      objectReference: {fileID: 2040890849726229375, guid: bf2597b6dd1c15e4398a00628aee49a0,
+        type: 3}
+    - target: {fileID: 3563025043788522400, guid: 19fd3be6212128f4a98b48de0307de8c,
+        type: 3}
+      propertyPath: specificMonsters.Array.data[4]
+      value: 
+      objectReference: {fileID: 8198348873259715437, guid: 60f196c7ca2101d42aadc7b592c74b6a,
+        type: 3}
+    - target: {fileID: 3563025043788522400, guid: 19fd3be6212128f4a98b48de0307de8c,
+        type: 3}
+      propertyPath: normalPool.monsters.Array.data[4]
+      value: 
+      objectReference: {fileID: 8198348873259715437, guid: 60f196c7ca2101d42aadc7b592c74b6a,
+        type: 3}
     - target: {fileID: 6106028302834404094, guid: 19fd3be6212128f4a98b48de0307de8c,
         type: 3}
       propertyPath: m_Enabled

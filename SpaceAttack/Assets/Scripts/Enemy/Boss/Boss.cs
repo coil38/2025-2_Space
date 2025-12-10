@@ -541,12 +541,11 @@ public class Boss : EnemyBase
             for (int i = 0; i < cansPerWave; i++)
             {
                 float randX = Random.Range(-size.x / 2f, size.x / 2f);
-                float randZ = Random.Range(-size.z / 2f, size.z / 2f); // 수정
+                float randZ = Random.Range(-size.z / 2f, size.z / 2f); 
 
                 Vector3 targetPos = new Vector3(center.x + randX, center.y + size.y / 2f, center.z + randZ);
-
                 GameObject can = Instantiate(canPrefab, headTransform.position, Quaternion.identity);
-                can.GetComponent<CanProjectile>().Init(targetPos);
+                can.GetComponent<CanProjectile>().InitRandomDirection(6.5f);
             }
 
             yield return new WaitForSeconds(1f);
