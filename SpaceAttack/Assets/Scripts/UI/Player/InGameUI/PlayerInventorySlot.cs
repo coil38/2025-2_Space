@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using System;
 using UnityEngine.EventSystems;
 
-public class PlayerInventorySlot : MonoBehaviour, IPointerClickHandler
+public class PlayerInventorySlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public Image image { get; private set; }
     public Sprite itemImage {  get; private set; }
@@ -48,9 +48,12 @@ public class PlayerInventorySlot : MonoBehaviour, IPointerClickHandler
         image.color = color;
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData eventData)
     {
         if (relic == null) return;
+
+        PlayerUIManager.instance.isInventorySlotButtonClick = true;
+        LogUtil.Log("버튼 클릭 시작");
 
         SlotClickType clickType = PlayerUIManager.instance.slotClickType;
         if (clickType == SlotClickType.Item)
@@ -61,5 +64,11 @@ public class PlayerInventorySlot : MonoBehaviour, IPointerClickHandler
         {
             PlayerUIManager.instance.ExchangeItem(relic, relicInstanceId);
         }
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        PlayerUIManager.instance.isInventorySlotButtonClick = false;
+        LogUtil.Log("버튼 클릭 종료");
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ClickButtonUI : MonoBehaviour, IPointerClickHandler
+public class ClickButtonUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     private HighLingthingButtonUI highLingthingButtonUI;
     [Header("버튼 유형")]
@@ -14,8 +14,11 @@ public class ClickButtonUI : MonoBehaviour, IPointerClickHandler
         if(highLingthingButtonUI == null)
             highLingthingButtonUI = GetComponent<HighLingthingButtonUI>();
     }
-    public void OnPointerClick(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData eventData)
     {
+        PlayerUIManager.instance.isInventorySlotButtonClick = true;
+        LogUtil.Log("버튼 클릭 시작");
+
         if (highLingthingButtonUI == null) return;
 
         if (!isEquipButton)
@@ -42,5 +45,11 @@ public class ClickButtonUI : MonoBehaviour, IPointerClickHandler
                 highLingthingButtonUI.isCanInteracting = false;   //장착 안됨 처리
             }
         }
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        PlayerUIManager.instance.isInventorySlotButtonClick = false;
+        LogUtil.Log("버튼 클릭 종료");
     }
 }

@@ -44,6 +44,9 @@ public class PlayerAttack : MonoBehaviour
 
     private void CheckWeaponAttack()
     {
+        if(PlayerUIManager.instance != null)
+            if(PlayerUIManager.instance.isInventorySlotButtonClick) return;   //인벤토리 슬롯 클릭일 경우, 반환
+
         if (PlayerTimeSystem.w_SkillTimer != null)
             if (PlayerTimeSystem.w_SkillTimer.IsRunning()) return;  //현재 공격중일 경우, 반환
 

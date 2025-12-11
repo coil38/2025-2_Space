@@ -24,6 +24,8 @@ public class PlayerUIManager : MonoBehaviour
 
     private InventoryManager inventoryManager;
 
+    public bool isInventorySlotButtonClick = false;
+
     public SlotClickType slotClickType { get; private set; }
     private void Awake()
     {
