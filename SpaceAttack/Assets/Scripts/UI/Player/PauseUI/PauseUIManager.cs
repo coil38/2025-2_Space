@@ -78,25 +78,32 @@ public class PauseUIManager : MonoBehaviour
     private void PlayNewGame()
     {
         LogUtil.Log("새로운 게임을 시작합니다.");
-        if (GameSceneManager.instance.currentScene == SceneType.TutorialScene)
-        {
-            pauseUIPanel.SetActive(false);
-            Time.timeScale = 1f;           //일시정지 해제
-            pauseVolume.weight = 0;                //블러효과 종료
+        //if (GameSceneManager.instance.currentScene == SceneType.TutorialScene)
+        //{
+        //    pauseUIPanel.SetActive(false);
+        //    Time.timeScale = 1f;           //일시정지 해제
+        //    pauseVolume.weight = 0;                //블러효과 종료
 
-            SaveManager.instance.InitializePlayerDatas();
-            SceneLoadManager.instance.
-                LoadScene(GameSceneManager.GetSceneNameByType(SceneType.TutorialScene));
-        }
-        else
-        {
-            pauseUIPanel.SetActive(false);
-            Time.timeScale = 1f;           //일시정지 해제
-            pauseVolume.weight = 0;                //블러효과 종료
+        //    SaveManager.instance.InitializePlayerDatas();
+        //    SceneLoadManager.instance.
+        //        LoadScene(GameSceneManager.GetSceneNameByType(SceneType.TutorialScene));
+        //}
+        //else
+        //{
+        //    pauseUIPanel.SetActive(false);
+        //    Time.timeScale = 1f;           //일시정지 해제
+        //    pauseVolume.weight = 0;                //블러효과 종료
 
-            SaveManager.instance.PlayerReset();
-        }
+        //    SaveManager.instance.PlayerReset();
+        //}
 
+        pauseUIPanel.SetActive(false);
+        Time.timeScale = 1f;           //일시정지 해제
+        pauseVolume.weight = 0;                //블러효과 종료
+
+        SaveManager.instance.InitializePlayerDatas();
+        SceneLoadManager.instance.
+            LoadScene(GameSceneManager.GetSceneNameByType(SceneType.TutorialScene));
     }
 
     private void OnAchievementPanel()

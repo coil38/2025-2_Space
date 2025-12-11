@@ -638,6 +638,7 @@ GameObject:
   - component: {fileID: 8742307618514868367}
   - component: {fileID: 57823206791000713}
   - component: {fileID: 2277895898474509071}
+  - component: {fileID: 8434274340300518774}
   m_Layer: 5
   m_Name: Remove_Button
   m_TagString: Untagged
@@ -774,6 +775,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isEquipButton: 0
+--- !u!114 &8434274340300518774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2069900134439119599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 243a6c835dde90544815a0a5cd567f11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2288320954411524006
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,6 +936,7 @@ GameObject:
   - component: {fileID: 7565346982572441574}
   - component: {fileID: 2588577361415892769}
   - component: {fileID: 4689820647193152069}
+  - component: {fileID: 4969139236541658787}
   m_Layer: 5
   m_Name: Return_Button
   m_TagString: Untagged
@@ -1059,6 +1073,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isEquipButton: 0
+--- !u!114 &4969139236541658787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3307132760209152102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 243a6c835dde90544815a0a5cd567f11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5587530460993909255
 GameObject:
   m_ObjectHideFlags: 0

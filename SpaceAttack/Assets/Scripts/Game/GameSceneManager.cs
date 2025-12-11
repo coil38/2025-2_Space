@@ -79,7 +79,7 @@ public class GameSceneManager : MonoBehaviour
                 LogUtil.Log("칩셋선택씬");
                 return SceneType.ChipsetSelectScene;
 
-            case "BattleTestNormalScene":
+            case "ExTestScene":             //발표용 씬으로 임시 변경. 원래 : BattleTestNormalScene
                 LogUtil.Log("전투씬");
                 return SceneType.BattleScene;
 
@@ -98,7 +98,7 @@ public class GameSceneManager : MonoBehaviour
             case SceneType.StartGameScene: return "StartUIScene";
             case SceneType.TutorialScene: return "Tutorial";
             case SceneType.ChipsetSelectScene: return "ChipsetSelectScene";
-            case SceneType.BattleScene: return "BattleTestNormalScene";
+            case SceneType.BattleScene: return "ExTestScene";            //발표용 씬으로 임시 변경. 원래 : BattleTestNormalScene
             case SceneType.MiddleBossScene: return "BattleTestScene";
         }
         return "";

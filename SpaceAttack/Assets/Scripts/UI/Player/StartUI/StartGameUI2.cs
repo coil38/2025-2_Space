@@ -28,17 +28,21 @@ public class StartGameUI2 : MonoBehaviour
 
     public void StartGame()
     {
-        if (!PlayerPrefs.HasKey("Tutorial"))
-        {
-            PlayerPrefs.SetInt("Tutorial", 1);
-            SceneLoadManager.instance.
-                LoadScene(GameSceneManager.GetSceneNameByType(SceneType.TutorialScene));  //튜토리얼 씬으로 이동 처리
-        }
-        else
-        {
-            if(SaveManager.instance != null)
-                SaveManager.instance.PlayerReset();  //칩셋 선택씬으로 이동
-        }
+        //if (!PlayerPrefs.HasKey("Tutorial"))
+        //{
+        //    PlayerPrefs.SetInt("Tutorial", 1);
+        //    SceneLoadManager.instance.
+        //        LoadScene(GameSceneManager.GetSceneNameByType(SceneType.TutorialScene));  //튜토리얼 씬으로 이동 처리
+        //}
+        //else
+        //{
+        //    if(SaveManager.instance != null)
+        //        SaveManager.instance.PlayerReset();  //칩셋 선택씬으로 이동
+        //}
+
+        SaveManager.instance.InitializePlayerDatas();
+        SceneLoadManager.instance.
+            LoadScene(GameSceneManager.GetSceneNameByType(SceneType.TutorialScene));
     }
     private void OnSettingPanel()        //설정화면 활성화
     {
