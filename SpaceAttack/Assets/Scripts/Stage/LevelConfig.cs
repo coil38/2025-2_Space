@@ -53,10 +53,14 @@ public class LevelConfig : MonoBehaviour
             TryFindPlayer();
         }
 
-        // K키로 소환
         if (Input.GetKeyDown(KeyCode.K) && player != null)
         {
             SpawnRandomEliteMonster();
+        }
+
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            SpawnRandomNormalMonster();
         }
     }
 
@@ -138,5 +142,19 @@ public class LevelConfig : MonoBehaviour
             return null;
 
         return pool.monsters[UnityEngine.Random.Range(0, pool.monsters.Length)];
+    }
+
+    private void SpawnRandomNormalMonster()
+    {
+        if (player == null) return;
+        if (normalPool.monsters == null || normalPool.monsters.Length == 0) return;
+
+        GameObject prefab = normalPool.monsters[UnityEngine.Random.Range(0, normalPool.monsters.Length)];
+
+        Vector3 spawnPos = player.position
+                         + player.forward * 2f
+                         + Vector3.up * 1.5f;
+
+        Instantiate(prefab, spawnPos, Quaternion.identity);
     }
 }
