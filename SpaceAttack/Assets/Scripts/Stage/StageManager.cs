@@ -573,14 +573,14 @@ public class StageManager : MonoBehaviour
         switch (stage)
         {
             case 1:
-                monstersPerWave = 5;
-                maxWaveCount = 3;
+                monstersPerWave = 4;
+                maxWaveCount = 4;
                 enemyHpMultiplier = 1.0f;
                 break;
 
             case 2:
-                monstersPerWave = 6;
-                maxWaveCount = 3;
+                monstersPerWave = 5;
+                maxWaveCount = 4;
                 enemyHpMultiplier = 1.2f;
                 break;
 

@@ -32,6 +32,65 @@ public class LevelConfig : MonoBehaviour
     [Range(0f, 1f)] public float specificTypeChance = 0.2f;
 
     private int monsterIndex;
+    public Transform player;
+
+    private void Start()
+    {
+        if (player == null)
+        {
+            // Player 오브젝트 자동 찾기
+            GameObject p = GameObject.FindGameObjectWithTag("Player");
+            if (p != null)
+                player = p.transform;
+        }
+    }
+
+    private void Update()
+    {
+        // 플레이어를 못 찾았으면 계속 찾기
+        if (player == null)
+        {
+            TryFindPlayer();
+        }
+
+        // K키로 소환
+        if (Input.GetKeyDown(KeyCode.K) && player != null)
+        {
+            SpawnRandomEliteMonster();
+        }
+    }
+
+    private void TryFindPlayer()
+    {
+        GameObject p = GameObject.FindGameObjectWithTag("Player");
+        if (p != null)
+        {
+            player = p.transform;
+            Debug.Log("Player Transform 연결됨");
+        }
+    }
+
+    private void SpawnRandomEliteMonster()
+    {
+        if (player == null)
+        {
+            return;
+        }
+
+        if (elitePool.monsters == null || elitePool.monsters.Length == 0)
+        {
+            return;
+        }
+
+        GameObject prefab = elitePool.monsters[UnityEngine.Random.Range(0, elitePool.monsters.Length)];
+
+        Vector3 spawnPos = player.position
+                   + player.forward * 2f
+                   + Vector3.up * 1f;
+
+        Instantiate(prefab, spawnPos, Quaternion.identity);
+    }
+
     public void ApplyRandomConfig()
     {
         if (StageProgress.Instance != null)

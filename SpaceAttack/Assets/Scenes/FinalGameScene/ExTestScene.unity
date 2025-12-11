@@ -5476,7 +5476,7 @@ MonoBehaviour:
     type: 3}
   stageTeleportPrefab: {fileID: 1830532034502690505}
   rewardTeleport: {fileID: 1830532034502690505}
-  eventRoomChance: 0.8
+  eventRoomChance: 0.9
   exchangePrefab: {fileID: 5114780495334812866, guid: 3df59a4f196c9ee47889b98a78eae161,
     type: 3}
   purifierPrefab: {fileID: 6031728646357752911, guid: 5e8686b79bae078489c39a165f114d77,
@@ -8465,6 +8465,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3563025043788522400, guid: 19fd3be6212128f4a98b48de0307de8c,
         type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1214099425}
+    - target: {fileID: 3563025043788522400, guid: 19fd3be6212128f4a98b48de0307de8c,
+        type: 3}
       propertyPath: eliteTypeChance
       value: 0.4
       objectReference: {fileID: 0}
@@ -8562,7 +8567,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 955012183239220153, guid: 19fd3be6212128f4a98b48de0307de8c, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 19fd3be6212128f4a98b48de0307de8c, type: 3}
@@ -8894,6 +8900,7 @@ MonoBehaviour:
   normalTypeChance: 0.8
   eliteTypeChance: 0.1
   specificTypeChance: 0.1
+  player: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
