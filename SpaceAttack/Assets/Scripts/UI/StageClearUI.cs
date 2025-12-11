@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class StageClearUI : MonoBehaviour
 {
     public GameObject clearMessageObj; // Text 오브젝트
-    public float delayToReturn = 3f;   // 몇 초 후에 돌아갈지
+    public float delayToReturn = 15f;   // 몇 초 후에 돌아갈지
 
     public void ShowClearMessage()
     {

@@ -352,7 +352,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1447,7 +1447,7 @@ Transform:
   m_GameObject: {fileID: 4515568162340463571}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.78, y: 0, z: 0}
+  m_LocalPosition: {x: -1.78, y: 1.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2185,7 +2185,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8862058005300809189
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2468,7 +2468,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 126
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!65 &351532512157509562
 BoxCollider:
@@ -2524,11 +2524,11 @@ MonoBehaviour:
   monsterHPUI: {fileID: 3498628328372902993}
   hitColor: {r: 1, g: 0.3726415, b: 0.3726415, a: 1}
   hitFlashDuration: 0.2
-  deathDuration: 2
+  deathDuration: 1.8
   wallCheckDistance: 0.7
   wallLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 6144
   isTutorialIdle: 0
   canDetectPlayer: 1
   attackRadius: 30

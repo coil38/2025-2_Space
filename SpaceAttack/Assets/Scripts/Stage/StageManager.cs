@@ -284,7 +284,7 @@ public class StageManager : MonoBehaviour
         if (PlayerStatus.Instance != null)
             PlayerStatus.Instance.isRooted = false;
 
-        StageProgress.Instance.ClearStage(StageGameData.SelectedStage);
+        StageProgressEx.Instance.ClearStage(StageGameData.SelectedStage);
 
         if (rewardTeleport != null)
             rewardTeleport.SetActive(true);
@@ -296,7 +296,7 @@ public class StageManager : MonoBehaviour
 
     public void OnStageClear()
     {
-        StageProgress.Instance.ClearStage(StageGameData.SelectedStage);
+        StageProgressEx.Instance.ClearStage(StageGameData.SelectedStage);
 
         if (PlayerStatus.Instance != null)
             PlayerStatus.Instance.isRooted = false;
@@ -360,7 +360,19 @@ public class StageManager : MonoBehaviour
             if (obj != null) Destroy(obj);
         spawnedEventObjects.Clear();
 
+        int itemLayer = LayerMask.NameToLayer("Item");
+
+        foreach (GameObject obj in FindObjectsOfType<GameObject>())
+        {
+            if (obj.layer == itemLayer)
+                Destroy(obj);
+        }
+
         GameObject[] splats = GameObject.FindGameObjectsWithTag("Splat");
+        foreach (GameObject splat in splats)
+            Destroy(splat);
+
+        GameObject[] Hearts = GameObject.FindGameObjectsWithTag("Heart");
         foreach (GameObject splat in splats)
             Destroy(splat);
 
@@ -567,8 +579,8 @@ public class StageManager : MonoBehaviour
                 break;
 
             case 2:
-                monstersPerWave = 8;
-                maxWaveCount = 4;
+                monstersPerWave = 6;
+                maxWaveCount = 3;
                 enemyHpMultiplier = 1.2f;
                 break;
 

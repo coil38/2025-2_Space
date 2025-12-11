@@ -30,31 +30,29 @@ public class StumpMons : EnemyBase
 
     private void Update()
     {
-        if (isDead || isHit)
-        {
-            rb.velocity = Vector3.zero;
-            return;
-        }
+        if (isDead) return;   // ← 이거 추가
 
         // 공격 중에는 상태 유지하며 항상 방향 회전
-        if (currentState == State.Attack && attackTarget != null)
+        if (!isDead && currentState == State.Attack && attackTarget != null)
         {
             float dirX = (attackTarget.position - transform.position).x;
             Flip(dirX);
         }
-
         DetectPlayerAndAttack();
     }
 
     private void FixedUpdate()
     {
-        // 항상 제자리
+        if (isDead)
+            return; // 죽었으면 물리 강제 조작 중단
+
         rb.velocity = Vector3.zero;
     }
 
     private void DetectPlayerAndAttack()
     {
         if (!canDetectPlayer) return;
+        if (isDead) return;
 
         Collider[] hits = Physics.OverlapSphere(transform.position, DetectRadius, playerLayer);
         if (hits.Length == 0)
@@ -108,8 +106,7 @@ public class StumpMons : EnemyBase
 
         while (elapsed < attackDuration)
         {
-            if (isHit) break;
-
+            if (isHit || isDead) break;
             rb.velocity = Vector3.zero;
 
             if (attackTarget != null)
@@ -118,8 +115,16 @@ public class StumpMons : EnemyBase
                 Flip(dirX);
             }
 
+
+
             elapsed += Time.deltaTime;
             yield return null;
+        }
+
+        if (isDead)
+        {
+            isAttacking = false;
+            yield break;
         }
 
         isAttacking = false;
