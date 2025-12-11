@@ -323,7 +323,9 @@ public class SnackMonster : EnemyBase
         }
 
         Vector3 forwardOffset = (isFacingRight ? Vector3.right : Vector3.left) * 3f + Vector3.up * 1f;
-        playerTransform.position = transform.position + forwardOffset;
+        Vector3 pos = transform.position + forwardOffset;
+        pos.y = 1f;
+        playerTransform.position = pos;
 
         if (eatRangeVisualInstance != null)
         {
