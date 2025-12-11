@@ -99,7 +99,7 @@ public class TutorialMovement : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.R)) rPressed = true;
 
                 if (qPressed && ePressed && rPressed)
-                    StartCoroutine(FadeOutAndNextStep(StartStep8_5));
+                    StartCoroutine(FadeOutAndNextStep(StartStep9));
                 break;
 
 
@@ -170,14 +170,6 @@ public class TutorialMovement : MonoBehaviour
         step = 7;
         ResetSkillKeyFlags();
         SetPanel("마우스 왼쪽 클릭으로 공격하세요");
-    }
-
-    void StartStep8_5()
-    {
-        step = 750; 
-        SetPanel("모든 스킬은 레벨업으로 잠금 해제 해야 합니다!");
-
-        StartCoroutine(PauseAndNext(2.5f, StartStep9)); 
     }
 
     void StartStep8()
