@@ -423,8 +423,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bd3d8fb6b12a3844a5023b6548b2834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unlockedStage: 2
-  clearedStage: 1
+  unlockedStage: 1
+  clearedStage: 0
 --- !u!4 &115817652
 Transform:
   m_ObjectHideFlags: 0
@@ -4266,7 +4266,7 @@ PrefabInstance:
     - target: {fileID: 6416948168632727303, guid: 02c80e22a6bc542448ce75ab79b26483,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6416948168632727303, guid: 02c80e22a6bc542448ce75ab79b26483,
         type: 3}
