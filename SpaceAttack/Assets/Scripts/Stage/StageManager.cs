@@ -553,12 +553,6 @@ public class StageManager : MonoBehaviour
     {
         isExchangeRoom = false;
 
-        if (StageProgressEx.Instance.clearedStage == 2 ||
-            StageProgressEx.Instance.unlockedStage == 2)
-        {
-            return false;
-        }
-
         if (exchangeRoomUsed && purifierRoomUsed)
             return false;
 
@@ -579,32 +573,32 @@ public class StageManager : MonoBehaviour
         switch (stage)
         {
             case 1:
-                monstersPerWave = 4;
+                monstersPerWave = 3;
                 maxWaveCount = 3;
                 enemyHpMultiplier = 1.0f;
                 break;
 
             case 2:
-                monstersPerWave = 5;
-                maxWaveCount = 2;
+                monstersPerWave = 4;
+                maxWaveCount = 3;
                 enemyHpMultiplier = 1.2f;
                 break;
 
             case 3:
-                monstersPerWave = 8;
-                maxWaveCount = 4;
+                monstersPerWave = 5;
+                maxWaveCount = 3;
                 enemyHpMultiplier = 1.4f;
                 break;
 
             case 4:
-                monstersPerWave = 12;
-                maxWaveCount = 5;
+                monstersPerWave = 6;
+                maxWaveCount = 3;
                 enemyHpMultiplier = 1.6f;
                 break;
 
             case 5:
-                monstersPerWave = 15;
-                maxWaveCount = 6;
+                monstersPerWave = 6;
+                maxWaveCount = 4;
                 enemyHpMultiplier = 2.0f;
                 break;
         }

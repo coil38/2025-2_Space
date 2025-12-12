@@ -207,14 +207,14 @@ public class TutorialMovement : MonoBehaviour
     void TutorialComplete()
     {
         step = 999; 
-        SetPanel("튜토리얼 클리어! 10초 후 자동으로 이동합니다.");
+        SetPanel("튜토리얼 클리어! 5초 후 자동으로 이동합니다.");
 
         StartCoroutine(GoNextSceneDelay());
     }
 
     IEnumerator GoNextSceneDelay()
     {
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(5f);
         UnityEngine.SceneManagement.SceneManager.LoadScene("ChipsetSelectScene");
     }
 
