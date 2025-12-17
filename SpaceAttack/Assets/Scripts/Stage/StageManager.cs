@@ -284,7 +284,7 @@ public class StageManager : MonoBehaviour
         if (PlayerStatus.Instance != null)
             PlayerStatus.Instance.isRooted = false;
 
-        StageProgressEx.Instance.ClearStage(StageGameData.SelectedStage);
+        StageProgress.Instance.ClearStage(StageGameData.SelectedStage);
 
         if (rewardTeleport != null)
             rewardTeleport.SetActive(true);
@@ -296,7 +296,7 @@ public class StageManager : MonoBehaviour
 
     public void OnStageClear()
     {
-        StageProgressEx.Instance.ClearStage(StageGameData.SelectedStage);
+        StageProgress.Instance.ClearStage(StageGameData.SelectedStage);
 
         if (PlayerStatus.Instance != null)
             PlayerStatus.Instance.isRooted = false;
